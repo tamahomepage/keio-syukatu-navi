@@ -1272,7 +1272,7 @@
       const rows = lines.slice(1).map(cols => ({
         date: cols[0], title: cols[1], place: cols[2],
         note: cols[3], status: cols[4], link: cols[5], members: cols[6]
-      })).filter(r => r.title);
+      })).filter(r => r.title && r.title !== 'タイトル' && r.title !== 'タイトルを入力' && r.date !== '日付');
 
       renderEvents(rows, 'all');
       note.textContent = '最終更新: ' + new Date().toLocaleDateString('ja-JP');
@@ -1308,7 +1308,7 @@
           const eventRows = lines.slice(1).map(cols => ({
             date: cols[0], title: cols[1], place: cols[2],
             note: cols[3], status: cols[4], link: cols[5], members: cols[6]
-          })).filter(r => r.title);
+          })).filter(r => r.title && r.title !== 'タイトル' && r.title !== 'タイトルを入力' && r.date !== '日付');
           renderEvents(eventRows, filter);
         } catch(e) {}
       }
@@ -1373,7 +1373,7 @@
       const res = await fetch(FAQ_CSV_URL);
       const text = await res.text();
       const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g, '')));
-      const items = lines.slice(1).map(cols => ({ q: cols[0], a: cols[1] })).filter(r => r.q && r.a);
+      const items = lines.slice(1).map(cols => ({ q: cols[0], a: cols[1] })).filter(r => r.q && r.a && r.q !== '質問');
       renderFAQ(items);
     } catch(e) {
       renderFAQ(FAQ_SAMPLE);
