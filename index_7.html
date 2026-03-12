@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>慶應就活ナビ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --navy-light: #142254;
+    --crimson: #c0001a;
+    --crimson-light: #e8001f;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vw;
+    height: 68px;
+    background: rgba(10, 26, 62, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold-light); }
+
+  .nav-cta {
+    background: var(--crimson);
+    color: white !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2px;
+    font-size: 0.8rem !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--crimson-light) !important; color: white !important; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 120px 5vw 80px;
+  }
+
+  .hero-bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 60px,
+        rgba(201,168,76,0.04) 60px,
+        rgba(201,168,76,0.04) 61px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 60px,
+        rgba(201,168,76,0.04) 60px,
+        rgba(201,168,76,0.04) 61px
+      );
+  }
+
+  .hero-accent {
+    position: absolute;
+    top: 0; right: 0;
+    width: 45vw;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(192,0,26,0.12) 0%, transparent 60%);
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(201,168,76,0.5);
+    padding: 0.35rem 1rem;
+    border-radius: 2px;
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.2s;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--crimson);
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    color: var(--white);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.35s;
+  }
+
+  .hero-title span {
+    color: var(--gold-light);
+    position: relative;
+  }
+
+  .hero-title span::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 2px;
+    background: var(--crimson);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.9;
+    max-width: 520px;
+    margin-bottom: 2.8rem;
+    font-weight: 300;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.5s;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.65s;
+  }
+
+  .btn-primary {
+    background: var(--crimson);
+    color: white;
+    padding: 0.9rem 2.2rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  }
+
+  .btn-primary:hover {
+    background: var(--crimson-light);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    border: 1px solid rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.85);
+    padding: 0.9rem 2.2rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .hero-stats {
+    position: absolute;
+    bottom: 60px; right: 8vw;
+    display: flex;
+    gap: 3rem;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.8s;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: var(--gold-light);
+    display: block;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.4rem;
+    letter-spacing: 0.1em;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* ===== SCROLL INDICATOR ===== */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 30px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+  }
+
+  /* ===== SECTION COMMON ===== */
+  section { position: relative; }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--crimson);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    color: var(--navy);
+    line-height: 1.35;
+    margin-bottom: 1.2rem;
+  }
+
+  .section-desc {
+    color: var(--text-muted);
+    line-height: 1.95;
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+
+  /* ===== MISSION ===== */
+  .mission {
+    padding: 120px 5vw;
+    background: var(--cream);
+  }
+
+  .mission-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8vw;
+    align-items: center;
+  }
+
+  .mission-visual {
+    position: relative;
+  }
+
+  .mission-card {
+    background: var(--navy);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mission-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--gold));
+  }
+
+  .mission-card-quote {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .mission-card-quote span { color: var(--gold-light); }
+
+  .mission-card-sub {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.9;
+    font-weight: 300;
+  }
+
+  .mission-deco {
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 120px; height: 120px;
+    border: 2px solid rgba(201,168,76,0.2);
+    transform: rotate(15deg);
+  }
+
+  /* ===== ACTIVITIES ===== */
+  .activities {
+    padding: 120px 5vw;
+    background: var(--gray);
+  }
+
+  .activities-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .activities-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 5rem;
+  }
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: rgba(10,26,62,0.08);
+  }
+
+  .activity-card {
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+
+  .activity-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(10,26,62,0.12);
+    z-index: 1;
+  }
+
+  .activity-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 0;
+    background: var(--crimson);
+    transition: height 0.3s;
+  }
+
+  .activity-card:hover::after { height: 3px; }
+
+  .activity-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: rgba(10,26,62,0.18);
+    line-height: 1;
+    margin-bottom: 1.2rem;
+    transition: color 0.3s;
+  }
+
+  .activity-card:hover .activity-num {
+    color: rgba(192,0,26,0.22);
+  }
+
+  .activity-icon {
+    width: 44px; height: 44px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+  }
+
+  .activity-card:hover .activity-icon {
+    background: var(--crimson);
+  }
+
+  .activity-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.05rem;
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+  }
+
+  .activity-desc {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.85;
+    font-weight: 300;
+  }
+
+  .activity-badge {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    font-size: 0.6rem;
+    background: rgba(201,168,76,0.15);
+    color: var(--gold);
+    padding: 0.2rem 0.6rem;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  /* ===== JOIN ===== */
+  .join {
+    padding: 120px 5vw;
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .join-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(192,0,26,0.15) 0%, transparent 70%);
+  }
+
+  .join-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    position: relative;
+  }
+
+  .join .section-title { color: var(--white); }
+  .join .section-desc { color: rgba(255,255,255,0.55); }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .faq-item {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 1.4rem 0;
+    cursor: pointer;
+  }
+
+  .faq-item:last-child {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .faq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .faq-q-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+  }
+
+  .faq-toggle {
+    width: 24px; height: 24px;
+    border: 1px solid rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    color: var(--gold);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .faq-a {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.85;
+    margin-top: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.35s ease;
+    font-weight: 300;
+  }
+
+  .faq-item.open .faq-a {
+    margin-top: 0.8rem;
+    max-height: 200px;
+  }
+
+  .faq-item.open .faq-toggle {
+    background: var(--crimson);
+    border-color: var(--crimson);
+    transform: rotate(45deg);
+  }
+
+  /* ===== GREETING ===== */
+  .greeting {
+    padding: 120px 5vw;
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .greeting::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 50% 70% at 10% 50%, rgba(192,0,26,0.1) 0%, transparent 70%);
+  }
+
+  .greeting-inner {
+    max-width: 800px;
+  }
+
+  .greeting-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.97rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 2.1;
+    font-weight: 400;
+    border: none;
+    margin: 1.8rem 0 2.5rem;
+    padding: 0;
+  }
+
+  .greeting-sig {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .greeting-sig-line {
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .greeting-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .greeting-role {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    margin-top: 0.25rem;
+    letter-spacing: 0.06em;
+  }
+
+  .greeting-deco {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 3.5rem 2.5rem;
+    position: relative;
+  }
+
+  .greeting-deco::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 40px; height: 40px;
+    border-top: 2px solid var(--crimson);
+    border-left: 2px solid var(--crimson);
+  }
+
+  .greeting-deco::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 40px; height: 40px;
+    border-bottom: 2px solid var(--crimson);
+    border-right: 2px solid var(--crimson);
+  }
+
+  .greeting-quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 7rem;
+    color: rgba(201,168,76,0.2);
+    line-height: 0.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .greeting-quote-sub {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 2;
+  }
+
+  @media (max-width: 900px) {
+    .greeting-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .greeting-deco { display: none; }
+  }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    padding: 100px 5vw;
+    background: var(--cream);
+    text-align: center;
+  }
+
+  .cta-inner {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    color: var(--navy);
+    line-height: 1.5;
+    margin-bottom: 1.2rem;
+  }
+
+  .cta-sub {
+    color: var(--text-muted);
+    line-height: 1.9;
+    font-size: 0.92rem;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .cta-btn {
+    background: var(--navy);
+    color: white;
+    padding: 1.1rem 3rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--crimson);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .cta-btn:hover::before { transform: scaleX(1); }
+  .cta-btn span { position: relative; z-index: 1; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #060e20;
+    padding: 3rem 5vw;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+  }
+
+  .footer-copy {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===== EVENTS ===== */
+  .events {
+    padding: 120px 5vw;
+    background: var(--cream);
+  }
+  .events-inner { max-width: 1200px; margin: 0 auto; }
+  .events-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 3.5rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .events-filter { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    border: 1px solid rgba(10,26,62,0.2);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover { background: var(--navy); border-color: var(--navy); color: white; }
+  .filter-btn.members-f.active, .filter-btn.members-f:hover { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+  .events-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
+  .event-row {
+    display: grid;
+    grid-template-columns: 110px 1fr auto auto;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.6rem 2rem;
+    background: var(--white);
+    transition: background 0.2s;
+  }
+  .event-row:hover { background: #f8f5f0; }
+  .event-row.members { border-left: 3px solid var(--gold); }
+  .event-date-block { text-align: center; }
+  .event-month { font-size: 0.68rem; letter-spacing: 0.12em; color: var(--crimson); font-weight: 700; text-transform: uppercase; }
+  .event-day { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--navy); line-height: 1; margin: 0.1rem 0; }
+  .event-weekday { font-size: 0.68rem; color: var(--text-muted); }
+  .event-title-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem; flex-wrap: wrap; }
+  .event-title { font-family: 'Noto Serif JP', serif; font-size: 1rem; color: var(--navy); font-weight: 700; }
+  .members-badge {
+    font-size: 0.6rem;
+    background: rgba(201,168,76,0.15);
+    color: #8a6d1a;
+    padding: 0.15rem 0.5rem;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+  .event-meta { font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 1.2rem; flex-wrap: wrap; }
+  .event-status { padding: 0.3rem 0.8rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; white-space: nowrap; }
+  .status-open { background: rgba(0,160,80,0.1); color: #00703c; border: 1px solid rgba(0,160,80,0.25); }
+  .status-soon { background: rgba(201,168,76,0.15); color: #8a6d1a; border: 1px solid rgba(201,168,76,0.3); }
+  .status-closed { background: rgba(10,26,62,0.07); color: var(--text-muted); border: 1px solid rgba(10,26,62,0.12); }
+  .event-link {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    background: var(--navy);
+    color: white;
+    font-size: 0.75rem;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .event-link:hover { background: var(--crimson); }
+  .event-link.no-link { background: rgba(10,26,62,0.08); color: var(--text-muted); pointer-events: none; }
+  .events-loading { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.88rem; background: var(--white); }
+  .events-empty { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.88rem; background: var(--white); }
+  .sheet-note { margin-top: 1.2rem; text-align: right; font-size: 0.72rem; color: rgba(10,26,62,0.3); letter-spacing: 0.05em; }
+  @media (max-width: 760px) {
+    .event-row { grid-template-columns: 70px 1fr; }
+    .event-row > :nth-child(3), .event-row > :nth-child(4) { grid-column: 2; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .mission-inner,
+    .activities-header,
+    .join-inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .activities-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .hero-stats {
+      position: static;
+      margin-top: 3rem;
+      justify-content: flex-start;
+    }
+
+    .nav-links { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .activities-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">慶應就活ナビ</a>
+  <ul class="nav-links">
+    <li><a href="#mission">ミッション</a></li>
+    <li><a href="#activities">活動内容</a></li>
+    <li><a href="#events">イベント</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="nav-cta" target="_blank" rel="noopener">参加する</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-accent"></div>
+  <div style="position:relative; max-width:1200px; margin:0 auto; width:100%;">
+    <div class="hero-badge">KEIO UNIVERSITY · 就活支援コミュニティ</div>
+    <h1 class="hero-title">
+      就活を、<br>
+      <span>ひとりで</span>戦わない。
+    </h1>
+    <p class="hero-sub">
+      情報・機会・経験を持ち寄り、互いの可能性を広げる。<br>
+      慶應生のための就活支援コミュニティです。
+    </p>
+    <div class="hero-buttons">
+      <a href="#join" class="btn-primary">コミュニティに参加する</a>
+      <a href="#activities" class="btn-outline">活動内容を見る</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">5</span>
+      <div class="stat-label">主な活動</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num" style="font-size:1.4rem; line-height:1.3;">日吉・三田<br>矢上</span>
+      <div class="stat-label">対象キャンパス</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num">Free</span>
+      <div class="stat-label">参加費無料</div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    SCROLL
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission" id="mission">
+  <div class="mission-inner">
+    <div class="reveal">
+      <div class="section-label">Our Mission</div>
+      <h2 class="section-title">就活という戦いを、<br>ともに越えていく</h2>
+      <p class="section-desc" style="margin-bottom:1.5rem;">
+        就活は個人戦になりがちです。しかし、情報・機会・経験を共有することで、より良い意思決定が可能になると私たちは考えています。
+      </p>
+      <p class="section-desc">
+        慶應就活ナビは、単なる情報共有の場ではなく、就活という長期的なプロセスを支え合うためのコミュニティです。参加者同士が互いに支え合いながら、納得のいく進路選択を行える環境を整えることを目指しています。
+      </p>
+    </div>
+    <div class="mission-visual reveal" style="transition-delay:0.15s;">
+      <div class="mission-card">
+        <p class="mission-card-quote">
+          「知らなかった」による<br>
+          <span>機会損失をなくす</span>こと。<br>
+          それが私たちの出発点。
+        </p>
+        <p class="mission-card-sub">
+          選考情報、イベント情報、業界の知識——<br>
+          ひとりで集めるには限界があります。だからこそ、<br>
+          コミュニティの力を最大限に活かします。
+        </p>
+        <div class="mission-deco"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVITIES -->
+<section class="activities" id="activities">
+  <div class="activities-inner">
+    <div class="activities-header">
+      <div class="reveal">
+        <div class="section-label">Activities</div>
+        <h2 class="section-title">5つの<br>活動内容</h2>
+      </div>
+      <div class="reveal" style="transition-delay:0.1s;">
+        <p class="section-desc">
+          情報共有から実践練習まで、就活のすべてのフェーズをカバー。参加者が主体的に関われる場を複数用意しています。
+        </p>
+      </div>
+    </div>
+
+    <div class="activities-grid">
+      <div class="activity-card reveal">
+        <div class="activity-num">01</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <h3 class="activity-title">情報共有</h3>
+        <p class="activity-desc">選考情報やイベント情報などを共有し、「知らなかったこと」による機会損失を防ぎます。メンバー全員で情報をアップデートし合います。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.1s;">
+        <div class="activity-num">02</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <h3 class="activity-title">就活イベント参加促進</h3>
+        <p class="activity-desc">合同説明会や選考イベントなどに参加しやすい環境づくりを行います。ひとりでは踏み出しにくい場も、仲間と一緒なら安心。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.2s;">
+        <div class="activity-num">03</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3 class="activity-title">模擬面接・GD</h3>
+        <p class="activity-desc">サマーインターン選考開始までに実践形式の練習機会を提供予定。フィードバックを通じて本番力を磨きます。</p>
+        <div class="activity-badge">準備中</div>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.1s;">
+        <div class="activity-num">04</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3 class="activity-title">交流イベント</h3>
+        <p class="activity-desc">不定期で交流会を開催し、情報交換や相談ができる関係構築を支援します。就活仲間との繋がりが心強い支えになります。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.2s;">
+        <div class="activity-num">05</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <h3 class="activity-title">輪読会</h3>
+        <p class="activity-desc">就活イベント参加特典で得たAmazonギフト券を活用し、業界研究本・ビジネス書等を購入・共有。コスパ最大の学びの場。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.3s; background: var(--navy);">
+        <div style="height:100%; display:flex; flex-direction:column; justify-content:center; padding-top:1rem;">
+          <p style="font-family:'Noto Serif JP',serif; color:rgba(255,255,255,0.7); font-size:1rem; line-height:1.9; margin-bottom:1.5rem;">
+            活動はこれからも<br>拡張していきます。
+          </p>
+          <a href="#join" class="btn-primary" style="align-self:flex-start; font-size:0.8rem; padding:0.7rem 1.5rem;">参加して一緒に作る →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section class="events" id="events">
+  <div class="events-inner">
+    <div class="events-header reveal">
+      <div>
+        <div class="section-label">Events</div>
+        <h2 class="section-title">イベント予定</h2>
+      </div>
+      <div class="events-filter">
+        <button class="filter-btn active" data-filter="all">すべて</button>
+        <button class="filter-btn" data-filter="open">募集中</button>
+        <button class="filter-btn members-f" data-filter="members">会員限定</button>
+      </div>
+    </div>
+    <div class="events-list" id="events-list">
+      <div class="events-loading">📅 イベント情報を読み込み中...</div>
+    </div>
+    <p class="sheet-note" id="sheet-note"></p>
+  </div>
+</section>
+
+<!-- FAQ / JOIN -->
+<section class="join" id="faq">
+  <div class="join-bg"></div>
+  <div class="join-inner">
+    <div class="reveal">
+      <div class="section-label" style="color:var(--gold);">FAQ</div>
+      <h2 class="section-title">よくある質問</h2>
+      <p class="section-desc" style="margin-bottom:2rem;">
+        参加を検討している方から寄せられるご質問をまとめました。
+      </p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener">今すぐ参加する</a>
+    </div>
+    <div class="faq-list reveal" id="faq-list" style="transition-delay:0.15s;">
+      <div class="events-loading">💬 FAQ を読み込み中...</div>
+    </div>
+  </div>
+</section>
+
+<!-- GREETING -->
+<section class="greeting" id="greeting">
+  <div class="greeting-inner">
+    <div class="greeting-content reveal">
+      <div class="section-label" style="color:var(--gold);">Message</div>
+      <h2 class="section-title" style="color:var(--white);">代表挨拶</h2>
+      <blockquote class="greeting-text">
+        慶應就活ナビは、立ち上げ当初の手探りの日々を経て、単なる就活情報の共有にとどまらない場へと少しずつ成長してきました。共通の目標を持つ仲間同士が、互いに刺激し合いながら就活を乗り切る——そのコミュニティとしての形が、徐々に鮮明になってきたと感じています。
+        <br><br>
+        就職活動は、ともすれば孤独になりがちです。だからこそ私たちは、サークルのように横のつながりを大切にしながら、「一人で戦わない就活」を実現するコミュニティを目指していきます。引き続き、よろしくお願いいたします。
+      </blockquote>
+      <div class="greeting-sig">
+        <div class="greeting-sig-line"></div>
+        <div>
+          <div class="greeting-name">大玉 直</div>
+          <div class="greeting-role">代表 ／ 経済学部2年</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="join">
+  <div class="cta-inner reveal">
+    <div class="section-label" style="text-align:center;">Join Us</div>
+    <h2 class="cta-title">一緒に就活を、<br>切り拓いていこう。</h2>
+    <p class="cta-sub">
+      登録は無料・1分で完了します。<br>
+      慶應生の就活コミュニティで、仲間と情報を共有しましょう。
+    </p>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="cta-btn" target="_blank" rel="noopener"><span>参加フォームへ進む →</span></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">慶應就活ナビ</div>
+    <div class="footer-copy">© 2025 慶應就活ナビ. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+  // ===== EVENTS FROM GOOGLE SHEETS =====
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ASykgCNJirBmB76yqxQ4H0jrpqK8vXbx2izLSdHo1To/export?format=csv&gid=0'; // ← ここにGoogle スプレッドシートの公開CSVURLを貼る
+  // 公開手順: スプレッドシート → ファイル → 共有 → ウェブに公開 → CSV → URLをコピー
+
+  const WEEKDAYS = ['日','月','火','水','木','金','土'];
+
+  function parseDate(str) {
+    if (!str) return null;
+    const d = new Date(str.replace(/\//g, '-'));
+    return isNaN(d) ? null : d;
+  }
+
+  function formatMonth(d) {
+    return d.toLocaleDateString('ja-JP', { month: 'short' }).replace('月','').trim() + ' ' + d.toLocaleDateString('ja-JP',{month:'long'}).replace(/\d+年/,'').replace('月','月');
+    // simpler:
+  }
+
+  function statusClass(s) {
+    if (!s) return 'status-soon';
+    if (s.includes('募集中') || s.toLowerCase().includes('open')) return 'status-open';
+    if (s.includes('締切') || s.includes('終了') || s.toLowerCase().includes('closed')) return 'status-closed';
+    return 'status-soon';
+  }
+
+  function renderEvents(rows, filter) {
+    const container = document.getElementById('events-list');
+    let filtered = rows.filter(r => {
+      if (filter === 'open') return statusClass(r.status) === 'status-open';
+      if (filter === 'members') return r.members === 'TRUE' || r.members === 'true' || r.members === '1' || r.members === 'はい';
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="events-empty">現在表示できるイベントはありません。</div>';
+      return;
+    }
+
+    container.innerHTML = filtered.map(r => {
+      const d = parseDate(r.date);
+      const monthStr = d ? d.toLocaleDateString('ja-JP',{month:'short'}) : '–';
+      const dayStr = d ? d.getDate() : '–';
+      const wdStr = d ? WEEKDAYS[d.getDay()] : '';
+      const isMembers = r.members === 'TRUE' || r.members === 'true' || r.members === '1' || r.members === 'はい';
+      const sc = statusClass(r.status);
+      const hasLink = r.link && r.link.startsWith('http');
+
+      return `
+        <div class="event-row ${isMembers ? 'members' : ''}" data-status="${sc}" data-members="${isMembers}">
+          <div class="event-date-block">
+            <div class="event-month">${monthStr}</div>
+            <div class="event-day">${dayStr}</div>
+            <div class="event-weekday">${wdStr}曜日</div>
+          </div>
+          <div class="event-info">
+            <div class="event-title-row">
+              <span class="event-title">${r.title || '(タイトルなし)'}</span>
+              ${isMembers ? '<span class="members-badge">会員限定</span>' : ''}
+            </div>
+            <div class="event-meta">
+              ${r.place ? `<span>📍 ${r.place}</span>` : ''}
+              ${r.note ? `<span>📝 ${r.note}</span>` : ''}
+            </div>
+          </div>
+          <div class="event-status ${sc}">${r.status || '近日公開'}</div>
+          <a href="${hasLink ? r.link : '#'}" class="event-link ${hasLink ? '' : 'no-link'}" ${hasLink ? 'target="_blank" rel="noopener"' : ''}>
+            ${hasLink ? '申し込む →' : '準備中'}
+          </a>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function loadEvents() {
+    const container = document.getElementById('events-list');
+    const note = document.getElementById('sheet-note');
+
+    if (!SHEET_CSV_URL) {
+      // サンプルデータで表示
+      const sample = [
+        { date: '2025/06/10', title: '模擬面接会 vol.1', place: 'オンライン', note: '事前申込必須', status: '募集中', link: '', members: 'FALSE' },
+        { date: '2025/06/22', title: '交流会', place: '三田キャンパス', note: '自由参加', status: '近日公開', link: '', members: 'FALSE' },
+        { date: '2025/07/05', title: 'GD練習会（会員限定）', place: '日吉キャンパス', note: '少人数制', status: '募集中', link: '', members: 'TRUE' },
+      ];
+      renderEvents(sample, 'all');
+      note.textContent = '※ スプレッドシートURLが未設定のため、サンプルデータを表示しています';
+      return;
+    }
+
+    try {
+      const res = await fetch(SHEET_CSV_URL);
+      const text = await res.text();
+      const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g,'')));
+      // 1行目はヘッダーとしてスキップ
+      const headers = lines[0]; // date, title, place, note, status, link, members
+      const rows = lines.slice(1).map(cols => ({
+        date: cols[0], title: cols[1], place: cols[2],
+        note: cols[3], status: cols[4], link: cols[5], members: cols[6]
+      })).filter(r => r.title);
+
+      renderEvents(rows, 'all');
+      note.textContent = '最終更新: ' + new Date().toLocaleDateString('ja-JP');
+    } catch(e) {
+      container.innerHTML = '<div class="events-empty">イベント情報の読み込みに失敗しました。</div>';
+    }
+  }
+
+  loadEvents();
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      const rows = Array.from(document.querySelectorAll('.event-row')).map(row => ({
+        // re-filter from DOM is simpler
+      }));
+      // reload with filter
+      if (!SHEET_CSV_URL) {
+        const sample = [
+          { date: '2025/06/10', title: '模擬面接会 vol.1', place: 'オンライン', note: '事前申込必須', status: '募集中', link: '', members: 'FALSE' },
+          { date: '2025/06/22', title: '交流会', place: '三田キャンパス', note: '自由参加', status: '近日公開', link: '', members: 'FALSE' },
+          { date: '2025/07/05', title: 'GD練習会（会員限定）', place: '日吉キャンパス', note: '少人数制', status: '募集中', link: '', members: 'TRUE' },
+        ];
+        renderEvents(sample, filter);
+      } else {
+        try {
+          const res = await fetch(SHEET_CSV_URL);
+          const text = await res.text();
+          const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g,'')));
+          const eventRows = lines.slice(1).map(cols => ({
+            date: cols[0], title: cols[1], place: cols[2],
+            note: cols[3], status: cols[4], link: cols[5], members: cols[6]
+          })).filter(r => r.title);
+          renderEvents(eventRows, filter);
+        } catch(e) {}
+      }
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ===== FAQ FROM GOOGLE SHEETS =====
+  const FAQ_CSV_URL = 'https://docs.google.com/spreadsheets/d/1hJqOds7fOxqLmau-IoHhfQLQC7_ttun-SmGZZSzF76M/export?format=csv&gid=0'; // ← FAQシートの公開CSVURLを貼る（列: 質問, 回答）
+
+  const FAQ_SAMPLE = [
+    { q: '参加費はかかりますか？', a: '参加費は無料です。慶應義塾大学の学生であればどなたでもご参加いただけます。' },
+    { q: 'どの学部・学年でも参加できますか？', a: '全学部・全キャンパスの学生を対象としています。就活を意識し始めた学年であればいつでも歓迎します。' },
+    { q: '活動にはすべて参加しないといけませんか？', a: '強制参加のイベントはありません。自分のスケジュールや興味に合わせて自由に選んでいただけます。' },
+    { q: '就活が始まったばかりでも大丈夫ですか？', a: 'もちろんです。まだ業界も絞れていない段階からのご参加を歓迎します。早い段階からの情報収集が、納得のいく就活への近道です。' },
+    { q: 'どのように参加しますか？', a: '参加フォームからご登録いただくと、LINEグループにご案内します。登録後すぐに情報共有コミュニティにアクセスいただけます。' },
+  ];
+
+  function renderFAQ(items) {
+    const container = document.getElementById('faq-list');
+    if (!items.length) {
+      container.innerHTML = '<div class="events-empty">FAQはまだありません。</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">${item.q}</span>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-a">${item.a}</div>
+      </div>
+    `).join('');
+
+    // Accordion
+    container.querySelectorAll('.faq-item').forEach(faqItem => {
+      faqItem.querySelector('.faq-q').addEventListener('click', () => {
+        const isOpen = faqItem.classList.contains('open');
+        container.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) faqItem.classList.add('open');
+      });
+    });
+  }
+
+  async function loadFAQ() {
+    const container = document.getElementById('faq-list');
+    if (!FAQ_CSV_URL) {
+      renderFAQ(FAQ_SAMPLE);
+      return;
+    }
+    try {
+      const res = await fetch(FAQ_CSV_URL);
+      const text = await res.text();
+      const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g, '')));
+      const items = lines.slice(1).map(cols => ({ q: cols[0], a: cols[1] })).filter(r => r.q && r.a);
+      renderFAQ(items);
+    } catch(e) {
+      renderFAQ(FAQ_SAMPLE);
+    }
+  }
+
+  loadFAQ();
+</script>
+</body>
+</html>
