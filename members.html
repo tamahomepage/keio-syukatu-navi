@@ -981,7 +981,9 @@
       body.innerHTML = fields.map(f => {
         if (!f.value) return '';
         const val = f.isUrl
-          ? `<a href="${f.value}" target="_blank" class="modal-url">${f.value}</a>`
+          ? f.value.split('|').map(u => u.trim()).filter(Boolean)
+              .map(u => `<a href="${u}" target="_blank" class="modal-url" style="display:block;margin-bottom:0.3rem;">${u}</a>`)
+              .join('')
           : `<div class="modal-field-content">${f.value}</div>`;
         return `<div class="modal-field">
           <div class="modal-field-label">${f.label}</div>
