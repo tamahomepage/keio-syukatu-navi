@@ -135,9 +135,8 @@
     font-size: 0.65rem; padding: 0.2rem 0.6rem; font-weight: 700; letter-spacing: 0.06em;
     display: inline-block; text-align: center;
   }
-  .tag-es { background: rgba(10,26,62,0.08); color: var(--navy); }
-  .tag-interview { background: rgba(192,0,26,0.08); color: var(--crimson); }
-  .tag-gd { background: rgba(201,168,76,0.15); color: #8a6d1a; }
+  .tag-intern { background: rgba(201,168,76,0.15); color: #8a6d1a; }
+  .tag-honsen { background: rgba(192,0,26,0.08); color: var(--crimson); }
   .sel-link { font-size: 0.78rem; color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
   .feature-btn { border-color: rgba(192,0,26,0.3); color: var(--crimson); }
   .feature-btn:hover, .feature-btn.active { background: var(--crimson); border-color: var(--crimson); color: white; }
@@ -314,8 +313,8 @@
         <button class="industry-btn" data-industry="金融" onclick="setIndustry('金融')">金融</button>
         <button class="industry-btn" data-industry="サービス・インフラ" onclick="setIndustry('サービス・インフラ')">サービス・インフラ</button>
         <button class="industry-btn" data-industry="ソフトウェア" onclick="setIndustry('ソフトウェア')">ソフトウェア</button>
-        <button class="industry-btn" data-industry="マスコミ" onclick="setIndustry('マスコミ')">マスコミ</button>
-        <button class="industry-btn" data-industry="官公庁" onclick="setIndustry('官公庁')">官公庁・公社</button>
+        <button class="industry-btn" data-industry="マスコミ" onclick="setIndustry('マスコミ')">広告・出版・マスコミ</button>
+        <button class="industry-btn" data-industry="官公庁" onclick="setIndustry('官公庁')">官公庁・公社・団体</button>
         <button class="industry-btn" data-industry="コンサル" onclick="setIndustry('コンサル')">コンサル</button>
       </div>
       <div class="sort-row">
@@ -437,16 +436,17 @@
   let selectionRows = [];
   let selectionSortAsc = true;
   let selectionIndustry = 'all';
+  let selectionFeature = 'all';
 
   async function loadSelection() {
     const el = document.getElementById('selection-list');
     const note = document.getElementById('selection-note');
     const sample = [
-      ['〇〇商事（サマーインターン）', '2025/06/10', 'ES', '', '商社', '大手'],
-      ['△△銀行（早期選考）', '2025/06/20', '面接', '', '金融', '大手'],
-      ['□□コンサル（早期選考）', '2025/07/01', 'GD', '', 'コンサル', ''],
-      ['〇〇テック（インターン）', '2025/06/15', 'ES', '', 'ソフトウェア', 'ベンチャー'],
-      ['△△スタートアップ', '2025/06/25', 'ES', '', 'サービス・インフラ', 'ベンチャー'],
+      ['〇〇商事（サマーインターン）', '2025/06/10', 'インターン', '', '商社', '大手'],
+      ['△△銀行（早期選考）', '2025/06/20', '本選考', '', '金融', '大手'],
+      ['□□コンサル（早期選考）', '2025/07/01', '本選考', '', 'コンサル', ''],
+      ['〇〇テック（インターン）', '2025/06/15', 'インターン', '', 'ソフトウェア', 'ベンチャー'],
+      ['△△スタートアップ', '2025/06/25', 'インターン', '', 'サービス・インフラ', 'ベンチャー'],
     ];
     selectionRows = SELECTION_CSV ? (await fetchCSV(SELECTION_CSV)) : sample;
     if (!selectionRows.length) { el.innerHTML = '<div class="m-empty">情報はまだありません。</div>'; return; }
@@ -458,17 +458,18 @@
     const el = document.getElementById('selection-list');
     const today = new Date();
 
-    let rows = [...selectionRows].filter(r => r[0] && r[0] !== '企業名・選考内容');
+    let rows = [...selectionRows].filter(r => r[0] && r[0] !== '企業名・選考内容' && r[0] !== '企業名');
 
-    // 特集フィルター（7列目 index 6）
+    // 特集フィルター（6列目 index 5）
     if (selectionFeature !== 'all') {
-      rows = rows.filter(r => (r[6] || '').includes(selectionFeature));
+      rows = rows.filter(r => (r[5] || '').includes(selectionFeature));
     }
-    // 業界フィルター（6列目 index 5）
+    // 業界フィルター（5列目 index 4）
     if (selectionIndustry !== 'all') {
       rows = rows.filter(r => {
-        const ind = r[5] || '';
+        const ind = r[4] || '';
         if (selectionIndustry === '官公庁') return ind.includes('官公庁') || ind.includes('公社') || ind.includes('団体');
+        if (selectionIndustry === 'その他') return !ind || !['メーカー','商社','小売','金融','サービス','インフラ','ソフトウェア','広告','出版','マスコミ','官公庁','公社','団体','コンサル'].some(k => ind.includes(k));
         return ind.includes(selectionIndustry);
       });
     }
@@ -490,7 +491,7 @@
         <span>企業名</span><span>締切</span><span>タグ</span><span>資料</span>
       </div>` +
       rows.map(r => {
-        const tagClass = r[2]?.includes('面接') ? 'tag-interview' : r[2]?.includes('GD') ? 'tag-gd' : 'tag-es';
+        const tagClass = r[2]?.includes('本選考') ? 'tag-honsen' : 'tag-intern';
         const hasLink = r[3]?.startsWith('http');
         const d = r[1] ? new Date(r[1].replace(/\//g,'-')) : null;
         const diff = d ? Math.ceil((d - today) / (1000*60*60*24)) : 999;
@@ -508,8 +509,6 @@
         </div>`;
       }).join('');
   }
-
-  let selectionFeature = 'all';   // 'all' | '大手' | 'ベンチャー'
 
   function setFeature(val) {
     selectionFeature = val;
