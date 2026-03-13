@@ -196,6 +196,41 @@
   .file-meta { font-size: 0.72rem; color: var(--text-muted); }
   .file-link { font-size: 0.75rem; color: var(--crimson); margin-top: auto; }
 
+  /* ===== CORPORATE EVENT LIST ===== */
+  .event-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
+  .event-row {
+    display: grid; grid-template-columns: 110px 1fr auto;
+    align-items: center; gap: 1.5rem; padding: 1.2rem 1.5rem;
+    background: var(--white); transition: background 0.2s;
+  }
+  .event-row:hover { background: #f8f5f0; }
+  .event-row.header { background: var(--navy); padding: 0.7rem 1.5rem; }
+  .event-row.header span { font-size: 0.72rem; color: rgba(255,255,255,0.6); letter-spacing: 0.08em; font-weight: 600; }
+  .event-date-block { display: flex; flex-direction: column; gap: 0.15rem; }
+  .event-date-main { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; color: var(--navy); font-weight: 700; }
+  .event-date-time { font-size: 0.72rem; color: var(--text-muted); }
+  .event-name { font-weight: 700; font-size: 0.92rem; color: var(--navy); margin-bottom: 0.2rem; }
+  .event-meta { font-size: 0.78rem; color: var(--text-muted); display: flex; gap: 0.8rem; flex-wrap: wrap; }
+  .event-meta-item { display: flex; align-items: center; gap: 0.2rem; }
+  .event-benefit {
+    font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.6rem;
+    background: rgba(201,168,76,0.15); color: #8a6d1a;
+    border: 1px solid rgba(201,168,76,0.3); white-space: nowrap;
+  }
+  .event-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
+  .event-apply-btn {
+    font-size: 0.75rem; font-weight: 600; padding: 0.45rem 1rem;
+    background: var(--navy); color: white; text-decoration: none;
+    letter-spacing: 0.05em; transition: background 0.2s; white-space: nowrap;
+  }
+  .event-apply-btn:hover { background: var(--crimson); }
+  .event-apply-btn.no-link { background: rgba(10,26,62,0.08); color: var(--text-muted); cursor: default; }
+
+  @media (max-width: 600px) {
+    .event-row { grid-template-columns: 1fr; gap: 0.8rem; }
+    .event-actions { align-items: flex-start; }
+  }
+
   /* ===== BOOKS ===== */
   .books-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,26,62,0.08); }
   .book-card { background: var(--white); padding: 1.5rem; }
@@ -326,7 +361,27 @@
       <p class="sheet-note" id="selection-note"></p>
     </div>
 
-    <!-- ② イベント先行案内 -->
+    <!-- ② 企業イベント情報 -->
+    <div class="m-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">EVENTS</div>
+          <div class="m-section-title">企業イベント情報</div>
+        </div>
+      </div>
+      <div class="sort-row">
+        <button class="sort-btn active" id="event-sort-btn" onclick="toggleEventSort()">↑ 日付が近い順</button>
+      </div>
+      <div class="event-list" id="event-list">
+        <div class="m-loading">読み込み中...</div>
+      </div>
+      <p class="sheet-note" id="event-note"></p>
+    </div>
+
+    <!-- ③ イベント先行案内 -->
     <div class="m-section">
       <div class="m-section-header">
         <div class="m-section-icon">
@@ -389,6 +444,7 @@
   const PRIORITY_CSV  = 'https://docs.google.com/spreadsheets/d/1Q8Ixh34Ffzy4imnugj4Nyp9mN65A-PUw_PXOj2ATA58/export?format=csv&gid=0'; // 列: 日付, タイトル, 場所・備考
   const FILES_CSV     = 'https://docs.google.com/spreadsheets/d/1N-9COcRmmf1TeNU1EHqyGqFzHzn02ngNlPXAsBbtnsg/export?format=csv&gid=0'; // 列: ファイル名, 説明, リンクURL, 更新日
   const BOOKS_CSV     = 'https://docs.google.com/spreadsheets/d/1hLFipZMnS03sc5aWb_pmCKXBN7utQaAQRXImg4uQhrs/export?format=csv&gid=0';
+  const EVENT_CSV     = 'https://docs.google.com/spreadsheets/d/1lr-FNeqRi5l41BafVJRc9Upkwn0VpLNmBvlM7moIgw8/export?format=csv&gid=0';
   const LENDING_FORM  = 'https://docs.google.com/forms/d/e/1FAIpQLScmV_ubANH5RNIHD_wEH3yakHbs5YqdegrPysSfpFo4veAg4Q/viewform'; // 列: タイトル, 著者, 状態(貸出可/貸出中), 現在の保有者
 
   function checkPassword() {
@@ -531,7 +587,89 @@
     renderSelection();
   }
 
-  // ② イベント先行案内
+  // ② 企業イベント情報
+  let eventRows = [];
+  let eventSortAsc = true;
+
+  async function loadEvents() {
+    const el = document.getElementById('event-list');
+    const note = document.getElementById('event-note');
+    const sample = [
+      ['2025/06/05', '14:00〜16:00', '〇〇商事 会社説明会', 'オンライン', '〇〇商事', 'https://example.com', '田中', '2025/06/03'],
+      ['2025/06/12', '10:00〜12:00', '△△銀行 インターン説明会', 'オフライン（三田）', '△△銀行', '', '', '2025/06/10'],
+      ['2025/06/20', '18:00〜20:00', '□□テック エンジニア交流会', 'オンライン', '□□テック', 'https://example.com', '鈴木', ''],
+    ];
+    eventRows = EVENT_CSV ? (await fetchCSV(EVENT_CSV)) : sample;
+    if (!eventRows.length) { el.innerHTML = '<div class="m-empty">イベント情報はまだありません。</div>'; return; }
+    renderEvents();
+    if (!EVENT_CSV) note.textContent = '※ サンプルデータです。スプシURLを設定してください。';
+  }
+
+  function renderEvents() {
+    const el = document.getElementById('event-list');
+    const today = new Date();
+    let rows = [...eventRows].filter(r => r[0] && r[0] !== '日付' && r[0] !== '');
+    rows.sort((a, b) => {
+      const da = a[0] ? new Date(a[0].replace(/\//g,'-')) : new Date('9999-12-31');
+      const db = b[0] ? new Date(b[0].replace(/\//g,'-')) : new Date('9999-12-31');
+      return eventSortAsc ? da - db : db - da;
+    });
+    if (!rows.length) { el.innerHTML = '<div class="m-empty">該当するイベントはありません。</div>'; return; }
+
+    el.innerHTML = `
+      <div class="event-row header">
+        <span>日付・時間</span><span>イベント情報・締切</span><span>申し込み</span>
+      </div>` +
+      rows.map(r => {
+        const d = r[0] ? new Date(r[0].replace(/\//g,'-')) : null;
+        const WEEKDAYS = ['日','月','火','水','木','金','土'];
+        const dateStr = d && !isNaN(d)
+          ? `${r[0]}（${WEEKDAYS[d.getDay()]}）`
+          : '日付未定';
+        const timeStr = r[1] ? r[1] : '時間未定';
+        const isPast = d && d < today;
+        const hasLink = r[5]?.startsWith('http');
+        const hasBenefit = r[6] && r[6].trim() !== '' && r[6].trim() !== 'なし';
+        const isOnline = (r[3] || '').includes('オンライン');
+
+        return `<div class="event-row" style="${isPast ? 'opacity:0.45;' : ''}">
+          <div class="event-date-block">
+            <div class="event-date-main">${dateStr}</div>
+            <div class="event-date-time" style="${!r[1] ? 'color:var(--text-muted);opacity:0.6;' : ''}">${timeStr}</div>
+          </div>
+          <div>
+            <div class="event-name">${r[2] || '–'}</div>
+            <div class="event-meta">
+              ${r[4] ? `<span class="event-meta-item">🏢 ${r[4]}</span>` : ''}
+              ${r[3] ? `<span class="event-meta-item">${isOnline ? '💻' : '📍'} ${r[3]}</span>` : ''}
+              ${(() => {
+                if (!r[7]) return `<span class="event-meta-item" style="color:var(--text-muted);opacity:0.6;">📅 締切未定</span>`;
+                const dl = new Date(r[7].replace(/\//g,'-'));
+                const diff = Math.ceil((dl - today) / (1000*60*60*24));
+                if (diff < 0) return `<span class="event-meta-item" style="color:var(--text-muted);">締切済み</span>`;
+                if (diff <= 3) return `<span class="event-meta-item" style="color:var(--crimson);font-weight:700;">⚠ 締切 ${r[7]}（残${diff}日）</span>`;
+                return `<span class="event-meta-item">📅 締切 ${r[7]}</span>`;
+              })()}
+            </div>
+          </div>
+          <div class="event-actions">
+            ${hasBenefit ? `<span class="event-benefit">🎁 ${r[6].trim()}さん紹介特典あり</span>` : ''}
+            ${hasLink
+              ? `<a href="${r[5]}" target="_blank" class="event-apply-btn">申し込む →</a>`
+              : `<span class="event-apply-btn no-link">リンクなし</span>`}
+          </div>
+        </div>`;
+      }).join('');
+  }
+
+  function toggleEventSort() {
+    eventSortAsc = !eventSortAsc;
+    const btn = document.getElementById('event-sort-btn');
+    btn.textContent = eventSortAsc ? '↑ 日付が近い順' : '↓ 日付が遅い順';
+    renderEvents();
+  }
+
+  // ③ イベント先行案内
   async function loadPriority() {
     const el = document.getElementById('priority-list');
     const note = document.getElementById('priority-note');
@@ -614,7 +752,7 @@
   }
 
   async function loadAll() {
-    await Promise.all([loadSelection(), loadPriority(), loadFiles(), loadBooks()]);
+    await Promise.all([loadSelection(), loadEvents(), loadPriority(), loadFiles(), loadBooks()]);
   }
 </script>
 </body>
