@@ -627,7 +627,9 @@
           ? `${r[0]}（${WEEKDAYS[d.getDay()]}）`
           : '日付未定';
         const timeStr = r[1] ? r[1] : '時間未定';
-        const isPast = d && d < today;
+        const isPast = r[7]
+          ? new Date(r[7].replace(/\//g,'-')) < today
+          : (d && d < today);
         const hasLink = r[5]?.startsWith('http');
         const hasBenefit = r[6] && r[6].trim() !== '' && r[6].trim() !== 'なし';
         const isOnline = (r[3] || '').includes('オンライン');
