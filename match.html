@@ -93,12 +93,12 @@
   .actions { width: 100%; max-width: 380px; display: flex; align-items: center; justify-content: center; gap: 1.5rem; padding: 1.1rem 0 0.6rem; }
   .abtn { border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.15s, box-shadow 0.15s; flex-shrink: 0; }
   .abtn:active { transform: scale(0.9) !important; }
-  .abtn-skip { width: 56px; height: 56px; font-size: 1.25rem; background: rgba(255,255,255,0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.3); color: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.08); }
-  .abtn-skip:hover { transform: scale(1.06); color: var(--crimson); background: rgba(192,0,26,0.1); box-shadow: 0 6px 24px rgba(192,0,26,0.25); }
-  .abtn-like { width: 68px; height: 68px; font-size: 1.55rem; background: linear-gradient(135deg, #00703c, #009450); box-shadow: 0 8px 30px rgba(0,112,60,0.4); }
+  .abtn-skip { width: 56px; height: 56px; font-size: 1.25rem; background: rgba(255,255,255,0.12); box-shadow: 0 4px 20px rgba(0,0,0,0.3); color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.25); }
+  .abtn-skip:hover { transform: scale(1.06); color: var(--crimson); background: rgba(192,0,26,0.15); box-shadow: 0 6px 24px rgba(192,0,26,0.25); border-color: var(--crimson); }
+  .abtn-like { width: 68px; height: 68px; font-size: 1.55rem; color: white; background: linear-gradient(135deg, #00703c, #009450); box-shadow: 0 8px 30px rgba(0,112,60,0.4); }
   .abtn-like:hover { transform: scale(1.08); box-shadow: 0 12px 36px rgba(0,112,60,0.5); }
-  .abtn-detail { width: 52px; height: 52px; font-size: 1.05rem; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.18); color: var(--gold); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
-  .abtn-detail:hover { transform: scale(1.06); background: rgba(201,168,76,0.18); }
+  .abtn-detail { width: 52px; height: 52px; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.9); box-shadow: 0 4px 16px rgba(0,0,0,0.2); font-family: 'Noto Sans JP', sans-serif; }
+  .abtn-detail:hover { transform: scale(1.06); background: rgba(201,168,76,0.2); color: var(--gold); border-color: var(--gold); }
 
   .swipe-hint { font-size: 0.6rem; color: rgba(255,255,255,0.16); text-align: center; letter-spacing: 0.08em; }
 
@@ -174,7 +174,7 @@
     <div class="actions">
       <button class="abtn abtn-skip" onclick="swipe('left')">✕</button>
       <button class="abtn abtn-like" onclick="swipe('right')">♥</button>
-      <button class="abtn abtn-detail" onclick="openNote()">📋</button>
+      <button class="abtn abtn-detail" onclick="openNote()">採用<br>ページ</button>
     </div>
     <div class="swipe-hint">← スキップ　　気になる →</div>
   </div>
@@ -310,7 +310,6 @@ function makeCard(c, layer) {
     </div>
     <div class="card-footer">
       ${c.industry?`<span class="chip">${c.industry}</span>`:''}
-      ${firstUrl?`<a href="${firstUrl}" target="_blank" class="chip-link">採用ページ →</a>`:''}
     </div>`;
   return card;
 }
