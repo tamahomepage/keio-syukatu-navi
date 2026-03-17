@@ -926,6 +926,17 @@
     document.getElementById('deadline-alert').style.display = 'none';
   }
 
+
+  // 日付文字列を YYYY/MM/DD に正規化（GASからDate文字列で返ってくる場合に対応）
+  function normalizeDate(val) {
+    if (!val) return '';
+    const s = String(val).trim();
+    if (s.match(/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/)) return s.replace(/-/g, '/');
+    const p = new Date(s);
+    if (isNaN(p)) return s;
+    return `${p.getFullYear()}/${String(p.getMonth()+1).padStart(2,'0')}/${String(p.getDate()).padStart(2,'0')}`;
+  }
+
   function renderDeadlineBanner(today) {
     const banner = document.getElementById('deadline-banner');
     const listEl = document.getElementById('deadline-banner-list');
@@ -1001,10 +1012,11 @@
       rows.map(r => {
         const tagClass = r[2]?.includes('本選考') ? 'tag-honsen' : 'tag-intern';
         const hasLink = r[3]?.startsWith('http');
-        const d = r[1] ? new Date(r[1].replace(/\//g,'-')) : null;
+        const normD1 = normalizeDate(r[1]);
+        const d = normD1 ? new Date(normD1.replace(/\//g,'-')) : null;
         const diff = d ? Math.ceil((d - today) / (1000*60*60*24)) : 999;
         const urgent = diff >= 0 && diff <= 7;
-        const deadlineLabel = r[1] ? (urgent ? `⚠ ${r[1]}（残${diff}日）` : r[1]) : '未定';
+        const deadlineLabel = normD1 ? (urgent ? `⚠ ${normD1}（残${diff}日）` : normD1) : '未定';
         const featureTag = (r[5] && r[5] !== 'なし') ? ` <span style="font-size:0.68rem;color:var(--crimson);margin-left:0.3rem;">${r[5]}</span>` : '';
         // 企業名から「（...）」を除いてノート検索
         const companyNameClean = (r[0]||'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').trim();
@@ -1084,13 +1096,23 @@
         <span>日付・時間</span><span>イベント情報・締切</span><span>申し込み</span>
       </div>` +
       rows.map(r => {
-        const d = r[0] ? new Date(r[0].replace(/\//g,'-')) : null;
+        const rawDate = r[0] ? String(r[0]).trim() : '';
+        // GASから返ってくる日付をYYYY/MM/DD形式に正規化
+        let normalizedDate = rawDate;
+        if (rawDate && !rawDate.match(/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/)) {
+          const parsed = new Date(rawDate);
+          if (!isNaN(parsed)) {
+            normalizedDate = `${parsed.getFullYear()}/${String(parsed.getMonth()+1).padStart(2,'0')}/${String(parsed.getDate()).padStart(2,'0')}`;
+          }
+        }
+        const d = normalizedDate ? new Date(normalizedDate.replace(/\//g,'-')) : null;
         const WEEKDAYS = ['日','月','火','水','木','金','土'];
         const dateStr = d && !isNaN(d)
-          ? `${r[0]}（${WEEKDAYS[d.getDay()]}）`
+          ? `${normalizedDate}（${WEEKDAYS[d.getDay()]}）`
           : '日付未定';
         const timeStr = r[1] ? r[1] : '時間未定';
-        const isPast = r[7] ? new Date(r[7].replace(/\//g,'-')) < today : false;
+        const normDeadline = r[7] ? (() => { const s = String(r[7]).trim(); if (s.match(/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/)) return s; const p = new Date(s); return isNaN(p) ? '' : `${p.getFullYear()}/${String(p.getMonth()+1).padStart(2,'0')}/${String(p.getDate()).padStart(2,'0')}`; })() : '';
+        const isPast = normDeadline ? new Date(normDeadline.replace(/\//g,'-')) < today : false;
         const hasLink = r[5]?.startsWith('http');
         const hasBenefit = r[6] && r[6].trim() !== '' && r[6].trim() !== 'なし';
         const isOnline = (r[3] || '').includes('オンライン');
@@ -1107,12 +1129,12 @@
               ${r[4] ? `<span class="event-meta-item">・${r[4]}</span>` : ''}
               ${r[3] ? `<span class="event-meta-item">・${r[3]}</span>` : ''}
               ${(() => {
-                if (!r[7]) return '';
-                const dl = new Date(r[7].replace(/\//g,'-'));
+                if (!normDeadline) return '';
+                const dl = new Date(normDeadline.replace(/\//g,'-'));
                 const diff = Math.ceil((dl - today) / (1000*60*60*24));
                 if (diff < 0) return `<span class="event-meta-item" style="color:var(--text-muted);">締切済み</span>`;
-                if (diff <= 3) return `<span class="event-meta-item" style="color:var(--crimson);font-weight:700;">⚠ 締切 ${r[7]}（残${diff}日）</span>`;
-                return `<span class="event-meta-item">📅 締切 ${r[7]}</span>`;
+                if (diff <= 3) return `<span class="event-meta-item" style="color:var(--crimson);font-weight:700;">⚠ 締切 ${normDeadline}（残${diff}日）</span>`;
+                return `<span class="event-meta-item">📅 締切 ${normDeadline}</span>`;
               })()}
             </div>
           </div>
