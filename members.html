@@ -758,7 +758,7 @@
   const COMPANY_CSV   = 'https://docs.google.com/spreadsheets/d/1axjcyNPqBiD4SiNhxDx3NaVALelMEkMt2x2ng0Sk7Ww/export?format=csv&gid=0';
   const NOTICE_CSV     = ''; // ← お知らせスプシのCSV URLを貼る（列: 日付・タイトル・内容・タグ）
   const SELECTION_FORM = ''; // ← 選考情報投稿フォームのURLを貼る
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbxcAL8lRpzma1fxSxx3X4-4vPjxsyb4czXzIbLWwyFpGXwRMQT4N96LZGGWCkd8SZBZdw/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbw-yG_kOdrn6ulo9mFWKFcVeLDwDvPNeCQvPasAbHxvVCEPsX3pycp9PikavsP08gITmw/exec';
   const LENDING_FORM  = 'https://docs.google.com/forms/d/e/1FAIpQLScmV_ubANH5RNIHD_wEH3yakHbs5YqdegrPysSfpFo4veAg4Q/viewform'; // 列: タイトル, 著者, 状態(貸出可/貸出中), 現在の保有者
 
   function checkPassword() {
@@ -860,7 +860,8 @@
         selectionRows.forEach(r => {
           if (!r[0] || !r[1]) return;
           const rowName = (r[0]||'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').trim();
-          if (!companyMatch(rowName, c.name)) return;
+          const selAlias = r[6] || ''; // G列: 一般呼称
+          if (!selectionMatch(rowName, selAlias, c.name)) return;
           const d = new Date(r[1].replace(/\//g,'-'));
           if (isNaN(d)) return;
           const diff = Math.ceil((d - today) / (1000*60*60*24));
@@ -1270,7 +1271,11 @@
   }
   function findNote(companyName) {
     if (!companyName || !companyNotes.length) return null;
-    return companyNotes.find(r => companyMatch(r[0] || '', companyName)) || null;
+    return companyNotes.find(r => {
+      const alias = r[7] || ''; // H列: 一般呼称
+      return companyMatch(r[0] || '', companyName) ||
+             (alias && companyMatch(alias, companyName));
+    }) || null;
   }
 
   function searchCompanyNotes() {
@@ -1283,7 +1288,8 @@
     const results = companyNotes.filter(r => {
       const name = (r[0] || '').trim();
       const industry = (r[1] || '').trim();
-      return (name && name.includes(q)) || (industry && industry.includes(q));
+      const alias = (r[7] || '').trim(); // H列: 一般呼称
+      return (name && name.includes(q)) || (industry && industry.includes(q)) || (alias && alias.includes(q));
     });
     if (!results.length) {
       grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem;">
@@ -1356,9 +1362,9 @@
   }
 
   // ===== AI 企業ノート自動生成（GASプロキシ経由） =====
-  async function generateNote(companyName) {
+  async function generateNote(searchWord) {
     // モーダルを開いてローディング表示
-    document.getElementById('modal-company-name').textContent = companyName;
+    document.getElementById('modal-company-name').textContent = searchWord;
     document.getElementById('modal-industry').textContent = '生成中...';
     const body = document.getElementById('modal-body');
     body.innerHTML = `<div style="text-align:center; padding:3rem;">
@@ -1371,11 +1377,11 @@
 
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 90000); // 90秒タイムアウト
+      const timeout = setTimeout(() => controller.abort(), 90000);
       const res = await fetch(GAS_PROXY_URL, {
         method: 'POST',
         redirect: 'follow',
-        body: JSON.stringify({ action: 'generate', companyName }),
+        body: JSON.stringify({ action: 'generate', companyName: searchWord }),
         signal: controller.signal,
       });
       clearTimeout(timeout);
@@ -1383,14 +1389,30 @@
       let data;
       try { data = JSON.parse(text); }
       catch(e) { throw new Error('GASからの応答が不正です: ' + text.slice(0, 100)); }
+
+      // 企業が見つからない場合
+      if (data.status !== 'ok' && data.message === 'NOT_FOUND') {
+        body.innerHTML = `<div style="text-align:center; padding:3rem;">
+          <div style="font-size:1.5rem; margin-bottom:1rem;">🔍</div>
+          <div style="font-size:0.92rem; font-weight:700; color:var(--navy); margin-bottom:0.6rem;">「${searchWord}」は見つかりませんでした</div>
+          <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.8;">企業名を正式名称や別の表記で試してみてください。<br>それでも見つからない場合はスプシに直接入力してください。</div>
+        </div>`;
+        document.getElementById('modal-industry').textContent = '';
+        return;
+      }
+
       if (data.status !== 'ok') throw new Error(data.message || '生成に失敗しました');
       const note = data.note;
 
-      // メモリに追加（検索でも出るように）
-      companyNotes.push([companyName, note.industry||'', note.business||'', note.strength||'', note.motive||'', note.process||'', note.url||'']);
-
-      // モーダルに表示
+      // 正式名称をモーダルヘッダーに表示
+      const officialName = note.officialName || searchWord;
+      document.getElementById('modal-company-name').textContent = officialName;
       document.getElementById('modal-industry').textContent = note.industry || '';
+
+      // メモリに追加（正式名称で登録、検索ワードをエイリアスに）
+      const newRow = [officialName, note.industry||'', note.business||'', note.strength||'', note.motive||'', note.process||'', note.url||'', searchWord !== officialName ? searchWord : ''];
+      companyNotes.push(newRow);
+
       const fields = [
         { label: '事業内容メモ', value: note.business },
         { label: '強み・弱み', value: note.strength },
@@ -1398,8 +1420,9 @@
         { label: '選考フロー', value: note.process },
         { label: '参考URL', value: note.url, isUrl: true },
       ];
-      // 生成結果を一時保存
-      window._lastGeneratedNote = { companyName, note };
+
+      // 生成結果を一時保存（正式名称・検索ワード両方）
+      window._lastGeneratedNote = { searchWord, officialName, note };
 
       body.innerHTML = fields.map(f => {
         if (!f.value) return '';
@@ -1427,17 +1450,17 @@
   async function saveLastNote(btn) {
     const data = window._lastGeneratedNote;
     if (!data) return;
-    await saveNoteToSheet(data.companyName, data.note, btn);
+    await saveNoteToSheet(data.searchWord, data.officialName, data.note, btn);
   }
 
-  async function saveNoteToSheet(companyName, note, btn) {
+  async function saveNoteToSheet(searchWord, officialName, note, btn) {
     try {
       btn = btn || event.target;
       btn.textContent = '保存中...'; btn.disabled = true;
       const res = await fetch(GAS_PROXY_URL, {
         method: 'POST',
         redirect: 'follow',
-        body: JSON.stringify({ action: 'save', companyName, note }),
+        body: JSON.stringify({ action: 'save', searchWord, note: { ...note, officialName } }),
       });
       const resultText = await res.text();
       let result;
