@@ -1151,14 +1151,37 @@
     }).join('');
   }
 
+
+  // ===== 企業名マッチングユーティリティ =====
+  function normalizeName(s) {
+    return (s || '')
+      .replace(/株式会社|有限会社|合同会社|（株）|\(株\)|HD|ホールディングス|グループ|コーポレーション/g, '')
+      .replace(/\s+/g, '').trim();
+  }
+
+  function companyMatch(a, b) {
+    const na = normalizeName(a);
+    const nb = normalizeName(b);
+    if (!na || !nb) return false;
+    // ① 完全一致
+    if (na === nb) return true;
+    // ② 一方が他方を含む かつ 文字数差が5以下（三井不動産 vs 三井不動産ファシリティーズは差9なので弾く）
+    const diff = Math.abs(na.length - nb.length);
+    if (diff <= 5) {
+      if (na.includes(nb) || nb.includes(na)) return true;
+    }
+    return false;
+  }
+
+  // エイリアス列（H列）も考慮したマッチング（選考情報スプシ用）
+  function selectionMatch(rowName, alias, targetName) {
+    if (companyMatch(rowName, targetName)) return true;
+    if (alias && companyMatch(alias, targetName)) return true;
+    return false;
+  }
   function findNote(companyName) {
     if (!companyName || !companyNotes.length) return null;
-    const q = companyName.trim();
-    return companyNotes.find(r => {
-      const name = (r[0] || '').trim();
-      if (!name) return false;
-      return name.includes(q) || q.includes(name);
-    }) || null;
+    return companyNotes.find(r => companyMatch(r[0] || '', companyName)) || null;
   }
 
   function searchCompanyNotes() {

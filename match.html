@@ -140,6 +140,25 @@
   .modal-clear-btn { width:100%; margin-top:0.4rem; padding:0.65rem; background:none; border:1px solid rgba(192,0,26,0.18); color:var(--crimson); font-family:'Noto Sans JP',sans-serif; font-size:0.72rem; cursor:pointer; border-radius:6px; transition:all 0.2s; }
   .modal-clear-btn:hover { background:rgba(192,0,26,0.05); }
 
+
+  /* NOTE MODAL */
+  .note-overlay { display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.88); backdrop-filter:blur(6px); align-items:flex-end; justify-content:center; }
+  .note-overlay.open { display:flex; }
+  .note-modal { background:var(--cream); width:100%; max-width:480px; max-height:82vh; border-radius:16px 16px 0 0; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 -20px 60px rgba(0,0,0,0.5); }
+  .note-modal-handle { width:36px; height:4px; background:rgba(10,26,62,0.12); border-radius:2px; margin:0.8rem auto 0; flex-shrink:0; }
+  .note-modal-head { background:var(--navy); padding:1rem 1.5rem; display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-shrink:0; border-bottom:2px solid var(--gold); }
+  .note-modal-name { font-family:'Noto Serif JP',serif; font-size:1.1rem; color:white; font-weight:700; }
+  .note-modal-ind { font-size:0.65rem; color:var(--gold); font-weight:700; letter-spacing:0.1em; margin-top:0.2rem; }
+  .note-modal-close { background:none; border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.5); width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:0.85rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
+  .note-modal-close:hover { border-color:var(--crimson); color:var(--crimson); }
+  .note-modal-body { overflow-y:auto; flex:1; padding:1.2rem; display:flex; flex-direction:column; gap:1rem; }
+  .note-field-label { font-size:0.6rem; color:var(--crimson); font-weight:700; letter-spacing:0.15em; margin-bottom:0.35rem; }
+  .note-field-content { font-size:0.82rem; color:var(--text); line-height:1.8; white-space:pre-wrap; background:white; padding:0.8rem 1rem; border-left:2px solid rgba(201,168,76,0.3); }
+  .note-url { font-size:0.78rem; color:var(--navy); word-break:break-all; text-decoration:underline; text-underline-offset:3px; display:block; margin-bottom:0.3rem; }
+  .liked-row { cursor:pointer; transition:background 0.15s; }
+  .liked-row:hover { background:rgba(10,26,62,0.04); }
+  .liked-row-arrow { font-size:0.72rem; color:var(--text-muted); flex-shrink:0; }
+
   @media (max-width:400px) {
     .card-stack { height:420px; }
     .card-name { font-size:1.35rem; }
@@ -198,9 +217,10 @@
 
 <script>
 const COMPANY_CSV = 'https://docs.google.com/spreadsheets/d/1axjcyNPqBiD4SiNhxDx3NaVALelMEkMt2x2ng0Sk7Ww/export?format=csv&gid=0';
+const SELECTION_CSV = 'https://docs.google.com/spreadsheets/d/1Rm6H6d2BcduDosoagcJjF3I78xOeuimNb3p80R6F3qE/export?format=csv&gid=0';
 const LIKED_KEY = 'keio_navi_liked_v2';
 
-let companies = [], idx = 0, sessionSeen = new Set();
+let companies = [], selectionRows = [], idx = 0, sessionSeen = new Set();
 let liked = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
 let dragging = false, sx = 0, sy = 0, cx = 0;
 let topCard = null;
@@ -234,6 +254,7 @@ async function fetchCSV(url) {
 
 async function init() {
   try {
+    selectionRows = await fetchCSV(SELECTION_CSV).catch(()=>[]);
     const rows = await fetchCSV(COMPANY_CSV);
     companies = rows.filter(r=>r[0]&&r[0].trim()).map(r=>({
       name:r[0]||'',industry:r[1]||'',business:r[2]||'',
@@ -421,6 +442,94 @@ function openNote() {
   window.open(urls[0]||'members.html','_blank');
 }
 
+
+
+  // ===== 企業名マッチングユーティリティ =====
+  function normalizeName(s) {
+    return (s || '')
+      .replace(/株式会社|有限会社|合同会社|（株）|\(株\)|HD|ホールディングス|グループ|コーポレーション/g, '')
+      .replace(/\s+/g, '').trim();
+  }
+
+  function companyMatch(a, b) {
+    const na = normalizeName(a);
+    const nb = normalizeName(b);
+    if (!na || !nb) return false;
+    // ① 完全一致
+    if (na === nb) return true;
+    // ② 一方が他方を含む かつ 文字数差が5以下（三井不動産 vs 三井不動産ファシリティーズは差9なので弾く）
+    const diff = Math.abs(na.length - nb.length);
+    if (diff <= 5) {
+      if (na.includes(nb) || nb.includes(na)) return true;
+    }
+    return false;
+  }
+
+  // エイリアス列（H列）も考慮したマッチング（選考情報スプシ用）
+  function selectionMatch(rowName, alias, targetName) {
+    if (companyMatch(rowName, targetName)) return true;
+    if (alias && companyMatch(alias, targetName)) return true;
+    return false;
+  }
+function openNoteModal(name) {
+  const c = [...companies, ...liked].find(x => x.name === name);
+  if (!c) return;
+  document.getElementById('note-modal-name').textContent = c.name;
+  document.getElementById('note-modal-ind').textContent = c.industry || '';
+  const body = document.getElementById('note-modal-body');
+
+  // 企業ノートフィールド
+  const fields = [
+    { label: '事業内容メモ', value: c.business },
+    { label: '強み・弱み', value: c.strength },
+    { label: '志望動機メモ', value: c.motive },
+    { label: '選考フロー', value: c.process },
+    { label: '参考URL', value: c.url, isUrl: true },
+  ];
+  let html = fields.map(f => {
+    if (!f.value) return '';
+    const val = f.isUrl
+      ? f.value.split(/[|;]/).map(u => u.trim()).filter(Boolean)
+          .map(u => `<a href="${u}" target="_blank" class="note-url">${u}</a>`).join('')
+      : `<div class="note-field-content">${f.value}</div>`;
+    return `<div><div class="note-field-label">${f.label}</div>${val}</div>`;
+  }).filter(Boolean).join('');
+
+  // 選考情報スプシから企業名でマッチング
+  const today = new Date();
+  const matched = selectionRows.filter(r => {
+    const rowName = (r[0] || '').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').trim();
+    const alias = r[7] || ''; // H列: 別名・エイリアス
+    return selectionMatch(rowName, alias, name);
+  });
+
+  if (matched.length) {
+    const selHtml = matched.map(r => {
+      const d = r[1] ? new Date(r[1].replace(/\//g,'-')) : null;
+      const diff = d ? Math.ceil((d - today) / (1000*60*60*24)) : null;
+      const urgent = diff !== null && diff >= 0 && diff <= 7;
+      const deadlineStr = r[1]
+        ? (urgent ? `<span style="color:var(--crimson);font-weight:700;">⚠ ${r[1]}（残${diff}日）</span>` : r[1])
+        : '未定';
+      const tag = r[2] || '';
+      const link = r[3]?.startsWith('http') ? r[3] : '';
+      return `<div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;padding:0.6rem 0;border-bottom:1px solid rgba(10,26,62,0.06);">
+        <div>
+          <div style="font-size:0.82rem;font-weight:700;color:var(--navy);">${r[0]}</div>
+          <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.15rem;">${tag} ／ 締切: ${deadlineStr}</div>
+        </div>
+        ${link ? `<a href="${link}" target="_blank" style="font-size:0.68rem;color:white;background:var(--navy);padding:0.3rem 0.7rem;text-decoration:none;border-radius:3px;white-space:nowrap;flex-shrink:0;">ES →</a>` : ''}
+      </div>`;
+    }).join('');
+    html += `<div><div class="note-field-label">選考情報</div><div style="background:white;padding:0.6rem 1rem;border-left:2px solid rgba(201,168,76,0.3);">${selHtml}</div></div>`;
+  }
+
+  body.innerHTML = html || '<div style="text-align:center;padding:2rem;color:var(--text-muted);">ノートの内容がまだありません。</div>';
+  document.getElementById('note-overlay').classList.add('open');
+}
+function closeNoteModal() { document.getElementById('note-overlay').classList.remove('open'); }
+function noteOverlayClick(e) { if (e.target === document.getElementById('note-overlay')) closeNoteModal(); }
+
 function openModal() {
   document.getElementById('modal-cnt').textContent=liked.length+'社';
   const body=document.getElementById('modal-body');
@@ -428,8 +537,9 @@ function openModal() {
   else{body.innerHTML=liked.map(c=>{
     const urls=(c.url||'').split(/[|;]/).map(u=>u.trim()).filter(u=>u.startsWith('http'));
     const u=urls[0]||'';
-    return `<div class="liked-row">
+    return `<div class="liked-row" onclick="openNoteModal('${c.name.replace(/'/g,"\'")}')">
       <div><div class="liked-row-name">${c.name}</div><div class="liked-row-ind">${c.industry||''}</div></div>
+      <span class="liked-row-arrow">ノートを見る →</span>
     </div>`;
   }).join('')+`<button class="modal-clear-btn" onclick="clearLiked()">リストをリセット</button>`;}
   document.getElementById('overlay').classList.add('open');
@@ -446,7 +556,7 @@ function clearLiked(){
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight') swipe('right');
   if(e.key==='ArrowLeft') swipe('left');
-  if(e.key==='Escape') closeModal();
+  if(e.key==='Escape') { closeModal(); closeNoteModal(); }
 });
 
 function sample(){return[
@@ -457,5 +567,21 @@ function sample(){return[
 
 init();
 </script>
+
+<!-- NOTE MODAL -->
+<div class="note-overlay" id="note-overlay" onclick="noteOverlayClick(event)">
+  <div class="note-modal">
+    <div class="note-modal-handle"></div>
+    <div class="note-modal-head">
+      <div>
+        <div class="note-modal-name" id="note-modal-name"></div>
+        <div class="note-modal-ind" id="note-modal-ind"></div>
+      </div>
+      <button class="note-modal-close" onclick="closeNoteModal()">✕</button>
+    </div>
+    <div class="note-modal-body" id="note-modal-body"></div>
+  </div>
+</div>
+
 </body>
 </html>
