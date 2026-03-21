@@ -1,5 +1,5 @@
 (function () {
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbxhnBXykIHYY3044O1TIQc5cATOMh3OY_hcEqzXheQsy1ccYCeSkYEkUTzoti5Hz7xjYw/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwMc8d4p_bLOJcMa8Vs_Egg5lsjl5UDwIOWT4cGFmNPWiQSdie-rT6oSYJ-pBiLCudzCw/exec';
   const SESSION_TOKEN_KEY = 'keio_navi_session_token_v1';
   const USER_CACHE_KEY = 'keio_navi_current_user_cache_v1';
   const LIKED_CACHE_KEY = 'keio_navi_liked_cache_v1';
@@ -182,7 +182,6 @@
 
     const response = await fetch(GAS_PROXY_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       redirect: 'follow',
     });
@@ -284,7 +283,6 @@
     if (!sessionToken) return;
     fetch(GAS_PROXY_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'authLogout', sessionToken }),
       redirect: 'follow',
     }).catch(() => {});
