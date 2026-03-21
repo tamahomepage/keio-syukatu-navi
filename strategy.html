@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>慶應就活ナビ コミュニティ成長戦略</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --cream: #f5f2eb;
+    --gray: #f0ede6;
+    --text: #1a1a1a;
+    --muted: #888;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--text);
+    padding: 3rem 2rem;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 4rem; }
+  .header-label { font-size: 0.65rem; color: var(--gold); letter-spacing: 0.2em; font-weight: 700; margin-bottom: 0.8rem; }
+  .header-title { font-family: 'Noto Serif JP', serif; font-size: 2rem; color: var(--navy); font-weight: 700; margin-bottom: 0.5rem; }
+  .header-sub { font-size: 0.82rem; color: var(--muted); }
+
+  /* Section */
+  .section { margin-bottom: 3.5rem; }
+  .section-label { font-size: 0.62rem; color: var(--crimson); letter-spacing: 0.2em; font-weight: 700; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.8rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(192,0,26,0.15); }
+
+  /* Flywheel */
+  .flywheel { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(10,26,62,0.08); margin-bottom: 0.5rem; }
+  .flywheel-center {
+    grid-column: 1 / -1; background: var(--navy);
+    padding: 1.5rem; text-align: center;
+    border-bottom: 3px solid var(--gold);
+  }
+  .flywheel-center-title { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; color: white; font-weight: 700; margin-bottom: 0.3rem; }
+  .flywheel-center-sub { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+  .flywheel-item { background: white; padding: 1.5rem; display: flex; align-items: flex-start; gap: 1rem; }
+  .flywheel-arrow { font-size: 1.2rem; color: var(--gold); flex-shrink: 0; margin-top: 0.1rem; }
+  .flywheel-item-title { font-size: 0.92rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+  .flywheel-item-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.6; }
+
+  /* Levers */
+  .levers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,26,62,0.08); }
+  .lever { background: white; padding: 1.5rem; }
+  .lever-head { font-size: 0.65rem; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 0.6rem; }
+  .lever-head.amber { color: #8a6d1a; }
+  .lever-head.coral { color: var(--crimson); }
+  .lever-head.blue { color: #0a5599; }
+  .lever-title { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.8rem; border-bottom: 2px solid; padding-bottom: 0.6rem; }
+  .lever-title.amber { border-color: rgba(201,168,76,0.4); }
+  .lever-title.coral { border-color: rgba(192,0,26,0.2); }
+  .lever-title.blue { border-color: rgba(10,85,153,0.2); }
+  .lever-list { list-style: none; }
+  .lever-list li { font-size: 0.78rem; color: var(--text); padding: 0.35rem 0; border-bottom: 1px solid rgba(10,26,62,0.05); display: flex; align-items: center; gap: 0.5rem; }
+  .lever-list li::before { content: '→'; color: var(--muted); font-size: 0.7rem; flex-shrink: 0; }
+
+  /* Timeline */
+  .timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,26,62,0.08); }
+  .timeline-item { background: white; padding: 1.5rem; position: relative; }
+  .timeline-item::after {
+    content: '→'; position: absolute; right: -12px; top: 50%;
+    transform: translateY(-50%); color: var(--gold); font-size: 1rem; z-index: 1;
+  }
+  .timeline-item:last-child::after { display: none; }
+  .timeline-phase { font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; font-weight: 700; margin-bottom: 0.5rem; }
+  .timeline-title { font-size: 0.92rem; font-weight: 700; color: var(--navy); margin-bottom: 0.4rem; }
+  .timeline-kpi { font-size: 0.72rem; color: var(--gold); font-weight: 700; margin-bottom: 0.8rem; }
+  .timeline-list { list-style: none; }
+  .timeline-list li { font-size: 0.75rem; color: var(--text); padding: 0.25rem 0; }
+  .timeline-list li::before { content: '・'; }
+
+  /* Vision */
+  .vision { background: var(--navy); padding: 2.5rem; text-align: center; border-top: 3px solid var(--gold); }
+  .vision-label { font-size: 0.65rem; color: var(--gold); letter-spacing: 0.2em; font-weight: 700; margin-bottom: 1rem; }
+  .vision-title { font-family: 'Noto Serif JP', serif; font-size: 1.5rem; color: white; font-weight: 700; margin-bottom: 0.8rem; }
+  .vision-desc { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.8; }
+
+  /* KPIs */
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(10,26,62,0.08); margin-top: 1px; }
+  .kpi { background: var(--gray); padding: 1.2rem; text-align: center; }
+  .kpi-num { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; color: var(--navy); font-weight: 700; line-height: 1; margin-bottom: 0.3rem; }
+  .kpi-label { font-size: 0.68rem; color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .flywheel { grid-template-columns: 1fr; }
+    .levers { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: 1fr; }
+    .kpis { grid-template-columns: 1fr 1fr; }
+    .timeline-item::after { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-label">COMMUNITY STRATEGY</div>
+    <div class="header-title">慶應就活ナビ 成長戦略</div>
+    <div class="header-sub">就活情報の民主化を目指す、慶應生発のコミュニティプラットフォーム</div>
+  </div>
+
+  <!-- Flywheel -->
+  <div class="section">
+    <div class="section-label">GROWTH ENGINE — フライホイール</div>
+    <div class="flywheel">
+      <div class="flywheel-center">
+        <div class="flywheel-center-title">使うほど、価値が上がる</div>
+        <div class="flywheel-center-sub">ユーザーが情報を持ち寄り、プラットフォームが育つ自己強化サイクル</div>
+      </div>
+      <div class="flywheel-item">
+        <div class="flywheel-arrow">①</div>
+        <div>
+          <div class="flywheel-item-title">メンバーが増える</div>
+          <div class="flywheel-item-desc">口コミ・紹介・イベント経由で新メンバーが加入。現在50人→200人を目指す</div>
+        </div>
+      </div>
+      <div class="flywheel-item">
+        <div class="flywheel-arrow">②</div>
+        <div>
+          <div class="flywheel-item-title">情報が増える</div>
+          <div class="flywheel-item-desc">選考情報・企業ノート・OB訪問記録がメンバーによって蓄積されていく</div>
+        </div>
+      </div>
+      <div class="flywheel-item">
+        <div class="flywheel-arrow">③</div>
+        <div>
+          <div class="flywheel-item-title">価値が上がる</div>
+          <div class="flywheel-item-desc">他では得られない一次情報が集まり「これがないと就活できない」レベルに</div>
+        </div>
+      </div>
+      <div class="flywheel-item">
+        <div class="flywheel-arrow">④</div>
+        <div>
+          <div class="flywheel-item-title">口コミが広がる</div>
+          <div class="flywheel-item-desc">価値を感じたメンバーが友人に紹介。新メンバーが加入してループが回る</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Levers -->
+  <div class="section">
+    <div class="section-label">GROWTH LEVERS — 成長レバー</div>
+    <div class="levers">
+      <div class="lever">
+        <div class="lever-head amber">CONTENT</div>
+        <div class="lever-title amber">コンテンツ</div>
+        <ul class="lever-list">
+          <li>今週締切バナー（毎週来る理由）</li>
+          <li>企業ノート追記機能</li>
+          <li>選考情報投稿フォーム</li>
+          <li>週次LINE通知</li>
+          <li>企業研究クイズ</li>
+        </ul>
+      </div>
+      <div class="lever">
+        <div class="lever-head coral">ENGAGEMENT</div>
+        <div class="lever-title coral">エンゲージメント</div>
+        <ul class="lever-list">
+          <li>GD・面接練習会</li>
+          <li>OB訪問報告共有</li>
+          <li>ランダムおすすめ企業ノート</li>
+          <li>内定報告・合格体験共有</li>
+          <li>業界別勉強会</li>
+        </ul>
+      </div>
+      <div class="lever">
+        <div class="lever-head blue">EXPANSION</div>
+        <div class="lever-title blue">拡大</div>
+        <ul class="lever-list">
+          <li>紹介インセンティブ設計</li>
+          <li>学部横断勧誘</li>
+          <li>サークル経由での拡散</li>
+          <li>協賛企業からの認知</li>
+          <li>他大学展開（将来）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="section">
+    <div class="section-label">ROADMAP — フェーズ別ロードマップ</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-phase">PHASE 1 — 今〜3ヶ月</div>
+        <div class="timeline-title">深める</div>
+        <div class="timeline-kpi">目標：月間アクティブ率 60%+</div>
+        <ul class="timeline-list">
+          <li>選考情報の毎週更新体制</li>
+          <li>企業ノート50社蓄積</li>
+          <li>LINE週次通知の定着</li>
+          <li>追記機能リリース</li>
+        </ul>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase">PHASE 2 — 3〜6ヶ月</div>
+        <div class="timeline-title">広げる</div>
+        <div class="timeline-kpi">目標：メンバー200人</div>
+        <ul class="timeline-list">
+          <li>紹介インセンティブ導入</li>
+          <li>GD練習会・イベント定期開催</li>
+          <li>企業ノート100社超え</li>
+          <li>企業協賛の打診開始</li>
+        </ul>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-phase">PHASE 3 — 6ヶ月〜</div>
+        <div class="timeline-title">稼ぐ・スケールする</div>
+        <div class="timeline-kpi">目標：月収10万円・他大展開</div>
+        <ul class="timeline-list">
+          <li>企業協賛10社（月30〜50万）</li>
+          <li>プレミアムプラン導入</li>
+          <li>早稲田・東大版リリース</li>
+          <li>Firebase移行・個人アカウント</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vision + KPIs -->
+  <div class="section" style="margin-bottom:0;">
+    <div class="section-label">NORTH STAR — ビジョン</div>
+    <div class="vision">
+      <div class="vision-label">VISION 2027</div>
+      <div class="vision-title">就活情報の民主化プラットフォーム</div>
+      <div class="vision-desc">
+        慶應から始まり、大学横断へ。<br>
+        一部の人だけが持っていた就活情報を、すべての学生に届ける。
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-num">200</div>
+        <div class="kpi-label">メンバー数（6ヶ月）</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">100</div>
+        <div class="kpi-label">企業ノート数</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">10</div>
+        <div class="kpi-label">協賛企業数</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num">3</div>
+        <div class="kpi-label">展開大学数</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

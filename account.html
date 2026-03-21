@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アカウント | 慶應就活ナビ</title>
+<meta name="description" content="慶應就活ナビの個人アカウント作成・ログイン・プロフィール管理ページです。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --navy-light: #142254;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f1ede6;
+    --text: #1a1a2e;
+    --text-muted: #68687b;
+    --white: #ffffff;
+    --success: #0a6e45;
+    --success-soft: rgba(10, 110, 69, 0.08);
+    --danger-soft: rgba(192, 0, 26, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(circle at top right, rgba(201, 168, 76, 0.14), transparent 28%),
+      radial-gradient(circle at bottom left, rgba(192, 0, 26, 0.08), transparent 24%),
+      linear-gradient(180deg, #f7f3ed 0%, #f2eee7 100%);
+    min-height: 100vh;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 5vw;
+    background: rgba(10, 26, 62, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.18);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--gold-light);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.72);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    transition: all 0.2s;
+  }
+
+  .nav-link:hover {
+    color: var(--gold-light);
+    border-color: rgba(201, 168, 76, 0.35);
+  }
+
+  .nav-link.primary {
+    color: var(--gold-light);
+    border-color: rgba(201, 168, 76, 0.28);
+    background: rgba(201, 168, 76, 0.08);
+  }
+
+  .account-shell {
+    width: min(1180px, calc(100% - 2.5rem));
+    margin: 0 auto;
+    padding: 4rem 0 5rem;
+    display: grid;
+    grid-template-columns: 1.1fr 0.95fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .intro-panel {
+    background: linear-gradient(180deg, rgba(10, 26, 62, 0.98) 0%, rgba(20, 34, 84, 0.96) 100%);
+    color: var(--white);
+    min-height: 100%;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(201, 168, 76, 0.2);
+  }
+
+  .intro-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, rgba(192, 0, 26, 0.14), transparent 45%),
+      radial-gradient(circle at 85% 18%, rgba(201, 168, 76, 0.14), transparent 20%);
+    pointer-events: none;
+  }
+
+  .intro-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.68rem;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid rgba(201, 168, 76, 0.28);
+    margin-bottom: 1.3rem;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--crimson);
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.35;
+    margin-bottom: 1.1rem;
+  }
+
+  .hero-title span { color: var(--gold-light); }
+
+  .hero-desc {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.68);
+    line-height: 1.95;
+    margin-bottom: 2rem;
+  }
+
+  .status-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 1.2rem 1.3rem;
+    margin-bottom: 1.3rem;
+  }
+
+  .status-label {
+    font-size: 0.62rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .status-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .status-desc {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.62);
+    line-height: 1.75;
+  }
+
+  .intro-list {
+    display: grid;
+    gap: 0.9rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .intro-item {
+    background: rgba(255, 255, 255, 0.04);
+    border-left: 2px solid rgba(201, 168, 76, 0.45);
+    padding: 0.95rem 1rem;
+  }
+
+  .intro-item-title {
+    font-size: 0.78rem;
+    color: var(--gold-light);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+  }
+
+  .intro-item-desc {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.62);
+    line-height: 1.75;
+  }
+
+  .intro-note {
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.42);
+    line-height: 1.75;
+  }
+
+  .panel {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(10, 26, 62, 0.08);
+    box-shadow: 0 20px 60px rgba(10, 26, 62, 0.08);
+    padding: 2rem;
+  }
+
+  .panel-header {
+    margin-bottom: 1.4rem;
+  }
+
+  .panel-label {
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    color: var(--crimson);
+    margin-bottom: 0.45rem;
+  }
+
+  .panel-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.55rem;
+    color: var(--navy);
+    margin-bottom: 0.45rem;
+  }
+
+  .panel-sub {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .flash {
+    display: none;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    border-left: 3px solid transparent;
+  }
+
+  .flash.show { display: block; }
+  .flash.success {
+    background: var(--success-soft);
+    border-color: var(--success);
+    color: var(--success);
+  }
+  .flash.error {
+    background: var(--danger-soft);
+    border-color: var(--crimson);
+    color: var(--crimson);
+  }
+  .flash.info {
+    background: rgba(10, 26, 62, 0.05);
+    border-color: rgba(10, 26, 62, 0.35);
+    color: var(--navy);
+  }
+
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .tab-btn {
+    border: 1px solid rgba(10, 26, 62, 0.12);
+    background: white;
+    color: var(--text-muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.85rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--navy);
+    color: white;
+    border-color: var(--navy);
+  }
+
+  .tab-btn:hover {
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+
+  .tab-btn.active:hover { color: white; }
+
+  .auth-form,
+  .settings-form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .auth-form[hidden],
+  .settings-form[hidden],
+  .view[hidden] { display: none; }
+
+  .field-group {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .field-label {
+    font-size: 0.72rem;
+    color: var(--navy);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .field-input,
+  .field-select,
+  .field-textarea {
+    width: 100%;
+    border: 1px solid rgba(10, 26, 62, 0.14);
+    background: white;
+    padding: 0.85rem 0.95rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .field-textarea {
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.7;
+  }
+
+  .field-input:focus,
+  .field-select:focus,
+  .field-textarea:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(10, 26, 62, 0.06);
+  }
+
+  .field-help {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  .grid-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+
+  .submit-btn,
+  .subtle-btn,
+  .ghost-link {
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .submit-btn {
+    border: none;
+    background: var(--crimson);
+    color: white;
+    font-size: 0.86rem;
+    font-weight: 700;
+    padding: 0.95rem 1.1rem;
+    letter-spacing: 0.08em;
+  }
+
+  .submit-btn:hover { background: #dc0b25; }
+
+  .subtle-btn {
+    border: 1px solid rgba(10, 26, 62, 0.15);
+    background: white;
+    color: var(--navy);
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.82rem 1rem;
+  }
+
+  .subtle-btn:hover {
+    border-color: var(--navy);
+    background: rgba(10, 26, 62, 0.04);
+  }
+
+  .ghost-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(10, 26, 62, 0.15);
+    background: transparent;
+    color: var(--navy);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.82rem 1rem;
+  }
+
+  .ghost-link:hover {
+    border-color: var(--crimson);
+    color: var(--crimson);
+  }
+
+  .form-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+
+  .member-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .member-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    background: rgba(201, 168, 76, 0.1);
+    border: 1px solid rgba(201, 168, 76, 0.2);
+  }
+
+  .member-chip::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--crimson);
+  }
+
+  .member-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .stat-card {
+    background: var(--gray);
+    padding: 1rem;
+  }
+
+  .stat-card-label {
+    font-size: 0.64rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-card-value {
+    font-size: 1rem;
+    color: var(--navy);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .quick-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .quick-launch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1rem;
+    background: var(--gray);
+    border-left: 3px solid var(--crimson);
+  }
+
+  .quick-launch-copy {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 620px;
+  }
+
+  .quick-link {
+    display: block;
+    text-decoration: none;
+    padding: 1rem 1.05rem;
+    border: 1px solid rgba(10, 26, 62, 0.12);
+    background: white;
+    transition: all 0.2s;
+  }
+
+  .quick-link:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .quick-link-label {
+    font-size: 0.68rem;
+    color: var(--crimson);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    margin-bottom: 0.35rem;
+  }
+
+  .quick-link-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    color: var(--navy);
+    margin-bottom: 0.3rem;
+  }
+
+  .quick-link-desc {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .settings-block {
+    padding-top: 1.2rem;
+    margin-top: 1.2rem;
+    border-top: 1px solid rgba(10, 26, 62, 0.08);
+  }
+
+  .settings-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.08rem;
+    color: var(--navy);
+    margin-bottom: 0.35rem;
+  }
+
+  .settings-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .logout-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.3rem;
+  }
+
+  @media (max-width: 960px) {
+    .account-shell {
+      grid-template-columns: 1fr;
+      width: min(760px, calc(100% - 2rem));
+      padding-top: 2.2rem;
+    }
+
+    .intro-panel,
+    .panel { padding: 1.6rem; }
+  }
+
+  @media (max-width: 640px) {
+    nav {
+      align-items: flex-start;
+      flex-direction: column;
+      padding: 1rem 1rem 1.1rem;
+    }
+
+    .nav-links { justify-content: flex-start; }
+
+    .account-shell { width: calc(100% - 1.25rem); }
+    .grid-two,
+    .member-stats,
+    .quick-links,
+    .tabs { grid-template-columns: 1fr; }
+    .member-top { flex-direction: column; }
+    .quick-launch { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a>
+  <div class="nav-links" id="nav-links">
+    <a href="index.html" class="nav-link">トップへ戻る</a>
+    <a href="members.html" class="nav-link">会員ページ</a>
+    <a href="match.html" class="nav-link primary">企業マッチング</a>
+  </div>
+</nav>
+
+<main class="account-shell">
+  <section class="intro-panel">
+    <div class="intro-inner">
+      <div class="eyebrow">PERSONAL ACCOUNT</div>
+      <h1 class="hero-title">就活の動きを、<br><span>自分のアカウント</span>でつなぐ。</h1>
+      <p class="hero-desc">
+        会員ページ、企業マッチング、気になる企業の保存をひとつのアカウントで管理できます。
+        アカウント情報と「気になる企業」はサーバー側に保存され、個人アカウント経由で会員ページに反映されます。
+      </p>
+
+      <div class="status-card">
+        <div class="status-label">CURRENT FLOW</div>
+        <div class="status-title" id="status-title">登録して会員機能を使い始める</div>
+        <div class="status-desc" id="status-desc">はじめて使う場合は新規登録、すでに作成済みならログインしてください。</div>
+      </div>
+
+      <div class="intro-list">
+        <div class="intro-item">
+          <div class="intro-item-title">会員限定ページの入口を一本化</div>
+          <div class="intro-item-desc">共通パスワードではなく、個人ごとのログインで会員ページと企業マッチングに入れます。</div>
+        </div>
+        <div class="intro-item">
+          <div class="intro-item-title">気になる企業を個人ごとに保存</div>
+          <div class="intro-item-desc">企業マッチングで付けた「気になる」はアカウント単位でサーバー保存され、別端末でログインしても引き継げます。</div>
+        </div>
+        <div class="intro-item">
+          <div class="intro-item-title">登録時に必要な情報を整理</div>
+          <div class="intro-item-desc">ユーザー名、パスワード、志望業界、第1〜第3志望、LINE情報をまとめて登録できます。</div>
+        </div>
+      </div>
+
+      <p class="intro-note">
+        ※ 表示高速化のためブラウザ側にも一時キャッシュは持ちますが、正本データはサーバー側に保存する前提です。
+        このリポジトリでは既存の Google Apps Script をアカウントAPIとして拡張する構成にしているため、GASを更新すれば別ブラウザや別端末でも同じアカウント情報を引き継げます。
+      </p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-label">ACCOUNT ACCESS</div>
+      <h2 class="panel-title" id="panel-title">会員登録 / ログイン</h2>
+      <p class="panel-sub" id="panel-sub">個人アカウントを作成すると、会員向け機能をすぐ使い始められます。</p>
+    </div>
+
+    <div class="flash" id="flash"></div>
+
+    <div class="view" id="guest-view">
+      <div class="tabs">
+        <button class="tab-btn active" type="button" data-mode="signup">新規登録</button>
+        <button class="tab-btn" type="button" data-mode="login">ログイン</button>
+      </div>
+
+      <form class="auth-form" id="signup-form">
+        <label class="field-group">
+          <span class="field-label">ユーザー名</span>
+          <input class="field-input" type="text" name="username" placeholder="例: kei_shukatsu" required>
+          <span class="field-help">本名でなくて大丈夫です。ログイン時にもこのユーザー名を使います。</span>
+        </label>
+
+        <label class="field-group">
+          <span class="field-label">志望業界</span>
+          <select class="field-select" name="desiredIndustry" required>
+            <option value="">選択してください</option>
+          </select>
+          <span class="field-help">区分はマイナビ新卒紹介「知っておきたい、業界分類一覧と解説」を参照しています。</span>
+        </label>
+
+        <label class="field-group">
+          <span class="field-label">第1志望の企業</span>
+          <input class="field-input" type="text" name="preferredCompany1" placeholder="例: 三菱商事" required>
+          <span class="field-help">第1志望は必須です。第2志望・第3志望は任意で入力できます。</span>
+        </label>
+
+        <div class="grid-two">
+          <label class="field-group">
+            <span class="field-label">第2志望の企業</span>
+            <input class="field-input" type="text" name="preferredCompany2" placeholder="任意">
+          </label>
+          <label class="field-group">
+            <span class="field-label">第3志望の企業</span>
+            <input class="field-input" type="text" name="preferredCompany3" placeholder="任意">
+          </label>
+        </div>
+
+        <label class="field-group">
+          <span class="field-label">LINE名</span>
+          <input class="field-input" type="text" name="lineName" placeholder="LINEで表示される名前" required>
+          <span class="field-help">運営側が照合できる名前で入力してください。</span>
+        </label>
+
+        <label class="field-group">
+          <span class="field-label">LINE QR</span>
+          <input class="field-input" type="file" name="lineQr" accept="image/*" required>
+          <span class="field-help" id="signup-line-qr-status">スクリーンショット可。運営確認用にサーバー側へ保存します。</span>
+        </label>
+
+        <label class="field-group">
+          <span class="field-label">パスワード</span>
+          <input class="field-input" type="password" name="password" minlength="8" placeholder="8文字以上" required>
+          <span class="field-help">パスワードはサーバー側でハッシュ化して保存する前提です。フロントには平文で保持しません。</span>
+        </label>
+
+        <div class="form-actions">
+          <button class="submit-btn" type="submit">アカウントを作成する</button>
+        </div>
+      </form>
+
+      <form class="auth-form" id="login-form" hidden>
+        <label class="field-group">
+          <span class="field-label">ユーザー名</span>
+          <input class="field-input" type="text" name="username" placeholder="登録したユーザー名" required>
+        </label>
+
+        <label class="field-group">
+          <span class="field-label">パスワード</span>
+          <input class="field-input" type="password" name="password" minlength="8" placeholder="登録したパスワード" required>
+        </label>
+
+        <div class="form-actions">
+          <button class="submit-btn" type="submit">ログインする</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="view" id="member-view" hidden>
+      <div class="member-top">
+        <div>
+          <div class="member-chip">SIGNED IN</div>
+          <h2 class="panel-title" id="member-title" style="margin-top:0.9rem; margin-bottom:0.4rem;">マイページ</h2>
+          <p class="panel-sub" id="member-summary"></p>
+          <p class="settings-sub" id="member-detail-note" style="margin-top:0.45rem; margin-bottom:0;"></p>
+        </div>
+        <button class="subtle-btn" type="button" id="continue-btn" hidden>元のページへ戻る</button>
+      </div>
+
+      <div class="member-stats">
+        <div class="stat-card">
+          <div class="stat-card-label">LIKED</div>
+          <div class="stat-card-value" id="liked-count">0社</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">CREATED</div>
+          <div class="stat-card-value" id="created-at">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">UPDATED</div>
+          <div class="stat-card-value" id="updated-at">-</div>
+        </div>
+      </div>
+
+      <div class="quick-launch">
+        <div class="quick-launch-copy" id="members-launch-copy">現行の会員ページにそのまま入りつつ、気になる企業の選考情報、企業ノート、締切リマインダーがあなたのアカウントに応じて反映されます。</div>
+        <a href="members.html" class="submit-btn" id="members-launch-btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">会員ページを開く</a>
+      </div>
+
+      <div class="quick-links">
+        <a href="members.html" class="quick-link">
+          <div class="quick-link-label">MEMBERS</div>
+          <div class="quick-link-title">会員ページ</div>
+          <div class="quick-link-desc">選考情報、限定資料、イベント情報をまとめて確認できます。</div>
+        </a>
+        <a href="match.html" class="quick-link">
+          <div class="quick-link-label">MATCHING</div>
+          <div class="quick-link-title">企業マッチング</div>
+          <div class="quick-link-desc">気になる企業を自分のアカウントで保存しながら探せます。</div>
+        </a>
+      </div>
+
+      <div class="settings-block">
+        <h3 class="settings-title">登録情報を編集する</h3>
+        <p class="settings-sub">ユーザー名、志望業界、志望企業、LINE情報を更新できます。</p>
+        <form class="settings-form" id="profile-form">
+          <label class="field-group">
+            <span class="field-label">ユーザー名</span>
+            <input class="field-input" type="text" name="username" required>
+          </label>
+
+          <label class="field-group">
+            <span class="field-label">志望業界</span>
+            <select class="field-select" name="desiredIndustry" required>
+              <option value="">選択してください</option>
+            </select>
+          </label>
+
+          <label class="field-group">
+            <span class="field-label">第1志望の企業</span>
+            <input class="field-input" type="text" name="preferredCompany1" required>
+          </label>
+
+          <div class="grid-two">
+            <label class="field-group">
+              <span class="field-label">第2志望の企業</span>
+              <input class="field-input" type="text" name="preferredCompany2" placeholder="任意">
+            </label>
+            <label class="field-group">
+              <span class="field-label">第3志望の企業</span>
+              <input class="field-input" type="text" name="preferredCompany3" placeholder="任意">
+            </label>
+          </div>
+
+          <label class="field-group">
+            <span class="field-label">LINE名</span>
+            <input class="field-input" type="text" name="lineName" required>
+          </label>
+
+          <label class="field-group">
+            <span class="field-label">LINE QR</span>
+            <input class="field-input" type="file" name="lineQr" accept="image/*">
+            <span class="field-help" id="profile-line-qr-status">変更する場合だけ再アップロードしてください。</span>
+          </label>
+
+          <button class="submit-btn" type="submit">プロフィールを保存する</button>
+        </form>
+      </div>
+
+      <div class="settings-block">
+        <h3 class="settings-title">パスワードを変更する</h3>
+        <p class="settings-sub">現在のパスワードを確認したうえで、新しいパスワードに更新します。</p>
+        <form class="settings-form" id="password-form">
+          <div class="grid-two">
+            <label class="field-group">
+              <span class="field-label">現在のパスワード</span>
+              <input class="field-input" type="password" name="currentPassword" minlength="8" required>
+            </label>
+            <label class="field-group">
+              <span class="field-label">新しいパスワード</span>
+              <input class="field-input" type="password" name="nextPassword" minlength="8" required>
+            </label>
+          </div>
+          <button class="subtle-btn" type="submit">パスワードを更新する</button>
+        </form>
+      </div>
+
+      <div class="logout-wrap">
+        <button class="subtle-btn" type="button" id="logout-btn">ログアウト</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="auth.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const requestedMode = params.get('mode') === 'login' ? 'login' : 'signup';
+  const returnTo = params.get('returnTo') || '';
+
+  const flash = document.getElementById('flash');
+  const guestView = document.getElementById('guest-view');
+  const memberView = document.getElementById('member-view');
+  const panelTitle = document.getElementById('panel-title');
+  const panelSub = document.getElementById('panel-sub');
+  const statusTitle = document.getElementById('status-title');
+  const statusDesc = document.getElementById('status-desc');
+  const continueBtn = document.getElementById('continue-btn');
+  const signupForm = document.getElementById('signup-form');
+  const loginForm = document.getElementById('login-form');
+  const profileForm = document.getElementById('profile-form');
+  const passwordForm = document.getElementById('password-form');
+  const memberDetailNote = document.getElementById('member-detail-note');
+  const signupLineQrStatus = document.getElementById('signup-line-qr-status');
+  const profileLineQrStatus = document.getElementById('profile-line-qr-status');
+
+  if (returnTo) KeioNaviAuth.setReturnTo(returnTo);
+
+  function showFlash(message, type) {
+    flash.textContent = message;
+    flash.className = 'flash show ' + type;
+  }
+
+  function clearFlash() {
+    flash.textContent = '';
+    flash.className = 'flash';
+  }
+
+  function field(form, name) {
+    return form.elements.namedItem(name);
+  }
+
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => reject(new Error('LINE QRの読み込みに失敗しました。'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function readImageInput(input, options) {
+    const settings = options || {};
+    const file = input && input.files && input.files[0];
+    if (!file) {
+      if (settings.required) throw new Error('LINE QRをアップロードしてください。');
+      return { dataUrl: '', fileName: '' };
+    }
+    if (!String(file.type || '').startsWith('image/')) {
+      throw new Error('LINE QRは画像ファイルを選択してください。');
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      throw new Error('LINE QRは4MB以下の画像にしてください。');
+    }
+
+    return {
+      dataUrl: await readFileAsDataUrl(file),
+      fileName: file.name || '',
+    };
+  }
+
+  function refreshSignupLineQrStatus() {
+    const file = field(signupForm, 'lineQr').files && field(signupForm, 'lineQr').files[0];
+    signupLineQrStatus.textContent = file
+      ? '選択中: ' + file.name
+      : 'スクリーンショット可。運営確認用にサーバー側へ保存します。';
+  }
+
+  function refreshProfileLineQrStatus() {
+    const file = field(profileForm, 'lineQr').files && field(profileForm, 'lineQr').files[0];
+    if (file) {
+      profileLineQrStatus.textContent = '選択中: ' + file.name;
+      return;
+    }
+
+    const user = KeioNaviAuth.getCurrentUser();
+    profileLineQrStatus.textContent = user && user.hasLineQr
+      ? '現在のLINE QRはサーバー側に保存されています。変更する場合だけ再アップロードしてください。'
+      : 'まだLINE QRが登録されていません。ここから追加できます。';
+  }
+
+  const INDUSTRY_GROUPS = [
+    {
+      label: 'メーカー',
+      items: ['食品・農林・水産', '建設・住宅・インテリア', '繊維・化学・薬品・化粧品', '鉄鋼・金属・鉱業', '機械・プラント', '電子・電気機器', '自動車・輸送用機器', '精密・医療機器', '印刷・事務機器関連', 'スポーツ・玩具', 'その他メーカー'],
+    },
+    {
+      label: 'サービス・インフラ',
+      items: ['不動産', '鉄道・航空・運輸・物流', '電力・ガス・エネルギー', 'フードサービス', 'ホテル・旅行', '医療・福祉', 'アミューズメント・レジャー', 'その他サービス', 'コンサルティング・調査', '人材サービス', '教育'],
+    },
+    {
+      label: '商社',
+      items: ['総合商社', '専門商社'],
+    },
+    {
+      label: 'ソフトウェア・通信',
+      items: ['ソフトウェア', 'インターネット', '通信'],
+    },
+    {
+      label: '小売',
+      items: ['百貨店・スーパー', 'コンビニ', '専門店'],
+    },
+    {
+      label: '広告・出版・マスコミ',
+      items: ['放送', '新聞', '出版', '広告'],
+    },
+    {
+      label: '金融',
+      items: ['銀行・証券', 'クレジット', '信販・リース', 'その他金融', '生保・損保'],
+    },
+    {
+      label: '官公庁・公社・団体',
+      items: ['公社・団体', '官公庁'],
+    },
+  ];
+
+  function populateIndustrySelects() {
+    document.querySelectorAll('select[name="desiredIndustry"]').forEach(select => {
+      const currentValue = select.dataset.currentValue || select.value || '';
+      select.innerHTML = '<option value="">選択してください</option>';
+
+      INDUSTRY_GROUPS.forEach(group => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = group.label;
+        group.items.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item;
+          option.textContent = item;
+          if (item === currentValue) option.selected = true;
+          optgroup.appendChild(option);
+        });
+        select.appendChild(optgroup);
+      });
+
+      if (!currentValue) select.value = '';
+    });
+  }
+
+  function switchMode(mode) {
+    document.querySelectorAll('.tab-btn').forEach(button => {
+      button.classList.toggle('active', button.dataset.mode === mode);
+    });
+    signupForm.hidden = mode !== 'signup';
+    loginForm.hidden = mode !== 'login';
+    clearFlash();
+  }
+
+  function getReturnTarget() {
+    const target = returnTo || KeioNaviAuth.consumeReturnTo();
+    return target && !target.startsWith('account.html') ? target : '';
+  }
+
+  function updateIntroForUser(user) {
+    if (user) {
+      statusTitle.textContent = user.username + ' さんでログイン中';
+      statusDesc.textContent = '会員ページと企業マッチングをそのまま開けます。志望企業やLINE情報の変更もこの画面から行えます。';
+    } else if (returnTo) {
+      statusTitle.textContent = '会員機能を使う準備ができています';
+      statusDesc.textContent = 'ログインまたは登録が完了すると、元のページへそのまま戻れます。';
+    } else {
+      statusTitle.textContent = '登録して会員機能を使い始める';
+      statusDesc.textContent = 'はじめて使う場合は新規登録、すでに作成済みならログインしてください。';
+    }
+  }
+
+  function renderMemberView() {
+    const user = KeioNaviAuth.getCurrentUser();
+    if (!user) {
+      guestView.hidden = false;
+      memberView.hidden = true;
+      panelTitle.textContent = '会員登録 / ログイン';
+      panelSub.textContent = 'ユーザー名、パスワード、志望業界、第1〜第3志望、LINE情報を登録できます。';
+      memberDetailNote.textContent = '';
+      updateIntroForUser(null);
+      refreshSignupLineQrStatus();
+      return;
+    }
+
+    guestView.hidden = true;
+    memberView.hidden = false;
+    panelTitle.textContent = 'マイページ';
+    panelSub.textContent = 'アカウント情報の確認と編集、会員機能への移動ができます。';
+    updateIntroForUser(user);
+
+    document.getElementById('member-title').textContent = user.username + ' さんのマイページ';
+    document.getElementById('member-summary').textContent = '志望業界: ' + (user.desiredIndustry || '未設定');
+
+    const preferredCompanies = (user.preferredCompanies || []).filter(Boolean);
+    memberDetailNote.textContent = [
+      preferredCompanies.length ? '志望企業: ' + preferredCompanies.join(' / ') : '志望企業: 未登録',
+      'LINE名: ' + (user.lineName || '未登録'),
+      user.hasLineQr ? 'LINE QR: 登録済み' : 'LINE QR: 未登録',
+    ].join(' | ');
+
+    const likedCount = KeioNaviAuth.getLikedCompanies().length;
+    document.getElementById('liked-count').textContent = likedCount + '社';
+    document.getElementById('created-at').textContent = KeioNaviAuth.formatDate(user.createdAt) || '-';
+    document.getElementById('updated-at').textContent = KeioNaviAuth.formatDate(user.updatedAt) || '-';
+    document.getElementById('members-launch-copy').textContent = likedCount
+      ? '現行の会員ページに入るだけで、気になる企業 ' + likedCount + ' 社に合わせて選考情報が優先表示され、企業ノートと締切リマインダーも追いやすくなります。'
+      : '現行の会員ページにはそのまま入れます。先に企業マッチでいいねしておくと、その会員ページの中で選考情報・企業ノート・締切リマインダーが個別化されます。';
+
+    field(profileForm, 'username').value = user.username || '';
+    field(profileForm, 'desiredIndustry').dataset.currentValue = user.desiredIndustry || '';
+    populateIndustrySelects();
+    field(profileForm, 'desiredIndustry').value = user.desiredIndustry || '';
+    field(profileForm, 'preferredCompany1').value = user.preferredCompany1 || '';
+    field(profileForm, 'preferredCompany2').value = user.preferredCompany2 || '';
+    field(profileForm, 'preferredCompany3').value = user.preferredCompany3 || '';
+    field(profileForm, 'lineName').value = user.lineName || '';
+    field(profileForm, 'lineQr').value = '';
+    refreshProfileLineQrStatus();
+
+    const target = returnTo || '';
+    continueBtn.hidden = !target;
+    if (target) continueBtn.textContent = '元のページへ戻る';
+  }
+
+  function renderNav() {
+    const user = KeioNaviAuth.getCurrentUser();
+    const navLinks = document.getElementById('nav-links');
+    if (!user) {
+      navLinks.innerHTML = `
+        <a href="index.html" class="nav-link">トップへ戻る</a>
+        <a href="members.html" class="nav-link">会員ページ</a>
+        <a href="match.html" class="nav-link primary">企業マッチング</a>
+      `;
+      return;
+    }
+
+    navLinks.innerHTML = `
+      <a href="members.html" class="nav-link">会員ページ</a>
+      <a href="match.html" class="nav-link primary">企業マッチング</a>
+      <a href="index.html" class="nav-link">${user.username} さん</a>
+    `;
+  }
+
+  async function handleAuthSuccess(label) {
+    renderNav();
+    renderMemberView();
+
+    const target = getReturnTarget();
+    if (target) {
+      showFlash(label + '。元のページへ移動します。', 'success');
+      setTimeout(() => {
+        location.href = target;
+      }, 700);
+      return;
+    }
+
+    showFlash(label + '。マイページを表示しています。', 'success');
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(button => {
+    button.addEventListener('click', () => switchMode(button.dataset.mode));
+  });
+
+  field(signupForm, 'lineQr').addEventListener('change', refreshSignupLineQrStatus);
+  field(profileForm, 'lineQr').addEventListener('change', refreshProfileLineQrStatus);
+
+  signupForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    let lineQrUpload;
+
+    try {
+      lineQrUpload = await readImageInput(field(form, 'lineQr'), { required: true });
+    } catch (error) {
+      showFlash(error.message, 'error');
+      return;
+    }
+
+    const result = await KeioNaviAuth.createAccount({
+      username: field(form, 'username').value,
+      desiredIndustry: field(form, 'desiredIndustry').value,
+      preferredCompany1: field(form, 'preferredCompany1').value,
+      preferredCompany2: field(form, 'preferredCompany2').value,
+      preferredCompany3: field(form, 'preferredCompany3').value,
+      lineName: field(form, 'lineName').value,
+      lineQrDataUrl: lineQrUpload.dataUrl,
+      lineQrFileName: lineQrUpload.fileName,
+      password: field(form, 'password').value,
+    });
+
+    if (!result.ok) {
+      showFlash(result.error, 'error');
+      return;
+    }
+
+    form.reset();
+    refreshSignupLineQrStatus();
+    await handleAuthSuccess('アカウントを作成しました');
+  });
+
+  loginForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const result = await KeioNaviAuth.login(field(form, 'username').value, field(form, 'password').value);
+
+    if (!result.ok) {
+      showFlash(result.error, 'error');
+      return;
+    }
+
+    form.reset();
+    await handleAuthSuccess('ログインしました');
+  });
+
+  profileForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    let lineQrUpload;
+
+    try {
+      lineQrUpload = await readImageInput(field(form, 'lineQr'), { required: false });
+    } catch (error) {
+      showFlash(error.message, 'error');
+      return;
+    }
+
+    const result = await KeioNaviAuth.updateCurrentUser({
+      username: field(form, 'username').value,
+      desiredIndustry: field(form, 'desiredIndustry').value,
+      preferredCompany1: field(form, 'preferredCompany1').value,
+      preferredCompany2: field(form, 'preferredCompany2').value,
+      preferredCompany3: field(form, 'preferredCompany3').value,
+      lineName: field(form, 'lineName').value,
+      lineQrDataUrl: lineQrUpload.dataUrl,
+      lineQrFileName: lineQrUpload.fileName,
+    });
+
+    if (!result.ok) {
+      showFlash(result.error, 'error');
+      return;
+    }
+
+    form.reset();
+    renderNav();
+    renderMemberView();
+    showFlash('プロフィールを更新しました。', 'success');
+  });
+
+  passwordForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const result = await KeioNaviAuth.changePassword(field(form, 'currentPassword').value, field(form, 'nextPassword').value);
+
+    if (!result.ok) {
+      showFlash(result.error, 'error');
+      return;
+    }
+
+    form.reset();
+    renderMemberView();
+    showFlash('パスワードを更新しました。', 'success');
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    KeioNaviAuth.logout();
+    switchMode('login');
+    renderNav();
+    renderMemberView();
+    showFlash('ログアウトしました。', 'info');
+  });
+
+  continueBtn.addEventListener('click', () => {
+    const target = returnTo || KeioNaviAuth.consumeReturnTo();
+    if (target) location.href = target;
+  });
+
+  switchMode(requestedMode);
+  populateIndustrySelects();
+  refreshSignupLineQrStatus();
+  refreshProfileLineQrStatus();
+  renderNav();
+  renderMemberView();
+
+  if (!KeioNaviAuth.getCurrentUser() && returnTo) {
+    showFlash('ログインまたは登録が完了すると、元のページへ戻ります。', 'info');
+  }
+</script>
+</body>
+</html>
