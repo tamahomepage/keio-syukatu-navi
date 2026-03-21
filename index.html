@@ -3,3034 +3,1561 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DEVELOPE — 場所の未来を設計するゲーム</title>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>慶應就活ナビ</title>
+<meta name="description" content="就活を、ひとりで戦わない。情報・機会・経験を持ち寄り、互いの可能性を広げる慶應生のための就活支援コミュニティです。">
+
+<!-- OGP -->
+<meta property="og:title" content="慶應就活ナビ">
+<meta property="og:description" content="就活を、ひとりで戦わない。情報・機会・経験を持ち寄り、互いの可能性を広げる慶應生のための就活支援コミュニティです。">
+<meta property="og:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+<meta property="og:url" content="https://naotama1123.github.io/keio-syukatu-navi/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="慶應就活ナビ">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="慶應就活ナビ">
+<meta name="twitter:description" content="就活を、ひとりで戦わない。情報・機会・経験を持ち寄り、互いの可能性を広げる慶應生のための就活支援コミュニティです。">
+<meta name="twitter:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:        #040a0f;
-  --bg2:       #07111a;
-  --bg3:       #0d1f2d;
-  --border:    #0e2840;
-  --border2:   #163856;
-  --text:      #c8dce8;
-  --text2:     #6a8fa8;
-  --text3:     #3a5570;
-  --accent:    #00c8ff;
-  --accent2:   #0084aa;
-  --gold:      #e8b84b;
-  --gold2:     #7a5a10;
-  --green:     #2de084;
-  --green2:    #0f5a30;
-  --red:       #ff4466;
-  --red2:      #5a0f20;
-  --amber:     #f5a623;
-  --purple:    #a78bfa;
-  --mono:      'Share Tech Mono', monospace;
-  --sans:      'Zen Kaku Gothic New', sans-serif;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans);}
-
-/* ── GRID NOISE BACKGROUND ── */
-body::before{
-  content:'';position:fixed;inset:0;
-  background-image:
-    linear-gradient(rgba(0,200,255,.015) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,200,255,.015) 1px,transparent 1px);
-  background-size:40px 40px;pointer-events:none;z-index:0;
-}
-
-/* ── LAYOUT ── */
-#app{display:flex;flex-direction:column;height:100vh;position:relative;z-index:1;}
-#topbar{
-  display:flex;align-items:center;gap:8px;padding:8px 12px;
-  border-bottom:1px solid var(--border);background:rgba(4,10,15,.97);
-  backdrop-filter:blur(8px);flex-shrink:0;
-}
-#main{display:flex;flex:1;overflow:hidden;position:relative;}
-#sidebar{
-  width:220px;flex-shrink:0;border-right:1px solid var(--border);
-  background:rgba(7,17,26,.97);overflow-y:auto;padding:12px;
-  transition:transform .25s ease;
-}
-#content{
-  flex:1;overflow-y:auto;padding:12px;
-  display:flex;flex-direction:column;gap:12px;
-  /* スマホ: ボトムナビ分の余白 */
-}
-/* ボトムナビ（スマホ専用） */
-#bottom-nav{
-  display:none;
-  position:fixed;bottom:0;left:0;right:0;
-  background:rgba(4,10,15,.97);border-top:1px solid var(--border);
-  z-index:60;
-}
-.bnav-item{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:8px 4px;font-size:9px;color:var(--text3);font-family:var(--mono);
-  cursor:pointer;border:none;background:transparent;transition:color .15s;
-  min-height:52px;
-}
-.bnav-item .bnav-icon{font-size:18px;margin-bottom:2px;}
-.bnav-item.active{color:var(--accent);}
-.bnav-item.active .bnav-icon{filter:drop-shadow(0 0 4px var(--accent));}
-/* サイドバーオーバーレイ（スマホ） */
-#sidebar-overlay{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:49;
-}
-/* ハンバーガーボタン */
-#menu-btn{
-  display:none;padding:8px;background:transparent;border:1px solid var(--border);
-  border-radius:6px;color:var(--text2);cursor:pointer;font-size:16px;flex-shrink:0;
-}
-
-/* ── TOPBAR ── */
-.logo{font-family:var(--mono);font-size:16px;color:var(--accent);letter-spacing:.12em;font-weight:700;white-space:nowrap;}
-.logo span{color:var(--text3);font-size:10px;margin-left:6px;letter-spacing:.04em;}
-.topstat{
-  display:flex;flex-direction:column;padding:4px 10px;background:var(--bg3);
-  border:1px solid var(--border);border-radius:4px;min-width:70px;
-}
-.topstat .lbl{font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:.08em;}
-.topstat .val{font-size:14px;font-weight:700;font-family:var(--mono);}
-.ap-btn{
-  padding:8px 14px;background:var(--accent2);color:var(--bg);font-weight:700;
-  border:none;border-radius:4px;cursor:pointer;font-size:12px;font-family:var(--mono);
-  letter-spacing:.04em;transition:all .15s;white-space:nowrap;min-height:36px;
-}
-.ap-btn:hover{background:var(--accent);}
-.ap-btn:disabled{background:var(--bg3);color:var(--text3);cursor:not-allowed;}
-/* topbarのmarket-tickerはスマホで非表示 */
-
-/* ── RESPONSIVE ── */
-@media(max-width:700px){
-  #menu-btn{display:flex;align-items:center;justify-content:center;}
-  #sidebar{
-    position:fixed;top:0;left:0;bottom:0;z-index:50;
-    transform:translateX(-100%);width:240px;
-    border-right:1px solid var(--border2);
-    box-shadow:4px 0 24px rgba(0,0,0,.5);
+  :root {
+    --navy: #0a1a3e;
+    --navy-light: #142254;
+    --crimson: #c0001a;
+    --crimson-light: #e8001f;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
   }
-  #sidebar.open{transform:translateX(0);}
-  #sidebar-overlay.show{display:block;}
-  #bottom-nav{display:flex;}
-  #main-tabs{display:none !important;}
-  #content{padding:10px 10px 70px;} /* ボトムナビ分の余白 */
-  #market-ticker{display:none;}
-  .logo span{display:none;}
-  #turn-limit-bar{display:none;}
-  .topstat{min-width:55px;padding:3px 7px;}
-  .topstat .val{font-size:12px;}
-  .grid2{grid-template-columns:1fr !important;}
-  .grid3{grid-template-columns:1fr 1fr !important;}
-  .card{padding:10px;}
-  .phase-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;}
-  .phase-step::before{display:none;}
-  .ps-lbl{font-size:8px;}
-  /* フェーズヘッダーのボタンを縦並びに */
-  #phase-header-btns{flex-direction:column;align-items:flex-end !important;}
-}
-@media(min-width:701px){
-  #menu-btn{display:none !important;}
-  #bottom-nav{display:none !important;}
-  #sidebar-overlay{display:none !important;}
-}
 
-/* ── SECTION HEADERS ── */
-.sec-hdr{
-  font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:.12em;
-  padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:10px;
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ── RESOURCE BARS ── */
-.res-row{display:flex;flex-direction:column;margin-bottom:8px;}
-.res-row .rl{display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;}
-.res-row .rl .rn{color:var(--text2);}
-.res-row .rl .rv{font-family:var(--mono);font-weight:700;}
-.bar-track{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:2px;transition:width .4s ease;}
+  html { scroll-behavior: smooth; }
 
-/* ── CARDS ── */
-.card{
-  background:rgba(7,17,26,.85);border:1px solid var(--border);border-radius:8px;
-  padding:14px;position:relative;overflow:hidden;
-}
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--border2),transparent);
-}
-.card-hdr{font-size:11px;color:var(--accent);font-family:var(--mono);letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-.card-hdr .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
 
-/* ── TABS ── */
-.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:14px;}
-.tab{
-  padding:6px 14px;font-size:11px;font-family:var(--mono);cursor:pointer;
-  color:var(--text3);border-bottom:2px solid transparent;transition:all .15s;
-  white-space:nowrap;
-}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-.tab:hover:not(.active){color:var(--text2);}
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vw;
+    height: 68px;
+    background: rgba(10, 26, 62, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+  }
 
-/* ── BUTTONS ── */
-.btn{
-  padding:8px 16px;border:1px solid var(--border2);border-radius:4px;
-  background:var(--bg3);color:var(--text);font-size:11px;font-family:var(--mono);
-  cursor:pointer;transition:all .15s;letter-spacing:.05em;
-}
-.btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
-.btn:disabled{opacity:.3;cursor:not-allowed;}
-.btn-primary{background:var(--accent2);border-color:var(--accent);color:var(--bg);font-weight:700;}
-.btn-primary:hover:not(:disabled){background:var(--accent);}
-.btn-gold{background:var(--gold2);border-color:var(--gold);color:var(--gold);}
-.btn-gold:hover:not(:disabled){background:var(--gold);color:var(--bg);}
-.btn-green{background:var(--green2);border-color:var(--green);color:var(--green);}
-.btn-green:hover:not(:disabled){background:var(--green);color:var(--bg);}
-.btn-red{background:var(--red2);border-color:var(--red);color:var(--red);}
-.btn-sm{padding:4px 10px;font-size:10px;}
-.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
 
-/* ── BADGES ── */
-.badge{
-  display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;
-  font-family:var(--mono);font-weight:700;letter-spacing:.05em;
-}
-.badge-blue{background:rgba(0,200,255,.1);color:var(--accent);border:1px solid rgba(0,200,255,.2);}
-.badge-gold{background:rgba(232,184,75,.1);color:var(--gold);border:1px solid rgba(232,184,75,.2);}
-.badge-green{background:rgba(45,224,132,.1);color:var(--green);border:1px solid rgba(45,224,132,.2);}
-.badge-red{background:rgba(255,68,102,.1);color:var(--red);border:1px solid rgba(255,68,102,.2);}
-.badge-gray{background:rgba(58,85,112,.15);color:var(--text3);border:1px solid var(--border);}
-.badge-amber{background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.2);}
-.badge-purple{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);}
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
 
-/* ── INPUTS ── */
-input[type=range]{
-  width:100%;accent-color:var(--accent);height:4px;cursor:pointer;
-  background:var(--bg3);border-radius:2px;
-}
-select,input[type=text]{
-  background:var(--bg3);border:1px solid var(--border2);color:var(--text);
-  padding:6px 10px;border-radius:4px;font-family:var(--mono);font-size:11px;
-  width:100%;
-}
-select:focus,input[type=text]:focus{outline:none;border-color:var(--accent);}
-label{font-size:11px;color:var(--text2);display:block;margin-bottom:4px;}
+  .nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
 
-/* ── AREA MAP ── */
-#area-map-wrap{position:relative;width:100%;aspect-ratio:16/9;max-height:380px;}
-#area-svg{width:100%;height:100%;display:block;}
-.map-node{cursor:pointer;transition:all .2s;}
-.map-node:hover .node-circle{filter:brightness(1.4);}
-.node-pulse{animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+  .nav-links a:hover { color: var(--gold-light); }
 
-/* ── PROJECT CARDS ── */
-.proj-mini{
-  border:1px solid var(--border);border-radius:6px;padding:10px 12px;
-  background:var(--bg2);cursor:pointer;transition:all .15s;margin-bottom:8px;
-}
-.proj-mini:hover,.proj-mini.active{border-color:var(--accent2);background:var(--bg3);}
-.proj-mini .pm-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;}
-.proj-mini .pm-phase{font-size:10px;color:var(--accent);font-family:var(--mono);}
-.proj-mini .pm-bar{height:3px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden;}
-.proj-mini .pm-bar-fill{height:100%;background:var(--accent);border-radius:2px;}
+  .nav-cta {
+    background: var(--crimson);
+    color: white !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2px;
+    font-size: 0.8rem !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--crimson-light) !important; color: white !important; }
 
-/* ── PHASE STEPPER ── */
-.phase-steps{display:flex;gap:0;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;}
-.phase-step{
-  display:flex;flex-direction:column;align-items:center;min-width:70px;
-  position:relative;flex:1;
-}
-.phase-step::before{
-  content:'';position:absolute;top:12px;left:50%;right:-50%;
-  height:1px;background:var(--border);z-index:0;
-}
-.phase-step:last-child::before{display:none;}
-.ps-dot{
-  width:24px;height:24px;border-radius:50%;border:2px solid var(--border2);
-  background:var(--bg3);display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-family:var(--mono);color:var(--text3);z-index:1;position:relative;
-  transition:all .3s;
-}
-.ps-dot.done{background:var(--green2);border-color:var(--green);color:var(--green);}
-.ps-dot.current{background:var(--accent2);border-color:var(--accent);color:var(--accent);box-shadow:0 0 12px rgba(0,200,255,.4);}
-.ps-lbl{font-size:9px;color:var(--text3);margin-top:4px;text-align:center;line-height:1.3;font-family:var(--mono);}
-.ps-lbl.current{color:var(--accent);}
-.ps-lbl.done{color:var(--green);}
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 120px 5vw 80px;
+  }
 
-/* ── STAKEHOLDER ── */
-.stakeholder-row{
-  display:flex;align-items:center;gap:10px;padding:10px 12px;
-  border:1px solid var(--border);border-radius:6px;background:var(--bg2);
-  margin-bottom:8px;cursor:pointer;transition:all .15s;
-}
-.stakeholder-row:hover{border-color:var(--border2);}
-.stakeholder-row.selected{border-color:var(--accent2);background:var(--bg3);}
-.sth-avatar{font-size:22px;width:36px;text-align:center;}
-.sth-info{flex:1;}
-.sth-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
-.sth-share{font-size:10px;color:var(--text3);font-family:var(--mono);}
-.sth-trust-bar{height:3px;background:var(--bg3);border-radius:2px;margin-top:5px;width:100%;overflow:hidden;}
-.sth-trust-fill{height:100%;border-radius:2px;transition:width .4s;}
+  .hero-bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 60px,
+        rgba(201,168,76,0.04) 60px,
+        rgba(201,168,76,0.04) 61px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 60px,
+        rgba(201,168,76,0.04) 60px,
+        rgba(201,168,76,0.04) 61px
+      );
+  }
 
-/* ── TENANT CARD ── */
-.tenant-card{
-  border:1px solid var(--border);border-radius:6px;padding:10px;background:var(--bg2);
-  cursor:pointer;transition:all .15s;
-}
-.tenant-card:hover{border-color:var(--border2);}
-.tenant-card.selected{border-color:var(--gold);background:rgba(232,184,75,.05);}
-.tenant-card.disabled{opacity:.35;cursor:not-allowed;}
+  .hero-accent {
+    position: absolute;
+    top: 0; right: 0;
+    width: 45vw;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(192,0,26,0.12) 0%, transparent 60%);
+    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+  }
 
-/* ── FINANCE TABLE ── */
-.fin-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
-.fin-row:last-child{border-bottom:none;}
-.fin-lbl{font-size:11px;color:var(--text2);}
-.fin-val{font-size:13px;font-family:var(--mono);font-weight:700;}
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(201,168,76,0.5);
+    padding: 0.35rem 1rem;
+    border-radius: 2px;
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.2s;
+  }
 
-/* ── EVENT POPUP ── */
-#event-overlay{
-  position:fixed;inset:0;background:rgba(4,10,15,.85);backdrop-filter:blur(6px);
-  display:flex;align-items:center;justify-content:center;z-index:100;
-  opacity:0;pointer-events:none;transition:opacity .3s;
-}
-#event-overlay.show{opacity:1;pointer-events:all;}
-#event-box{
-  background:var(--bg2);border:1px solid var(--border2);border-radius:12px;
-  padding:28px 32px;max-width:480px;width:90%;position:relative;
-  box-shadow:0 0 60px rgba(0,200,255,.1);
-}
-.ev-icon{font-size:48px;text-align:center;margin-bottom:12px;}
-.ev-title{font-size:18px;font-weight:900;text-align:center;margin-bottom:8px;}
-.ev-body{font-size:13px;color:var(--text2);text-align:center;line-height:1.7;margin-bottom:20px;}
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--crimson);
+  }
 
-/* ── ENDING ── */
-#ending-overlay{
-  position:fixed;inset:0;background:rgba(4,10,15,.97);
-  display:flex;align-items:center;justify-content:center;z-index:200;
-  opacity:0;pointer-events:none;transition:opacity .5s;overflow-y:auto;
-}
-#ending-overlay.show{opacity:1;pointer-events:all;}
-#ending-box{
-  background:var(--bg2);border:1px solid var(--border2);border-radius:16px;
-  padding:36px 40px;max-width:720px;width:92%;margin:auto;
-}
+  .hero-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    color: var(--white);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.35s;
+  }
 
-/* ── MARKET TICKER ── */
-#market-ticker{
-  font-family:var(--mono);font-size:10px;color:var(--text3);
-  display:flex;gap:16px;flex-wrap:wrap;align-items:center;padding:4px 0;
-}
-#market-ticker .mk{color:var(--text2);}
-#market-ticker .up{color:var(--green);}
-#market-ticker .dn{color:var(--red);}
+  .hero-title span {
+    color: var(--gold-light);
+    position: relative;
+  }
 
-/* ── NOTIFICATION ── */
-#notif{
-  position:fixed;top:60px;right:16px;z-index:90;
-  display:flex;flex-direction:column;gap:8px;pointer-events:none;
-}
-.notif-item{
-  background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
-  padding:10px 14px;font-size:12px;max-width:280px;
-  animation:slideIn .3s ease;pointer-events:none;
-}
-.notif-item.good{border-color:var(--green);color:var(--green);}
-.notif-item.bad{border-color:var(--red);color:var(--red);}
-.notif-item.info{border-color:var(--accent);color:var(--accent);}
-.notif-item.warn{border-color:var(--amber);color:var(--amber);}
-@keyframes slideIn{from{transform:translateX(20px);opacity:0;}to{transform:none;opacity:1;}}
+  .hero-title span::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 2px;
+    background: var(--crimson);
+  }
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+  .hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.9;
+    max-width: 520px;
+    margin-bottom: 2.8rem;
+    font-weight: 300;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.5s;
+  }
 
-/* ── HELP POPUP ── */
-.help-btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:14px;height:14px;border-radius:50%;
-  background:rgba(58,85,112,.5);border:1px solid var(--border2);
-  color:var(--text3);font-size:9px;cursor:pointer;
-  font-family:var(--mono);font-weight:700;flex-shrink:0;
-  transition:all .15s;vertical-align:middle;margin-left:4px;
-}
-.help-btn:hover{background:var(--accent2);color:var(--bg);border-color:var(--accent);}
-#help-overlay{
-  position:fixed;inset:0;background:rgba(4,10,15,.75);backdrop-filter:blur(4px);
-  z-index:150;display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .2s;
-}
-#help-overlay.show{opacity:1;pointer-events:all;}
-#help-box{
-  background:var(--bg2);border:1px solid var(--border2);border-radius:12px;
-  padding:24px 28px;max-width:440px;width:92%;
-  box-shadow:0 0 40px rgba(0,200,255,.08);
-}
-.help-metric-name{font-size:16px;font-weight:900;margin-bottom:4px;}
-.help-section{margin-top:14px;}
-.help-section-lbl{font-size:9px;font-family:var(--mono);letter-spacing:.1em;
-  color:var(--text3);margin-bottom:6px;}
-.help-section-body{font-size:12px;color:var(--text2);line-height:1.8;}
-/* ── TITLE SCREEN ── */
-#title-overlay{
-  position:fixed;inset:0;z-index:300;
-  background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .4s;
-  overflow-y:auto;
-}
-#title-overlay.show{opacity:1;pointer-events:all;}
-.title-wrap{
-  max-width:640px;width:92%;margin:auto;padding:32px 16px;
-  display:flex;flex-direction:column;align-items:center;
-}
-.title-logo{
-  font-family:var(--mono);font-size:clamp(32px,8vw,56px);
-  font-weight:900;letter-spacing:.18em;color:var(--accent);
-  text-shadow:0 0 40px rgba(0,200,255,.4);
-  margin-bottom:6px;
-}
-.title-sub{
-  font-size:clamp(11px,3vw,14px);color:var(--text3);
-  font-family:var(--mono);letter-spacing:.12em;margin-bottom:36px;
-  text-align:center;
-}
-.mode-cards{
-  display:grid;grid-template-columns:1fr 1fr;gap:14px;
-  width:100%;margin-bottom:24px;
-}
-@media(max-width:480px){.mode-cards{grid-template-columns:1fr;}}
-.mode-card{
-  background:var(--bg2);border:1px solid var(--border2);border-radius:12px;
-  padding:22px 18px;cursor:pointer;transition:all .2s;text-align:left;
-  position:relative;overflow:hidden;
-}
-.mode-card::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,transparent 60%,rgba(0,200,255,.04));
-  pointer-events:none;
-}
-.mode-card:hover{border-color:var(--accent);transform:translateY(-2px);
-  box-shadow:0 8px 32px rgba(0,200,255,.12);}
-.mode-card.gold:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(232,184,75,.12);}
-.mode-card .mc-icon{font-size:32px;margin-bottom:10px;}
-.mode-card .mc-title{font-size:16px;font-weight:900;color:var(--text);margin-bottom:4px;}
-.mode-card .mc-sub{font-size:11px;color:var(--accent);font-family:var(--mono);
-  letter-spacing:.06em;margin-bottom:10px;}
-.mode-card.gold .mc-sub{color:var(--gold);}
-.mode-card .mc-desc{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px;}
-.mode-card .mc-tags{display:flex;flex-wrap:wrap;gap:5px;}
-.mode-card .mc-tag{
-  font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:3px;
-  background:rgba(0,200,255,.08);color:var(--accent);border:1px solid rgba(0,200,255,.2);
-}
-.mode-card.gold .mc-tag{
-  background:rgba(232,184,75,.08);color:var(--gold);border-color:rgba(232,184,75,.2);
-}
-.title-footer{font-size:10px;color:var(--text3);font-family:var(--mono);
-  text-align:center;line-height:1.8;margin-top:8px;}
+  .hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.65s;
+  }
 
-/* ── TURN LIMIT ── */
-#turn-limit-bar{
-  display:flex;align-items:center;gap:6px;padding:4px 10px;
-  border-radius:4px;font-family:var(--mono);font-size:11px;
-  border:1px solid var(--border);background:var(--bg3);
-  transition:all .3s;white-space:nowrap;
-}
-#turn-limit-bar.warn{border-color:var(--amber);background:rgba(245,166,35,.08);color:var(--amber);}
-#turn-limit-bar.danger{border-color:var(--red);background:rgba(255,68,102,.1);color:var(--red);
-  animation:blink .8s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.55;}}
+  .btn-primary {
+    background: var(--crimson);
+    color: white;
+    padding: 0.9rem 2.2rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  }
 
-/* ── MISC ── */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.sep{height:1px;background:var(--border);margin:12px 0;}
-.small{font-size:11px;color:var(--text2);}
-.mono{font-family:var(--mono);}
-.warn-box{padding:10px 14px;background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.2);border-radius:6px;font-size:12px;color:var(--amber);}
-.info-box{padding:10px 14px;background:rgba(0,200,255,.06);border:1px solid rgba(0,200,255,.15);border-radius:6px;font-size:12px;color:var(--accent);}
-.good-box{padding:10px 14px;background:rgba(45,224,132,.06);border:1px solid rgba(45,224,132,.2);border-radius:6px;font-size:12px;color:var(--green);}
-.dimtext{color:var(--text3);}
-h3.section-title{font-size:12px;color:var(--text);margin-bottom:10px;font-weight:700;}
-.tooltip-wrap{position:relative;display:inline-block;}
-.tooltip-wrap .tt{
-  display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
-  background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
-  padding:8px 12px;font-size:11px;color:var(--text2);width:200px;pointer-events:none;
-  margin-bottom:6px;z-index:50;
-}
-.tooltip-wrap:hover .tt{display:block;}
-.consent-check{display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:12px;color:var(--text2);}
-.consent-check input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;}
-.consent-check:hover{color:var(--text);}
+  .btn-primary:hover {
+    background: var(--crimson-light);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    border: 1px solid rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.85);
+    padding: 0.9rem 2.2rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin: 2rem 0 2.5rem;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 0;
+    animation-delay: 0.8s;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: var(--gold-light);
+    display: block;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.4rem;
+    letter-spacing: 0.1em;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* ===== SCROLL INDICATOR ===== */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 30px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+  }
+
+  /* ===== SECTION COMMON ===== */
+  section { position: relative; }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--crimson);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    color: var(--navy);
+    line-height: 1.35;
+    margin-bottom: 1.2rem;
+  }
+
+  .section-desc {
+    color: var(--text-muted);
+    line-height: 1.95;
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+
+  /* ===== MISSION ===== */
+  .mission {
+    padding: 120px 5vw;
+    background: var(--cream);
+  }
+
+  .mission-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8vw;
+    align-items: center;
+  }
+
+  .mission-visual {
+    position: relative;
+  }
+
+  .mission-card {
+    background: var(--navy);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mission-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--crimson), var(--gold));
+  }
+
+  .mission-card-quote {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .mission-card-quote span { color: var(--gold-light); }
+
+  .mission-card-sub {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.9;
+    font-weight: 300;
+  }
+
+  .mission-deco {
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 120px; height: 120px;
+    border: 2px solid rgba(201,168,76,0.2);
+    transform: rotate(15deg);
+  }
+
+  /* ===== ACTIVITIES ===== */
+  .activities {
+    padding: 120px 5vw;
+    background: var(--gray);
+  }
+
+  .activities-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .activities-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 5rem;
+  }
+
+  .activities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    background: rgba(10,26,62,0.08);
+  }
+
+  .activity-card {
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+
+  .activity-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(10,26,62,0.12);
+    z-index: 1;
+  }
+
+  .activity-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 0;
+    background: var(--crimson);
+    transition: height 0.3s;
+  }
+
+  .activity-card:hover::after { height: 3px; }
+
+  .activity-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: rgba(10,26,62,0.18);
+    line-height: 1;
+    margin-bottom: 1.2rem;
+    transition: color 0.3s;
+  }
+
+  .activity-card:hover .activity-num {
+    color: rgba(192,0,26,0.22);
+  }
+
+  .activity-icon {
+    width: 44px; height: 44px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+  }
+
+  .activity-card:hover .activity-icon {
+    background: var(--crimson);
+  }
+
+  .activity-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.05rem;
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+  }
+
+  .activity-desc {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    line-height: 1.85;
+    font-weight: 300;
+  }
+
+  .activity-badge {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    font-size: 0.6rem;
+    background: rgba(201,168,76,0.15);
+    color: var(--gold);
+    padding: 0.2rem 0.6rem;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  /* ===== JOIN ===== */
+  .join {
+    padding: 120px 5vw;
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .join-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(192,0,26,0.15) 0%, transparent 70%);
+  }
+
+  .join-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    position: relative;
+  }
+
+  .join .section-title { color: var(--white); }
+  .join .section-desc { color: rgba(255,255,255,0.55); }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .faq-item {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 1.4rem 0;
+    cursor: pointer;
+  }
+
+  .faq-item:last-child {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .faq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .faq-q-text {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+  }
+
+  .faq-toggle {
+    width: 24px; height: 24px;
+    border: 1px solid rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    color: var(--gold);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .faq-a {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.85;
+    margin-top: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.35s ease;
+    font-weight: 300;
+  }
+
+  .faq-item.open .faq-a {
+    margin-top: 0.8rem;
+    max-height: 200px;
+  }
+
+  .faq-item.open .faq-toggle {
+    background: var(--crimson);
+    border-color: var(--crimson);
+    transform: rotate(45deg);
+  }
+
+  /* ===== GREETING ===== */
+  .greeting {
+    padding: 120px 5vw;
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .greeting::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 50% 70% at 10% 50%, rgba(192,0,26,0.1) 0%, transparent 70%);
+  }
+
+  .greeting-inner {
+    max-width: 800px;
+  }
+
+  .greeting-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.97rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 2.1;
+    font-weight: 400;
+    border: none;
+    margin: 1.8rem 0 2.5rem;
+    padding: 0;
+  }
+
+  .greeting-sig {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .greeting-sig-line {
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .greeting-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.1rem;
+    color: var(--white);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .greeting-role {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    margin-top: 0.25rem;
+    letter-spacing: 0.06em;
+  }
+
+  .greeting-deco {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 3.5rem 2.5rem;
+    position: relative;
+  }
+
+  .greeting-deco::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 40px; height: 40px;
+    border-top: 2px solid var(--crimson);
+    border-left: 2px solid var(--crimson);
+  }
+
+  .greeting-deco::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 40px; height: 40px;
+    border-bottom: 2px solid var(--crimson);
+    border-right: 2px solid var(--crimson);
+  }
+
+  .greeting-quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 7rem;
+    color: rgba(201,168,76,0.2);
+    line-height: 0.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .greeting-quote-sub {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 2;
+  }
+
+  @media (max-width: 900px) {
+    .greeting-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .greeting-deco { display: none; }
+  }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    padding: 100px 5vw;
+    background: var(--cream);
+    text-align: center;
+  }
+
+  .cta-inner {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    color: var(--navy);
+    line-height: 1.5;
+    margin-bottom: 1.2rem;
+  }
+
+  .cta-sub {
+    color: var(--text-muted);
+    line-height: 1.9;
+    font-size: 0.92rem;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .cta-btn {
+    background: var(--navy);
+    color: white;
+    padding: 1.1rem 3rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--crimson);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .cta-btn:hover::before { transform: scaleX(1); }
+  .cta-btn span { position: relative; z-index: 1; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #060e20;
+    padding: 3rem 5vw;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+  }
+
+  .footer-copy {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+  }
+
+  /* ===== CONTACT ===== */
+  .contact-section {
+    padding: 120px 5vw;
+    background: var(--gray);
+  }
+  .contact-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .contact-form {
+    background: var(--white);
+    padding: 2.5rem;
+    border-top: 3px solid var(--navy);
+  }
+  .contact-field { margin-bottom: 1.5rem; }
+  .contact-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.6rem;
+  }
+  .required {
+    font-size: 0.68rem;
+    background: var(--crimson);
+    color: white;
+    padding: 0.1rem 0.4rem;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+  }
+  .contact-textarea {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(10,26,62,0.15);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    background: var(--cream);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.8;
+  }
+  .contact-textarea:focus { border-color: var(--navy); }
+  .contact-actions { text-align: right; }
+  .contact-btn {
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 0.85rem 2.2rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .contact-btn:hover { background: var(--crimson); }
+  .contact-btn:disabled { background: rgba(10,26,62,0.3); cursor: not-allowed; }
+  .contact-note {
+    margin-top: 1rem;
+    font-size: 0.82rem;
+    text-align: center;
+    min-height: 1.2em;
+  }
+  .contact-note.success { color: #00703c; }
+  .contact-note.error { color: var(--crimson); }
+
+  /* ===== HAMBURGER ===== */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: rgba(255,255,255,0.8);
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: rgba(10,26,62,0.98);
+    backdrop-filter: blur(12px);
+    z-index: 99;
+    flex-direction: column;
+    padding: 1.5rem 6vw 2rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--gold-light); }
+  .mobile-menu-members {
+    color: var(--gold-light) !important;
+    font-weight: 500;
+  }
+  .mobile-menu-cta {
+    margin-top: 1rem;
+    background: var(--crimson) !important;
+    color: white !important;
+    text-align: center;
+    padding: 0.9rem !important;
+    border: none !important;
+    font-weight: 500;
+  }
+
+  @media (max-width: 900px) {
+    .hamburger { display: flex; }
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===== EVENTS ===== */
+  .events {
+    padding: 120px 5vw;
+    background: var(--cream);
+  }
+  .events-inner { max-width: 1200px; margin: 0 auto; }
+  .events-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 3.5rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .events-filter { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 0.4rem 1rem;
+    font-size: 0.75rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    border: 1px solid rgba(10,26,62,0.2);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover { background: var(--navy); border-color: var(--navy); color: white; }
+  .filter-btn.members-f.active, .filter-btn.members-f:hover { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+  .events-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
+  .event-row {
+    display: grid;
+    grid-template-columns: 110px 1fr auto auto;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.6rem 2rem;
+    background: var(--white);
+    transition: background 0.2s;
+  }
+  .event-row:hover { background: #f8f5f0; }
+  .event-row.members { border-left: 3px solid var(--gold); }
+  .event-date-block { text-align: center; }
+  .event-month { font-size: 0.68rem; letter-spacing: 0.12em; color: var(--crimson); font-weight: 700; text-transform: uppercase; }
+  .event-day { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--navy); line-height: 1; margin: 0.1rem 0; } .event-day.undated { font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
+  .event-weekday { font-size: 0.68rem; color: var(--text-muted); }
+  .event-title-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem; flex-wrap: wrap; }
+  .event-title { font-family: 'Noto Serif JP', serif; font-size: 1rem; color: var(--navy); font-weight: 700; }
+  .members-badge {
+    font-size: 0.6rem;
+    background: rgba(201,168,76,0.15);
+    color: #8a6d1a;
+    padding: 0.15rem 0.5rem;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+  .event-meta { font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 1.2rem; flex-wrap: wrap; }
+  .event-status { padding: 0.3rem 0.8rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; white-space: nowrap; }
+  .status-open { background: rgba(0,160,80,0.1); color: #00703c; border: 1px solid rgba(0,160,80,0.25); }
+  .status-soon { background: rgba(201,168,76,0.15); color: #8a6d1a; border: 1px solid rgba(201,168,76,0.3); }
+  .status-closed { background: rgba(10,26,62,0.07); color: var(--text-muted); border: 1px solid rgba(10,26,62,0.12); }
+  .event-link {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    background: var(--navy);
+    color: white;
+    font-size: 0.75rem;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .event-link:hover { background: var(--crimson); }
+  .event-link.no-link { background: rgba(10,26,62,0.08); color: var(--text-muted); pointer-events: none; }
+  .events-loading { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.88rem; background: var(--white); }
+  .events-empty { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.88rem; background: var(--white); }
+  .sheet-note { margin-top: 1.2rem; text-align: right; font-size: 0.72rem; color: rgba(10,26,62,0.3); letter-spacing: 0.05em; }
+  @media (max-width: 760px) {
+    .event-row { grid-template-columns: 70px 1fr; }
+    .event-row > :nth-child(3), .event-row > :nth-child(4) { grid-column: 2; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .mission-inner,
+    .activities-header,
+    .join-inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .activities-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .hero-stats {
+      position: static;
+      margin-top: 3rem;
+      justify-content: flex-start;
+    }
+
+    .nav-links { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .activities-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero {
+      padding: 100px 6vw 100px;
+    }
+
+    .hero-title {
+      font-size: 2.4rem;
+      line-height: 1.3;
+    }
+
+    .hero-sub {
+      font-size: 0.92rem;
+    }
+
+    .hero-stats {
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .stat-divider { display: none; }
+
+    .stat-num {
+      font-size: 1.6rem;
+    }
+
+    .hero-buttons {
+      flex-direction: column;
+    }
+
+    .btn-primary, .btn-outline {
+      text-align: center;
+    }
+
+    .event-row {
+      grid-template-columns: 60px 1fr;
+      gap: 1rem;
+      padding: 1.2rem;
+    }
+
+    .event-row > :nth-child(3),
+    .event-row > :nth-child(4) {
+      grid-column: 2;
+    }
+
+    .event-day { font-size: 1.6rem; }
+
+    .mission-card { padding: 2rem; }
+    .mission-card-quote { font-size: 1.1rem; }
+
+    .greeting-inner { grid-template-columns: 1fr; }
+
+    .section-title { font-size: 1.6rem; }
+  }
 </style>
 </head>
 <body>
-<div id="app">
 
-<!-- TOP BAR -->
-<div id="topbar">
-  <button id="menu-btn" onclick="G.toggleSidebar()">☰</button>
-  <div class="logo">DEVELOPE<span>— 場所の未来を設計するゲーム</span></div>
-  <div class="topstat">
-    <span class="lbl">SEASON</span>
-    <span class="val" id="ts-season" style="color:var(--gold);font-size:12px;">---</span>
-  </div>
-  <div class="topstat">
-    <span class="lbl">TURN</span>
-    <span class="val" id="ts-turn" style="color:var(--accent);">1</span>
-  </div>
-  <div id="turn-limit-bar">
-    <span id="tl-icon">📅</span>
-    <span id="tl-text">残 15期</span>
-  </div>
-  <div class="topstat" style="min-width:80px;">
-    <span class="lbl">AP</span>
-    <div id="ts-ap"></div>
-  </div>
-  <div class="topstat">
-    <span class="lbl">CASH</span>
-    <span class="val" id="ts-cash" style="color:var(--gold);font-size:12px;">8,000</span>
-  </div>
-  <div id="market-ticker"></div>
-  <div style="margin-left:auto;display:flex;gap:6px;">
-    <button class="ap-btn" onclick="G.endTurn()">▶ ターン終了</button>
-  </div>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">慶應就活ナビ</a>
+  <ul class="nav-links">
+    <li><a href="orientation.html" style="color:var(--gold-light);">新入生の方へ</a></li>
+    <li><a href="#mission">ミッション</a></li>
+    <li><a href="#activities">活動内容</a></li>
+    <li><a href="#events">イベント</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">お問い合わせ</a></li>
+    <li><a href="match.html" class="nav-cta" style="background:rgba(201,168,76,0.15); color:var(--gold-light); border:1px solid rgba(201,168,76,0.3);">企業マッチング</a></li>
+    <li><a href="members.html" class="nav-cta" style="background:rgba(201,168,76,0.15); color:var(--gold-light); border:1px solid rgba(201,168,76,0.3);">会員ページ</a></li>
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="nav-cta" target="_blank" rel="noopener">参加する</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="orientation.html" style="color:var(--gold-light); font-weight:700;">新入生の方へ</a>
+  <a href="#mission" onclick="closeMenu()">ミッション</a>
+  <a href="#activities" onclick="closeMenu()">活動内容</a>
+  <a href="#events" onclick="closeMenu()">イベント</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="#contact" onclick="closeMenu()">お問い合わせ</a>
+  <a href="match.html" class="mobile-menu-members">企業マッチング</a>
+  <a href="members.html" class="mobile-menu-members">🔒 会員ページ</a>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="mobile-menu-cta" target="_blank" rel="noopener">参加する</a>
 </div>
 
-<!-- サイドバーオーバーレイ（スマホ時） -->
-<div id="sidebar-overlay" onclick="G.closeSidebar()"></div>
-
-<!-- MAIN -->
-<div id="main">
-  <!-- SIDEBAR -->
-  <div id="sidebar">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-      <div class="sec-hdr" style="margin-bottom:0;border:none;">RESOURCES</div>
-      <button class="btn btn-sm" style="display:none;" id="sidebar-close-btn" onclick="G.closeSidebar()">✕</button>
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-accent"></div>
+  <div style="position:relative; max-width:1200px; margin:0 auto; width:100%;">
+    <div class="hero-badge">KEIO UNIVERSITY · 就活支援コミュニティ</div>
+    <h1 class="hero-title">
+      就活を、<br>
+      <span>ひとりで</span>戦わない。
+    </h1>
+    <p class="hero-sub">
+      情報・機会・経験を持ち寄り、互いの可能性を広げる。<br>
+      慶應生のための就活支援コミュニティです。
+    </p>
+    <div class="hero-buttons">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener">コミュニティに参加する</a>
+      <a href="#activities" class="btn-outline">活動内容を見る</a>
     </div>
-    <div id="res-panel"></div>
-    <div class="sep"></div>
-    <div class="sec-hdr">PORTFOLIO</div>
-    <div id="proj-list"></div>
-    <button class="btn btn-sm" style="width:100%;margin-top:6px;" onclick="G.showNewProjectModal()">＋ 新規案件</button>
-    <div class="sep"></div>
-    <div class="sec-hdr">LOG</div>
-    <div id="log-panel" style="font-size:10px;color:var(--text3);font-family:var(--mono);line-height:1.8;max-height:180px;overflow-y:auto;"></div>
+    <p style="margin-top:1.5rem; font-size:0.72rem; color:rgba(255,255,255,0.35); letter-spacing:0.05em; line-height:1.8;">
+      ※大学公式ではありません。有志の学生による非営利団体です。
+    </p>
   </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    SCROLL
+  </div>
+</section>
 
-  <!-- CONTENT -->
-  <div id="content">
-    <!-- デスクトップタブ -->
-    <div class="tabs" id="main-tabs">
-      <div class="tab active" onclick="G.switchTab('map')">🗺 エリアマップ</div>
-      <div class="tab" onclick="G.switchTab('project')">📋 案件詳細</div>
-      <div class="tab" onclick="G.switchTab('market')">📊 市況</div>
-      <div class="tab" onclick="G.switchTab('portfolio')">💼 ポートフォリオ</div>
+<!-- MISSION -->
+<section class="mission" id="mission">
+  <div class="mission-inner">
+    <div class="reveal">
+      <div class="section-label">Our Mission</div>
+      <h2 class="section-title">就活という戦いを、<br>ともに越えていく</h2>
+      <p class="section-desc" style="margin-bottom:1.5rem;">
+        就活は個人戦になりがちです。しかし、情報・機会・経験を共有することで、より良い意思決定が可能になると私たちは考えています。
+      </p>
+      <p class="section-desc">
+        慶應就活ナビは、単なる情報共有の場ではなく、就活という長期的なプロセスを支え合うためのコミュニティです。参加者同士が互いに支え合いながら、納得のいく進路選択を行える環境を整えることを目指しています。
+      </p>
     </div>
-    <div id="tab-content"></div>
+    <div class="mission-visual reveal" style="transition-delay:0.15s;">
+      <div class="mission-card">
+        <p class="mission-card-quote">
+          「知らなかった」による<br>
+          <span>機会損失をなくす</span>こと。<br>
+          それが私たちの出発点。
+        </p>
+        <p class="mission-card-sub">
+          選考情報、イベント情報、業界の知識——<br>
+          ひとりで集めるには限界があります。だからこそ、<br>
+          コミュニティの力を最大限に活かします。
+        </p>
+        <div class="mission-deco"></div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- ボトムナビ（スマホ専用） -->
-<div id="bottom-nav">
-  <button class="bnav-item active" id="bnav-map" onclick="G.switchTab('map')">
-    <span class="bnav-icon">🗺</span>マップ
-  </button>
-  <button class="bnav-item" id="bnav-project" onclick="G.switchTab('project')">
-    <span class="bnav-icon">📋</span>案件
-  </button>
-  <button class="bnav-item" id="bnav-market" onclick="G.switchTab('market')">
-    <span class="bnav-icon">📊</span>市況
-  </button>
-  <button class="bnav-item" id="bnav-portfolio" onclick="G.switchTab('portfolio')">
-    <span class="bnav-icon">💼</span>ポートフォリオ
-  </button>
-</div>
+<!-- ACTIVITIES -->
+<section class="activities" id="activities">
+  <div class="activities-inner">
+    <div class="activities-header">
+      <div class="reveal">
+        <div class="section-label">Activities</div>
+        <h2 class="section-title">5つの<br>活動内容</h2>
+      </div>
+      <div class="reveal" style="transition-delay:0.1s;">
+        <p class="section-desc">
+          情報共有から実践練習まで、就活のすべてのフェーズをカバー。参加者が主体的に関われる場を複数用意しています。
+        </p>
+      </div>
+    </div>
 
-<!-- TITLE SCREEN -->
-<div id="title-overlay">
-  <div class="title-wrap">
-
-    <!-- ロゴ -->
-    <div class="title-logo">DEVELOPE</div>
-    <div class="title-sub">— 場所の未来を設計するゲーム —</div>
-
-    <!-- モード選択 -->
-    <div class="mode-cards">
-
-      <!-- 単一開発モード -->
-      <div class="mode-card" onclick="G.startGame('single')">
-        <div class="mc-icon">🏗️</div>
-        <div class="mc-title">単一開発</div>
-        <div class="mc-sub">4年 / 16ターン</div>
-        <div class="mc-desc">
-          1つのエリアで1〜2案件に集中。<br>
-          用地発見から開業まで、<br>
-          デベロッパーの仕事を一通り体験できます。
-        </div>
-        <div class="mc-tags">
-          <span class="mc-tag">初めての方に</span>
-          <span class="mc-tag">30〜45分</span>
-          <span class="mc-tag">最大2案件</span>
+    <div class="activities-grid">
+      <div class="activity-card reveal">
+        <div class="activity-num">01</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <h3 class="activity-title">情報共有</h3>
+        <p class="activity-desc">選考情報やイベント情報などを共有し、「知らなかったこと」による機会損失を防ぎます。メンバー全員で情報をアップデートし合います。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.1s;">
+        <div class="activity-num">02</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <h3 class="activity-title">就活イベント参加促進</h3>
+        <p class="activity-desc">合同説明会や選考イベントなどに参加しやすい環境づくりを行います。ひとりでは踏み出しにくい場も、仲間と一緒なら安心。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.2s;">
+        <div class="activity-num">03</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3 class="activity-title">模擬面接・GD</h3>
+        <p class="activity-desc">サマーインターン選考開始までに実践形式の練習機会を提供予定。フィードバックを通じて本番力を磨きます。</p>
+        <div class="activity-badge">準備中</div>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.1s;">
+        <div class="activity-num">04</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3 class="activity-title">交流イベント</h3>
+        <p class="activity-desc">不定期で交流会を開催し、情報交換や相談ができる関係構築を支援します。就活仲間との繋がりが心強い支えになります。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.2s;">
+        <div class="activity-num">05</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <h3 class="activity-title">輪読会</h3>
+        <p class="activity-desc">就活イベント参加特典で得たAmazonギフト券を活用し、業界研究本・ビジネス書等を購入・共有。コスパ最大の学びの場。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.3s; background: var(--navy);">
+        <div style="height:100%; display:flex; flex-direction:column; justify-content:center; padding-top:1rem;">
+          <p style="font-family:'Noto Serif JP',serif; color:rgba(255,255,255,0.7); font-size:1rem; line-height:1.9; margin-bottom:1.5rem;">
+            活動はこれからも<br>拡張していきます。
+          </p>
+          <a href="#join" class="btn-primary" style="align-self:flex-start; font-size:0.8rem; padding:0.7rem 1.5rem;">参加して一緒に作る →</a>
         </div>
       </div>
-
-      <!-- エリア開発モード -->
-      <div class="mode-card gold" onclick="G.startGame('area')">
-        <div class="mc-icon">🏙️</div>
-        <div class="mc-title">エリア開発</div>
-        <div class="mc-sub">10年 / 40ターン</div>
-        <div class="mc-desc">
-          複数エリアを開発しながら<br>
-          街全体の価値を高めていく。<br>
-          長期的なポートフォリオ経営を体験できます。
-        </div>
-        <div class="mc-tags">
-          <span class="mc-tag">やり込み向け</span>
-          <span class="mc-tag">60〜90分</span>
-          <span class="mc-tag">最大3案件並行</span>
-        </div>
-      </div>
-
     </div>
-
-    <!-- モードの違い早見表 -->
-    <div style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:20px;">
-      <div style="font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:.12em;margin-bottom:10px;">MODE COMPARISON</div>
-      <table style="width:100%;border-collapse:collapse;font-size:11px;">
-        <thead>
-          <tr>
-            <th style="padding:5px 0;border-bottom:1px solid var(--border);color:var(--text3);font-weight:400;text-align:left;width:40%;"></th>
-            <th style="padding:5px 8px;border-bottom:1px solid var(--border);color:var(--accent);font-family:var(--mono);font-weight:700;text-align:center;">単一開発</th>
-            <th style="padding:5px 8px;border-bottom:1px solid var(--border);color:var(--gold);font-family:var(--mono);font-weight:700;text-align:center;">エリア開発</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2);">期間</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">4年</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">10年</td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2);">ターン数</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">16</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">40</td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2);">並行案件</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">最大2</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">最大3</td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2);">初期資金</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">8,000M¥</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">12,000M¥</td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2);">エリア解放</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">一部</td>
-            <td style="padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text);text-align:center;font-family:var(--mono);">全4エリア</td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;color:var(--text2);">勝利条件</td>
-            <td style="padding:6px 8px;color:var(--text);text-align:center;font-size:10px;">1案件完成</td>
-            <td style="padding:6px 8px;color:var(--text);text-align:center;font-size:10px;">エリア価値向上</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="title-footer">
-      不動産デベロッパーの仕事の本質<br>
-      「場所の制約と可能性を読み、多様な関係者を束ねながら<br>
-      長期的な都市価値と事業価値を両立する面白さ」を体験してください
-    </div>
-
   </div>
-</div>
+</section>
 
-<!-- HELP OVERLAY -->
-<div id="help-overlay" onclick="G._closeHelp()">
-  <div id="help-box" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+<!-- EVENTS -->
+<section class="events" id="events">
+  <div class="events-inner">
+    <div class="events-header reveal">
       <div>
-        <div class="help-metric-name" id="help-name"></div>
-        <div style="font-size:11px;color:var(--text3);font-family:var(--mono);" id="help-range"></div>
+        <div class="section-label">Events</div>
+        <h2 class="section-title">イベント予定</h2>
       </div>
-      <button class="btn btn-sm" onclick="G._closeHelp()">✕</button>
+      <div class="events-filter">
+        <button class="filter-btn active" data-filter="all">すべて</button>
+        <button class="filter-btn" data-filter="open">募集中</button>
+        <button class="filter-btn members-f" data-filter="members">会員限定</button>
+      </div>
     </div>
-    <div class="help-section">
-      <div class="help-section-lbl">この指標は何か</div>
-      <div class="help-section-body" id="help-what"></div>
+    <div class="events-list" id="events-list">
+      <div class="events-loading">📅 イベント情報を読み込み中...</div>
     </div>
-    <div class="help-section">
-      <div class="help-section-lbl">上げる方法</div>
-      <div class="help-section-body" id="help-how"></div>
+    <p class="sheet-note" id="sheet-note"></p>
+  </div>
+</section>
+
+<!-- FAQ / JOIN -->
+<section class="join" id="faq">
+  <div class="join-bg"></div>
+  <div class="join-inner">
+    <div class="reveal">
+      <div class="section-label" style="color:var(--gold);">FAQ</div>
+      <h2 class="section-title">よくある質問</h2>
+      <p class="section-desc" style="margin-bottom:2rem;">
+        参加を検討している方から寄せられるご質問をまとめました。
+      </p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener">今すぐ参加する</a>
     </div>
-    <div class="help-section">
-      <div class="help-section-lbl">高いと何が起きるか</div>
-      <div class="help-section-body" id="help-effect"></div>
-    </div>
-    <div class="help-section">
-      <div class="help-section-lbl">低いと何が起きるか</div>
-      <div class="help-section-body" id="help-risk"></div>
+    <div class="faq-list reveal" id="faq-list" style="transition-delay:0.15s;">
+      <div class="events-loading">💬 FAQ を読み込み中...</div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- EVENT OVERLAY -->
-<div id="event-overlay">
-  <div id="event-box">
-    <div class="ev-icon" id="ev-icon"></div>
-    <div class="ev-title" id="ev-title"></div>
-    <div class="ev-body" id="ev-body"></div>
-    <div class="btn-row" style="justify-content:center;" id="ev-actions"></div>
+<!-- GREETING -->
+<section class="greeting" id="greeting">
+  <div class="greeting-inner">
+    <div class="greeting-content reveal">
+      <div class="section-label" style="color:var(--gold);">Message</div>
+      <h2 class="section-title" style="color:var(--white);">代表挨拶</h2>
+      <blockquote class="greeting-text">
+        慶應就活ナビは、立ち上げ当初の手探りの日々を経て、単なる就活情報の共有にとどまらない場へと少しずつ成長してきました。共通の目標を持つ仲間同士が、互いに刺激し合いながら就活を乗り切る——そのコミュニティとしての形が、徐々に鮮明になってきたと感じています。
+        <br><br>
+        就職活動は、ともすれば孤独になりがちです。だからこそ私たちは、サークルのように横のつながりを大切にしながら、「一人で戦わない就活」を実現するコミュニティを目指していきます。引き続き、よろしくお願いいたします。
+      </blockquote>
+      <div class="greeting-sig">
+        <div class="greeting-sig-line"></div>
+        <div>
+          <div class="greeting-name">大玉 直</div>
+          <div class="greeting-role">代表 ／ 経済学部2年</div>
+        </div>
+      </div>
+    </div>
+
   </div>
-</div>
+</section>
 
-<!-- ENDING OVERLAY -->
-<div id="ending-overlay">
-  <div id="ending-box" id="ending-content"></div>
-</div>
+<!-- CTA -->
+<section class="cta-section" id="join">
+  <div class="cta-inner reveal">
+    <div class="section-label" style="text-align:center;">Join Us</div>
+    <h2 class="cta-title">一緒に就活を、<br>切り拓いていこう。</h2>
+    <p class="cta-sub">
+      登録は無料・1分で完了します。<br>
+      慶應生の就活コミュニティで、仲間と情報を共有しましょう。
+    </p>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="cta-btn" target="_blank" rel="noopener"><span>参加フォームへ進む →</span></a>
+  </div>
+</section>
 
-<!-- NOTIFICATION AREA -->
-<div id="notif"></div>
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <div class="reveal" style="text-align:center; margin-bottom:3rem;">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">お問い合わせ</h2>
+      <p class="section-desc">ご質問・ご要望はこちらからお気軽にどうぞ。</p>
+    </div>
+    <div class="reveal">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdawYFU8D5V-2BeMdsdlNbWNwMWWHqUaggniqYEUzkKkulO8g/viewform?embedded=true" width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0" style="border:none; background:white;">読み込んでいます…</iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">慶應就活ナビ</div>
+    <div class="footer-copy">© 2025 慶應就活ナビ. All rights reserved.</div>
+  </div>
+</footer>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// DATA DEFINITIONS
-// ═══════════════════════════════════════════════════════════
+  // ===== EVENTS FROM GOOGLE SHEETS =====
+  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ASykgCNJirBmB76yqxQ4H0jrpqK8vXbx2izLSdHo1To/export?format=csv&gid=0'; // ← ここにGoogle スプレッドシートの公開CSVURLを貼る
+  // 公開手順: スプレッドシート → ファイル → 共有 → ウェブに公開 → CSV → URLをコピー
 
-const AREAS = [
-  {
-    id:'A1', name:'北橋駅前', type:'都心駅前', x:28, y:28,
-    population:28000, nightPop:4200, tourism:0.15,
-    officeIdx:45, housingIdx:82, commercialIdx:68,
-    govPriority:['防災機能強化','歩行者空間確保','夜間賑わい創出'],
-    landscape:'景観重点地区（高さ45m以下）',
-    floorRatio:600, coverRatio:80,
-    context:['駅徒歩3分だが動線が悪く素通りされやすい','昼就労者多・夜間閑散','景観規制あり＋行政防災優先','容積ボーナス狙える可能性'],
-    color:'#00c8ff', bonusCondition:'防災+歩行者デッキ整備',
-    unlocked:true,
-    // ── エリア固有設定 ──
-    keyResource:'govTrust',        // このエリアで最重要なリソース
-    keyResourceLabel:'行政信頼度', // 表示名
-    keyResourceDesc:'容積ボーナス取得・景観規制交渉の鍵。行政信頼なしでは高層案が通らない',
-    ownerCount:7,                  // 地権者数（多いほど権利調整が難）
-    ownerDifficulty:'高',
-    govDifficulty:'高',
-    leasingDifficulty:'中',
-    operationDifficulty:'中',
-    // フェーズ別の固有論点
-    phasePoints:{
-      2:['昼人口vs夜人口の非対称が最大の課題。夜間活性化策が差別化になる',
-         '容積率600%は高いが、景観規制で高さが制限される。容積消化の工夫が必要',
-         '行政が防災を最優先している背景を読む。それに応えることで容積ボーナスが狙える'],
-      3:['夜間人口が薄い弱点を「夜も使える施設」で補えるか',
-         '景観規制の中でどう容積を最大化するか（セットバック・分棟など）',
-         '住宅中心vs商業強化 — 短期収益vs長期エリアブランドのジレンマ'],
-      4:['地権者7名・最大地権者38%。全員合意でなくても80%で着工可能',
-         '地権者の優先事項はバラバラ：相続対策、地代収入、地元愛、早期現金化',
-         'ヒアリングを重ねると「本音」が判明し、交渉が一気に動くことがある'],
-      5:['防災課への対応が容積ボーナスの入口。防災備蓄倉庫+歩行者デッキで実現',
-         '景観審議会の意見が計画変更を求めてくる可能性がある',
-         '都市計画課・防災課・建築指導課で要求が異なる。全方位の対応が必要'],
-      6:['広場整備でIRRが下がる。しかしエリア価値向上で将来案件の収益性が上がる',
-         '容積ボーナスが取れているかどうかで投資規模が大きく変わる'],
-      8:['夜間人流が薄いエリア。夜も稼げるテナント（飲食・フィットネス）が重要',
-         'ブランドテナントが入ることでエリアの格が上がり周辺地価も連動する'],
-      9:['開業後は夜間活性化施策が評価の鍵。昼だけ賑わうでは目標を達成できない',
-         'エリアマネジメント活動（イベント・マルシェ）が行政評価を継続的に高める'],
-    },
-    // エリア専用イベント
-    areaEvents:[
-      {id:'AE-A1-1',name:'景観審議会で差し戻し',icon:'🏛️',phase:[5],prob:.25,
-       desc:'景観審議会から高層部のデザインについて変更勧告が出ました。設計修正か強行かの判断が必要です。',
-       choices:[{label:'設計を修正（工期+1ターン、行政評価+15）',action:'modify'},{label:'現行案で強行（住民反発リスク+20）',action:'force'}]},
-      {id:'AE-A1-2',name:'隣接地権者が他社に打診',icon:'📞',phase:[4],prob:.2,
-       desc:'最大地権者が競合デベロッパーに売却を打診したとの情報が入りました。早急な対応が必要です。',
-       choices:[{label:'条件を上乗せして早期合意（費用+5%）',action:'premium'},{label:'信頼関係を深めて引き止める（AP2追加消費）',action:'trust'}]},
-    ],
-  },
-  {
-    id:'A2', name:'南港準工業地', type:'準工業地域', x:72, y:28,
-    population:8000, nightPop:2000, tourism:0.02,
-    officeIdx:60, housingIdx:30, commercialIdx:40,
-    govPriority:['雇用創出・産業集積','用途転換の慎重審査','物流インフラ維持'],
-    landscape:'なし（ただし用途転換に行政審査が必要）',
-    floorRatio:300, coverRatio:60,
-    context:['物流・製造業の集積地。既存産業との共存が前提','住宅転用には行政の慎重審査あり','R&D・オフィス・物流の需要は安定','土壌汚染リスクの事前調査が不可欠'],
-    color:'#f5a623', bonusCondition:'産業・R&D用途60%以上＋雇用目標達成',
-    unlocked:true,
-    keyResource:'expertise',
-    keyResourceLabel:'産業系ノウハウ',
-    keyResourceDesc:'産業テナント誘致・用途転換の行政説得に専門知識が必要。一般商業系の知識では対応できない',
-    ownerCount:2,
-    ownerDifficulty:'低',
-    govDifficulty:'高',
-    leasingDifficulty:'高',
-    operationDifficulty:'低',
-    phasePoints:{
-      2:['工場跡地の土壌汚染リスクを事前調査する必要がある（コスト+vs安全確認）',
-         '昼間就労者が主な利用者。夜間・休日の活用は期待できない用途設計が前提',
-         '周辺既存産業（倉庫・工場）との動線・騒音・大型車両の干渉を整理すること'],
-      3:['何を誘致するか』が最大の論点。R&D・物流・データセンター・産業複合で性格が全く違う',
-         '住宅転用は収益は高いが行政審査で難航するリスク。産業用途なら審査が通りやすい',
-         '雇用何人をこの地区で生み出すか、という行政との交渉軸を持つことが重要'],
-      4:['地権者は2名（法人）。交渉難易度は低いが、契約条件が複雑（借地権・定期借地等）',
-         '既存テナント（賃借人）の退去交渉が実質的な権利調整になる'],
-      5:['用途転換審査が最大の難関。「産業用途を減らすな」という行政の圧力がある',
-         '雇用創出計画・産業集積への貢献を数字で示すことが審査通過の鍵',
-         '環境アセスメント（大型車両・騒音・排水）の事前提出が求められる'],
-      6:['産業系の賃料は住宅・商業より低め。IRR確保のために規模を大きくするか、付加価値を上げるか',
-         '長期一括契約（10〜20年）が多い。初期空室リスクは低いが柔軟性に欠ける'],
-      8:['産業テナントは一般公募でなく、個別開拓・業界紹介が主なルート',
-         'anchor tenantとなるR&D企業や物流大手を先に押さえることが他テナント誘致の前提'],
-      9:['産業系は「運営」より「管理」のフェーズ。稼働率より雇用人数・産業集積の質が評価軸',
-         '行政への雇用報告・産業貢献レポートの定期提出が信頼維持に重要'],
-    },
-    areaEvents:[
-      {id:'AE-A2-1',name:'土壌汚染が発覚',icon:'⚗️',phase:[2,3],prob:.3,
-       desc:'旧工場跡地から基準値を超える土壌汚染が検出されました。浄化工事が必要です。',
-       choices:[{label:'浄化工事を実施（追加費用+8%、行政評価+10）',action:'cleanup'},{label:'計画を縮小して汚染区域を回避（規模-20%）',action:'avoid'}]},
-      {id:'AE-A2-2',name:'大手物流企業から引き合い',icon:'🚚',phase:[3,4],prob:.25,
-       desc:'大手物流企業から「この地区に物流センターを構えたい」という打診がありました。',
-       choices:[{label:'物流用途を強化（オフィス比率を下げ物流向けに設計変更）',action:'logistics'},{label:'現行計画を維持して引き合いを断る',action:'decline'}]},
-    ],
-  },
-  {
-    id:'A3', name:'西丘郊外駅前', type:'郊外駅前', x:28, y:72,
-    population:14000, nightPop:12000, tourism:0.05,
-    officeIdx:20, housingIdx:90, commercialIdx:55,
-    govPriority:['子育て支援施設の確保','空き店舗・商店街の維持','コンパクトシティ誘導'],
-    landscape:'準景観地区（高さ35m以下）',
-    floorRatio:400, coverRatio:70,
-    context:['人口微減だが子育て世帯が増加中。昼は閑散・夜は住民が戻る','既存商店街（シャッター率40%）との共存が政治的課題','住宅＋子育て複合が行政の最優先テーマ','大型商業は商店街と競合するため行政が難色を示す'],
-    color:'#2de084', bonusCondition:'子育て施設設置＋住宅比率70%以上',
-    unlocked:false,
-    keyResource:'reputation',
-    keyResourceLabel:'地域評判',
-    keyResourceDesc:'商店街・地域住民との関係が案件成否を左右する。評判が低いと住民反対運動に発展する',
-    ownerCount:3,
-    ownerDifficulty:'中',
-    govDifficulty:'中',
-    leasingDifficulty:'中',
-    operationDifficulty:'高',
-    phasePoints:{
-      2:['人口は微減だが子育て世帯の流入がある。ファミリー向け住宅の需要は根強い',
-         '昼間人口が少ない = 商業施設の稼働が課題。「地域住民の日常使い」に特化すべき',
-         '既存商店街との競合・共存関係を整理することが地域合意形成の前提'],
-      3:['大型商業は避け、生活利便型（スーパー・クリニック・保育所）に絞る判断が重要',
-         '「縮退する街で何を守り、何を変えるか」という長期視点の設計が求められる',
-         '行政の子育て支援優先テーマに乗ることでボーナスが得られる'],
-      4:['地権者3名は地元住民（商店街関係者含む）。信頼関係の構築が長期戦になる',
-         '商店街組合との非公式な対話が実質的な権利調整より重要なことがある'],
-      5:['コンパクトシティ計画との整合性を示すことが審査通過の条件',
-         '子育て施設を入れると保育課・教育委員会が協力的になり審査が加速する',
-         '大型商業を計画に入れると商店街代表が行政に働きかけて難航する'],
-      6:['郊外は賃料水準が低い。収益性は厳しいが、住宅分譲との組み合わせで成立させる',
-         '長期的なエリアブランド向上（住みたい街ランキング）が資産価値維持の鍵'],
-      8:['生活密着型テナント（スーパー・クリニック・保育所）の誘致が最優先',
-         '大手チェーンより地域密着の個店・コミュニティ施設を混ぜると地域評判が上がる'],
-      9:['「使われ続けるか」が評価軸。稼働率より地域住民の満足度・リピート率が重要',
-         '子育てイベント・地域祭りの運営参加がエリアマネジメントの核になる'],
-    },
-    areaEvents:[
-      {id:'AE-A3-1',name:'商店街組合が反対声明',icon:'🏪',phase:[3,4,5],prob:.3,
-       desc:'地元商店街組合が「大型商業が入れば商店街が壊滅する」と反対声明を出しました。',
-       choices:[{label:'商店街との共存計画を提示（商業比率を下げ、商店街テナント優遇）',action:'coexist'},{label:'住民説明会を開いて直接対話する',action:'dialogue'}]},
-      {id:'AE-A3-2',name:'子育て世帯の署名活動が追い風',icon:'👶',phase:[3,4],prob:.25,
-       desc:'地区の子育て世帯から「保育所・子育て施設を入れてほしい」という署名が1,200人分集まりました。',
-       choices:[{label:'子育て施設の設置を計画に正式追加（行政評価+20、評判+15）',action:'add_childcare'},{label:'検討中として受け取るにとどめる',action:'consider'}]},
-    ],
-  },
-  {
-    id:'A4', name:'東港臨海再開発', type:'都心再開発', x:72, y:72,
-    population:5000, nightPop:800, tourism:0.35,
-    officeIdx:70, housingIdx:50, commercialIdx:80,
-    govPriority:['国際観光・MICE誘致','防災（海抜・高潮対策）','ブランド形成・シンボル性'],
-    landscape:'臨海景観特別地区（デザイン審議・高さ制限なしだが外観審査あり）',
-    floorRatio:800, coverRatio:85,
-    context:['海に面した大規模一体開発地。インバウンド高ポテンシャル','容積率800%で大規模開発が可能。ただし投資規模が最大クラス','ホテル・MICE・複合商業の組み合わせが最も有効','海抜・高潮リスクの防災対応が計画の前提条件'],
-    color:'#a78bfa', bonusCondition:'ホテル＋国際商業＋防災対応（海抜設計）',
-    unlocked:false,
-    keyResource:'brand',
-    keyResourceLabel:'ブランド力',
-    keyResourceDesc:'国際ブランドテナント・ホテルの誘致にはデベロッパーのブランドが問われる。実績なき事業者には応じないテナントがいる',
-    ownerCount:1,
-    ownerDifficulty:'低',  // 国有地払い下げのため権利調整は形式的
-    govDifficulty:'最高',
-    leasingDifficulty:'最高',
-    operationDifficulty:'中',
-    phasePoints:{
-      2:['観光客は多いが「滞在時間が短い・宿泊しない」現状を変えることが課題',
-         '海に面した立地の強みを最大化する用途設計が必要（水辺の回遊・眺望・体験）',
-         '海抜・高潮リスクのハザードマップを確認し、防災設計を計画の前提にすること'],
-      3:['「何棟を、どの機能で組み合わせるか」の複合構成設計が最大の論点',
-         'ホテル・MICE・商業・住宅の比率次第でエリアのブランドが全く変わる',
-         '国際競争力のあるコンテンツ（世界水準のホテル・MICEホール）を誘致できるか'],
-      4:['国有地払い下げのため権利調整は形式的。ただし行政との条件交渉が実質的な権利調整',
-         '入札条件（ブランド・デザイン・公共貢献）への対応が審査通過の鍵'],
-      5:['国際競争力審査・デザイン審議会の二重審査がある。最も難易度が高い行政協議',
-         '防災対応（海抜設計・高潮対策）が義務要件。未対応では計画が却下される',
-         'MICE誘致については観光庁・経済産業省など複数の省庁との調整が必要'],
-      6:['投資規模が最大。IRR確保のためにホテル稼働率・MICE稼働率の見通しが重要',
-         'インバウンド需要の変動（為替・地政学リスク）がキャッシュフローを直撃する'],
-      8:['国際ブランドホテルは「デベロッパーのブランド力」を先に問う。実績が必要',
-         'MICEホールの運営会社確保が他テナント誘致の前提になる（集客力の担保）'],
-      9:['オフシーズン・平日の稼働率維持が最大の運営課題',
-         'インバウンド対応（多言語・決済・文化配慮）の質が評判を左右する',
-         '定期的な国際プロモーション・IRイベントが稼働率を支える'],
-    },
-    areaEvents:[
-      {id:'AE-A4-1',name:'海面上昇リスク報告が公表',icon:'🌊',phase:[2,3,5],prob:.25,
-       desc:'国土交通省の新しい気候変動リスク報告書で、このエリアの高潮リスクが「高」に引き上げられました。',
-       choices:[{label:'防災設計を強化（建設費+10%、行政評価+20、ブランド+5）',action:'reinforce'},{label:'現行の防災設計を維持（リスク説明文書を追加）',action:'maintain'}]},
-      {id:'AE-A4-2',name:'国際ブランドホテルから出店打診',icon:'🏨',phase:[4,5],prob:0,
-       triggerCondition:'brand>=60',
-       desc:'世界的ホテルブランドから「このプロジェクトに参画したい」という打診がありました。',
-       choices:[{label:'条件交渉に入る（ブランド力+15、ホテル用途を強化）',action:'negotiate'},{label:'今回は見送り現行テナントで進める',action:'skip'}]},
-    ],
-  },
-];
+  const WEEKDAYS = ['日','月','火','水','木','金','土'];
 
-// ── AP設計思想 ──
-// 【基本原則】
-//   フェーズ進行 = AP1消費（意思決定コスト）
-//   フェーズ内サブアクション = AP1消費
-//   AP=0のとき → 「強制進行」ボタンで進められるが、次ターンAP上限-1ペナルティ
-//   ターン終了 → AP全回復（ペナルティも1ずつ回復）
-const PHASE_DEF = [
-  {id:1,name:'用地発見',    short:'発見', desc:'エリアを調査し案件を発掘する'},
-  {id:2,name:'現況分析',    short:'分析', desc:'立地・規制・需要を分析する'},
-  {id:3,name:'コンセプト立案',short:'構想',desc:'開発コンセプトと用途構成を決める'},
-  {id:4,name:'権利調整',    short:'権利', desc:'地権者と交渉し合意を形成する'},
-  {id:5,name:'行政協議',    short:'行政', desc:'行政各部局と協議し許認可を得る'},
-  {id:6,name:'収支設計',    short:'収支', desc:'事業収支を検証し資金調達を確定する'},
-  {id:7,name:'設計・施工',  short:'施工', desc:'設計・施工会社を決め建設を進める'},
-  {id:8,name:'リーシング',  short:'賃貸', desc:'テナントを誘致し開業を準備する'},
-  {id:9,name:'開業・運営',  short:'運営', desc:'開業後の運営・エリアマネジメント'},
-];
-
-const LANDOWNER_POOL = [
-  {id:'LO-1',name:'田中不動産（法人）',avatar:'🏢',share:38,priorities:['権利継続・等価交換','相続税対策','地元貢献'],hiddenInfo:'息子が継承を拒否。早期解決を内心望んでいる',trustReq:55,dealBreaker:'完全売却要求'},
-  {id:'LO-2',name:'山田美代子（個人）',avatar:'👩‍🦳',share:22,priorities:['街の雰囲気を守りたい','生活安定','資産継承'],hiddenInfo:'医療費不安あり。安定地代を最優先にしている',trustReq:50,dealBreaker:'大規模商業への転換'},
-  {id:'LO-3',name:'鈴木孝（個人）',avatar:'👨',share:12,priorities:['騒音・日影への懸念','透明なプロセス','街への愛着'],hiddenInfo:'街活性化には賛成。プロセス重視なだけ',trustReq:45,dealBreaker:'説明なしの強引着工'},
-  {id:'LO-4',name:'㈱マルタ商事',avatar:'🏪',share:18,priorities:['テナント出店機会','人流増加','合理的条件'],hiddenInfo:null,trustReq:40,dealBreaker:'競合スーパー誘致'},
-  {id:'LO-5',name:'佐々木地所',avatar:'🏘️',share:10,priorities:['適切な対価','迅速手続き'],hiddenInfo:null,trustReq:30,dealBreaker:''},
-];
-
-const TENANT_POOL = [
-  {id:'T1',name:'ブルーマウンテンコーヒー',type:'カフェ',icon:'☕',brandPower:85,reqFlow:3000,rent:18000,minArea:50,maxArea:150,effect:{brand:8,flow:10},compatibleWith:['住宅複合','商業複合','都心複合'],tag:'ブランド'},
-  {id:'T2',name:'地域スーパー ミナト屋',type:'食品小売',icon:'🛒',brandPower:30,reqFlow:1500,rent:9000,minArea:300,maxArea:800,effect:{reputation:10,dailyUse:20},compatibleWith:['住宅複合','郊外型','生活利便'],tag:'集客'},
-  {id:'T3',name:'クリニックモール',type:'医療',icon:'🏥',brandPower:60,reqFlow:500,rent:18000,minArea:200,maxArea:500,effect:{convenience:15,seniorFlow:25},compatibleWith:['住宅複合','郊外型','生活利便'],tag:'生活'},
-  {id:'T4',name:'にじいろ子育て支援',type:'子育て',icon:'🌈',brandPower:40,reqFlow:800,rent:6000,minArea:150,maxArea:300,effect:{reputation:15,govTrust:10},compatibleWith:['住宅複合','郊外型'],tag:'公共'},
-  {id:'T5',name:'セレクトショップ URBN',type:'アパレル',icon:'👗',brandPower:75,reqFlow:2000,rent:22000,minArea:80,maxArea:200,effect:{brand:10},compatibleWith:['商業複合','都心複合','観光型'],tag:'ブランド'},
-  {id:'T6',name:'フィットネス FLEX',type:'スポーツ',icon:'💪',brandPower:55,reqFlow:1200,rent:14000,minArea:200,maxArea:600,effect:{nightFlow:30,repeat:25},compatibleWith:['住宅複合','都心複合'],tag:'集客'},
-  {id:'T7',name:'ブティックホテル リブラン',type:'ホテル',icon:'🏨',brandPower:90,reqFlow:1000,rent:25000,minArea:500,maxArea:2000,effect:{brand:15,tourism:20},compatibleWith:['都心複合','観光型','臨海型'],tag:'ブランド'},
-  {id:'T8',name:'R&D オフィス TechHub',type:'オフィス',icon:'💻',brandPower:65,reqFlow:800,rent:16000,minArea:300,maxArea:1500,effect:{brand:6,govTrust:5},compatibleWith:['産業型','都心複合'],tag:'産業'},
-  {id:'T9',name:'地域コミュニティセンター',type:'公共',icon:'🏛️',brandPower:20,reqFlow:400,rent:4000,minArea:200,maxArea:600,effect:{reputation:20,govTrust:15,areaValue:10},compatibleWith:['住宅複合','郊外型','都心複合'],tag:'公共'},
-  {id:'T10',name:'有機レストラン OHANA',type:'飲食',icon:'🌿',brandPower:70,reqFlow:1800,rent:20000,minArea:100,maxArea:300,effect:{brand:8,stayTime:15},compatibleWith:['都心複合','観光型','商業複合'],tag:'ブランド'},
-];
-
-const RANDOM_EVENTS = [
-  {id:'E1',name:'建材価格高騰',icon:'📈',type:'risk',phase:[7],prob:.22,desc:'資材費が予想以上に上昇しています。建設費+15%の追加コストが発生します。',effect:{constructionBonus:0.15},choices:[{label:'受け入れる（建設費+15%）',action:'accept'},{label:'設計を簡略化（品質-1、費用±0）',action:'simplify'}]},
-  {id:'E2',name:'金利上昇',icon:'💹',type:'risk',phase:[6,7,8],prob:.18,desc:'日銀が政策金利を引き上げました。借入コストが上昇します（+0.5%）。',effect:{interestUp:0.005},choices:[{label:'現状の計画で継続',action:'accept'},{label:'借入を圧縮（自己資本比率UP）',action:'reduce_debt'}]},
-  {id:'E3',name:'競合施設の開発計画',icon:'⚠️',type:'risk',phase:[3,4,5,6],prob:.15,desc:'近隣エリアで競合デベロッパーが類似案件を検討中という情報が入りました。',effect:{competitorRisk:true},choices:[{label:'コンセプトを差別化して対抗',action:'differentiate'},{label:'スピードを上げて先行する',action:'accelerate'}]},
-  {id:'E4',name:'インバウンド急増',icon:'✈️',type:'chance',phase:[3,4,5],prob:.12,desc:'円安の影響でインバウンド観光客が急増しています。観光・商業需要が高まっています。',effect:{tourismBonus:0.2},choices:[{label:'観光向け用途を強化',action:'tourism'},{label:'現状計画を維持',action:'maintain'}]},
-  {id:'E5',name:'行政の都市再生指定オファー',icon:'🏛️',type:'chance',phase:[4,5],prob:0,triggerCondition:'govTrust>=70',desc:'行政から都市再生緊急整備エリア指定のオファーが届きました。容積ボーナスが大幅に拡大します。',effect:{volumeBonus:100},choices:[{label:'指定を受ける（公共用途10%条件）',action:'accept_bonus'},{label:'今回は見送る',action:'decline'}]},
-  {id:'E6',name:'地権者から緊急連絡',icon:'📞',type:'risk',phase:[4],prob:.1,desc:'主要地権者から健康上の理由で「早期に話をまとめたい」と連絡がありました。',effect:{ownerUrgency:true},choices:[{label:'条件を上乗せして早期合意',action:'fast_deal'},{label:'丁寧に時間をかける',action:'careful'}]},
-  {id:'E7',name:'メディアに取り上げられる',icon:'📺',type:'chance',phase:[8,9],prob:0,triggerCondition:'brand>=70',desc:'開発計画がメディアに注目されています。ブランド力が大幅に向上します。',effect:{brandBoost:12},choices:[{label:'積極的に情報発信',action:'publicize'},{label:'控えめに対応',action:'low_key'}]},
-  {id:'E8',name:'テナント撤退申し出',icon:'🚪',type:'risk',phase:[9],prob:.14,desc:'入居テナントから業績不振を理由に退去の申し出がありました。',effect:{tenantLeave:true},choices:[{label:'条件を見直して引き留める',action:'retain'},{label:'新たなテナントを探す',action:'replace'}]},
-  {id:'E9',name:'自然災害（局地的豪雨）',icon:'🌧️',type:'risk',phase:[7,8,9],prob:.08,desc:'局地的豪雨により工事・施設に一部被害が発生しました。防災対応が評価されます。',effect:{disasterDamage:true},choices:[{label:'防災設備を強化（追加投資）',action:'reinforce'},{label:'保険対応で復旧',action:'insurance'}]},
-  {id:'E10',name:'行政から補助金のオファー',icon:'💰',type:'chance',phase:[5,6],prob:.1,desc:'公共貢献の実績が評価され、都市再生補助金のオファーが届きました（最大2億円）。',effect:{subsidy:200},choices:[{label:'補助金を申請する（審査3ターン）',action:'apply'},{label:'申請せずに進める',action:'skip'}]},
-];
-
-const CONCEPT_THEMES = [
-  {id:'職住近接',label:'職住近接型複合',areas:['A1'],housing:60,commercial:25,office:15,plaza:0},
-  {id:'生活利便',label:'生活利便ハブ型',areas:['A3','A1'],housing:70,commercial:20,office:0,plaza:10},
-  {id:'観光商業',label:'観光・商業複合型',areas:['A4','A1'],housing:10,commercial:60,office:0,plaza:30},
-  {id:'産業R&D',label:'産業・R&D複合型',areas:['A2'],housing:0,commercial:10,office:80,plaza:10},
-  {id:'ナイトタイム',label:'ナイトタイム活性化型',areas:['A1','A4'],housing:40,commercial:50,office:0,plaza:10},
-  {id:'コミュニティ',label:'コミュニティ拠点型',areas:['A3','A1'],housing:50,commercial:20,office:0,plaza:30},
-];
-
-// ═══════════════════════════════════════════════════════════
-// GAME STATE
-// ═══════════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════
-// HELP DATA — 各指標の説明
-// ═══════════════════════════════════════════════════════════
-const HELP_DATA = {
-  govTrust:{
-    name:'行政信頼度', range:'0〜100',
-    what:'自治体・各行政部局からの信頼・評価スコア。過去の実績、公共貢献の姿勢、協議の丁寧さが蓄積される。',
-    how:[
-      '行政協議を丁寧に実施する（毎回+6〜10）',
-      '公共貢献（防災倉庫・歩行者デッキ等）を設定する（+4〜8）',
-      'テナントに公共施設・子育て施設を誘致する（+5〜15）',
-      '約束した公共貢献を実際に実行する',
-    ],
-    effect:[
-      '70以上：都市再生緊急整備エリア指定オファーが発生し、容積ボーナス+100%を狙える',
-      '65以上：容積ボーナスの取得条件を満たす',
-      '行政協議の進捗速度が上がる',
-      '次案件での行政折衝がスムーズになる',
-    ],
-    risk:[
-      '50未満：行政協議が毎回難航し、フェーズ進行が遅くなる',
-      '30未満：許認可取得に追加ターンが必要になるリスク',
-      '住民トラブルを放置すると急落する',
-    ],
-  },
-  ownerNetwork:{
-    name:'地権者ネットワーク', range:'0〜100',
-    what:'地域の地権者コミュニティとの関係値。地道なヒアリングと誠実な交渉が信頼を積み上げる。',
-    how:[
-      'ヒアリングを重ねる（毎回+2〜3）',
-      '地権者の本音ニーズに応えた提案をする（+10〜15）',
-      '合意した条件を守り続ける',
-      '等価交換スキームなど柔軟な手法を提案する',
-    ],
-    effect:[
-      '70以上：未公開案件の情報が入ってきやすくなる',
-      '80以上：地権者の紹介ルートが開き、交渉コストが下がる',
-      '新規案件の地権者初期信頼値がベースアップされる',
-    ],
-    risk:[
-      '強引な交渉や約束不履行で急落（-20〜30）',
-      '低いと地権者の初期信頼値が低くスタートし、交渉に時間がかかる',
-      '住民説明会での対立リスクが高まる',
-    ],
-  },
-  reputation:{
-    name:'地域評判', range:'0〜100',
-    what:'地域住民・メディア・NPOなど市民社会からの評価。開発の質と対話姿勢が問われる。',
-    how:[
-      '子育て支援施設・コミュニティスペースを設置する',
-      '住民説明会を丁寧に実施する',
-      '地元テナント・地域密着施設を誘致する',
-      'ソフト施策（マルシェ・アートイベント等）を実施する',
-      '地元工務店を施工会社に選ぶ（+8）',
-    ],
-    effect:[
-      '70以上：住民説明会がスムーズに進む',
-      '80以上：メディアが好意的に取り上げやすくなる',
-      '地域評判はエリア価値指数にも影響する',
-      'テナント誘致時に「地域に根ざしたブランド」として有利になる',
-    ],
-    risk:[
-      '50以下：住民訴訟イベントの発生確率が上がる',
-      '30以下：住民説明会で反対運動が激化し、フェーズが止まるリスク',
-      '景観破壊・騒音問題を放置すると毎ターン低下',
-    ],
-  },
-  brand:{
-    name:'ブランド力', range:'0〜100',
-    what:'デベロッパーとしての市場ブランド認知度。高品質な案件完成と発信力の積み重ねで育つ。',
-    how:[
-      '案件を完成させる（毎回+8）',
-      '高品質グレード（high/premium）の建物を建てる',
-      'ブランド系テナント（カフェ・セレクトショップ等）を誘致する',
-      'アートイベント等ソフト施策を実施する（+6）',
-      'ブランド力70以上でメディア露出イベントが発生（+12）',
-    ],
-    effect:[
-      '60以上：優良テナント（ブランド系）が誘致しやすくなる',
-      '70以上：メディア掲載イベントが発生しブランドが加速する',
-      '資金調達コストが下がる（将来実装）',
-      'エンディングスコアに直接反映される',
-    ],
-    risk:[
-      '低いと高ブランドテナントが来てくれない',
-      'ブランド力のない施設は人流が伸びにくい',
-    ],
-  },
-  tenantNetwork:{
-    name:'テナントネットワーク', range:'0〜100',
-    what:'テナント企業群との関係値。丁寧な対応と良好な運営実績が積み上がる。',
-    how:[
-      '案件を完成・開業させる（毎回+6）',
-      'テナント満足度を高く保つ（運営フェーズでの施策）',
-      'ソフト施策でテナントの売上向上に貢献する',
-    ],
-    effect:[
-      '70以上：リーシング速度が上がり、空室率が低下しやすい',
-      '80以上：テナント側から出店打診イベントが発生することがある',
-      'テナントプールに登場する企業の質が上がる',
-    ],
-    risk:[
-      '低いと優良テナントの誘致に多くのAPが必要になる',
-      '交渉が難航し、リーシングフェーズで詰まりやすくなる',
-    ],
-  },
-  areaValue:{
-    name:'エリア価値指数', range:'0〜100',
-    what:'プレイヤーが関与するエリア全体の価値スコア。個別案件の質・公共性・人流の総合評価。',
-    how:[
-      '案件開業で大幅上昇（+15）',
-      '公共貢献（広場・デッキ）を設置する',
-      'ブランドテナントを誘致する',
-      'ソフト施策（グリーン化・マルシェ等）を実施する',
-      '容積ボーナスを活用する',
-    ],
-    effect:[
-      '高いほど隣接エリアの地価が上昇し、次案件の収益性が向上する',
-      '新たなエリア（西丘・東港）の解放を促進する',
-      'エンディングスコアの主軸（最大25点）',
-      '周辺地権者の交渉に好影響（エリアが良くなると説明できる）',
-    ],
-    risk:[
-      '低いと次案件の立地条件が改善されない',
-      '最終評価で大きく差がつく指標',
-    ],
-  },
-};
-
-// MAX_TURNS は S.maxTurns に移行（モード選択で決まる）
-
-const G = (function(){
-let S = null; // State
-let activeTab = 'map';
-let activeProjectId = null;
-let pendingEvent = null;
-
-function initState(mode){
-  const modes = {
-    single: { maxTurns:16, maxProjects:1, label:'単一開発モード（4年）',
-              cash:8000, unlockedAreas:['A1','A2'] },
-    area:   { maxTurns:40, maxProjects:3, label:'エリア開発モード（10年）',
-              cash:12000, unlockedAreas:['A1','A2'] },
-  };
-  const cfg = modes[mode] || modes.single;
-  S = {
-    gameMode: mode || 'single',
-    maxTurns: cfg.maxTurns,
-    maxProjects: cfg.maxProjects,
-    turn:1, season:'2024年春',
-    ap:6, maxAp:6,
-    apHistory:[],
-    cash:cfg.cash, debt:0,
-    govTrust:50, ownerNetwork:45,
-    reputation:55, brand:35, tenantNetwork:40,
-    areaValue:{A1:40,A2:30,A3:35,A4:25},
-    expertise:{housing:1,commercial:1,office:0,hotel:0,logistics:0},
-    projects:[],
-    completedProjects:[],
-    market:{
-      interestRate:0.032,
-      constructionIdx:1.0,
-      housingDemand:1.0,
-      officeDemand:0.8,
-      commercialDemand:0.9,
-      hotelDemand:1.1,
-    },
-    log:[],
-    eventHistory:[],
-    unlockedAreas:cfg.unlockedAreas.slice(),
-  };
-  addLog(`ゲーム開始（${cfg.label}）— デベロッパーとしてのキャリアをスタートします`);
-}
-
-// ── PROJECT FACTORY ──
-function createProject(areaId){
-  const area = AREAS.find(a=>a.id===areaId);
-  const lo = shuffle(LANDOWNER_POOL.slice()).slice(0,Math.floor(2+Math.random()*3)).map(l=>({
-    ...l, trust:20+Math.floor(Math.random()*30),
-    hearingCount:0, hiddenUnlocked:false, status:'未交渉'
-  }));
-  return {
-    id:'PRJ-'+Date.now(),
-    areaId, name:area.name+'開発案件',
-    phase:1,
-    area:2000+Math.floor(Math.random()*2500),
-    floorRatio:area.floorRatio,
-    concept:{target:null,theme:null,housing:50,commercial:30,office:0,plaza:20,hotel:0,grade:'standard'},
-    finance:{landCost:0,constructionCost:0,totalInvestment:0,loan:0,annualRent:0,noi:0,irr:0,ltv:0,cf:0,bonusApplied:false,ratioBonus:0},
-    landowners:lo,
-    govProgress:{urbanPlanning:30,disaster:30,architecture:30},
-    publicContrib:{disasterStorage:false,pedestrianDeck:false,childcare:false,plaza:false,parking:false},
-    selectedTenants:[],
-    softMeasures:[],
-    operation:{occupancyRate:0,dailyFlow:0,stayTime:0,satisfaction:0,monthlyRent:0},
-    completedPhases:[],
-    constructionTurns:0,
-    constructorId:null,
-    eventLog:[],
-    interestRate: S.market.interestRate,
-    constructionIdxSnapshot: S.market.constructionIdx,
-  };
-}
-
-// ── FINANCE CALC ──
-function calcFinance(proj){
-  const area = AREAS.find(a=>a.id===proj.areaId);
-  const c = proj.concept;
-  const baseRatio = proj.floorRatio / 100;
-  const bonusRatio = proj.finance.bonusApplied ? proj.finance.ratioBonus/100 : 0;
-  const totalFloor = proj.area * (baseRatio + bonusRatio);
-
-  const gradeM = c.grade==='standard'?1:c.grade==='high'?1.2:1.4;
-  const consPerSqm = 350000 * gradeM * proj.constructionIdxSnapshot;
-  const constructionCost = Math.round(totalFloor*consPerSqm/1000000);
-  const landCost = Math.round(proj.area * (area.type.includes('都心')?1500:area.type.includes('準工業')?600:800) / 1000);
-
-  const housingFloor = totalFloor*(c.housing/100);
-  const commFloor = totalFloor*(c.commercial/100);
-  const offFloor = totalFloor*(c.office/100);
-  const hotelFloor = totalFloor*((c.hotel||0)/100);
-
-  const housingRent = housingFloor/3.3*12000*12*0.90/1000000;
-  const commRent    = commFloor/3.3*15000*12*0.88*S.market.commercialDemand/1000000;
-  const offRent     = offFloor/3.3*14000*12*0.85*S.market.officeDemand/1000000;
-  const hotelRent   = hotelFloor/3.3*25000*12*0.82*S.market.hotelDemand/1000000;
-
-  const annualRent = Math.round(housingRent+commRent+offRent+hotelRent);
-  const opCost = Math.round(annualRent*0.33);
-  const totalInv = landCost+constructionCost+Math.round(constructionCost*0.07)+Math.round(landCost*0.05);
-  const loan = Math.round(totalInv*0.70);
-  const interest = Math.round(loan*(proj.interestRate||S.market.interestRate));
-  const noi = annualRent-opCost;
-  const cf = noi-interest;
-  const ltv = totalInv>0?loan/(totalInv*1.05)*100:0;
-  const irr = totalInv>0&&cf>0?(noi/totalInv)*100*0.95:0;
-
-  return {
-    landCost,constructionCost,totalInvestment:totalInv,
-    loan,annualRent,noi,cf,
-    irr:Math.round(irr*10)/10,
-    ltv:Math.round(ltv*10)/10,
-    bonusApplied:proj.finance.bonusApplied,
-    ratioBonus:proj.finance.ratioBonus,
-  };
-}
-
-function getAreaValue(proj){
-  let v = S.areaValue[proj.areaId]||40;
-  const pc = proj.publicContrib;
-  if(pc.plaza) v+=10; if(pc.pedestrianDeck) v+=8;
-  if(pc.childcare) v+=6; if(pc.disasterStorage) v+=5;
-  v += proj.selectedTenants.length*5;
-  const brandTens = proj.selectedTenants.filter(id=>TENANT_POOL.find(t=>t.id===id&&t.brandPower>70)).length;
-  v += brandTens*5;
-  v += proj.softMeasures.length*3;
-  if(proj.finance.bonusApplied) v+=8;
-  return Math.min(100,Math.round(v));
-}
-
-function getAgreementRate(proj){
-  let agreed=0,total=0;
-  (proj.landowners||[]).forEach(lo=>{
-    total+=lo.share;
-    if(['賛成','条件付き賛成','合意済み'].includes(lo.status)) agreed+=lo.share;
-  });
-  return total>0?Math.round(agreed/total*100):0;
-}
-
-// ── TURN END ──
-function endTurn(){
-  // AP消費サマリーをログに残す
-  const spent = S.maxAp - S.ap;
-  if(spent > 0) addLog(`AP消費: ${spent}/${S.maxAp} — ${S.apHistory.slice(-3).join('、')}`);
-
-  S.turn++;
-  // ターン終了でmaxApペナルティを1ずつ回復（上限6）
-  S.maxAp = Math.min(6, (S.maxAp||6) + 1);
-  S.ap = S.maxAp;
-  S.apHistory = [];
-  updateSeason();
-  updateMarket();
-  tickProjects();
-  checkSpecialEvents();
-  rollRandomEvent();
-  renderAll();
-  addLog(`ターン${S.turn}開始 — ${S.season} / AP ${S.maxAp} 回復`);
-  notify(`▶ ${S.season} — AP ${S.maxAp} 回復しました`, 'info');
-  checkTurnLimit();
-}
-
-function updateSeason(){
-  const seasons=['春','夏','秋','冬'];
-  const yr = 2024+Math.floor((S.turn-1)/4);
-  const ss = seasons[(S.turn-1)%4];
-  S.season = yr+'年'+ss;
-}
-
-function updateMarket(){
-  // 市況をゆらす
-  S.market.interestRate += (Math.random()-.52)*0.003;
-  S.market.interestRate = Math.max(0.015,Math.min(0.06,S.market.interestRate));
-  S.market.constructionIdx += (Math.random()-.45)*0.04;
-  S.market.constructionIdx = Math.max(0.85,Math.min(1.4,S.market.constructionIdx));
-  S.market.housingDemand += (Math.random()-.5)*0.06;
-  S.market.housingDemand = Math.max(0.6,Math.min(1.4,S.market.housingDemand));
-  S.market.officeDemand += (Math.random()-.5)*0.05;
-  S.market.officeDemand = Math.max(0.5,Math.min(1.3,S.market.officeDemand));
-  S.market.commercialDemand += (Math.random()-.5)*0.05;
-  S.market.commercialDemand = Math.max(0.6,Math.min(1.4,S.market.commercialDemand));
-}
-
-function tickProjects(){
-  S.projects.forEach(proj=>{
-    if(proj.phase===7){
-      proj.constructionTurns=(proj.constructionTurns||0)+1;
-      if(proj.constructionTurns>=3&&proj.constructorId){
-        notify('🏗️ '+proj.name+' — 竣工が近づいています','info');
-      }
-    }
-    if(proj.phase===9){
-      const op=proj.operation;
-      // 運営フェーズの月次収益反映
-      const rent=proj.operation.monthlyRent||0;
-      S.cash+=Math.round(rent/12);
-      S.areaValue[proj.areaId]=Math.min(100,(S.areaValue[proj.areaId]||40)+1);
-    }
-  });
-}
-
-function checkSpecialEvents(){
-  // govTrust>=70 → 都市再生オファーイベント
-  if(S.govTrust>=70){
-    const govEvent=RANDOM_EVENTS.find(e=>e.id==='E5');
-    if(!S.eventHistory.includes('E5')&&govEvent){
-      S.eventHistory.push('E5');
-      setTimeout(()=>showEvent(govEvent,null),600);
-    }
+  function parseDate(str) {
+    if (!str) return null;
+    const d = new Date(str.replace(/\//g, '-'));
+    return isNaN(d) ? null : d;
   }
-  // brand>=70 → メディア
-  if(S.brand>=70){
-    const ev=RANDOM_EVENTS.find(e=>e.id==='E7');
-    if(!S.eventHistory.includes('E7')){
-      S.eventHistory.push('E7');
-      setTimeout(()=>showEvent(ev,null),800);
-    }
-  }
-}
 
-function rollRandomEvent(){
-  if(S.projects.length===0) return;
-  const proj=S.projects[Math.floor(Math.random()*S.projects.length)];
-  const eligible=RANDOM_EVENTS.filter(e=>
-    e.prob>0 && !e.triggerCondition &&
-    e.phase.includes(proj.phase) &&
-    !S.eventHistory.slice(-6).includes(e.id)
-  );
-  if(eligible.length===0) return;
-  const ev=eligible[Math.floor(Math.random()*eligible.length)];
-  if(Math.random()<ev.prob){
-    S.eventHistory.push(ev.id);
-    setTimeout(()=>showEvent(ev,proj),400);
+  function formatMonth(d) {
+    return d.toLocaleDateString('ja-JP', { month: 'short' }).replace('月','').trim() + ' ' + d.toLocaleDateString('ja-JP',{month:'long'}).replace(/\d+年/,'').replace('月','月');
+    // simpler:
   }
-}
 
-function showEvent(ev,proj){
-  pendingEvent={ev,proj};
-  document.getElementById('ev-icon').textContent=ev.icon;
-  document.getElementById('ev-title').textContent=ev.name;
-  document.getElementById('ev-title').style.color=ev.type==='chance'?'var(--gold)':'var(--red)';
-  document.getElementById('ev-body').textContent=ev.desc+(proj?' （'+proj.name+'）':'');
-  const actDiv=document.getElementById('ev-actions');
-  actDiv.innerHTML='';
-  ev.choices.forEach(ch=>{
-    const btn=document.createElement('button');
-    btn.className='btn btn-primary';
-    btn.textContent=ch.label;
-    btn.onclick=()=>resolveEvent(ch.action);
-    actDiv.appendChild(btn);
-  });
-  document.getElementById('event-overlay').classList.add('show');
-}
+  function statusClass(s) {
+    if (!s) return 'status-soon';
+    if (s.includes('募集中') || s.toLowerCase().includes('open')) return 'status-open';
+    if (s.includes('締切') || s.includes('終了') || s.toLowerCase().includes('closed')) return 'status-closed';
+    return 'status-soon';
+  }
 
-function resolveEvent(action){
-  document.getElementById('event-overlay').classList.remove('show');
-  if(!pendingEvent) return;
-  const {ev,proj}=pendingEvent;
-  // Apply effects
-  if(ev.effect.constructionBonus&&action==='accept'&&proj){
-    proj.constructionIdxSnapshot=(proj.constructionIdxSnapshot||1)*(1+ev.effect.constructionBonus);
-    notify('建設費が+15%増加しました','bad');
-  }
-  if(ev.effect.brandBoost) { S.brand=Math.min(100,S.brand+ev.effect.brandBoost); notify('ブランド力+'+ev.effect.brandBoost,'good'); }
-  if(ev.effect.volumeBonus&&action==='accept_bonus'&&proj){
-    proj.finance.bonusApplied=true; proj.finance.ratioBonus=ev.effect.volumeBonus;
-    proj.finance={...proj.finance,...calcFinance(proj)};
-    notify('容積ボーナス+100%が適用されました！','good');
-  }
-  if(ev.effect.subsidy&&action==='apply'){S.cash+=ev.effect.subsidy;notify('補助金 '+ev.effect.subsidy+'M¥ を受領しました','good');}
-  if(ev.effect.interestUp&&action==='accept'&&proj){ proj.interestRate=(proj.interestRate||S.market.interestRate)+0.005; notify('借入金利が+0.5%上昇','bad'); }
-  if(action==='differentiate'){ S.brand=Math.min(100,S.brand+5); notify('コンセプト差別化でブランド力+5','good'); }
-  if(action==='accelerate'&&proj){ proj.phase=Math.min(9,proj.phase+0); /* フェーズを前倒し */ notify('スピードアップを選択しました','info'); }
-  if(ev.effect.tourismBonus&&action==='tourism'&&proj){
-    proj.concept.hotel=Math.min(40,(proj.concept.hotel||0)+15);
-    notify('ホテル用途を強化しました','good');
-  }
-  if(action === 'timeout_end'){
-    showEnding();
-    pendingEvent = null;
-    return;
-  }
-  pendingEvent=null;
-  renderAll();
-}
+  function renderEvents(rows, filter) {
+    const container = document.getElementById('events-list');
+    let filtered = rows.filter(r => {
+      if (filter === 'open') return statusClass(r.status) === 'status-open';
+      if (filter === 'members') return r.members === 'TRUE' || r.members === 'true' || r.members === '1' || r.members === 'はい';
+      return true;
+    });
 
-// ── ACTIONS ──
-function spendAP(n, name){
-  if(S.ap <= 0){
-    notify(`AP切れ — ターン終了でAP全回復。または強制進行ボタン（ペナルティあり）`, 'warn');
-    return false;
-  }
-  // AP不足でも1以上あれば実行（残りAPを全消費）
-  const actual = Math.min(S.ap, n);
-  S.ap -= actual;
-  S.apHistory = S.apHistory || [];
-  S.apHistory.push(name);
-  if(actual < n){
-    addLog(`[AP-${actual}] ${name}（AP不足のため${actual}で実行、残0）`);
-    notify(`${name} 実行 — AP不足のため残り${actual}で続行（残0AP）`, 'warn');
-  } else {
-    addLog(`[AP-${actual}] ${name}（残${S.ap}AP）`);
-  }
-  renderTopbar();
-  return true;
-}
-
-function advancePhase(projId, forced){
-  const proj = S.projects.find(p=>p.id===projId);
-  if(!proj) return;
-
-  if(forced){
-    // 強制進行：AP0のとき。次ターンのAP上限を-1するペナルティ
-    S.maxAp = Math.max(3, S.maxAp - 1);
-    addLog(`[強制進行] PH${proj.phase}→PH${proj.phase+1} — 次ターンAP上限${S.maxAp}に低下`);
-    notify(`⚡ 強制進行 — 次ターンのAP上限が${S.maxAp}に低下します`, 'warn');
-  } else {
-    // 通常進行：AP1消費
-    if(S.ap <= 0){
-      notify('AP切れ — ターン終了でAP全回復。または強制進行（ペナルティあり）', 'warn');
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="events-empty">現在表示できるイベントはありません。</div>';
       return;
     }
-    S.ap -= 1;
-    addLog(`[AP-1] PH${proj.phase}→PH${proj.phase+1}へ進行（残${S.ap}AP）`);
-    renderTopbar();
+
+    container.innerHTML = filtered.map(r => {
+      const d = parseDate(r.date);
+      const isUndated = !r.date || r.date === '日付未定' || r.date === 'TBD' || r.date === '未定';
+      const monthStr = isUndated ? '日付' : (d ? d.toLocaleDateString('ja-JP',{month:'short'}) : '–');
+      const dayStr = isUndated ? '未定' : (d ? d.getDate() : '–');
+      const wdStr = isUndated ? '' : (d ? WEEKDAYS[d.getDay()] : '');
+      const isMembers = r.members === 'TRUE' || r.members === 'true' || r.members === '1' || r.members === 'はい';
+      const sc = statusClass(r.status);
+      const hasLink = r.link && r.link.startsWith('http');
+
+      return `
+        <div class="event-row ${isMembers ? 'members' : ''}" data-status="${sc}" data-members="${isMembers}">
+          <div class="event-date-block">
+            <div class="event-month">${monthStr}</div>
+            <div class="event-day ${isUndated ? 'undated' : ''}">${dayStr}</div>
+            <div class="event-weekday">${wdStr}曜日</div>
+          </div>
+          <div class="event-info">
+            <div class="event-title-row">
+              <span class="event-title">${r.title || '(タイトルなし)'}</span>
+              ${isMembers ? '<span class="members-badge">会員限定</span>' : ''}
+            </div>
+            <div class="event-meta">
+              ${r.place ? `<span>📍 ${r.place}</span>` : ''}
+              ${r.note ? `<span>📝 ${r.note}</span>` : ''}
+            </div>
+          </div>
+          <div class="event-status ${sc}">${r.status || '近日公開'}</div>
+          <a href="${hasLink ? r.link : '#'}" class="event-link ${hasLink ? '' : 'no-link'}" ${hasLink ? 'target="_blank" rel="noopener"' : ''}>
+            ${hasLink ? '申し込む →' : '準備中'}
+          </a>
+        </div>
+      `;
+    }).join('');
   }
 
-  const fromPh = PHASE_DEF[proj.phase-1];
-  proj.completedPhases.push(proj.phase);
-  proj.phase++;
-  const toPh = PHASE_DEF[proj.phase-1];
-  notify(`📋 PH${proj.phase}「${toPh?.name||'完了'}」へ進みました`, 'info');
+  async function loadEvents() {
+    const container = document.getElementById('events-list');
+    const note = document.getElementById('sheet-note');
 
-  if(proj.phase === 9){
-    proj.finance = {...proj.finance, ...calcFinance(proj)};
-    proj.operation = {
-      occupancyRate: Math.min(95, 72 + proj.selectedTenants.length*4 + (getAreaValue(proj)>60?8:0)),
-      monthlyRent:   Math.round(proj.finance.annualRent / 12),
-      dailyFlow:     3000 + proj.selectedTenants.length*700 + proj.softMeasures.length*250,
-      stayTime:      55   + proj.selectedTenants.length*8  + proj.softMeasures.length*4,
-      satisfaction:  Math.min(92, 55 + proj.selectedTenants.length*7 + S.reputation/10),
-    };
-    S.cash -= proj.finance.totalInvestment;
-    notify('🎉 ' + proj.name + ' 開業！', 'good');
-    addLog(proj.name + ' が開業しました');
-    S.areaValue[proj.areaId] = Math.min(100, (S.areaValue[proj.areaId]||40) + 15);
-    if(proj.areaId==='A1' && !S.unlockedAreas.includes('A3')){ S.unlockedAreas.push('A3'); notify('🔓 新エリア解放：西丘郊外駅前','good'); }
-    if(proj.areaId==='A2' && !S.unlockedAreas.includes('A4')){ S.unlockedAreas.push('A4'); notify('🔓 新エリア解放：東港臨海再開発','good'); }
-  }
-  renderAll();
-}
-
-// ── PROJECT UI ACTIONS ──
-function negotiateOwner(projId, loId, action){
-  const proj = S.projects.find(p=>p.id===projId);
-  const lo   = proj.landowners.find(l=>l.id===loId);
-  if(!lo) return;
-  // すべてAP1消費に統一
-  if(!spendAP(1, action==='hearing' ? 'ヒアリング' : '地権者交渉')) return;
-  if(action==='hearing'){
-    lo.trust=Math.min(100,lo.trust+12+Math.floor(Math.random()*8));
-    lo.hearingCount=(lo.hearingCount||0)+1;
-    if(lo.hearingCount>=2&&lo.hiddenInfo) lo.hiddenUnlocked=true;
-    if(lo.trust>=40&&lo.status==='未交渉') lo.status='交渉中';
-    S.ownerNetwork=Math.min(100,S.ownerNetwork+2);
-    notify('ヒアリング完了 — '+lo.name+' 信頼+'+12,'good');
-  } else {
-    if(lo.trust>=lo.trustReq){
-      lo.trust=Math.min(100,lo.trust+10);
-      lo.status=lo.status==='反対'?'条件付き賛成':'合意済み';
-      notify('✓ '+lo.name+' と合意しました','good');
-    } else {
-      lo.trust=Math.min(100,lo.trust+6);
-      lo.status='交渉中';
-      notify('もう少し信頼関係が必要です（信頼値'+lo.trust+'/'+lo.trustReq+'）','info');
+    if (!SHEET_CSV_URL) {
+      // サンプルデータで表示
+      const sample = [
+        { date: '2025/06/10', title: '模擬面接会 vol.1', place: 'オンライン', note: '事前申込必須', status: '募集中', link: '', members: 'FALSE' },
+        { date: '2025/06/22', title: '交流会', place: '三田キャンパス', note: '自由参加', status: '近日公開', link: '', members: 'FALSE' },
+        { date: '2025/07/05', title: 'GD練習会（会員限定）', place: '日吉キャンパス', note: '少人数制', status: '募集中', link: '', members: 'TRUE' },
+      ];
+      renderEvents(sample, 'all');
+      note.textContent = '※ スプレッドシートURLが未設定のため、サンプルデータを表示しています';
+      return;
     }
-  }
-  renderProjectDetail(projId);
-  renderSidebar();
-}
 
-function consultGov(projId){
-  const proj = S.projects.find(p=>p.id===projId);
-  if(!spendAP(1, '行政協議')) return;
-  const pc=proj.publicContrib;
-  proj.govProgress.urbanPlanning=Math.min(90,proj.govProgress.urbanPlanning+15+(pc.pedestrianDeck?20:0));
-  proj.govProgress.disaster=Math.min(90,proj.govProgress.disaster+12+(pc.disasterStorage?22:0));
-  proj.govProgress.architecture=Math.min(90,proj.govProgress.architecture+10);
-  S.govTrust=Math.min(100,S.govTrust+6+(pc.disasterStorage?4:0)+(pc.pedestrianDeck?4:0));
-  // ボーナス条件チェック
-  if(pc.disasterStorage&&pc.pedestrianDeck&&S.govTrust>=65&&!proj.finance.bonusApplied){
-    notify('🌟 容積ボーナス条件達成！「特例容積を適用」ボタンが現れます','good');
-  }
-  notify('行政協議完了','good');
-  renderProjectDetail(projId);
-  renderSidebar();
-}
+    try {
+      const res = await fetch(SHEET_CSV_URL);
+      const text = await res.text();
+      const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g,'')));
+      // 1行目はヘッダーとしてスキップ
+      const headers = lines[0]; // date, title, place, note, status, link, members
+      const rows = lines.slice(1).map(cols => ({
+        date: cols[0], title: cols[1], place: cols[2],
+        note: cols[3], status: cols[4], link: cols[5], members: cols[6]
+      })).filter(r => r.title && r.title !== 'タイトル' && r.title !== 'タイトルを入力' && r.date !== '日付');
 
-function applyVolumeBonus(projId){
-  const proj=S.projects.find(p=>p.id===projId);
-  proj.finance.bonusApplied=true;
-  proj.finance.ratioBonus=100;
-  proj.finance={...proj.finance,...calcFinance(proj)};
-  S.govTrust=Math.min(100,S.govTrust+8);
-  notify('容積ボーナス+100%を適用しました！収支が改善されます','good');
-  renderProjectDetail(projId);
-  renderSidebar();
-}
-
-function togglePublicContrib(projId,key){
-  const proj=S.projects.find(p=>p.id===projId);
-  proj.publicContrib[key]=!proj.publicContrib[key];
-  if(proj.publicContrib[key]){
-    if(key==='childcare') S.reputation=Math.min(100,S.reputation+12);
-    if(key==='plaza') S.areaValue[proj.areaId]=Math.min(100,(S.areaValue[proj.areaId]||40)+5);
-    notify('公共貢献を追加: '+key,'good');
-  }
-  renderProjectDetail(projId);
-}
-
-function toggleTenant(projId,tenantId){
-  const proj=S.projects.find(p=>p.id===projId);
-  const idx=proj.selectedTenants.indexOf(tenantId);
-  if(idx>=0){
-    proj.selectedTenants.splice(idx,1);
-  } else {
-    proj.selectedTenants.push(tenantId);
-    const t=TENANT_POOL.find(t=>t.id===tenantId);
-    if(t){
-      if(t.effect.brand) S.brand=Math.min(100,S.brand+t.effect.brand);
-      if(t.effect.reputation) S.reputation=Math.min(100,S.reputation+t.effect.reputation);
-      if(t.effect.govTrust) S.govTrust=Math.min(100,S.govTrust+t.effect.govTrust);
-    }
-  }
-  renderProjectDetail(projId);
-  renderSidebar();
-}
-
-function applySoftMeasure(projId, measureId){
-  const proj = S.projects.find(p=>p.id===projId);
-  const measures = {
-    'SM1':{name:'週末マルシェ',    ap:1, areaValue:3, reputation:5,  flow:300},
-    'SM2':{name:'アートイベント',   ap:1, brand:6,     areaValue:5},
-    'SM3':{name:'ナイトマーケット', ap:1, areaValue:8, nightFlow:35},
-    'SM4':{name:'広場グリーン化',   ap:1, stayTime:20, areaValue:12},
-    'SM5':{name:'エリアアプリ',     ap:1, repeat:20,   areaValue:6},
-  };
-  const m=measures[measureId];
-  if(!m||!spendAP(m.ap,'ソフト施策: '+m.name)) return;
-  if(!proj.softMeasures.includes(measureId)) proj.softMeasures.push(measureId);
-  if(m.areaValue) S.areaValue[proj.areaId]=Math.min(100,(S.areaValue[proj.areaId]||40)+m.areaValue);
-  if(m.brand) S.brand=Math.min(100,S.brand+m.brand);
-  if(m.reputation) S.reputation=Math.min(100,S.reputation+m.reputation);
-  if(m.flow&&proj.operation) proj.operation.dailyFlow=(proj.operation.dailyFlow||0)+m.flow;
-  notify(m.name+' を実施しました','good');
-  renderProjectDetail(projId);
-  renderSidebar();
-}
-
-function setContractor(projId, cId){
-  if(!spendAP(1, '施工会社選定')) return;
-  const proj=S.projects.find(p=>p.id===projId);
-  proj.constructorId=cId;
-  if(cId==='C3') S.reputation=Math.min(100,S.reputation+8);
-  notify('施工会社を決定しました','good');
-  renderProjectDetail(projId);
-}
-
-// ── MODALS ──
-function showNewProjectModal(){
-  const unlockedAreas=AREAS.filter(a=>S.unlockedAreas.includes(a.id));
-  const existingAreaIds=S.projects.map(p=>p.areaId);
-  const available=unlockedAreas.filter(a=>!existingAreaIds.includes(a.id)||S.projects.filter(p=>p.areaId===a.id).length<2);
-  if(available.length===0){notify('担当可能なエリアがありません','warn');return;}
-  let html=`<div class="card" style="max-width:500px;margin:auto;">
-    <div class="card-hdr"><div class="dot"></div>新規案件を開始するエリアを選択</div>
-    <div style="display:flex;flex-direction:column;gap:10px;">`;
-  available.forEach(area=>{
-    html+=`<div class="stakeholder-row" onclick="G._startProject('${area.id}')" style="cursor:pointer;">
-      <div style="font-size:28px;width:40px;text-align:center;">🗺️</div>
-      <div style="flex:1;">
-        <div style="font-size:13px;font-weight:700;color:var(--text);">${area.name}</div>
-        <div style="font-size:11px;color:var(--text3);font-family:var(--mono);">${area.type} / 容積率${area.floorRatio}%</div>
-        <div style="font-size:11px;color:var(--accent);margin-top:3px;">${area.context[0]}</div>
-      </div>
-      <span style="color:${area.color};font-size:18px;">→</span>
-    </div>`;
-  });
-  html+=`</div><div class="btn-row"><button class="btn" onclick="G._closeModal()">キャンセル</button></div></div>`;
-  showModal(html);
-}
-
-function _startProject(areaId){
-  if(S.projects.length>=(S.maxProjects||3)){notify(`並行案件は最大${S.maxProjects||3}件までです`,'warn');_closeModal();return;}
-  const proj=createProject(areaId);
-  proj.finance={...proj.finance,...calcFinance(proj)};
-  S.projects.push(proj);
-  activeProjectId=proj.id;
-  addLog('新規案件を開始: '+proj.name);
-  _closeModal();
-  switchTab('project');
-  renderAll();
-  notify('案件を開始しました: '+proj.name,'info');
-}
-
-let _modalEl=null;
-function showModal(html){
-  if(_modalEl) _modalEl.remove();
-  _modalEl=document.createElement('div');
-  _modalEl.style.cssText='position:fixed;inset:0;background:rgba(4,10,15,.85);backdrop-filter:blur(6px);z-index:80;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:20px;';
-  _modalEl.innerHTML=html;
-  _modalEl.onclick=(e)=>{if(e.target===_modalEl)_closeModal();};
-  document.body.appendChild(_modalEl);
-}
-function _closeModal(){if(_modalEl){_modalEl.remove();_modalEl=null;}}
-
-// ── RENDER ──
-function renderAll(){
-  renderTopbar();
-  renderSidebar();
-  renderTabContent();
-}
-
-function renderTopbar(){
-  document.getElementById('ts-season').textContent = S.season;
-  document.getElementById('ts-turn').textContent   = S.turn;
-
-  // AP表示：ドットゲージ＋回復ヒント
-  const apColor = S.ap >= 4 ? 'var(--green)' : S.ap >= 2 ? 'var(--amber)' : S.ap <= 0 ? 'var(--red)' : 'var(--red)';
-  const apDots  = Array.from({length: S.maxAp}, (_,i) =>
-    `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 1px;
-      background:${i < S.ap ? 'var(--green)' : 'rgba(58,85,112,.35)'};
-      box-shadow:${i < S.ap ? '0 0 4px var(--green)' : 'none'};
-      transition:all .2s;"></span>`
-  ).join('');
-  const apHint = S.ap <= 0
-    ? '<span style="font-size:9px;color:var(--red);display:block;margin-top:2px;">▶ ターン終了 or 次フェーズで回復</span>'
-    : S.ap <= 2
-    ? '<span style="font-size:9px;color:var(--amber);display:block;margin-top:2px;">残り少 — 次フェーズ進行で回復</span>'
-    : '';
-  document.getElementById('ts-ap').innerHTML =
-    `<span style="font-family:var(--mono);font-size:14px;font-weight:700;color:${apColor};">${S.ap}</span>` +
-    `<span style="color:var(--text3);font-size:11px;">/${S.maxAp}</span>` +
-    `<div style="margin-top:3px;">${apDots}</div>` +
-    apHint;
-
-  document.getElementById('ts-cash').textContent  = S.cash.toLocaleString();
-  document.getElementById('ts-cash').style.color  = S.cash < 0 ? 'var(--red)' : 'var(--gold)';
-
-  const m = S.market;
-  document.getElementById('market-ticker').innerHTML =
-    `<span class="mk">金利:</span><span class="${m.interestRate>0.04?'dn':'up'}">${(m.interestRate*100).toFixed(2)}%</span>` +
-    `<span class="mk">建設費:</span><span class="${m.constructionIdx>1.1?'dn':'up'}">${(m.constructionIdx*100).toFixed(0)}</span>` +
-    `<span class="mk">住宅需要:</span><span class="${m.housingDemand>1?'up':'dn'}">${(m.housingDemand*100).toFixed(0)}</span>` +
-    `<span class="mk">オフィス:</span><span class="${m.officeDemand>1?'up':'dn'}">${(m.officeDemand*100).toFixed(0)}</span>` +
-    `<span class="mk">商業:</span><span class="${m.commercialDemand>1?'up':'dn'}">${(m.commercialDemand*100).toFixed(0)}</span>`;
-}
-
-function renderSidebar(){
-  // Resources with help buttons
-  const rl = [
-    {n:'行政信頼度', v:S.govTrust,      key:'govTrust'},
-    {n:'地権者NW',   v:S.ownerNetwork,  key:'ownerNetwork'},
-    {n:'地域評判',   v:S.reputation,    key:'reputation'},
-    {n:'ブランド力', v:S.brand,         key:'brand'},
-    {n:'テナントNW', v:S.tenantNetwork, key:'tenantNetwork'},
-  ];
-  const resHtml = rl.map(r => {
-    const c = r.v>=70?'var(--green)':r.v>=40?'var(--gold)':'var(--red)';
-    return `<div class="res-row">
-      <div class="rl">
-        <span style="display:flex;align-items:center;gap:0;">
-          <span class="rn">${r.n}</span>
-          <span class="help-btn" onclick="G.showHelp('${r.key}')" title="説明を見る">?</span>
-        </span>
-        <span class="rv" style="color:${c}">${r.v}</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:${r.v}%;background:${c}"></div></div>
-    </div>`;
-  }).join('');
-  document.getElementById('res-panel').innerHTML = resHtml;
-  // エリア価値も表示（折りたたみ）
-  const avHtml = Object.entries(S.areaValue).map(([aid, v]) => {
-    const area = AREAS.find(a => a.id === aid);
-    if(!area) return '';
-    const unlocked = S.unlockedAreas.includes(aid);
-    if(!unlocked) return '';
-    const c = v>=70?'var(--green)':v>=50?'var(--gold)':'var(--text3)';
-    return `<div class="res-row">
-      <div class="rl">
-        <span style="display:flex;align-items:center;gap:0;">
-          <span class="rn" style="color:${area.color};">${area.name.substring(0,4)}</span>
-          <span class="help-btn" onclick="G.showHelp('areaValue')" title="説明を見る">?</span>
-        </span>
-        <span class="rv" style="color:${c}">${v}</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:${v}%;background:${area.color}66"></div></div>
-    </div>`;
-  }).join('');
-  document.getElementById('res-panel').innerHTML = resHtml
-    + '<div style="margin-top:8px;font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:.1em;padding-bottom:4px;border-bottom:1px solid var(--border);">AREA VALUE</div>'
-    + avHtml;
-
-  // Project list
-  const projHtml=S.projects.length===0
-    ? '<div class="dimtext" style="font-size:11px;text-align:center;padding:10px 0;">案件なし</div>'
-    : S.projects.map(p=>{
-        const ph=PHASE_DEF[p.phase-1]||PHASE_DEF[8];
-        const pct=((p.phase-1)/9)*100;
-        return `<div class="proj-mini ${activeProjectId===p.id?'active':''}" onclick="G._selectProject('${p.id}')">
-          <div class="pm-name">${p.name}</div>
-          <div class="pm-phase">PH${p.phase}: ${ph.name}</div>
-          <div class="pm-bar"><div class="pm-bar-fill" style="width:${pct}%"></div></div>
-        </div>`;
-      }).join('');
-  document.getElementById('proj-list').innerHTML=projHtml;
-
-  // Log
-  const logHtml=[...S.log].reverse().slice(0,20).map(l=>`<div>${l}</div>`).join('');
-  document.getElementById('log-panel').innerHTML=logHtml;
-}
-
-function _selectProject(id){
-  activeProjectId=id;
-  switchTab('project');
-  closeSidebar(); // スマホ時はサイドバーを閉じる
-  renderAll();
-}
-
-function switchTab(tab){
-  activeTab=tab;
-  // デスクトップタブ
-  document.querySelectorAll('.tab').forEach((el,i)=>{
-    const tabs=['map','project','market','portfolio'];
-    el.classList.toggle('active',tabs[i]===tab);
-  });
-  // ボトムナビ同期
-  ['map','project','market','portfolio'].forEach(t=>{
-    const el=document.getElementById('bnav-'+t);
-    if(el) el.classList.toggle('active',t===tab);
-  });
-  renderTabContent();
-}
-
-function toggleSidebar(){
-  const sb=document.getElementById('sidebar');
-  const ov=document.getElementById('sidebar-overlay');
-  const cb=document.getElementById('sidebar-close-btn');
-  const isOpen=sb.classList.contains('open');
-  if(isOpen){ closeSidebar(); }
-  else {
-    sb.classList.add('open');
-    ov.classList.add('show');
-    if(cb) cb.style.display='block';
-  }
-}
-
-function closeSidebar(){
-  const sb=document.getElementById('sidebar');
-  const ov=document.getElementById('sidebar-overlay');
-  const cb=document.getElementById('sidebar-close-btn');
-  sb.classList.remove('open');
-  ov.classList.remove('show');
-  if(cb) cb.style.display='none';
-}
-
-function renderTabContent(){
-  const el=document.getElementById('tab-content');
-  if(activeTab==='map') el.innerHTML=renderMapTab();
-  else if(activeTab==='project') el.innerHTML=renderProjectTab();
-  else if(activeTab==='market') el.innerHTML=renderMarketTab();
-  else if(activeTab==='portfolio') el.innerHTML=renderPortfolioTab();
-  // Bind events after render
-  bindTabEvents();
-}
-
-// ── MAP TAB ──
-function renderMapTab(){
-  // SVGは viewBox="0 0 200 120" の横長座標系で描く
-  // 各エリアの座標もこの座標系に合わせる（%ではなく絶対値）
-  const MAP_COORDS = {
-    A1: {cx:50, cy:35},
-    A2: {cx:150, cy:35},
-    A3: {cx:50, cy:88},
-    A4: {cx:150, cy:88},
-  };
-  const NODE_R = 10; // 固定半径（小さめ）
-
-  let connectors = '';
-  // エリア間の接続ライン
-  [['A1','A2'],['A1','A3'],['A2','A4'],['A3','A4'],['A1','A4'],['A2','A3']].forEach(([a,b])=>{
-    const ca=MAP_COORDS[a], cb=MAP_COORDS[b];
-    connectors+=`<line x1="${ca.cx}" y1="${ca.cy}" x2="${cb.cx}" y2="${cb.cy}"
-      stroke="rgba(14,40,64,0.8)" stroke-width="0.5" stroke-dasharray="3,3"/>`;
-  });
-
-  let nodes='';
-  AREAS.forEach(area=>{
-    const unlocked=S.unlockedAreas.includes(area.id);
-    const hasProj=S.projects.find(p=>p.areaId===area.id);
-    const aVal=S.areaValue[area.id]||40;
-    const {cx,cy}=MAP_COORDS[area.id];
-    const alpha=unlocked?1:0.35;
-    const phaseLabel=hasProj?`PH${hasProj.phase}`:'';
-
-    nodes+=`<g class="map-node" style="opacity:${alpha};cursor:${unlocked?'pointer':'default'}"
-      onclick="${unlocked?`G._onMapClick('${area.id}')`:''}" >
-
-      <!-- 外側グロー -->
-      <circle cx="${cx}" cy="${cy}" r="${NODE_R+5}" fill="${area.color}08" stroke="${area.color}30" stroke-width="0.5"/>
-      <!-- メイン円 -->
-      <circle cx="${cx}" cy="${cy}" r="${NODE_R}" fill="${area.color}18"
-        stroke="${area.color}" stroke-width="${hasProj?1.8:1}" />
-      <!-- パルスリング（案件進行中） -->
-      ${hasProj?`<circle class="node-pulse" cx="${cx}" cy="${cy}" r="${NODE_R+8}"
-        fill="none" stroke="${area.color}" stroke-width="0.8" opacity="0.3"/>`:'' }
-
-      <!-- エリア価値スコア（円の中） -->
-      <text x="${cx}" y="${cy+0.5}" text-anchor="middle" dominant-baseline="middle"
-        fill="${area.color}" font-size="7" font-family="Share Tech Mono,monospace" font-weight="700">${aVal}</text>
-
-      <!-- エリア名（円の下） -->
-      <text x="${cx}" y="${cy+NODE_R+5}" text-anchor="middle"
-        fill="${unlocked?'#c8dce8':'#3a5570'}" font-size="5.5" font-family="Zen Kaku Gothic New,sans-serif" font-weight="700">${area.name}</text>
-      <!-- タイプ -->
-      <text x="${cx}" y="${cy+NODE_R+9.5}" text-anchor="middle"
-        fill="${area.color}99" font-size="3.8" font-family="Share Tech Mono,monospace">${area.type}</text>
-
-      <!-- フェーズバッジ（案件進行中） -->
-      ${hasProj?`<rect x="${cx+NODE_R-2}" y="${cy-NODE_R-7}" width="14" height="6" rx="2"
-          fill="${area.color}33" stroke="${area.color}" stroke-width="0.5"/>
-        <text x="${cx+NODE_R+5}" y="${cy-NODE_R-3.5}" text-anchor="middle"
-          fill="${area.color}" font-size="3.8" font-family="Share Tech Mono,monospace">${phaseLabel}</text>`:''}
-
-      <!-- 鍵アイコン（未解放） -->
-      ${!unlocked?`<text x="${cx}" y="${cy-NODE_R-3}" text-anchor="middle"
-        fill="#3a5570" font-size="7">🔒</text>`:''}
-    </g>`;
-  });
-
-  // エリアカード（右サイドパネル）
-  const areaCards=AREAS.map(area=>{
-    const unlocked=S.unlockedAreas.includes(area.id);
-    const hasProj=S.projects.find(p=>p.areaId===area.id);
-    const aVal=S.areaValue[area.id]||40;
-    if(!unlocked) return `<div class="card" style="opacity:0.4;border-style:dashed;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-size:18px;">🔒</span>
-        <div>
-          <div style="font-size:12px;font-weight:700;color:var(--text3);">${area.name}</div>
-          <div style="font-size:10px;color:var(--text3);">${area.type}</div>
-        </div>
-      </div>
-    </div>`;
-    return `<div class="card" style="cursor:pointer;border-left:3px solid ${area.color};" onclick="G._onMapClick('${area.id}')">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
-        <div>
-          <div style="font-size:13px;font-weight:700;color:${area.color};margin-bottom:2px;">${area.name}</div>
-          <div style="font-size:10px;color:var(--text3);font-family:var(--mono);">${area.type}</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-size:18px;font-weight:900;color:${area.color};font-family:var(--mono);line-height:1;">${aVal}</div>
-          <div style="font-size:9px;color:var(--text3);">EV指数</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;">
-        <span class="badge badge-blue">容積${area.floorRatio}%</span>
-        ${hasProj?`<span class="badge badge-amber">PH${hasProj.phase}進行中</span>`:'<span class="badge badge-gray">案件なし</span>'}
-      </div>
-      <div style="font-size:11px;color:var(--text3);line-height:1.6;margin-bottom:8px;">${area.context[0]}</div>
-      ${!hasProj?`<button class="btn btn-sm btn-primary" onclick="event.stopPropagation();G._startProject('${area.id}')">＋ 担当する</button>`:''}
-    </div>`;
-  }).join('');
-
-  return `<div style="display:grid;grid-template-columns:1fr 260px;gap:12px;height:100%;min-height:0;">
-    <div style="display:flex;flex-direction:column;gap:8px;min-height:0;">
-      <div class="card" style="padding:6px;flex:1;display:flex;flex-direction:column;">
-        <div style="font-size:9px;color:var(--text3);font-family:var(--mono);letter-spacing:.1em;margin-bottom:6px;padding:0 4px;">
-          AREA MAP — エリア価値指数・案件状況
-        </div>
-        <svg viewBox="0 0 200 120" style="width:100%;flex:1;" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <pattern id="mapgrid" width="10" height="10" patternUnits="userSpaceOnUse">
-              <path d="M10 0L0 0 0 10" fill="none" stroke="rgba(14,40,64,.5)" stroke-width=".3"/>
-            </pattern>
-          </defs>
-          <rect width="200" height="120" fill="url(#mapgrid)"/>
-          <!-- 幹線ライン -->
-          <line x1="0" y1="61" x2="200" y2="61" stroke="rgba(0,200,255,.08)" stroke-width="1" stroke-dasharray="4,4"/>
-          <line x1="100" y1="0" x2="100" y2="120" stroke="rgba(0,200,255,.08)" stroke-width="1" stroke-dasharray="4,4"/>
-          <text x="3" y="59" fill="rgba(58,85,112,.6)" font-size="2.8" font-family="Share Tech Mono,monospace">── 東西幹線 ──</text>
-          <text x="102" y="5" fill="rgba(58,85,112,.6)" font-size="2.8" font-family="Share Tech Mono,monospace">南北幹線</text>
-          <!-- 象限ラベル -->
-          <text x="5" y="15" fill="rgba(58,85,112,.4)" font-size="3" font-family="Share Tech Mono,monospace">NORTH-WEST</text>
-          <text x="115" y="15" fill="rgba(58,85,112,.4)" font-size="3" font-family="Share Tech Mono,monospace">NORTH-EAST</text>
-          <text x="5" y="115" fill="rgba(58,85,112,.4)" font-size="3" font-family="Share Tech Mono,monospace">SOUTH-WEST</text>
-          <text x="115" y="115" fill="rgba(58,85,112,.4)" font-size="3" font-family="Share Tech Mono,monospace">SOUTH-EAST</text>
-          <!-- 接続線 -->
-          ${connectors}
-          <!-- エリアノード -->
-          ${nodes}
-          <!-- 凡例 -->
-          <rect x="3" y="103" width="80" height="12" rx="2" fill="rgba(7,17,26,.8)"/>
-          <text x="6" y="110" fill="rgba(58,85,112,.8)" font-size="2.8" font-family="Share Tech Mono,monospace">数値=EV指数  脈動円=案件進行中  🔒=未解放</text>
-        </svg>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px;overflow-y:auto;">
-      ${areaCards}
-      <div class="card" style="border-color:var(--gold2);">
-        <div class="card-hdr"><div class="dot" style="background:var(--gold)"></div>エリア解放条件</div>
-        <div style="font-size:11px;color:var(--text3);line-height:1.9;">
-          🔒 西丘郊外 — A1完成で解放<br>
-          🔒 東港臨海 — A2完成で解放
-        </div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function _onMapClick(areaId){
-  const hasProj=S.projects.find(p=>p.areaId===areaId);
-  if(hasProj){activeProjectId=hasProj.id;switchTab('project');}
-  else showNewProjectModalForArea(areaId);
-}
-
-function showNewProjectModalForArea(areaId){
-  if(S.projects.length>=(S.maxProjects||3)){notify(`並行案件は最大${S.maxProjects||3}件までです`,'warn');return;}
-  const area=AREAS.find(a=>a.id===areaId);
-  showModal(`<div class="card" style="max-width:480px;margin:auto;">
-    <div class="card-hdr"><div class="dot"></div>${area.name} — 案件開始</div>
-    <div style="margin-bottom:12px;">
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-        <span class="badge badge-blue">${area.type}</span>
-        <span class="badge badge-gray">容積率${area.floorRatio}%</span>
-        <span class="badge badge-gray">建ぺい率${area.coverRatio}%</span>
-      </div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.8;">${area.context.map(c=>'• '+c).join('<br>')}</div>
-    </div>
-    <div style="margin-bottom:14px;padding:10px 14px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--amber);">
-      💡 行政の優先テーマ: ${area.govPriority.join(' / ')}
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="G._startProject('${areaId}')">この案件を担当する</button>
-      <button class="btn" onclick="G._closeModal()">キャンセル</button>
-    </div>
-  </div>`);
-}
-
-// ── PROJECT TAB ──
-function renderProjectTab(){
-  if(S.projects.length===0) return `<div class="card" style="text-align:center;padding:40px;"><div style="font-size:48px;margin-bottom:16px;">🏗️</div><div style="color:var(--text3);">案件がありません</div><br><button class="btn btn-primary" onclick="G.showNewProjectModal()">最初の案件を開始する</button></div>`;
-  const proj=S.projects.find(p=>p.id===activeProjectId)||S.projects[0];
-  if(!activeProjectId) activeProjectId=proj.id;
-  const area=AREAS.find(a=>a.id===proj.areaId);
-  return renderProjectDetail(proj.id);
-}
-
-// フェーズ進行のブロック条件（APは関係なし。コンテンツ上の条件のみ）
-function getPhaseBlockReason(proj){
-  const ph=proj.phase;
-  if(ph===3){
-    const c=proj.concept;
-    const total=(c.housing||0)+(c.commercial||0)+(c.office||0)+(c.hotel||0)+(c.plaza||0);
-    if(!c.target) return 'ターゲットを選択してください';
-    if(!c.theme)  return 'テーマを選択してください';
-    if(total!==100) return `用途構成の合計を100%に（現在${total}%）`;
-  }
-  if(ph===4){
-    const agr=getAgreementRate(proj);
-    if(agr<80) return `地権者合意率${agr}%（80%以上必要）`;
-  }
-  if(ph===5){
-    const gp=proj.govProgress;
-    const avg=Math.round((gp.urbanPlanning+gp.disaster+gp.architecture)/3);
-    if(avg<60) return `行政協議スコア${avg}（60以上必要）`;
-  }
-  if(ph===6){
-    const f=proj.finance;
-    if(f.cf<0) return '年間CF赤字 — 収支を見直してください';
-    if(f.irr<3) return `IRR ${f.irr}%（3%以上必要）`;
-  }
-  if(ph===7){
-    if(!proj.constructorId) return '施工会社を選定してください';
-  }
-  if(ph===8){
-    if(proj.selectedTenants.length<2) return '2テナント以上選択してください';
-  }
-  return null; // ブロックなし
-}
-
-function renderProjectDetail(projId){
-  const proj=S.projects.find(p=>p.id===projId);
-  if(!proj) return '';
-  const area=AREAS.find(a=>a.id===proj.areaId);
-  const f=calcFinance(proj);
-  const av=getAreaValue(proj);
-  const agr=getAgreementRate(proj);
-
-  // Phase stepper
-  const steps=PHASE_DEF.map(ph=>{
-    const done=proj.phase>ph.id;
-    const cur=proj.phase===ph.id;
-    return `<div class="phase-step">
-      <div class="ps-dot ${done?'done':cur?'current':''}">${done?'✓':ph.id}</div>
-      <div class="ps-lbl ${done?'done':cur?'current':''}">${ph.short}</div>
-    </div>`;
-  }).join('');
-
-  // Phase content
-  let phaseContent='';
-  const ph=proj.phase;
-
-  if(ph===1) phaseContent=renderPhase1(proj,area,f);
-  else if(ph===2) phaseContent=renderPhase2(proj,area);
-  else if(ph===3) phaseContent=renderPhase3(proj,area,f);
-  else if(ph===4) phaseContent=renderPhase4(proj,area,agr);
-  else if(ph===5) phaseContent=renderPhase5(proj,area,f,agr);
-  else if(ph===6) phaseContent=renderPhase6(proj,area,f);
-  else if(ph===7) phaseContent=renderPhase7(proj,area,f);
-  else if(ph===8) phaseContent=renderPhase8(proj,area,f);
-  else if(ph===9) phaseContent=renderPhase9(proj,area,f,av);
-
-  // フェーズ進行条件チェック
-  const phaseBlockReason = getPhaseBlockReason(proj);
-
-  // フェーズ進行ボタン生成
-  const apBadgeColor = S.ap>=3?'var(--green)':S.ap>=1?'var(--amber)':'var(--red)';
-  let advanceBtn = '';
-  if(proj.phase < 9){
-    if(phaseBlockReason){
-      advanceBtn = `<span style="font-size:11px;color:var(--amber);">⚠ ${phaseBlockReason}</span>
-        <button class="btn btn-sm" disabled style="opacity:.35;">次フェーズへ (AP1)</button>`;
-    } else if(S.ap >= 1){
-      advanceBtn = `<button class="btn btn-sm btn-primary" onclick="G.advancePhase('${proj.id}')">
-        次フェーズへ進む <span style="opacity:.65;font-size:10px;">(AP1)</span> →
-      </button>`;
-    } else {
-      advanceBtn = `<button class="btn btn-sm btn-red"
-        onclick="G.advancePhase('${proj.id}',true)"
-        title="APなしで強制進行。次ターンのAP上限-1のペナルティがあります">
-        ⚡ 強制進行 <span style="opacity:.7;font-size:10px;">(ペナルティ: 次ターンAP上限-1)</span>
-      </button>`;
+      renderEvents(rows, 'all');
+      note.textContent = '最終更新: ' + new Date().toLocaleDateString('ja-JP');
+    } catch(e) {
+      container.innerHTML = '<div class="events-empty">イベント情報の読み込みに失敗しました。</div>';
     }
   }
 
-  const html=`<div>
-    <!-- Header -->
-    <div class="card" style="margin-bottom:12px;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
-        <span style="color:${area.color};font-size:15px;font-weight:900;">${proj.name}</span>
-        <span class="badge badge-gray">${area.type}</span>
-        <span class="badge badge-blue">PH${proj.phase}: ${PHASE_DEF[proj.phase-1].name}</span>
-        <span style="font-size:11px;color:${apBadgeColor};font-family:var(--mono);
-          padding:2px 8px;border-radius:4px;
-          border:1px solid ${apBadgeColor}44;background:${apBadgeColor}11;">
-          AP ${S.ap}/${S.maxAp}${S.maxAp<6?' ⚠ペナルティ中':''}
-        </span>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
-          ${advanceBtn}
-        </div>
-      </div>
-      <div class="phase-steps">${steps}</div>
-    </div>
-    <!-- Phase content -->
-    ${phaseContent}
-  </div>`;
+  loadEvents();
 
-  const el=document.getElementById('tab-content');
-  if(el&&activeTab==='project') el.innerHTML=html;
-  return html;
-}
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      const rows = Array.from(document.querySelectorAll('.event-row')).map(row => ({
+        // re-filter from DOM is simpler
+      }));
+      // reload with filter
+      if (!SHEET_CSV_URL) {
+        const sample = [
+          { date: '2025/06/10', title: '模擬面接会 vol.1', place: 'オンライン', note: '事前申込必須', status: '募集中', link: '', members: 'FALSE' },
+          { date: '2025/06/22', title: '交流会', place: '三田キャンパス', note: '自由参加', status: '近日公開', link: '', members: 'FALSE' },
+          { date: '2025/07/05', title: 'GD練習会（会員限定）', place: '日吉キャンパス', note: '少人数制', status: '募集中', link: '', members: 'TRUE' },
+        ];
+        renderEvents(sample, filter);
+      } else {
+        try {
+          const res = await fetch(SHEET_CSV_URL);
+          const text = await res.text();
+          const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g,'')));
+          const eventRows = lines.slice(1).map(cols => ({
+            date: cols[0], title: cols[1], place: cols[2],
+            note: cols[3], status: cols[4], link: cols[5], members: cols[6]
+          })).filter(r => r.title && r.title !== 'タイトル' && r.title !== 'タイトルを入力' && r.date !== '日付');
+          renderEvents(eventRows, filter);
+        } catch(e) {}
+      }
+    });
+  });
 
-function renderPhase1(proj, area, f){
-  const diffColor = {'低':'var(--green)','中':'var(--amber)','高':'var(--red)','最高':'#ff44aa'};
-  const difficulties = [
-    {label:'権利調整',    val:area.ownerDifficulty,   note:`地権者${area.ownerCount}名`},
-    {label:'行政協議',    val:area.govDifficulty,      note:'許認可難易度'},
-    {label:'リーシング',  val:area.leasingDifficulty,  note:'テナント誘致難易度'},
-    {label:'開業後運営',  val:area.operationDifficulty,note:'稼働維持難易度'},
-  ];
-  return `<div class="grid2">
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot"></div>立地概要</div>
-        <div style="font-size:18px;font-weight:900;color:var(--text);margin-bottom:8px;">${area.name}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-          <span class="badge badge-blue">${area.type}</span>
-          <span class="badge badge-gray">容積率${area.floorRatio}%</span>
-          <span class="badge badge-gray">建ぺい率${area.coverRatio}%</span>
-          ${area.landscape!=='なし'?`<span class="badge badge-amber">${area.landscape.split('（')[0]}</span>`:''}
-        </div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.9;">
-          ${area.context.map(c=>`• ${c}`).join('<br>')}
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--gold)"></div>このエリアの難易度マップ</div>
-        ${difficulties.map(d=>`
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);">
-            <span style="font-size:12px;color:var(--text2);">${d.label}</span>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span style="font-size:10px;color:var(--text3);">${d.note}</span>
-              <span style="font-size:12px;font-weight:700;color:${diffColor[d.val]||'var(--text)'};">${d.val}</span>
-            </div>
-          </div>`).join('')}
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card" style="border-color:${area.color}44;">
-        <div class="card-hdr"><div class="dot" style="background:${area.color}"></div>
-          このエリアの最重要リソース
-        </div>
-        <div style="padding:12px 14px;background:${area.color}11;border-radius:8px;margin-bottom:10px;">
-          <div style="font-size:16px;font-weight:900;color:${area.color};margin-bottom:4px;">
-            🔑 ${area.keyResourceLabel}
-          </div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.7;">${area.keyResourceDesc}</div>
-        </div>
-        <div class="card-hdr" style="margin-top:4px;"><div class="dot" style="background:var(--amber)"></div>行政の優先テーマ</div>
-        ${area.govPriority.map(p=>`
-          <div style="padding:5px 10px;background:var(--bg3);border-radius:4px;margin-bottom:5px;font-size:12px;color:var(--amber);">⚡ ${p}</div>
-        `).join('')}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--purple)"></div>ボーナス条件</div>
-        <div style="padding:10px 12px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:6px;font-size:12px;color:var(--purple);line-height:1.7;">
-          💡 ${area.bonusCondition}
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--accent)"></div>デベロッパーとしての問い</div>
-        <div class="info-box" style="font-size:13px;font-weight:700;line-height:1.7;">
-          「この土地の<span style="color:${area.color};">制約と可能性</span>を読み、<br>
-          誰を動かし、何をここに作るべきか？」
-        </div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderPhase2(proj, area){
-  const scores=[
-    {n:'交通利便性',    v:Math.min(100,Math.round(area.population/300))},
-    {n:'昼間人口密度',  v:Math.min(100,Math.round(area.population/280))},
-    {n:'夜間人口密度',  v:Math.min(100,Math.round(area.nightPop/120))},
-    {n:'観光ポテンシャル',v:Math.min(100,Math.round(area.tourism*100*1.5))},
-    {n:'オフィス需要',  v:area.officeIdx},
-    {n:'住宅需要',      v:area.housingIdx},
-    {n:'商業需要',      v:area.commercialIdx},
-    {n:'競合の少なさ',  v:70+Math.floor(Math.random()*20)},
-  ];
-  const avg = Math.round(scores.reduce((a,b)=>a+b.v,0)/scores.length);
-
-  // 汎用インサイト
-  const insights=[];
-  if(area.housingIdx>area.officeIdx+20) insights.push({t:'住宅需要が優位。安定収益の基盤になる',c:'var(--green)'});
-  if(area.officeIdx>area.housingIdx+20) insights.push({t:'産業・オフィス需要が優位。業務系用途が有効',c:'var(--accent)'});
-  if(area.tourism>0.2)                  insights.push({t:'観光ポテンシャル高。ホテル・体験型施設が有効',c:'var(--purple)'});
-  if(area.nightPop/area.population<0.3) insights.push({t:'夜間人口が薄い。夜も使える施設が差別化になる',c:'var(--accent)'});
-  if(area.nightPop/area.population>0.7) insights.push({t:'夜間人口多（居住者）。生活密着型が重要',c:'var(--gold)'});
-
-  // エリア固有論点
-  const areaPoints = (area.phasePoints && area.phasePoints[2]) || [];
-
-  return `<div class="grid2">
-    <div class="card">
-      <div class="card-hdr"><div class="dot"></div>立地スコアカード</div>
-      <div style="margin-bottom:8px;font-size:10px;color:var(--text3);">※総合スコアより「何をここに建てるか」が重要</div>
-      ${scores.map(s=>{
-        const c=s.v>=70?'var(--green)':s.v>=40?'var(--gold)':'var(--red)';
-        return `<div class="res-row">
-          <div class="rl"><span class="rn">${s.n}</span><span class="rv" style="color:${c}">${s.v}</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:${s.v}%;background:${c}"></div></div>
-        </div>`;
-      }).join('')}
-      <div class="sep"></div>
-      <div class="fin-row"><span class="fin-lbl">総合平均</span><span class="fin-val" style="color:var(--gold)">${avg}/100</span></div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--purple)"></div>汎用インサイト</div>
-        ${insights.map(i=>`
-          <div style="padding:7px 10px;background:var(--bg3);border-radius:4px;margin-bottom:5px;font-size:12px;color:${i.c};line-height:1.5;">
-            ⚡ ${i.t}
-          </div>`).join('')}
-      </div>
-      <div class="card" style="border-color:${area.color}44;">
-        <div class="card-hdr"><div class="dot" style="background:${area.color}"></div>
-          ${area.name}固有の分析論点
-        </div>
-        ${areaPoints.map((p,i)=>`
-          <div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
-            <span style="color:${area.color};font-size:11px;font-family:var(--mono);font-weight:700;flex-shrink:0;">Q${i+1}</span>
-            <span style="font-size:12px;color:var(--text2);line-height:1.6;">${p}</span>
-          </div>`).join('')}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--amber)"></div>制度制約</div>
-        <div style="font-size:12px;color:var(--text2);line-height:2.0;">
-          用途地域: <span style="color:var(--accent);">${area.type}</span><br>
-          容積率: <span style="color:var(--accent);">${area.floorRatio}%</span><br>
-          景観: <span style="color:var(--amber);">${area.landscape}</span>
-        </div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderPhase3(proj, area, f){
-  const c = proj.concept;
-  const total = c.housing + c.commercial + c.office + c.plaza + (c.hotel||0);
-
-  // 汎用チェック
-  const checks = [];
-  if(area.housingIdx>70 && c.housing<40)       checks.push({t:'住宅需要が強いエリアで住宅比率が低め',ty:'warn'});
-  if(area.housingIdx>70 && c.housing>=40)       checks.push({t:'住宅需要に合った構成。安定収益基盤が見込める',ty:'good'});
-  if(area.tourism>0.2  && (c.hotel||0)<20)      checks.push({t:'観光ポテンシャルがあるがホテル用途が薄い',ty:'info'});
-  if(c.plaza>=15)                               checks.push({t:'広場15%以上 → 行政評価UP、エリア回遊性UP（収益は下がる）',ty:'info'});
-  if(c.office>30 && area.officeIdx<50)          checks.push({t:'オフィス需要が弱いエリアでオフィス比率が高め。空室リスクあり',ty:'warn'});
-  if(total===100 && c.housing+c.commercial>=60) checks.push({t:'住商複合バランス良好。市況変動に強い',ty:'good'});
-
-  // エリア固有チェック
-  if(area.id==='A2' && c.office<40)  checks.push({t:'産業系エリアでオフィス・R&D比率が低い。行政の産業用途要件を満たせない可能性',ty:'warn'});
-  if(area.id==='A2' && c.housing>40) checks.push({t:'準工業地域での高い住宅比率は行政の用途転換審査で難航する可能性大',ty:'warn'});
-  if(area.id==='A3' && c.commercial>40) checks.push({t:'郊外エリアで商業比率が高い。商店街との競合で行政・地域が反発するリスク',ty:'warn'});
-  if(area.id==='A3' && c.housing>=60 && proj.publicContrib?.childcare) checks.push({t:'住宅＋子育て施設の組み合わせ。ボーナス条件を満たす可能性あり',ty:'good'});
-  if(area.id==='A4' && (c.hotel||0)<20) checks.push({t:'臨海エリアでホテルが少ない。観光ポテンシャルを活かせていない',ty:'warn'});
-  if(area.id==='A4' && (c.hotel||0)>=20 && c.commercial>=30) checks.push({t:'ホテル＋商業の組み合わせ。臨海観光型としてボーナス条件に近い',ty:'good'});
-
-  // エリア固有論点
-  const areaPoints = (area.phasePoints && area.phasePoints[3]) || [];
-  const themes = CONCEPT_THEMES.filter(t=>!t.areas||t.areas.some(a=>a===area.id||t.areas.includes('all')));
-  const targets = ['近隣住民','就労者','観光客','ファミリー','富裕層','産業従事者'];
-
-  return `<div class="grid2">
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot"></div>ターゲット・テーマ</div>
-        <label>メインターゲット</label>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-          ${targets.map(t=>`<button class="btn btn-sm ${c.target===t?'btn-primary':''}" onclick="G._setConcept('${proj.id}','target','${t}')">${t}</button>`).join('')}
-        </div>
-        <label>開発テーマ</label>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          ${themes.map(t=>`<button class="btn btn-sm ${c.theme===t.id?'btn-gold':''}" onclick="G._applyTheme('${proj.id}','${t.id}')">${t.label}</button>`).join('')}
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--gold)"></div>建物グレード</div>
-        <div class="grid3">
-          ${[{id:'standard',l:'標準',s:'コスト重視'},{id:'high',l:'高品質',s:'+20%コスト'},{id:'premium',l:'プレミアム',s:'+40%コスト'}].map(g=>`
-            <button class="btn ${c.grade===g.id?'btn-primary':''}" onclick="G._setConcept('${proj.id}','grade','${g.id}')">
-              <div style="font-weight:700;">${g.l}</div><div style="font-size:10px;opacity:.7;">${g.s}</div>
-            </button>`).join('')}
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--green)"></div>用途構成スライダー
-          <span style="margin-left:auto;font-size:11px;color:${total===100?'var(--green)':'var(--red)'};">合計:${total}%</span>
-        </div>
-        ${[
-          {k:'housing',  l:'🏠 住宅',    col:'#60a5fa'},
-          {k:'commercial',l:'🏪 商業',   col:'#34d399'},
-          {k:'office',   l:'🏢 オフィス',col:'#f59e0b'},
-          {k:'hotel',    l:'🏨 ホテル',  col:'#a78bfa'},
-          {k:'plaza',    l:'🌳 広場・公共',col:'#818cf8'},
-        ].map(s=>`<div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;">
-            <span style="color:var(--text2);">${s.l}</span>
-            <span style="color:${s.col};font-weight:700;">${c[s.k]||0}%</span>
-          </div>
-          <input type="range" min="0" max="100" step="5" value="${c[s.k]||0}"
-            oninput="G._setConceptSlider('${proj.id}','${s.k}',this.value)" style="accent-color:${s.col}">
-        </div>`).join('')}
-        <div style="display:flex;height:18px;border-radius:3px;overflow:hidden;gap:1px;margin-top:4px;">
-          ${[{k:'housing',col:'#3b82f6'},{k:'commercial',col:'#10b981'},{k:'office',col:'#f59e0b'},{k:'hotel',col:'#8b5cf6'},{k:'plaza',col:'#6366f1'}].map(s=>(c[s.k]||0)>0?`<div style="flex:${c[s.k]||0};background:${s.col};display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;transition:flex .3s;">${(c[s.k]||0)>=12?`${c[s.k]}%`:''}</div>`:'').join('')}
-        </div>
-      </div>
-      <div class="card" style="border-color:${area.color}44;">
-        <div class="card-hdr"><div class="dot" style="background:${area.color}"></div>${area.name}で考えるべき論点</div>
-        ${areaPoints.map((p,i)=>`
-          <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);">
-            <span style="color:${area.color};font-size:11px;font-weight:700;flex-shrink:0;">▶</span>
-            <span style="font-size:12px;color:var(--text2);line-height:1.6;">${p}</span>
-          </div>`).join('')}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--purple)"></div>整合性診断</div>
-        ${checks.length===0
-          ? '<div class="dimtext" style="font-size:12px;">スライダーを動かすと診断が表示されます</div>'
-          : checks.map(ch=>`<div style="padding:7px 10px;border-radius:4px;margin-bottom:5px;font-size:12px;line-height:1.5;
-              ${ch.ty==='good'?'background:var(--green2);color:var(--green);':ch.ty==='warn'?'background:var(--red2);color:#fca5a5;':'background:var(--bg3);color:var(--accent);'}">
-              ${ch.ty==='good'?'✅':ch.ty==='warn'?'⚠️':'ℹ️'} ${ch.t}
-            </div>`).join('')}
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderPhase4(proj, area, agr){
-  const selLo = proj._selectedLo || null;
-  const lo    = selLo ? proj.landowners.find(l=>l.id===selLo) : null;
-  const areaPoints = (area.phasePoints && area.phasePoints[4]) || [];
-
-  return `<div class="grid2">
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot"></div>地権者一覧
-          <span style="margin-left:auto;color:${agr>=80?'var(--green)':'var(--red)'};font-size:13px;font-family:var(--mono);">${agr}% / 80%必要</span>
-        </div>
-        ${proj.landowners.map(lo=>{
-          const tc=lo.trust>=70?'var(--green)':lo.trust>=40?'var(--gold)':'var(--red)';
-          const sc={'賛成':'badge-green','合意済み':'badge-green','条件付き賛成':'badge-gold','反対':'badge-red','交渉中':'badge-blue','未交渉':'badge-gray'}[lo.status]||'badge-gray';
-          return `<div class="stakeholder-row ${proj._selectedLo===lo.id?'selected':''}" onclick="G._selectLo('${proj.id}','${lo.id}')">
-            <div class="sth-avatar">${lo.avatar}</div>
-            <div class="sth-info">
-              <div class="sth-name">${lo.name}</div>
-              <div class="sth-share">持分 ${lo.share}% / 信頼 ${lo.trust}</div>
-              <div class="sth-trust-bar"><div class="sth-trust-fill" style="width:${lo.trust}%;background:${tc}"></div></div>
-            </div>
-            <span class="badge ${sc}">${lo.status}</span>
-          </div>`;
-        }).join('')}
-        ${agr>=80 ? `<div class="good-box" style="margin-top:8px;">✅ 合意条件達成。次フェーズへ進めます</div>` : ''}
-      </div>
-      ${areaPoints.length>0 ? `<div class="card" style="border-color:${area.color}44;">
-        <div class="card-hdr"><div class="dot" style="background:${area.color}"></div>${area.name}の権利調整ポイント</div>
-        ${areaPoints.map(p=>`
-          <div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);">
-            <span style="color:${area.color};font-size:14px;flex-shrink:0;">▶</span>
-            <span style="font-size:12px;color:var(--text2);line-height:1.6;">${p}</span>
-          </div>`).join('')}
-      </div>` : ''}
-    </div>
-    <div class="card">
-      ${lo ? `
-        <div class="card-hdr"><div class="dot" style="background:var(--gold)"></div>${lo.name}</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">持分 ${lo.share}% / 信頼度 ${lo.trust}/100</div>
-        <div style="margin-bottom:10px;">
-          <div style="font-size:11px;color:var(--gold);margin-bottom:5px;">優先事項</div>
-          ${lo.priorities.map(p=>`<div style="font-size:12px;color:var(--text2);padding:3px 0;">• ${p}</div>`).join('')}
-        </div>
-        <div style="margin-bottom:10px;">
-          <div style="font-size:11px;color:var(--green);margin-bottom:4px;">合意の鍵</div>
-          <div style="font-size:12px;color:var(--text2);">信頼値 ${lo.trustReq}以上で合意提案が成功しやすくなる</div>
-          ${lo.dealBreaker ? `<div style="font-size:12px;color:var(--red);margin-top:4px;">❌ NG: ${lo.dealBreaker}</div>` : ''}
-        </div>
-        ${lo.hiddenUnlocked && lo.hiddenInfo
-          ? `<div style="padding:8px 10px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:6px;margin-bottom:10px;">
-              <div style="font-size:10px;color:var(--purple);margin-bottom:3px;">🔓 本音（ヒアリングで判明）</div>
-              <div style="font-size:12px;color:#c4b5fd;">${lo.hiddenInfo}</div>
-             </div>`
-          : lo.hiddenInfo
-            ? `<div style="padding:8px 10px;background:var(--bg3);border:1px dashed var(--border);border-radius:6px;margin-bottom:10px;">
-                <div style="font-size:11px;color:var(--text3);">🔒 ヒアリングあと${2-Math.min(2,lo.hearingCount||0)}回で本音が判明</div>
-               </div>` : ''}
-        <div class="btn-row">
-          <button class="btn btn-sm" onclick="G.negotiateOwner('${proj.id}','${lo.id}','hearing')" ${S.ap<1?'disabled':''}>
-            ヒアリング (AP1)
-          </button>
-          <button class="btn btn-sm btn-primary" onclick="G.negotiateOwner('${proj.id}','${lo.id}','propose')" ${S.ap<1?'disabled':''}>
-            合意提案 (AP1)
-          </button>
-        </div>
-      ` : `<div style="text-align:center;padding:40px 0;color:var(--text3);font-size:12px;">
-          ← 地権者を選択してください<br><br>
-          ヒアリングを重ねると<span style="color:var(--purple);">本音が判明</span>し、<br>
-          交渉が有利になります
-         </div>`}
-    </div>
-  </div>`;
-}
-
-function renderPhase5(proj,area,f,agr){
-  const pc=proj.publicContrib;
-  const gp=proj.govProgress;
-  const bonusReady=pc.disasterStorage&&pc.pedestrianDeck&&S.govTrust>=65;
-  const govAvg=Math.round((gp.urbanPlanning+gp.disaster+gp.architecture)/3);
-
-  const contribItems=[
-    {k:'disasterStorage',l:'防災備蓄倉庫',icon:'🏪',eff:'防災課+22、ボーナス条件'},
-    {k:'pedestrianDeck',l:'歩行者デッキ整備',icon:'🚶',eff:'都市計画課+20、ボーナス条件'},
-    {k:'childcare',l:'保育施設誘致',icon:'👶',eff:'地域評判+12'},
-    {k:'plaza',l:'公開空地・広場',icon:'🌳',eff:'エリア価値+5'},
-    {k:'parking',l:'駐輪場200台以上',icon:'🚲',eff:'地域評判+8'},
-  ];
-
-  return `<div class="grid2">
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot"></div>部局別協議状況</div>
-        ${[{n:'都市計画課',v:gp.urbanPlanning,icon:'🏙️'},{n:'防災課',v:gp.disaster,icon:'🚒',note:'容積ボーナス担当'},{n:'建築指導課',v:gp.architecture,icon:'📐'}].map(d=>{
-          const c=d.v>=70?'var(--green)':d.v>=50?'var(--gold)':'var(--red)';
-          return `<div style="margin-bottom:12px;">
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-              <span>${d.icon} <span style="color:var(--text)">${d.n}</span> ${d.note?`<span class="badge badge-purple">${d.note}</span>`:''}</span>
-              <span style="color:${c};font-family:var(--mono);">${d.v}</span>
-            </div>
-            <div class="bar-track" style="height:6px;"><div class="bar-fill" style="width:${d.v}%;background:${c}"></div></div>
-          </div>`;
-        }).join('')}
-        <div class="sep"></div>
-        <div class="fin-row"><span class="fin-lbl">総合評価（60以上で次フェーズ可）</span><span class="fin-val" style="color:${govAvg>=60?'var(--green)':'var(--red)'}">${govAvg}/100</span></div>
-        <div class="btn-row" style="margin-top:10px;">
-          <button class="btn btn-primary" onclick="G.consultGov('${proj.id}')" ${S.ap<1?'disabled':''}>行政協議を実施 (AP1)</button>
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--amber)"></div>公共貢献の設定</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">行政への貢献は「コスト」ではなく「交渉材料」として使う</div>
-        ${contribItems.map(item=>`
-          <label class="consent-check" onclick="G.togglePublicContrib('${proj.id}','${item.k}')">
-            <input type="checkbox" ${pc[item.k]?'checked':''} readonly>
-            <span style="font-size:16px;">${item.icon}</span>
-            <div>
-              <div>${item.l}</div>
-              <div style="font-size:10px;color:var(--green);">${item.eff}</div>
-            </div>
-          </label>`).join('')}
-      </div>
-      <div class="card" style="border-color:${bonusReady?'var(--purple)':'var(--border)'};">
-        <div class="card-hdr"><div class="dot" style="background:${bonusReady?'var(--purple)':'var(--border2)'}"></div>⚡ 容積ボーナス判定</div>
-        ${[{l:'防災備蓄倉庫設置',met:pc.disasterStorage},{l:'歩行者デッキ整備',met:pc.pedestrianDeck},{l:'行政信頼度65以上',met:S.govTrust>=65}].map(c=>`
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;">
-            <span style="color:${c.met?'var(--green)':'var(--text3)'}">${c.met?'✅':'◻'}</span>
-            <span style="color:${c.met?'var(--text)':'var(--text3)'};">${c.l}</span>
-          </div>`).join('')}
-        ${bonusReady&&!proj.finance.bonusApplied?`
-          <div class="good-box" style="margin-top:8px;">🎉 容積ボーナス取得可能！</div>
-          <button class="btn btn-gold" style="margin-top:8px;width:100%;" onclick="G.applyVolumeBonus('${proj.id}')">特例容積率+100%を適用する</button>
-        `:(proj.finance.bonusApplied?`<div class="good-box">✅ 容積ボーナス+${proj.finance.ratioBonus}% 適用済み</div>`:`<div style="font-size:11px;color:var(--text3);margin-top:8px;">条件を満たすと容積率が倍になります</div>`)}
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderPhase6(proj,area,f){
-  const warnings=[];
-  if(f.ltv>70) warnings.push({t:`LTV ${f.ltv}% → 融資条件70%超過`,ty:'error'});
-  if(f.irr<5) warnings.push({t:`IRR ${f.irr}% → 目標5%未達。投資家合意困難`,ty:'error'});
-  if(f.irr>=5&&f.irr<6) warnings.push({t:`IRR ${f.irr}% → 合格ラインだがバッファ不足`,ty:'warn'});
-  if(f.cf<0) warnings.push({t:'年間CF赤字。金融機関融資否認リスクあり',ty:'error'});
-  if(proj.concept.plaza>=15) warnings.push({t:'広場15%以上はエリア価値+だが収益下押し。長期価値との引換',ty:'info'});
-  if(f.bonusApplied) warnings.push({t:`容積ボーナス+${f.ratioBonus}%適用中。収支が改善されています`,ty:'good'});
-
-  return `<div class="grid2">
-    <div class="card">
-      <div class="card-hdr"><div class="dot"></div>事業収支サマリー</div>
-      <div class="grid2" style="gap:8px;margin-bottom:12px;">
-        ${[
-          {l:'総投資額',v:`¥${f.totalInvestment.toLocaleString()}M`,sub:'土地+建設+諸費用'},
-          {l:'借入額',v:`¥${f.loan.toLocaleString()}M`,sub:`LTV ${f.ltv}%`,c:f.ltv>70?'var(--red)':'var(--text)'},
-          {l:'年間賃料収入',v:`¥${f.annualRent.toLocaleString()}M`,sub:'住宅+商業+オフィス等'},
-          {l:'NOI',v:`¥${f.noi.toLocaleString()}M`,sub:'賃料収入-運営費'},
-          {l:'年間CF',v:`¥${f.cf.toLocaleString()}M`,sub:'NOI-金融費用',c:f.cf<0?'var(--red)':'var(--green)'},
-          {l:'IRR',v:`${f.irr}%`,sub:'目標5%以上',c:f.irr>=5?'var(--green)':f.irr>=3?'var(--amber)':'var(--red)'},
-        ].map(m=>`<div style="padding:10px 12px;background:var(--bg3);border-radius:6px;">
-          <div style="font-size:10px;color:var(--text3);margin-bottom:3px;">${m.l}</div>
-          <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:${m.c||'var(--text)'};">${m.v}</div>
-          <div style="font-size:10px;color:var(--text3);">${m.sub}</div>
-        </div>`).join('')}
-      </div>
-      <div style="padding:10px 14px;background:var(--bg3);border-radius:6px;">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">エリア価値への貢献度</div>
-        <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:var(--purple);">${getAreaValue(proj)}/100</div>
-        <div style="font-size:11px;color:var(--text3);">高いほど将来案件で有利になる</div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--amber)"></div>収支診断・アドバイス</div>
-        ${warnings.length===0?'<div class="good-box">収支計画は良好です</div>':
-          warnings.map(w=>`<div style="padding:8px 10px;border-radius:4px;margin-bottom:6px;font-size:12px;line-height:1.5;
-            ${w.ty==='error'?'background:var(--red2);color:#fca5a5;':
-              w.ty==='warn'?'background:var(--gold2);color:#fde68a;':
-              w.ty==='good'?'background:var(--green2);color:var(--green);':
-              'background:var(--bg3);color:var(--accent);'}">${w.ty==='error'?'🔴':w.ty==='warn'?'🟡':w.ty==='good'?'✅':'🔵'} ${w.t}</div>`).join('')}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--accent)"></div>デベロッパーの判断ポイント</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.8;">
-          IRR・LTV・CF・エリア価値の4軸で総合判断してください。<br>
-          短期収益だけでなく、この案件がエリア全体の価値にどう貢献するかが、次の案件の競争優位を作ります。
-        </div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderPhase7(proj,area,f){
-  const contractors=[
-    {id:'C1',name:'大手ゼネコン A社',icon:'🏗️',cost:'標準',quality:'高',speed:'普通',risk:'低'},
-    {id:'C2',name:'中堅ゼネコン B社',icon:'⚡',cost:'安価-5%',quality:'標準',speed:'速い',risk:'中'},
-    {id:'C3',name:'地元工務店 C社',icon:'🤝',cost:'やや高+3%',quality:'高',speed:'普通',risk:'低',bonus:'地域評判+8'},
-  ];
-  const schedule=[
-    {ph:'設計完了',status:'完了',icon:'📐'},
-    {ph:'建築確認申請',status:'完了',icon:'📋'},
-    {ph:'着工',status:proj.constructorId?'完了':'待機',icon:'🏗️'},
-    {ph:'躯体工事',status:proj.constructorId?'進行中':'待機',icon:'🧱'},
-    {ph:'内装・設備',status:'待機',icon:'🔧'},
-    {ph:'竣工・検査',status:'待機',icon:'🏢'},
-  ];
-
-  return `<div class="grid2">
-    <div class="card">
-      <div class="card-hdr"><div class="dot"></div>施工会社の選定</div>
-      ${contractors.map(c=>`<div style="padding:12px 14px;border:1px solid ${proj.constructorId===c.id?'var(--accent)':'var(--border)'};border-radius:6px;margin-bottom:8px;cursor:pointer;background:${proj.constructorId===c.id?'rgba(0,200,255,.05)':'var(--bg2)'};" onclick="G.setContractor('${proj.id}','${c.id}')">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-          <span style="font-size:22px;">${c.icon}</span>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text);">${c.name}</div>
-            ${c.bonus?`<span class="badge badge-green" style="font-size:10px;">${c.bonus}</span>`:''}
-          </div>
-          ${proj.constructorId===c.id?'<span style="margin-left:auto;color:var(--accent);">✓ 選択中</span>':''}
-        </div>
-        <div class="grid3" style="gap:6px;">
-          ${[{l:'コスト',v:c.cost},{l:'品質',v:c.quality},{l:'速度',v:c.speed},{l:'リスク',v:c.risk}].map(i=>`<div style="text-align:center;padding:4px;background:var(--bg3);border-radius:4px;"><div style="font-size:9px;color:var(--text3);">${i.l}</div><div style="font-size:11px;color:var(--text2);font-weight:700;">${i.v}</div></div>`).join('')}
-        </div>
-      </div>`).join('')}
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--purple)"></div>工程管理</div>
-        ${schedule.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
-          <span style="font-size:16px;">${s.icon}</span>
-          <span style="flex:1;font-size:12px;color:${s.status==='完了'?'var(--green)':s.status==='進行中'?'var(--gold)':'var(--text3)'};">${s.ph}</span>
-          <span class="badge ${s.status==='完了'?'badge-green':s.status==='進行中'?'badge-gold':'badge-gray'}">${s.status}</span>
-        </div>`).join('')}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--amber)"></div>リスク状況</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.8;">
-          建設費指数: <span style="color:${S.market.constructionIdx>1.1?'var(--red)':'var(--green)'};">${(S.market.constructionIdx*100).toFixed(0)}</span><br>
-          金利: <span style="color:${S.market.interestRate>0.04?'var(--red)':'var(--text)'};">${(S.market.interestRate*100).toFixed(2)}%</span><br>
-          工期リスク: <span style="color:var(--amber);">中（小学校隣接・時間制限あり）</span>
-        </div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderPhase8(proj,area,f){
-  const sel=proj.selectedTenants;
-  // Tenant mix bonus
-  const selData=sel.map(id=>TENANT_POOL.find(t=>t.id===id)).filter(Boolean);
-  const hasCafe=selData.some(t=>t.type==='カフェ');
-  const hasMed=selData.some(t=>t.type==='医療');
-  const hasCare=selData.some(t=>t.type==='子育て');
-  const hasSuper=selData.some(t=>t.type==='食品小売');
-  const hasFit=selData.some(t=>t.type==='スポーツ');
-  const hasHotel=selData.some(t=>t.type==='ホテル');
-  const mixBonuses=[];
-  if(hasMed&&hasCare&&hasSuper) mixBonuses.push('生活利便ハブ: 収益+20%、評判+15');
-  if(hasCafe&&selData.some(t=>t.type==='アパレル')) mixBonuses.push('カルチャー複合: ブランド+10');
-  if(hasFit&&hasCafe) mixBonuses.push('ウェルネス複合: 夜間人流+20%');
-  if(hasHotel&&selData.some(t=>t.type==='飲食')) mixBonuses.push('ホスピタリティ複合: 観光客滞在時間+25%');
-
-  return `<div class="grid2">
-    <div class="card">
-      <div class="card-hdr"><div class="dot"></div>テナント誘致 <span style="margin-left:auto;font-size:11px;color:var(--text3);">選択中: ${sel.length}</span></div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        ${TENANT_POOL.map(t=>{
-          const isSel=sel.includes(t.id);
-          return `<div class="tenant-card ${isSel?'selected':''}" onclick="G.toggleTenant('${proj.id}','${t.id}')">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span style="font-size:24px;">${t.icon}</span>
-              <div style="flex:1;">
-                <div style="display:flex;align-items:center;gap:6px;">
-                  <span style="font-size:12px;font-weight:700;color:var(--text);">${t.name}</span>
-                  <span class="badge badge-gray" style="font-size:9px;">${t.tag}</span>
-                </div>
-                <div style="font-size:11px;color:var(--text3);">${t.type} / ¥${t.rent.toLocaleString()}/坪 / 必要人流${t.reqFlow.toLocaleString()}人</div>
-                <div style="font-size:11px;color:var(--green);">${Object.entries(t.effect).map(([k,v])=>`${k}+${v}`).join(', ')}</div>
-              </div>
-              ${isSel?'<span style="color:var(--gold);font-size:18px;">✓</span>':''}
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--purple)"></div>テナントミックス診断</div>
-        ${sel.length===0?'<div class="dimtext" style="font-size:12px;">テナントを選択してください</div>':
-          selData.map(t=>`<div style="display:flex;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:6px;margin-bottom:6px;">
-            <span style="font-size:16px;">${t.icon}</span>
-            <div><div style="font-size:12px;font-weight:700;color:var(--text);">${t.name}</div><div style="font-size:11px;color:var(--green);">${Object.entries(t.effect).map(([k,v])=>`${k}+${v}`).join(', ')}</div></div>
-          </div>`).join('')}
-        ${mixBonuses.length>0?`<div style="margin-top:8px;padding:10px 12px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:6px;">
-          <div style="font-size:10px;color:var(--purple);margin-bottom:5px;">🎉 テナントミックスボーナス</div>
-          ${mixBonuses.map(b=>`<div style="font-size:11px;color:#c4b5fd;">✨ ${b}</div>`).join('')}
-        </div>`:''}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--amber)"></div>テナントミックスの原則</div>
-        ${['賃料最大化だけが正解ではない','低賃料でも日常利用テナントが人流を安定させる','テナント間の相乗効果を考える','コンセプトとの一貫性が長期価値を作る'].map(t=>`<div style="font-size:12px;color:var(--text2);margin-bottom:6px;padding-left:10px;border-left:2px solid var(--border2);">${t}</div>`).join('')}
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderPhase9(proj,area,f,av){
-  const op=proj.operation;
-  const softMeasureDefs={
-    'SM1':{n:'週末マルシェ',icon:'🛍️'},
-    'SM2':{n:'アートイベント',icon:'🎨'},
-    'SM3':{n:'ナイトマーケット',icon:'🌙'},
-    'SM4':{n:'広場グリーン化',icon:'🌳'},
-    'SM5':{n:'エリアアプリ',icon:'📱'},
-  };
-
-  return `<div class="grid2">
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--green)"></div>運営ダッシュボード</div>
-        <div class="grid2" style="gap:8px;margin-bottom:10px;">
-          ${[
-            {l:'稼働率',v:op.occupancyRate+'%',c:op.occupancyRate>=85?'var(--green)':'var(--amber)'},
-            {l:'月次賃料収入',v:'¥'+op.monthlyRent.toLocaleString()+'M',c:'var(--gold)'},
-            {l:'日次人流',v:op.dailyFlow.toLocaleString()+'人',c:'var(--accent)'},
-            {l:'平均滞在時間',v:op.stayTime+'分',c:'var(--purple)'},
-            {l:'施設満足度',v:op.satisfaction+'/100',c:op.satisfaction>=75?'var(--green)':'var(--amber)'},
-            {l:'エリア価値指数',v:av+'/100',c:'var(--purple)'},
-          ].map(m=>`<div style="padding:10px 12px;background:var(--bg3);border-radius:6px;text-align:center;">
-            <div style="font-size:10px;color:var(--text3);margin-bottom:3px;">${m.l}</div>
-            <div style="font-size:16px;font-weight:700;font-family:var(--mono);color:${m.c};">${m.v}</div>
-          </div>`).join('')}
-        </div>
-        <div class="sep"></div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.8;">
-          周辺地価への波及: <span style="color:var(--green);">+5〜8%上昇傾向</span><br>
-          エリア全体の人流: <span style="color:var(--accent);">増加中</span><br>
-          次案件への布石: <span style="color:var(--gold);">行政信頼・ブランド蓄積</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--amber)"></div>ソフト施策の実施</div>
-        ${Object.entries(softMeasureDefs).map(([id,m])=>{
-          const applied=proj.softMeasures.includes(id);
-          return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:${applied?'rgba(45,224,132,.05)':'var(--bg2)'};border-radius:6px;margin-bottom:6px;border:1px solid ${applied?'var(--green2)':'transparent'};">
-            <span style="font-size:18px;">${m.icon}</span>
-            <span style="flex:1;font-size:12px;color:${applied?'var(--green)':'var(--text2)'};">${m.n}</span>
-            ${applied?'<span class="badge badge-green">実施済</span>':`<button class="btn btn-sm" onclick="G.applySoftMeasure('${proj.id}','${id}')" ${S.ap<1?'disabled':''}>実施(AP1〜2)</button>`}
-          </div>`;
-        }).join('')}
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--purple)"></div>テナント稼働</div>
-        ${proj.selectedTenants.map(id=>{
-          const t=TENANT_POOL.find(x=>x.id===id);
-          return t?`<div style="display:flex;gap:10px;padding:8px 10px;background:var(--bg3);border-radius:6px;margin-bottom:6px;">
-            <span style="font-size:18px;">${t.icon}</span>
-            <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:var(--text);">${t.name}</div><div style="font-size:11px;color:var(--text3);">${t.type}</div></div>
-            <span class="badge badge-green">営業中</span>
-          </div>`:'';
-        }).join('')}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--accent)"></div>🌆 エリアへの波及効果</div>
-        ${['周辺地価が上昇傾向（+5〜8%）','徒歩人流増加→周辺店舗売上向上','空きビルへの開発問い合わせが増加','行政からまちづくり協議会への招待'].map(t=>`<div style="padding:6px 0;font-size:12px;color:var(--text2);border-bottom:1px solid var(--border);">${t}</div>`).join('')}
-      </div>
-      <button class="btn btn-gold" style="font-size:14px;padding:12px;" onclick="G._finishProject('${proj.id}')">✅ 案件完成・次案件へ</button>
-    </div>
-  </div>`;
-}
-
-// ── MARKET TAB ──
-function renderMarketTab(){
-  const m=S.market;
-  const indicators=[
-    {l:'政策金利',v:(m.interestRate*100).toFixed(2)+'%',trend:m.interestRate>0.04?'↑':'→',c:m.interestRate>0.04?'var(--red)':'var(--green)',note:'高いほど借入コスト増加'},
-    {l:'建設費指数',v:(m.constructionIdx*100).toFixed(0),trend:m.constructionIdx>1.1?'↑':m.constructionIdx<0.95?'↓':'→',c:m.constructionIdx>1.1?'var(--red)':m.constructionIdx<0.95?'var(--green)':'var(--text)',note:'100基準。高いほど工事費増加'},
-    {l:'住宅需要指数',v:(m.housingDemand*100).toFixed(0),trend:m.housingDemand>1?'↑':'↓',c:m.housingDemand>1?'var(--green)':'var(--amber)',note:'100基準。高いほど需要旺盛'},
-    {l:'オフィス需要',v:(m.officeDemand*100).toFixed(0),trend:m.officeDemand>1?'↑':'↓',c:m.officeDemand>1?'var(--green)':'var(--amber)',note:'テレワーク需要が影響'},
-    {l:'商業需要',v:(m.commercialDemand*100).toFixed(0),trend:m.commercialDemand>1?'↑':'↓',c:m.commercialDemand>1?'var(--green)':'var(--amber)',note:'消費動向を反映'},
-    {l:'ホテル需要',v:(m.hotelDemand*100).toFixed(0),trend:m.hotelDemand>1?'↑':'↓',c:m.hotelDemand>1?'var(--green)':'var(--amber)',note:'インバウンドが牽引'},
-  ];
-
-  const recentEvents=RANDOM_EVENTS.filter(e=>S.eventHistory.includes(e.id));
-
-  return `<div class="grid2">
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot"></div>市況インジケーター — ${S.season}</div>
-        ${indicators.map(ind=>`<div style="padding:10px 14px;background:var(--bg3);border-radius:6px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">
-          <div style="flex:1;">
-            <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">${ind.l}</div>
-            <div style="font-size:11px;color:var(--text3);">${ind.note}</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:22px;font-weight:900;font-family:var(--mono);color:${ind.c};">${ind.v}</div>
-            <div style="font-size:16px;color:${ind.c};">${ind.trend}</div>
-          </div>
-        </div>`).join('')}
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--gold)"></div>市況の読み方</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.9;">
-          <div style="padding:6px 0;border-bottom:1px solid var(--border);">金利上昇 → 借入コスト増加 → IRR低下 → 収支設計に注意</div>
-          <div style="padding:6px 0;border-bottom:1px solid var(--border);">建設費高騰 → 総投資額増加 → IRR・収益性が圧迫される</div>
-          <div style="padding:6px 0;border-bottom:1px solid var(--border);">住宅需要強 → 住宅分譲・賃貸の収益性が向上</div>
-          <div style="padding:6px 0;">ホテル需要強 → 観光・ホテル系用途が有利</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--amber)"></div>発生済みイベント</div>
-        ${recentEvents.length===0?'<div class="dimtext" style="font-size:12px;">まだイベントは発生していません</div>':
-          recentEvents.map(e=>`<div style="padding:8px 10px;background:var(--bg3);border-radius:6px;margin-bottom:6px;display:flex;gap:8px;align-items:center;">
-            <span style="font-size:18px;">${e.icon}</span>
-            <div>
-              <div style="font-size:12px;color:${e.type==='chance'?'var(--gold)':'var(--red)'};">${e.name}</div>
-              <div style="font-size:10px;color:var(--text3);">${e.type==='chance'?'チャンス':'リスク'}</div>
-            </div>
-          </div>`).join('')}
-      </div>
-    </div>
-  </div>`;
-}
-
-// ── PORTFOLIO TAB ──
-function renderPortfolioTab(){
-  const all=[...S.projects,...S.completedProjects];
-  const totalInv=S.projects.reduce((a,p)=>a+p.finance.totalInvestment,0);
-  const avgIrr=S.projects.filter(p=>p.finance.irr>0).reduce((a,p)=>a+p.finance.irr,0)/(S.projects.filter(p=>p.finance.irr>0).length||1);
-  const areaVals=Object.entries(S.areaValue).map(([k,v])=>({area:AREAS.find(a=>a.id===k),v}));
-
-  return `<div class="grid2">
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot"></div>ポートフォリオ概要</div>
-        <div class="grid2" style="gap:8px;margin-bottom:12px;">
-          ${[
-            {l:'進行中案件',v:S.projects.length+'件',c:'var(--accent)'},
-            {l:'完成案件',v:S.completedProjects.length+'件',c:'var(--green)'},
-            {l:'総投資額',v:'¥'+totalInv.toLocaleString()+'M',c:'var(--gold)'},
-            {l:'平均IRR',v:avgIrr.toFixed(1)+'%',c:avgIrr>=5?'var(--green)':'var(--amber)'},
-          ].map(m=>`<div style="padding:10px 12px;background:var(--bg3);border-radius:6px;text-align:center;">
-            <div style="font-size:10px;color:var(--text3);margin-bottom:3px;">${m.l}</div>
-            <div style="font-size:18px;font-weight:700;font-family:var(--mono);color:${m.c};">${m.v}</div>
-          </div>`).join('')}
-        </div>
-        <div class="sec-hdr">プレイヤーリソース</div>
-        ${[
-          {n:'行政信頼度',v:S.govTrust},{n:'地権者NW',v:S.ownerNetwork},
-          {n:'地域評判',v:S.reputation},{n:'ブランド力',v:S.brand},
-          {n:'テナントNW',v:S.tenantNetwork},
-        ].map(r=>{
-          const c=r.v>=70?'var(--green)':r.v>=40?'var(--gold)':'var(--red)';
-          return `<div class="res-row"><div class="rl"><span class="rn">${r.n}</span><span class="rv" style="color:${c}">${r.v}</span></div><div class="bar-track"><div class="bar-fill" style="width:${r.v}%;background:${c}"></div></div></div>`;
-        }).join('')}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--purple)"></div>エリア価値ヒートマップ</div>
-        ${areaVals.map(({area,v})=>area?`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
-          <span style="color:${area.color};font-size:12px;font-weight:700;width:100px;">${area.name}</span>
-          <div style="flex:1;"><div class="bar-track" style="height:10px;"><div class="bar-fill" style="width:${v}%;background:${area.color}"></div></div></div>
-          <span style="color:${area.color};font-family:var(--mono);font-weight:700;width:30px;text-align:right;">${v}</span>
-        </div>`:'').join('')}
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--gold)"></div>案件一覧</div>
-        ${all.length===0?'<div class="dimtext" style="font-size:12px;">案件なし</div>':
-          all.map(p=>{
-            const a=AREAS.find(x=>x.id===p.areaId);
-            const ph=PHASE_DEF[p.phase-1]||PHASE_DEF[8];
-            const f2=calcFinance(p);
-            return `<div style="padding:12px 14px;background:var(--bg3);border-radius:6px;margin-bottom:8px;cursor:pointer;border:1px solid ${activeProjectId===p.id?'var(--accent)':'var(--border)'};" onclick="G._selectProject('${p.id}')">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <span style="color:${a?a.color:'var(--text)'};font-size:13px;font-weight:700;">${p.name}</span>
-                <span class="badge badge-blue">PH${p.phase}</span>
-              </div>
-              <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
-                <span class="badge badge-gray">${ph.name}</span>
-                ${f2.irr>0?`<span class="badge ${f2.irr>=5?'badge-green':f2.irr>=3?'badge-gold':'badge-red'}">IRR ${f2.irr}%</span>`:''}
-              </div>
-              <div style="height:3px;background:var(--bg2);border-radius:2px;overflow:hidden;">
-                <div style="height:100%;width:${((p.phase-1)/9)*100}%;background:var(--accent);border-radius:2px;"></div>
-              </div>
-            </div>`;
-          }).join('')}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--green)"></div>事業ノウハウ</div>
-        ${Object.entries(S.expertise).map(([k,v])=>`<div class="res-row"><div class="rl"><span class="rn">${{housing:'住宅',commercial:'商業',office:'オフィス',hotel:'ホテル',logistics:'物流'}[k]}</span><span class="rv" style="color:var(--gold)">LV${v}</span></div><div class="bar-track"><div class="bar-fill" style="width:${v*20}%;background:var(--gold)"></div></div></div>`).join('')}
-      </div>
-    </div>
-  </div>`;
-}
-
-// ── CONCEPT HELPERS ──
-function _setConcept(projId,key,val){
-  const proj=S.projects.find(p=>p.id===projId);
-  proj.concept[key]=val;
-  proj.finance={...proj.finance,...calcFinance(proj)};
-  renderProjectDetail(projId);
-}
-
-function _setConceptSlider(projId,key,val){
-  const proj=S.projects.find(p=>p.id===projId);
-  proj.concept[key]=parseInt(val);
-  const c=proj.concept;
-  const t=(c.housing||0)+(c.commercial||0)+(c.office||0)+(c.hotel||0)+(c.plaza||0);
-  proj.finance={...proj.finance,...calcFinance(proj)};
-  renderProjectDetail(projId);
-}
-
-function _applyTheme(projId,themeId){
-  const proj=S.projects.find(p=>p.id===projId);
-  const theme=CONCEPT_THEMES.find(t=>t.id===themeId);
-  if(!theme) return;
-  proj.concept={...proj.concept,theme:themeId,housing:theme.housing,commercial:theme.commercial,office:theme.office,hotel:0,plaza:theme.plaza};
-  proj.finance={...proj.finance,...calcFinance(proj)};
-  notify('テーマ「'+theme.label+'」を適用しました','info');
-  renderProjectDetail(projId);
-}
-
-function _selectLo(projId,loId){
-  const proj=S.projects.find(p=>p.id===projId);
-  proj._selectedLo=loId;
-  renderProjectDetail(projId);
-}
-
-function _finishProject(projId){
-  const proj=S.projects.find(p=>p.id===projId);
-  S.projects=S.projects.filter(p=>p.id!==projId);
-  S.completedProjects.push(proj);
-  // Expertise UP
-  if(proj.concept.housing>40) S.expertise.housing=Math.min(5,(S.expertise.housing||0)+1);
-  if(proj.concept.commercial>30) S.expertise.commercial=Math.min(5,(S.expertise.commercial||0)+1);
-  if((proj.concept.hotel||0)>20) S.expertise.hotel=Math.min(5,(S.expertise.hotel||0)+1);
-  S.brand=Math.min(100,S.brand+8);
-  S.tenantNetwork=Math.min(100,S.tenantNetwork+6);
-  addLog(proj.name+' が完成しました');
-  notify('🏆 案件完成！ブランド力+8','good');
-  activeProjectId=S.projects.length>0?S.projects[0].id:null;
-
-  // Check ending
-  if(S.completedProjects.length>=2) showEnding();
-  else {renderAll();switchTab('map');}
-}
-
-// ── ENDING ──
-function showEnding(){
-  const totalScore=calcFinalScore();
-  const ending=getEndingType(totalScore);
-  const endEl=document.getElementById('ending-box');
-  endEl.innerHTML=`
-    <div style="text-align:center;margin-bottom:28px;">
-      <div style="font-size:64px;margin-bottom:12px;">${ending.icon}</div>
-      <div style="font-size:24px;font-weight:900;color:${ending.color};margin-bottom:6px;">${ending.title}</div>
-      <div style="font-size:14px;color:var(--text2);margin-bottom:16px;">${ending.sub}</div>
-      <div style="display:inline-flex;align-items:center;gap:12px;padding:16px 32px;background:var(--bg3);border-radius:12px;border:2px solid ${ending.color};">
-        <span style="color:var(--text3);font-size:14px;">総合スコア</span>
-        <span style="color:${ending.color};font-size:52px;font-weight:900;font-family:var(--mono);">${totalScore}</span>
-        <span style="color:var(--text3);font-size:14px;">/100</span>
-      </div>
-    </div>
-    <div class="grid2" style="margin-bottom:20px;">
-      ${[
-        {l:'案件完成数',v:S.completedProjects.length+'件'},
-        {l:'行政信頼度',v:S.govTrust},
-        {l:'地域評判',v:S.reputation},
-        {l:'ブランド力',v:S.brand},
-        {l:'解放エリア数',v:S.unlockedAreas.length+'/4'},
-        {l:'ターン数',v:S.turn+'ターン'},
-      ].map(m=>`<div style="padding:10px 14px;background:var(--bg3);border-radius:8px;text-align:center;">
-        <div style="font-size:11px;color:var(--text3);margin-bottom:3px;">${m.l}</div>
-        <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text);">${m.v}</div>
-      </div>`).join('')}
-    </div>
-    <div style="padding:16px 20px;background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:10px;margin-bottom:20px;">
-      <div style="color:var(--accent);font-size:13px;font-weight:700;margin-bottom:8px;">🏙️ このキャリアが残したもの</div>
-      <div style="color:var(--text2);font-size:13px;line-height:1.8;">
-        ${S.completedProjects.map(p=>p.name).join('・')}を完成させ、エリアの価値を高めた。
-        ${S.govTrust>=70?'行政との強固な信頼関係が次のプロジェクトへの道を開いている。':''}
-        ${S.brand>=60?'市場でのブランド認知が向上し、優良テナントが集まりやすくなっている。':''}
-        場所の制約と可能性を読み、多様な関係者を動かし、長期的な都市価値を創造するデベロッパーとしての本質的な力を身につけた。
-      </div>
-    </div>
-    <div style="text-align:center;">
-      <button class="btn btn-primary" style="padding:14px 40px;font-size:14px;" onclick="G._restart()">もう一度プレイする</button>
-    </div>
-  `;
-  document.getElementById('ending-overlay').classList.add('show');
-}
-
-function calcFinalScore(){
-  let s=0;
-  s+=Math.min(30,S.completedProjects.length*15);
-  const avgIrr=S.completedProjects.reduce((a,p)=>a+(calcFinance(p).irr||0),0)/(S.completedProjects.length||1);
-  s+=avgIrr>=5?20:avgIrr>=3?12:5;
-  s+=S.govTrust>=70?15:S.govTrust>=50?10:5;
-  s+=S.reputation>=70?10:S.reputation>=50?7:3;
-  s+=S.brand>=60?10:S.brand>=40?7:3;
-  s+=S.unlockedAreas.length*3;
-  return Math.min(100,Math.round(s));
-}
-
-function getEndingType(score){
-  if(score>=80) return {title:'エリア再生の立役者',sub:'財務と街の価値を両立した名プロジェクト群',color:'var(--gold)',icon:'🏆'};
-  if(score>=65) return {title:'堅実なデベロッパー',sub:'バランスの取れた開発で地域に貢献',color:'var(--green)',icon:'🌟'};
-  if(score>=45) return {title:'経験を積んだ担当者',sub:'課題もあったが着実にプロジェクトを完遂',color:'var(--accent)',icon:'📈'};
-  return {title:'次回に活かせる経験',sub:'厳しいプロジェクトから多くを学んだ',color:'var(--text2)',icon:'📚'};
-}
-
-function _restart(){
-  document.getElementById('ending-overlay').classList.remove('show');
-  activeProjectId=null;
-  activeTab='map';
-  showTitleScreen();
-}
-
-// ── NOTIFY ──
-function notify(msg,type='info'){
-  const el=document.createElement('div');
-  el.className=`notif-item ${type}`;
-  el.textContent=msg;
-  document.getElementById('notif').appendChild(el);
-  setTimeout(()=>el.remove(),3500);
-}
-
-function addLog(msg){
-  const ts=S.season||'';
-  S.log.push(`[${ts}] ${msg}`);
-  if(S.log.length>50) S.log.shift();
-}
-
-function bindTabEvents(){/* Dynamic events bound via onclick strings */}
-
-// ── HELP SYSTEM ──
-function showHelp(metricKey){
-  const d = HELP_DATA[metricKey];
-  if(!d) return;
-  document.getElementById('help-name').textContent  = d.name;
-  document.getElementById('help-range').textContent = '値域: ' + d.range;
-  document.getElementById('help-what').textContent   = d.what;
-  document.getElementById('help-how').innerHTML =
-    '<ul>' + d.how.map(h=>'<li>'+h+'</li>').join('') + '</ul>';
-  document.getElementById('help-effect').innerHTML =
-    '<ul>' + d.effect.map(e=>'<li style="color:var(--green);">'+e+'</li>').join('') + '</ul>';
-  document.getElementById('help-risk').innerHTML =
-    '<ul>' + d.risk.map(r=>'<li style="color:var(--amber);">'+r+'</li>').join('') + '</ul>';
-  document.getElementById('help-overlay').classList.add('show');
-}
-function _closeHelp(){
-  document.getElementById('help-overlay').classList.remove('show');
-}
-
-// ── TURN LIMIT ──
-function getRemainingTurns(){ return (S.maxTurns||16) - S.turn; }
-
-function checkTurnLimit(){
-  const rem = getRemainingTurns();
-  const bar = document.getElementById('turn-limit-bar');
-  const icon = document.getElementById('tl-icon');
-  const text = document.getElementById('tl-text');
-  if(!bar) return;
-  if(rem <= 0){
-    // 強制終了
-    bar.className = 'danger';
-    icon.textContent = '⛔';
-    text.textContent = '期限終了';
-    setTimeout(()=>{
-      showEvent({
-        id:'TIMEOUT', name:'開発期限終了', icon:'⏰', type:'risk',
-        desc:'担当期間（4年・16期）が終了しました。現時点の成果で最終評価を行います。',
-        choices:[{label:'最終評価を見る', action:'timeout_end'}]
-      }, null);
-    }, 500);
-    return;
+  // ===== HAMBURGER MENU =====
+  function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('open');
+    document.getElementById('mobile-menu').classList.toggle('open');
   }
-  if(rem <= 2){
-    bar.className = 'danger';
-    icon.textContent = '🚨';
-    text.textContent = '残り ' + rem + ' 期！';
-    if(rem === 2) notify('🚨 残り2期！急いで案件を進めてください', 'warn');
-  } else if(rem <= 4){
-    bar.className = 'warn';
-    icon.textContent = '⚠️';
-    text.textContent = '残り ' + rem + ' 期';
-    if(rem === 4) notify('⚠️ 残り4期。優先順位を見直してください', 'warn');
-  } else {
-    bar.className = '';
-    icon.textContent = '📅';
-    text.textContent = '残り ' + rem + ' 期';
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('mobile-menu').classList.remove('open');
   }
-}
 
-// ── HELPERS ──
-function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
 
-// ── INIT ──
-function init(){
-  showTitleScreen();
-}
+  // ===== FAQ FROM GOOGLE SHEETS =====
+  const FAQ_CSV_URL = 'https://docs.google.com/spreadsheets/d/1hJqOds7fOxqLmau-IoHhfQLQC7_ttun-SmGZZSzF76M/export?format=csv&gid=0'; // ← FAQシートの公開CSVURLを貼る（列: 質問, 回答）
 
-function showTitleScreen(){
-  document.getElementById('title-overlay').classList.add('show');
-}
+  const FAQ_SAMPLE = [
+    { q: '参加費はかかりますか？', a: '参加費は無料です。慶應義塾大学の学生であればどなたでもご参加いただけます。' },
+    { q: 'どの学部・学年でも参加できますか？', a: '全学部・全キャンパスの学生を対象としています。就活を意識し始めた学年であればいつでも歓迎します。' },
+    { q: '活動にはすべて参加しないといけませんか？', a: '強制参加のイベントはありません。自分のスケジュールや興味に合わせて自由に選んでいただけます。' },
+    { q: '就活が始まったばかりでも大丈夫ですか？', a: 'もちろんです。まだ業界も絞れていない段階からのご参加を歓迎します。早い段階からの情報収集が、納得のいく就活への近道です。' },
+    { q: 'どのように参加しますか？', a: '参加フォームからご登録いただくと、LINEグループにご案内します。登録後すぐに情報共有コミュニティにアクセスいただけます。' },
+  ];
 
-function startGame(mode){
-  document.getElementById('title-overlay').classList.remove('show');
-  initState(mode);
-  renderAll();
-  updateSeason();
-  renderTopbar();
-  checkTurnLimit();
-  setTimeout(()=>{
-    const modeLabel = mode==='area' ? 'エリア開発モード（10年）' : '単一開発モード（4年）';
-    notify(`${modeLabel}でゲーム開始！エリアマップから案件を選んでください`, 'good');
-  }, 400);
-}
+  function renderFAQ(items) {
+    const container = document.getElementById('faq-list');
+    if (!items.length) {
+      container.innerHTML = '<div class="events-empty">FAQはまだありません。</div>';
+      return;
+    }
+    container.innerHTML = items.map(item => `
+      <div class="faq-item">
+        <div class="faq-q">
+          <span class="faq-q-text">${item.q}</span>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-a">${item.a}</div>
+      </div>
+    `).join('');
 
-return {
-  init,endTurn,switchTab,advancePhase,
-  showNewProjectModal,_startProject,_closeModal,_onMapClick,
-  negotiateOwner,consultGov,applyVolumeBonus,togglePublicContrib,
-  toggleTenant,applySoftMeasure,setContractor,
-  _setConcept,_setConceptSlider,_applyTheme,_selectLo,
-  _selectProject,_finishProject,_restart,
-  showNewProjectModalForArea,
-  showHelp,_closeHelp,
-  toggleSidebar,closeSidebar,
-  startGame,showTitleScreen,
-};
-})();
+    // Accordion
+    container.querySelectorAll('.faq-item').forEach(faqItem => {
+      faqItem.querySelector('.faq-q').addEventListener('click', () => {
+        const isOpen = faqItem.classList.contains('open');
+        container.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) faqItem.classList.add('open');
+      });
+    });
+  }
 
-window.addEventListener('DOMContentLoaded',()=>G.init());
+  async function loadFAQ() {
+    const container = document.getElementById('faq-list');
+    if (!FAQ_CSV_URL) {
+      renderFAQ(FAQ_SAMPLE);
+      return;
+    }
+    try {
+      const res = await fetch(FAQ_CSV_URL);
+      const text = await res.text();
+      const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g, '')));
+      const items = lines.slice(1).map(cols => ({ q: cols[0], a: cols[1] })).filter(r => r.q && r.a && r.q !== '質問');
+      renderFAQ(items);
+    } catch(e) {
+      renderFAQ(FAQ_SAMPLE);
+    }
+  }
+
+  loadFAQ();
 </script>
 </body>
 </html>
