@@ -185,21 +185,20 @@
   /* ===== PAGINATION ===== */
   .pagination {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0.8rem 1rem; background: white;
+    padding: 0.7rem 1rem; background: rgba(10,26,62,0.03);
     border-top: 1px solid rgba(10,26,62,0.08);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
   }
-  .pagination-info { color: var(--text-muted); }
-  .pagination-btns { display: flex; gap: 0.4rem; }
+  .pagination-info { color: var(--text-muted); font-weight: 600; }
+  .pagination-btns { display: flex; gap: 0.5rem; }
   .pagination-btn {
-    padding: 0.3rem 0.8rem; border: 1px solid rgba(10,26,62,0.15);
+    padding: 0.3rem 0.9rem; border: 1px solid rgba(10,26,62,0.2);
     background: white; color: var(--navy); cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif; font-size: 0.75rem;
-    font-weight: 600; transition: all 0.15s;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.73rem;
+    font-weight: 700; transition: all 0.15s; letter-spacing: 0.03em;
   }
   .pagination-btn:hover:not(:disabled) { background: var(--navy); color: white; border-color: var(--navy); }
-  .pagination-btn:disabled { opacity: 0.3; cursor: default; }
-  .pagination-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+  .pagination-btn:disabled { opacity: 0.25; cursor: default; }
 
   /* ===== SELECTION INFO TABLE ===== */
   .selection-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
@@ -1027,11 +1026,17 @@
       return;
     }
 
+    const totalPages = Math.ceil(rows.length / SELECTION_PAGE_SIZE);
+    if (selectionPage >= totalPages) selectionPage = 0;
+    const pageRows = rows.slice(selectionPage * SELECTION_PAGE_SIZE, (selectionPage + 1) * SELECTION_PAGE_SIZE);
+    const from = selectionPage * SELECTION_PAGE_SIZE + 1;
+    const to = Math.min((selectionPage + 1) * SELECTION_PAGE_SIZE, rows.length);
+
     el.innerHTML = `
       <div class="selection-row header">
         <span>企業名</span><span>締切</span><span>タグ</span><span>資料</span>
       </div>` +
-      rows.map(r => {
+      pageRows.map(r => {
         const tagClass = r[2]?.includes('本選考') ? 'tag-honsen' : 'tag-intern';
         const hasLink = r[3]?.startsWith('http');
         const normD1 = normalizeDate(r[1]);
@@ -1056,10 +1061,21 @@
             ${selNote ? `<button onclick="openModal('${companyNameClean.replace(/'/g,"\\'")}');event.stopPropagation();" style="font-size:0.68rem;padding:0.2rem 0.6rem;background:rgba(10,26,62,0.07);border:1px solid rgba(10,26,62,0.15);color:var(--navy);cursor:pointer;font-family:'Noto Sans JP',sans-serif;font-weight:600;letter-spacing:0.04em;white-space:nowrap;">企業ノート</button>` : ''}
           </div>
         </div>`;
-      }).join('');
+      }).join('') +
+      `<div class="pagination">
+        <div class="pagination-info">[ ${from} - ${to} / ${rows.length} 件 ]</div>
+        <div class="pagination-btns">
+          <button class="pagination-btn" onclick="goSelectionPage(${selectionPage - 1})" ${selectionPage === 0 ? 'disabled' : ''}>← 前 ${SELECTION_PAGE_SIZE} 件</button>
+          <button class="pagination-btn" onclick="goSelectionPage(${selectionPage + 1})" ${selectionPage >= totalPages - 1 ? 'disabled' : ''}>次 ${SELECTION_PAGE_SIZE} 件 →</button>
+        </div>
+      </div>`;
   }
 
-  function setFeature(val) {
+  function goSelectionPage(page) {
+    selectionPage = page;
+    renderSelection();
+    document.getElementById('selection-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
     selectionFeature = val; selectionPage = 0;
     document.querySelectorAll('[data-feature]').forEach(b => b.classList.remove('active'));
     document.querySelector(`[data-feature="${val}"]`).classList.add('active');
