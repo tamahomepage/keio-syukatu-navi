@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仲間を見つける ｜ 慶應就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.8rem 5vw; background: rgba(10,26,62,0.97);
+    backdrop-filter: blur(10px); border-bottom: 1px solid rgba(201,168,76,0.18);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--gold-light); text-decoration: none; letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .nav-link { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.75rem; padding: 0.4rem 0.8rem; border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s; }
+  .nav-link:hover { color: var(--gold-light); border-color: rgba(201,168,76,0.35); }
+  .nav-link.active { color: var(--gold-light); border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.08); }
+
+  main { max-width: 900px; margin: 0 auto; padding: 5rem 1.2rem 3rem; }
+
+  .page-header { margin-bottom: 2rem; }
+  .page-label { font-size: 0.7rem; letter-spacing: 0.15em; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+  .page-title { font-family: 'Noto Serif JP', serif; font-size: 1.5rem; font-weight: 700; color: var(--navy); margin-top: 0.3rem; }
+  .page-desc { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.7; }
+
+  .section { background: var(--white); border: 1px solid rgba(10,26,62,0.08); margin-bottom: 1.5rem; }
+  .section-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 0.8rem; }
+  .section-icon { width: 28px; height: 28px; }
+  .section-icon svg { width: 100%; height: 100%; }
+  .section-label { font-size: 0.65rem; letter-spacing: 0.12em; color: var(--gold-light); font-weight: 700; }
+  .section-title { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; color: white; font-weight: 700; }
+  .section-body { padding: 1.5rem; }
+
+  .opt-in-bar { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: var(--gray); margin-bottom: 1rem; flex-wrap: wrap; }
+  .opt-in-bar label { font-size: 0.82rem; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+  .opt-in-bar .desc { font-size: 0.75rem; color: var(--text-muted); }
+  input[type="checkbox"].toggle { width: 40px; height: 22px; appearance: none; background: rgba(10,26,62,0.15); border-radius: 11px; position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+  input[type="checkbox"].toggle::before { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 0.2s; }
+  input[type="checkbox"].toggle:checked { background: var(--navy); }
+  input[type="checkbox"].toggle:checked::before { transform: translateX(18px); }
+
+  .filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .filter-input { padding: 0.5rem 0.8rem; border: 1px solid rgba(10,26,62,0.15); font-size: 0.82rem; font-family: 'Noto Sans JP', sans-serif; flex: 1; min-width: 200px; background: white; }
+  .filter-btn { padding: 0.5rem 1rem; background: var(--navy); color: white; border: none; font-size: 0.78rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; letter-spacing: 0.05em; transition: opacity 0.2s; }
+  .filter-btn:hover { opacity: 0.85; }
+
+  .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+  .member-card { border: 1px solid rgba(10,26,62,0.1); padding: 1.2rem; background: white; transition: border-color 0.2s; }
+  .member-card:hover { border-color: var(--gold); }
+  .member-name { font-weight: 700; font-size: 0.9rem; color: var(--navy); font-family: 'Noto Serif JP', serif; }
+  .member-industry { font-size: 0.75rem; color: var(--gold); font-weight: 700; margin-top: 0.3rem; }
+  .member-companies { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; }
+  .member-line-btn { display: inline-block; margin-top: 0.8rem; padding: 0.35rem 0.8rem; font-size: 0.72rem; background: #06C755; color: white; border: none; cursor: pointer; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; transition: opacity 0.2s; }
+  .member-line-btn:hover { opacity: 0.85; }
+
+  .group-list { display: flex; flex-direction: column; gap: 0.8rem; }
+  .group-card { border: 1px solid rgba(10,26,62,0.1); padding: 1rem 1.2rem; background: white; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .group-info { flex: 1; min-width: 200px; }
+  .group-name { font-weight: 700; font-size: 0.88rem; color: var(--navy); }
+  .group-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .group-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+  .btn-join { padding: 0.4rem 1rem; background: var(--navy); color: white; border: none; font-size: 0.75rem; cursor: pointer; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; }
+  .btn-leave { padding: 0.4rem 1rem; background: none; border: 1px solid rgba(10,26,62,0.2); color: var(--text-muted); font-size: 0.75rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
+  .btn-view { padding: 0.4rem 1rem; background: none; border: 1px solid var(--gold); color: #7a5f10; font-size: 0.75rem; cursor: pointer; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; }
+
+  .create-group-form { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .create-group-form input, .create-group-form select { padding: 0.5rem 0.8rem; border: 1px solid rgba(10,26,62,0.15); font-size: 0.82rem; font-family: 'Noto Sans JP', sans-serif; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; padding: 1rem; }
+  .modal-overlay.open { display: flex; }
+  .modal-box { background: white; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; }
+  .modal-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { color: white; font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700; }
+  .modal-close { background: none; border: none; color: rgba(255,255,255,0.6); font-size: 1.2rem; cursor: pointer; }
+  .modal-body { padding: 1.5rem; }
+  .modal-body .member-card { margin-bottom: 0.8rem; }
+
+  .empty-msg { text-align: center; padding: 2rem; font-size: 0.82rem; color: var(--text-muted); line-height: 1.8; }
+  .flash { position: fixed; top: 4.5rem; left: 50%; transform: translateX(-50%); padding: 0.6rem 1.5rem; font-size: 0.82rem; font-weight: 700; z-index: 300; display: none; }
+  .flash.show { display: block; }
+  .flash.success { background: rgba(10,110,69,0.1); color: #0a6e45; border: 1px solid rgba(10,110,69,0.25); }
+  .flash.error { background: rgba(192,0,26,0.08); color: var(--crimson); border: 1px solid rgba(192,0,26,0.2); }
+
+  @media (max-width: 600px) {
+    main { padding: 4.5rem 0.8rem 2rem; }
+    .member-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Keio Navi</a>
+  <div class="nav-links" id="nav-links">
+    <a href="members.html" class="nav-link">会員ページ</a>
+    <a href="glossary.html" class="nav-link">用語集</a>
+    <a href="community.html" class="nav-link active">コミュニティ</a>
+    <a href="account.html" class="nav-link">マイページ</a>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div class="page-label">COMMUNITY</div>
+    <div class="page-title">仲間を見つける</div>
+    <div class="page-desc">同じ業界を志望するメンバーとつながって、就活を一緒に乗り越えよう。</div>
+  </div>
+
+  <div class="flash" id="flash"></div>
+
+  <!-- マッチング設定 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div>
+        <div class="section-label">SETTINGS</div>
+        <div class="section-title">マッチング設定</div>
+      </div>
+    </div>
+    <div class="opt-in-bar">
+      <label>
+        <input type="checkbox" class="toggle" id="opt-in-toggle">
+        他のメンバーに自分を公開する
+      </label>
+      <span class="desc">オンにすると、他のメンバーがあなたの志望業界・志望企業・LINE情報を見ることができます。</span>
+    </div>
+  </div>
+
+  <!-- 同じ業界のメンバー -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div>
+        <div class="section-label">INDUSTRY MATCH</div>
+        <div class="section-title">同じ業界を志望する仲間</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="filter-bar">
+        <input class="filter-input" type="text" id="filter-industry" placeholder="業界名で絞り込み...">
+        <button class="filter-btn" onclick="searchByIndustry()">検索</button>
+      </div>
+      <div id="industry-match-list" class="member-grid">
+        <div class="empty-msg">検索してメンバーを探してみましょう。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 同じ企業のメンバー -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <div>
+        <div class="section-label">COMPANY MATCH</div>
+        <div class="section-title">同じ企業を志望する仲間</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="filter-bar">
+        <input class="filter-input" type="text" id="filter-company" placeholder="企業名で絞り込み...">
+        <button class="filter-btn" onclick="searchByCompany()">検索</button>
+      </div>
+      <div id="company-match-list" class="member-grid">
+        <div class="empty-msg">検索してメンバーを探してみましょう。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- グループ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div class="section-label">GROUPS</div>
+        <div class="section-title">グループ</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="create-group-form">
+        <input type="text" id="new-group-name" placeholder="グループ名" style="flex:1;min-width:150px;">
+        <select id="new-group-type">
+          <option value="industry">業界別</option>
+          <option value="company">企業別</option>
+          <option value="other">その他</option>
+        </select>
+        <input type="text" id="new-group-desc" placeholder="説明（任意）" style="flex:1;min-width:150px;">
+        <button class="filter-btn" onclick="createNewGroup()">グループ作成</button>
+      </div>
+      <div id="group-list" class="group-list">
+        <div class="empty-msg">読み込み中...</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- グループメンバーモーダル -->
+<div class="modal-overlay" id="group-members-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="gm-modal-title">グループメンバー</span>
+      <button class="modal-close" onclick="document.getElementById('group-members-modal').classList.remove('open')">&times;</button>
+    </div>
+    <div class="modal-body" id="gm-modal-body">
+      <div class="empty-msg">読み込み中...</div>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const flash = document.getElementById('flash');
+  let flashTimer = null;
+
+  function showFlash(msg, type) {
+    flash.textContent = msg;
+    flash.className = 'flash show ' + type;
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => { flash.className = 'flash'; }, 4000);
+  }
+
+  async function callApi(action, extra) {
+    const sessionToken = KeioNaviAuth.getSessionToken();
+    if (!sessionToken) throw new Error('ログインが必要です。');
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action, sessionToken, ...extra }),
+      redirect: 'follow'
+    });
+    const data = await res.json();
+    if (!data || data.status !== 'ok') throw new Error((data && data.message) || 'エラーが発生しました。');
+    return data;
+  }
+
+  function renderMemberCard(m) {
+    const companies = (m.preferredCompanies || []).filter(Boolean).join(' / ');
+    const lineBtn = m.lineQrUrl
+      ? `<a href="${m.lineQrUrl}" target="_blank" class="member-line-btn">LINE で繋がる</a>`
+      : (m.lineName ? `<span style="font-size:0.72rem;color:var(--text-muted);margin-top:0.6rem;display:block;">LINE: ${m.lineName}</span>` : '');
+    return `<div class="member-card">
+      <div class="member-name">${m.displayName || '名前未設定'}</div>
+      <div class="member-industry">${m.desiredIndustry || ''}</div>
+      ${companies ? `<div class="member-companies">志望: ${companies}</div>` : ''}
+      ${lineBtn}
+    </div>`;
+  }
+
+  function renderMemberList(containerId, members) {
+    const el = document.getElementById(containerId);
+    if (!members.length) {
+      el.innerHTML = '<div class="empty-msg">条件に合うメンバーが見つかりませんでした。<br>マッチング設定をオンにしているメンバーのみ表示されます。</div>';
+      return;
+    }
+    el.innerHTML = members.map(renderMemberCard).join('');
+  }
+
+  // 業界検索
+  async function searchByIndustry() {
+    const industry = document.getElementById('filter-industry').value.trim();
+    const el = document.getElementById('industry-match-list');
+    el.innerHTML = '<div class="empty-msg">検索中...</div>';
+    try {
+      const data = await callApi('searchMembers', { industry: industry || undefined });
+      renderMemberList('industry-match-list', data.members || []);
+    } catch (e) {
+      el.innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${e.message}</div>`;
+    }
+  }
+
+  // 企業検索
+  async function searchByCompany() {
+    const company = document.getElementById('filter-company').value.trim();
+    const el = document.getElementById('company-match-list');
+    el.innerHTML = '<div class="empty-msg">検索中...</div>';
+    try {
+      const data = await callApi('searchMembers', { company: company || undefined });
+      renderMemberList('company-match-list', data.members || []);
+    } catch (e) {
+      el.innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${e.message}</div>`;
+    }
+  }
+
+  // グループ
+  async function loadGroups() {
+    const el = document.getElementById('group-list');
+    try {
+      const data = await callApi('getGroups');
+      renderGroups(data.groups || []);
+    } catch (e) {
+      el.innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${e.message}</div>`;
+    }
+  }
+
+  function renderGroups(groups) {
+    const el = document.getElementById('group-list');
+    if (!groups.length) {
+      el.innerHTML = '<div class="empty-msg">まだグループがありません。上のフォームから作成してみましょう。</div>';
+      return;
+    }
+    el.innerHTML = groups.map(g => {
+      const typeLabel = g.type === 'industry' ? '業界別' : g.type === 'company' ? '企業別' : 'その他';
+      const actions = g.isMember
+        ? `<button class="btn-view" onclick="viewGroupMembers('${g.id}','${(g.name||'').replace(/'/g,"\\'")}')">メンバー</button>
+           <button class="btn-leave" onclick="leaveGroupAction('${g.id}')">退出</button>`
+        : `<button class="btn-join" onclick="joinGroupAction('${g.id}')">参加する</button>`;
+      return `<div class="group-card">
+        <div class="group-info">
+          <div class="group-name">${g.name}</div>
+          <div class="group-meta">${typeLabel} | ${g.memberCount}人参加${g.description ? ' | ' + g.description : ''}</div>
+        </div>
+        <div class="group-actions">${actions}</div>
+      </div>`;
+    }).join('');
+  }
+
+  async function createNewGroup() {
+    const name = document.getElementById('new-group-name').value.trim();
+    if (!name) { showFlash('グループ名を入力してください。', 'error'); return; }
+    try {
+      await callApi('createGroup', {
+        name,
+        type: document.getElementById('new-group-type').value,
+        description: document.getElementById('new-group-desc').value.trim()
+      });
+      document.getElementById('new-group-name').value = '';
+      document.getElementById('new-group-desc').value = '';
+      showFlash('グループを作成しました。', 'success');
+      loadGroups();
+    } catch (e) {
+      showFlash(e.message, 'error');
+    }
+  }
+
+  async function joinGroupAction(groupId) {
+    try {
+      await callApi('joinGroup', { groupId });
+      showFlash('グループに参加しました。', 'success');
+      loadGroups();
+    } catch (e) { showFlash(e.message, 'error'); }
+  }
+
+  async function leaveGroupAction(groupId) {
+    try {
+      await callApi('leaveGroup', { groupId });
+      showFlash('グループを退出しました。', 'success');
+      loadGroups();
+    } catch (e) { showFlash(e.message, 'error'); }
+  }
+
+  async function viewGroupMembers(groupId, groupName) {
+    document.getElementById('gm-modal-title').textContent = groupName + ' のメンバー';
+    document.getElementById('gm-modal-body').innerHTML = '<div class="empty-msg">読み込み中...</div>';
+    document.getElementById('group-members-modal').classList.add('open');
+    try {
+      const data = await callApi('getGroupMembers', { groupId });
+      const members = data.members || [];
+      if (!members.length) {
+        document.getElementById('gm-modal-body').innerHTML = '<div class="empty-msg">メンバーがいません。</div>';
+        return;
+      }
+      document.getElementById('gm-modal-body').innerHTML = members.map(m => {
+        const badge = m.isMe ? '<span style="font-size:0.65rem;background:var(--gold);color:white;padding:0.1rem 0.4rem;margin-left:0.4rem;">あなた</span>' : '';
+        return renderMemberCard({ ...m, displayName: (m.displayName || '') + badge });
+      }).join('');
+    } catch (e) {
+      document.getElementById('gm-modal-body').innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${e.message}</div>`;
+    }
+  }
+
+  document.getElementById('group-members-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('group-members-modal'))
+      document.getElementById('group-members-modal').classList.remove('open');
+  });
+
+  // マッチング設定
+  const optInToggle = document.getElementById('opt-in-toggle');
+  optInToggle.addEventListener('change', async () => {
+    try {
+      await callApi('updateMatchingPrefs', { optIn: optInToggle.checked });
+      showFlash(optInToggle.checked ? '公開設定をオンにしました。' : '公開設定をオフにしました。', 'success');
+    } catch (e) { showFlash(e.message, 'error'); }
+  });
+
+  // 初期化
+  const user = KeioNaviAuth.requireAuth({ returnTo: 'community.html' });
+  if (user) {
+    // 自動検索: 自分の業界と志望企業で
+    if (user.desiredIndustry) {
+      document.getElementById('filter-industry').value = user.desiredIndustry;
+      searchByIndustry();
+    }
+    if (user.preferredCompany1) {
+      document.getElementById('filter-company').value = user.preferredCompany1;
+      searchByCompany();
+    }
+    loadGroups();
+  }
+</script>
+</body>
+</html>

@@ -6,6 +6,16 @@
 <title>慶應就活ナビ</title>
 <meta name="description" content="就活を、ひとりで戦わない。情報・機会・経験を持ち寄り、互いの可能性を広げる慶應生のための就活支援コミュニティです。">
 
+<!-- Microsoft Clarity（ヒートマップ計測）
+     導入手順: https://clarity.microsoft.com でプロジェクト作成 → トラッキングコードを以下に貼る -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "YOUR_PROJECT_ID");
+</script>
+
 <!-- OGP -->
 <meta property="og:title" content="慶應就活ナビ">
 <meta property="og:description" content="就活を、ひとりで戦わない。情報・機会・経験を持ち寄り、互いの可能性を広げる慶應生のための就活支援コミュニティです。">
@@ -107,6 +117,7 @@
     position: relative;
     overflow: hidden;
     padding: 120px 5vw 80px;
+    isolation: isolate;
   }
 
   .hero-bg-pattern {
@@ -245,6 +256,65 @@
   .btn-outline:hover {
     border-color: var(--gold);
     color: var(--gold);
+  }
+
+  .hero-account-card {
+    margin-top: 1.6rem;
+    display: grid;
+    gap: 1rem;
+    padding: 1.15rem 1.2rem;
+    max-width: 640px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.16);
+    backdrop-filter: blur(8px);
+  }
+
+  .hero-account-label {
+    font-size: 0.68rem;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .hero-account-text {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.62);
+    line-height: 1.8;
+  }
+
+  .hero-account-actions {
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-account-btn {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid rgba(255,255,255,0.16);
+    color: rgba(255,255,255,0.86);
+    transition: all 0.2s;
+  }
+
+  .hero-account-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .hero-account-btn.primary {
+    background: rgba(201,168,76,0.12);
+    border-color: rgba(201,168,76,0.3);
+    color: var(--gold-light);
+  }
+
+  .hero-account-btn.primary:hover {
+    background: rgba(201,168,76,0.2);
+    color: var(--gold-light);
   }
 
   .hero-stats {
@@ -749,30 +819,93 @@
   /* ===== FOOTER ===== */
   footer {
     background: #060e20;
-    padding: 3rem 5vw;
+    padding: 4rem 5vw 2.5rem;
     border-top: 1px solid rgba(201,168,76,0.15);
+    position: relative;
   }
 
   .footer-inner {
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    margin-bottom: 3rem;
   }
 
   .footer-logo {
     font-family: 'Playfair Display', serif;
     font-size: 1.1rem;
     color: var(--gold-light);
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+
+  .footer-tagline {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.8;
+  }
+
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .footer-nav-group h4 {
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .footer-nav-group ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer-nav-group a {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  .footer-nav-group a:hover { color: var(--gold-light); }
+
+  .footer-bottom {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
   }
 
   .footer-copy {
     font-size: 0.72rem;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.2);
     letter-spacing: 0.05em;
+  }
+
+  .footer-note {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.18);
+  }
+
+  @media (max-width: 768px) {
+    .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-nav { grid-template-columns: 1fr 1fr; }
   }
 
   /* ===== CONTACT ===== */
@@ -1088,6 +1221,161 @@
     .greeting-inner { grid-template-columns: 1fr; }
 
     .section-title { font-size: 1.6rem; }
+    .hero-account-card { padding: 1rem; }
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline-section {
+    padding: 120px 5vw;
+    background: var(--cream);
+  }
+
+  .timeline-inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .timeline-list {
+    position: relative;
+    padding-left: 0;
+  }
+
+  .timeline-list::before {
+    content: '';
+    position: absolute;
+    left: 120px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--crimson), rgba(192,0,26,0.1));
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 120px 28px 1fr;
+    align-items: flex-start;
+    gap: 0 0;
+    margin-bottom: 2.8rem;
+    position: relative;
+  }
+
+  .timeline-month {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    padding-top: 0.15rem;
+    text-align: right;
+    padding-right: 1.2rem;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  .timeline-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--crimson);
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    justify-self: center;
+  }
+
+  .timeline-dot--highlight {
+    background: var(--crimson);
+    box-shadow: 0 0 0 4px rgba(192,0,26,0.18);
+    width: 16px;
+    height: 16px;
+  }
+
+  .timeline-content {
+    padding-left: 1.6rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .timeline-content h3 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.45rem;
+    line-height: 1.5;
+  }
+
+  .timeline-content p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .timeline-footer {
+    margin-top: 4rem;
+    text-align: center;
+  }
+
+  .timeline-support-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.05rem;
+    color: var(--navy);
+    margin-bottom: 1.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .timeline-cta-btn {
+    display: inline-block;
+    background: var(--crimson);
+    color: var(--white);
+    text-decoration: none;
+    padding: 0.85rem 2.8rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .timeline-cta-btn:hover {
+    background: var(--crimson-light);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 680px) {
+    .timeline-list::before {
+      left: 72px;
+    }
+    .timeline-item {
+      grid-template-columns: 72px 24px 1fr;
+    }
+    .timeline-month {
+      font-size: 0.78rem;
+      padding-right: 0.8rem;
+    }
+    .timeline-content {
+      padding-left: 1rem;
+    }
+    .timeline-content h3 {
+      font-size: 0.95rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .timeline-section {
+      padding: 80px 4vw;
+    }
+    .timeline-list::before {
+      left: 60px;
+    }
+    .timeline-item {
+      grid-template-columns: 60px 22px 1fr;
+    }
+    .timeline-month {
+      font-size: 0.72rem;
+      padding-right: 0.6rem;
+    }
   }
 </style>
 </head>
@@ -1095,17 +1383,18 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">慶應就活ナビ</a>
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a><span style="font-size:0.55rem;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.2);padding:0.1rem 0.4rem;margin-left:0.5rem;letter-spacing:0.05em;vertical-align:middle;">非公式・学生有志</span>
   <ul class="nav-links">
     <li><a href="orientation.html" style="color:var(--gold-light);">新入生の方へ</a></li>
     <li><a href="#mission">ミッション</a></li>
-    <li><a href="#activities">活動内容</a></li>
+    <li><a href="#activities">サイト機能</a></li>
     <li><a href="#events">イベント</a></li>
+    <li><a href="match.html">企業マッチング</a></li>
     <li><a href="#faq">FAQ</a></li>
-    <li><a href="#contact">お問い合わせ</a></li>
-    <li><a href="match.html" class="nav-cta" style="background:rgba(201,168,76,0.15); color:var(--gold-light); border:1px solid rgba(201,168,76,0.3);">企業マッチング</a></li>
-    <li><a href="members.html" class="nav-cta" style="background:rgba(201,168,76,0.15); color:var(--gold-light); border:1px solid rgba(201,168,76,0.3);">会員ページ</a></li>
-    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="nav-cta" target="_blank" rel="noopener">参加する</a></li>
+    <li><a href="glossary.html" style="color:rgba(255,255,255,0.7);">用語集</a></li>
+    <li id="members-nav-item" style="display:none;"><a href="members.html" style="color:rgba(255,255,255,0.7);">会員ページ</a></li>
+    <li><a href="account.html" id="account-nav-link" style="color:rgba(255,255,255,0.7);">ログイン</a></li>
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="nav-cta" target="_blank" rel="noopener">LINE参加申請</a></li>
   </ul>
   <button class="hamburger" id="hamburger" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -1116,13 +1405,14 @@
 <div class="mobile-menu" id="mobile-menu">
   <a href="orientation.html" style="color:var(--gold-light); font-weight:700;">新入生の方へ</a>
   <a href="#mission" onclick="closeMenu()">ミッション</a>
-  <a href="#activities" onclick="closeMenu()">活動内容</a>
+  <a href="#activities" onclick="closeMenu()">サイト機能</a>
   <a href="#events" onclick="closeMenu()">イベント</a>
+  <a href="match.html" onclick="closeMenu()">企業マッチング</a>
   <a href="#faq" onclick="closeMenu()">FAQ</a>
   <a href="#contact" onclick="closeMenu()">お問い合わせ</a>
-  <a href="match.html" class="mobile-menu-members">企業マッチング</a>
-  <a href="members.html" class="mobile-menu-members">🔒 会員ページ</a>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="mobile-menu-cta" target="_blank" rel="noopener">参加する</a>
+  <a href="members.html" id="mobile-members-link" onclick="closeMenu()" style="display:none;">会員ページ</a>
+  <a href="account.html" id="mobile-account-link" onclick="closeMenu()">ログイン / 会員登録</a>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="mobile-menu-cta" target="_blank" rel="noopener">LINE参加申請</a>
 </div>
 
 <!-- HERO -->
@@ -1139,9 +1429,24 @@
       情報・機会・経験を持ち寄り、互いの可能性を広げる。<br>
       慶應生のための就活支援コミュニティです。
     </p>
+    <div style="display:inline-block;font-size:0.68rem;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.2);padding:0.3rem 0.8rem;margin-top:0.8rem;letter-spacing:0.06em;">本サイトは慶應義塾大学非公式です。有志の学生が運営しています。</div>
     <div class="hero-buttons">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener">コミュニティに参加する</a>
-      <a href="#activities" class="btn-outline">活動内容を見る</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener">LINEコミュニティに参加する</a>
+      <a href="account.html" class="btn-outline">HP会員登録（無料）</a>
+    </div>
+    <p style="margin-top:1.2rem; font-size:0.78rem; color:rgba(255,255,255,0.45); line-height:1.8;">
+      まずはLINEコミュニティへ。HP会員登録は参加後でもOK。どちらも無料です。
+    </p>
+    <div class="hero-stats" style="animation: fadeUp 0.7s ease forwards; opacity:0; animation-delay:0.8s;">
+      <div class="stat-item">
+        <span class="stat-num">52</span>
+        <div class="stat-label">メンバー数</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num">全学部</span>
+        <div class="stat-label">対象</div>
+      </div>
     </div>
     <p style="margin-top:1.5rem; font-size:0.72rem; color:rgba(255,255,255,0.35); letter-spacing:0.05em; line-height:1.8;">
       ※大学公式ではありません。有志の学生による非営利団体です。
@@ -1190,11 +1495,11 @@
     <div class="activities-header">
       <div class="reveal">
         <div class="section-label">Activities</div>
-        <h2 class="section-title">5つの<br>活動内容</h2>
+        <h2 class="section-title">サイトの<br>主な機能</h2>
       </div>
       <div class="reveal" style="transition-delay:0.1s;">
         <p class="section-desc">
-          情報共有から実践練習まで、就活のすべてのフェーズをカバー。参加者が主体的に関われる場を複数用意しています。
+          企業研究からES作成、面接対策、仲間づくりまで。就活の全フェーズをAIとコミュニティの力でサポートします。
         </p>
       </div>
     </div>
@@ -1202,43 +1507,116 @@
     <div class="activities-grid">
       <div class="activity-card reveal">
         <div class="activity-num">01</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
-        <h3 class="activity-title">情報共有</h3>
-        <p class="activity-desc">選考情報やイベント情報などを共有し、「知らなかったこと」による機会損失を防ぎます。メンバー全員で情報をアップデートし合います。</p>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3 class="activity-title">就活進捗トラッカー</h3>
+        <p class="activity-desc">就活の進捗を「未応募→ES提出→面接→内定」まで一元管理。締切カレンダーで重要な日程を見逃しません。</p>
       </div>
       <div class="activity-card reveal" style="transition-delay:0.1s;">
         <div class="activity-num">02</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
-        <h3 class="activity-title">就活イベント参加促進</h3>
-        <p class="activity-desc">合同説明会や選考イベントなどに参加しやすい環境づくりを行います。ひとりでは踏み出しにくい場も、仲間と一緒なら安心。</p>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+        <h3 class="activity-title">就活情報共有</h3>
+        <p class="activity-desc">業界ごとの選考フローや就活ノウハウを整理。メンバーで情報を持ち寄り、クイズ形式で知識を定着させます。</p>
       </div>
       <div class="activity-card reveal" style="transition-delay:0.2s;">
         <div class="activity-num">03</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <h3 class="activity-title">模擬面接・GD</h3>
-        <p class="activity-desc">サマーインターン選考開始までに実践形式の練習機会を提供予定。フィードバックを通じて本番力を磨きます。</p>
-        <div class="activity-badge">準備中</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <h3 class="activity-title">ES・ガクチカ保管庫</h3>
+        <p class="activity-desc">ESとガクチカをSTAR法で整理・保存。AIによるES添削・自動生成・PDF出力まで。面接対策ノートとも連携します。</p>
       </div>
       <div class="activity-card reveal" style="transition-delay:0.1s;">
         <div class="activity-num">04</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <h3 class="activity-title">交流イベント</h3>
-        <p class="activity-desc">不定期で交流会を開催し、情報交換や相談ができる関係構築を支援します。就活仲間との繋がりが心強い支えになります。</p>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3 class="activity-title">面接対策AI</h3>
+        <p class="activity-desc">深掘り質問をAIが自動生成。回答を書いてAIに添削してもらい、面接チェックリストで準備状況を可視化できます。</p>
       </div>
       <div class="activity-card reveal" style="transition-delay:0.2s;">
         <div class="activity-num">05</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3 class="activity-title">コミュニティ</h3>
+        <p class="activity-desc">同じ業界を志望する仲間を検索してつながれます。グループ機能で情報交換。選考情報やES添削を掲示板で共有。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.3s;">
+        <div class="activity-num">06</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <h3 class="activity-title">選考情報共有</h3>
+        <p class="activity-desc">選考締切や選考フローをメンバーで共有。気になる情報をブックマークして、自分の就活スケジュールを管理できます。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.1s;">
+        <div class="activity-num">07</div>
+        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <h3 class="activity-title">就活用語集</h3>
+        <p class="activity-desc">ES、GD、ケース面接、フェルミ推定など40語以上を収録。カテゴリ別・検索付きで、就活初心者でも迷わず理解できます。</p>
+      </div>
+      <div class="activity-card reveal" style="transition-delay:0.2s;">
+        <div class="activity-num">08</div>
         <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
         <h3 class="activity-title">輪読会</h3>
-        <p class="activity-desc">就活イベント参加特典で得たAmazonギフト券を活用し、業界研究本・ビジネス書等を購入・共有。コスパ最大の学びの場。</p>
+        <p class="activity-desc">業界研究本・ビジネス書を共同購入し、メンバーで共有。貸出状況をサイトで管理。コスパ最大の学びの場です。</p>
       </div>
-      <div class="activity-card reveal" style="transition-delay:0.3s; background: var(--navy);">
-        <div style="height:100%; display:flex; flex-direction:column; justify-content:center; padding-top:1rem;">
-          <p style="font-family:'Noto Serif JP',serif; color:rgba(255,255,255,0.7); font-size:1rem; line-height:1.9; margin-bottom:1.5rem;">
-            活動はこれからも<br>拡張していきます。
-          </p>
-          <a href="#join" class="btn-primary" style="align-self:flex-start; font-size:0.8rem; padding:0.7rem 1.5rem;">参加して一緒に作る →</a>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline-section" id="timeline">
+  <div class="timeline-inner">
+    <div class="reveal" style="text-align:center; margin-bottom:3.5rem;">
+      <div class="section-label">TIMELINE</div>
+      <h2 class="section-title">就活スケジュール</h2>
+    </div>
+    <div class="timeline-list">
+      <div class="timeline-item reveal">
+        <div class="timeline-month">6〜8月</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>夏インターン選考 / 自己分析スタート</h3>
+          <p>サマーインターンのエントリーが本格化。自己分析を早めにスタートし、ESや面接対策の基盤をつくる時期。</p>
         </div>
       </div>
+      <div class="timeline-item reveal" style="transition-delay:0.05s;">
+        <div class="timeline-month">9〜10月</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>秋インターン / 業界研究・OB訪問</h3>
+          <p>秋冬インターンの選考が始まり、本選考を見据えた業界研究・OB訪問が重要に。視野を広げる絶好の機会。</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:0.1s;">
+        <div class="timeline-month">11〜12月</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>冬インターン / 本選考に向けたES対策</h3>
+          <p>冬インターンへの参加と並行し、本選考を意識したESの磨き込みを開始。仲間との添削・フィードバックが効果的。</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:0.15s;">
+        <div class="timeline-month">1〜2月</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>早期選考 / 志望業界の絞り込み</h3>
+          <p>一部企業の早期選考が本格化。インターン参加実績を活かし、志望業界・企業を絞り込んでいく時期。</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:0.2s;">
+        <div class="timeline-month">3月</div>
+        <div class="timeline-dot timeline-dot--highlight"></div>
+        <div class="timeline-content">
+          <h3>本選考エントリー解禁</h3>
+          <p>3月1日に経団連ルールによる本選考エントリーが解禁。準備が整った状態で一斉スタートを切ろう。</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal" style="transition-delay:0.25s;">
+        <div class="timeline-month">4〜6月</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h3>面接ラッシュ・内定</h3>
+          <p>企業の面接が集中する最大の山場。模擬面接・GDで培った実力を本番に発揮し、内定獲得を目指す。</p>
+        </div>
+      </div>
+    </div>
+    <div class="timeline-footer reveal">
+      <p class="timeline-support-text">慶應就活ナビでは、この全プロセスをサポートします。</p>
+      <a href="account.html" class="timeline-cta-btn">会員登録はこちら</a>
     </div>
   </div>
 </section>
@@ -1274,7 +1652,7 @@
       <p class="section-desc" style="margin-bottom:2rem;">
         参加を検討している方から寄せられるご質問をまとめました。
       </p>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener">今すぐ参加する</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener">LINEコミュニティ参加を申請する</a>
     </div>
     <div class="faq-list reveal" id="faq-list" style="transition-delay:0.15s;">
       <div class="events-loading">💬 FAQ を読み込み中...</div>
@@ -1296,7 +1674,7 @@
       <div class="greeting-sig">
         <div class="greeting-sig-line"></div>
         <div>
-          <div class="greeting-name">大玉 直</div>
+          <div class="greeting-name">たま</div>
           <div class="greeting-role">代表 ／ 経済学部2年</div>
         </div>
       </div>
@@ -1307,14 +1685,18 @@
 
 <!-- CTA -->
 <section class="cta-section" id="join">
-  <div class="cta-inner reveal">
-    <div class="section-label" style="text-align:center;">Join Us</div>
-    <h2 class="cta-title">一緒に就活を、<br>切り拓いていこう。</h2>
+    <div class="cta-inner reveal">
+      <div class="section-label" style="text-align:center;">Join Us</div>
+      <h2 class="cta-title">一緒に就活を、<br>切り拓いていこう。</h2>
     <p class="cta-sub">
-      登録は無料・1分で完了します。<br>
-      慶應生の就活コミュニティで、仲間と情報を共有しましょう。
+      LINEコミュニティへの参加が活動の中心です。<br>
+      HP会員登録は無料・1分で完了します。
     </p>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="cta-btn" target="_blank" rel="noopener"><span>参加フォームへ進む →</span></a>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="cta-btn" target="_blank" rel="noopener" style="background:var(--crimson);"><span>LINEコミュニティに参加する →</span></a>
+      <a href="account.html" class="cta-btn" style="background:var(--navy); border:1px solid rgba(201,168,76,0.3);"><span>HP会員登録（無料）</span></a>
+    </div>
+    <p style="margin-top:1.2rem; font-size:0.75rem; color:var(--text-muted);">どちらも無料。まずはLINEコミュニティへどうぞ。</p>
   </div>
 </section>
 
@@ -1335,11 +1717,50 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-logo">慶應就活ナビ</div>
-    <div class="footer-copy">© 2025 慶應就活ナビ. All rights reserved.</div>
+    <div class="footer-top">
+      <div>
+        <span class="footer-logo">慶應就活ナビ</span>
+        <p class="footer-tagline">就活を、ひとりで戦わない。<br>慶應生のための就活支援コミュニティ。</p>
+      </div>
+      <div class="footer-nav">
+        <div class="footer-nav-group">
+          <h4>コンテンツ</h4>
+          <ul>
+            <li><a href="#mission">ミッション</a></li>
+            <li><a href="#activities">サイト機能</a></li>
+            <li><a href="#events">イベント</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-group">
+          <h4>機能</h4>
+          <ul>
+            <li><a href="match.html">企業マッチング</a></li>
+            <li><a href="members.html">会員ページ</a></li>
+            <li><a href="members.html">面接対策ノート</a></li>
+            <li><a href="account.html">ログイン / 会員登録</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-group">
+          <h4>参加する</h4>
+          <ul>
+            <li><a href="orientation.html">新入生の方へ</a></li>
+            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" target="_blank" rel="noopener">LINE参加申請</a></li>
+            <li><a href="#contact">お問い合わせ</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div style="margin-bottom:0.5rem;"><a href="privacy.html" style="color:rgba(255,255,255,0.4);font-size:0.7rem;text-decoration:underline;">プライバシーポリシー</a></div>
+      <div class="footer-copy">© 2026 慶應就活ナビ. All rights reserved.</div>
+      <div style="font-size:0.62rem;color:rgba(255,255,255,0.3);margin-top:0.6rem;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto;">本サイトは慶應義塾大学の公式サービスではありません。有志の学生による非営利の情報共有コミュニティです。掲載されている企業情報はAIによる独自分析または公式HP等の公開情報に基づくものであり、各企業の公式見解ではありません。正確な情報は各企業の公式サイトをご確認ください。</div>
+      <div class="footer-note">※大学公式ではありません。有志の学生による非営利団体です。</div>
+    </div>
   </div>
 </footer>
 
+<script src="auth.js"></script>
 <script>
   // ===== EVENTS FROM GOOGLE SHEETS =====
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ASykgCNJirBmB76yqxQ4H0jrpqK8vXbx2izLSdHo1To/export?format=csv&gid=0'; // ← ここにGoogle スプレッドシートの公開CSVURLを貼る
@@ -1354,8 +1775,7 @@
   }
 
   function formatMonth(d) {
-    return d.toLocaleDateString('ja-JP', { month: 'short' }).replace('月','').trim() + ' ' + d.toLocaleDateString('ja-JP',{month:'long'}).replace(/\d+年/,'').replace('月','月');
-    // simpler:
+    return d.toLocaleDateString('ja-JP', { month: 'short' });
   }
 
   function statusClass(s) {
@@ -1393,7 +1813,7 @@
           <div class="event-date-block">
             <div class="event-month">${monthStr}</div>
             <div class="event-day ${isUndated ? 'undated' : ''}">${dayStr}</div>
-            <div class="event-weekday">${wdStr}曜日</div>
+            <div class="event-weekday">${wdStr ? wdStr + '曜日' : ''}</div>
           </div>
           <div class="event-info">
             <div class="event-title-row">
@@ -1414,6 +1834,8 @@
     }).join('');
   }
 
+  let cachedEventRows = [];
+
   async function loadEvents() {
     const container = document.getElementById('events-list');
     const note = document.getElementById('sheet-note');
@@ -1425,6 +1847,7 @@
         { date: '2025/06/22', title: '交流会', place: '三田キャンパス', note: '自由参加', status: '近日公開', link: '', members: 'FALSE' },
         { date: '2025/07/05', title: 'GD練習会（会員限定）', place: '日吉キャンパス', note: '少人数制', status: '募集中', link: '', members: 'TRUE' },
       ];
+      cachedEventRows = sample;
       renderEvents(sample, 'all');
       note.textContent = '※ スプレッドシートURLが未設定のため、サンプルデータを表示しています';
       return;
@@ -1441,6 +1864,7 @@
         note: cols[3], status: cols[4], link: cols[5], members: cols[6]
       })).filter(r => r.title && r.title !== 'タイトル' && r.title !== 'タイトルを入力' && r.date !== '日付');
 
+      cachedEventRows = rows;
       renderEvents(rows, 'all');
       note.textContent = '最終更新: ' + new Date().toLocaleDateString('ja-JP');
     } catch(e) {
@@ -1450,35 +1874,12 @@
 
   loadEvents();
 
-  // Filter buttons
+  // Filter buttons — キャッシュから再描画（毎回APIを叩かない）
   document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      const rows = Array.from(document.querySelectorAll('.event-row')).map(row => ({
-        // re-filter from DOM is simpler
-      }));
-      // reload with filter
-      if (!SHEET_CSV_URL) {
-        const sample = [
-          { date: '2025/06/10', title: '模擬面接会 vol.1', place: 'オンライン', note: '事前申込必須', status: '募集中', link: '', members: 'FALSE' },
-          { date: '2025/06/22', title: '交流会', place: '三田キャンパス', note: '自由参加', status: '近日公開', link: '', members: 'FALSE' },
-          { date: '2025/07/05', title: 'GD練習会（会員限定）', place: '日吉キャンパス', note: '少人数制', status: '募集中', link: '', members: 'TRUE' },
-        ];
-        renderEvents(sample, filter);
-      } else {
-        try {
-          const res = await fetch(SHEET_CSV_URL);
-          const text = await res.text();
-          const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g,'')));
-          const eventRows = lines.slice(1).map(cols => ({
-            date: cols[0], title: cols[1], place: cols[2],
-            note: cols[3], status: cols[4], link: cols[5], members: cols[6]
-          })).filter(r => r.title && r.title !== 'タイトル' && r.title !== 'タイトルを入力' && r.date !== '日付');
-          renderEvents(eventRows, filter);
-        } catch(e) {}
-      }
+      renderEvents(cachedEventRows, btn.dataset.filter);
     });
   });
 
@@ -1511,7 +1912,7 @@
     { q: 'どの学部・学年でも参加できますか？', a: '全学部・全キャンパスの学生を対象としています。就活を意識し始めた学年であればいつでも歓迎します。' },
     { q: '活動にはすべて参加しないといけませんか？', a: '強制参加のイベントはありません。自分のスケジュールや興味に合わせて自由に選んでいただけます。' },
     { q: '就活が始まったばかりでも大丈夫ですか？', a: 'もちろんです。まだ業界も絞れていない段階からのご参加を歓迎します。早い段階からの情報収集が、納得のいく就活への近道です。' },
-    { q: 'どのように参加しますか？', a: '参加フォームからご登録いただくと、LINEグループにご案内します。登録後すぐに情報共有コミュニティにアクセスいただけます。' },
+    { q: 'どのように参加しますか？', a: 'まずHPで会員登録してください。LINEコミュニティへの参加が必要な場合は、別の参加申請フォームからご登録いただく形です。' },
   ];
 
   function renderFAQ(items) {
@@ -1558,6 +1959,65 @@
   }
 
   loadFAQ();
+
+  function renderAccountEntry() {
+    if (typeof KeioNaviAuth === 'undefined') return;
+
+    const user = KeioNaviAuth.getCurrentUser();
+    const navLink = document.getElementById('account-nav-link');
+    const mobileLink = document.getElementById('mobile-account-link');
+    const membersNavItem = document.getElementById('members-nav-item');
+    const mobileMembersLink = document.getElementById('mobile-members-link');
+
+    if (!navLink || !mobileLink) return;
+
+    if (!user) {
+      navLink.textContent = 'ログイン';
+      navLink.href = 'account.html';
+      mobileLink.textContent = 'ログイン / 会員登録';
+      mobileLink.href = 'account.html';
+      if (membersNavItem) membersNavItem.style.display = 'none';
+      if (mobileMembersLink) mobileMembersLink.style.display = 'none';
+      return;
+    }
+
+    navLink.textContent = user.username + ' さん';
+    navLink.href = 'account.html';
+    mobileLink.textContent = user.username + ' さんのマイページ';
+    mobileLink.href = 'account.html';
+    if (membersNavItem) membersNavItem.style.display = '';
+    if (mobileMembersLink) mobileMembersLink.style.display = '';
+  }
+
+  renderAccountEntry();
+
+  // ===== カウントアップアニメーション =====
+  function animateCounter(el, end, duration) {
+    const start = performance.now();
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      // easeOut
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(ease * end);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = end;
+    }
+    requestAnimationFrame(step);
+  }
+
+  const statNums = document.querySelectorAll('.stat-num');
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const raw = el.textContent.trim();
+        const num = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(num) && num > 0) animateCounter(el, num, 1200);
+        counterObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  statNums.forEach(el => counterObserver.observe(el));
 </script>
 </body>
 </html>

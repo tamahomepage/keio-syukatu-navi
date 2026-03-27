@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>面接対策 ｜ 慶應就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 68px;
+    background: rgba(10,26,62,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold-light); text-decoration: none; }
+  .nav-back { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold-light); }
+  .nav-member-badge {
+    font-size: 0.68rem; background: rgba(201,168,76,0.15); color: var(--gold);
+    padding: 0.2rem 0.7rem; border: 1px solid rgba(201,168,76,0.3); letter-spacing: 0.1em;
+  }
+  .nav-link-active {
+    color: var(--gold-light) !important; font-weight: 700;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.15rem;
+  }
+
+  /* ===== PASSWORD SCREEN ===== */
+  #password-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--navy); padding: 2rem;
+  }
+  .pw-box {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.2);
+    padding: 3rem 2.5rem; max-width: 420px; width: 100%; text-align: center;
+    position: relative;
+  }
+  .pw-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--crimson), var(--gold));
+  }
+  .pw-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .pw-title { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.5rem; }
+  .pw-sub { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; line-height: 1.8; }
+  .pw-btn {
+    display: block; width: 100%; padding: 0.9rem; background: var(--navy);
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold-light);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem;
+    font-weight: 500; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .pw-btn:hover { background: rgba(201,168,76,0.1); }
+  .gate-actions { display: grid; gap: 0.75rem; }
+  .pw-link-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; color: rgba(255,255,255,0.72);
+    text-decoration: none; padding: 0.85rem 1rem;
+    border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s;
+  }
+  .pw-link-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+
+  /* ===== MEMBERS CONTENT ===== */
+  #members-content { display: none; padding-top: 68px; }
+
+  /* ===== HERO ===== */
+  .members-hero {
+    background: var(--navy); padding: 60px 5vw 50px;
+    border-bottom: 1px solid rgba(201,168,76,0.15); position: relative; overflow: hidden;
+  }
+  .members-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 40% 80% at 90% 50%, rgba(192,0,26,0.1) 0%, transparent 70%);
+  }
+  .members-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+  .members-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1px solid rgba(201,168,76,0.4); padding: 0.3rem 0.9rem;
+    font-size: 0.68rem; color: var(--gold); letter-spacing: 0.15em; font-weight: 600;
+    margin-bottom: 1.2rem;
+  }
+  .members-hero h1 { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; color: var(--white); margin-bottom: 0.5rem; }
+  .members-hero p { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+
+  /* ===== MAIN LAYOUT ===== */
+  .members-main { max-width: 1200px; margin: 0 auto; padding: 3rem 5vw 6rem; }
+
+  /* ===== SECTION ===== */
+  .m-section { margin-bottom: 4rem; }
+  .m-section-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(10,26,62,0.1);
+  }
+  .m-section-icon {
+    width: 36px; height: 36px; background: var(--navy);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .m-section-icon svg { width: 16px; height: 16px; }
+  .m-section-title { font-family: 'Noto Serif JP', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
+  .m-section-label { font-size: 0.68rem; color: var(--crimson); letter-spacing: 0.15em; font-weight: 700; }
+
+  /* ===== LOADING ===== */
+  .m-loading { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; background: var(--white); }
+  .m-empty { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; background: var(--white); line-height: 2; }
+
+  /* ===== LOGOUT ===== */
+  .logout-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5);
+    padding: 0.3rem 0.8rem; font-size: 0.72rem; font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.06em;
+  }
+  .logout-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+
+  /* ===== HAMBURGER (members) ===== */
+  .hamburger-m {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger-m span {
+    display: block; width: 22px; height: 2px;
+    background: rgba(255,255,255,0.7); transition: all 0.3s;
+  }
+  .hamburger-m.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger-m.open span:nth-child(2) { opacity: 0; }
+  .hamburger-m.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu-m {
+    display: none; position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: rgba(10,26,62,0.98); backdrop-filter: blur(12px);
+    z-index: 99; flex-direction: column;
+    padding: 1.2rem 5vw 1.8rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .mobile-menu-m.open { display: flex; }
+  .mobile-menu-m a, .mobile-menu-m button {
+    color: rgba(255,255,255,0.75); text-decoration: none;
+    font-size: 0.9rem; padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 0.04em; transition: color 0.2s;
+    background: none; border-top: none; border-left: none; border-right: none;
+    font-family: 'Noto Sans JP', sans-serif; cursor: pointer; text-align: left;
+  }
+  .mobile-menu-m a:hover, .mobile-menu-m button:hover { color: var(--gold-light); }
+
+  @media (max-width: 768px) {
+    .hamburger-m { display: flex; }
+    .nav-desktop-links { display: none; }
+  }
+
+  /* ===== SCROLL TOP ===== */
+  .scroll-top-btn {
+    position: fixed; right: 1.4rem; bottom: 1.6rem; z-index: 150;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--navy); border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light); font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 16px rgba(10,26,62,0.35);
+  }
+  .scroll-top-btn.visible { opacity: 1; pointer-events: auto; }
+  .scroll-top-btn:hover { background: var(--crimson); transform: translateY(-2px); }
+
+  /* ===== CHECKLIST ===== */
+  .checklist-progress-bar { height: 5px; background: rgba(10,26,62,0.08); margin-bottom: 0.3rem; }
+  .checklist-progress-fill { height: 100%; background: var(--navy); transition: width 0.3s ease; }
+  .checklist-progress-text { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 1.2rem; display: flex; justify-content: space-between; }
+  .checklist-group { margin-bottom: 1.5rem; }
+  .checklist-group-title { font-family: 'Noto Serif JP',serif; font-size: 0.82rem; font-weight: 700; color: var(--navy); border-bottom: 1px solid rgba(10,26,62,0.1); padding-bottom: 0.4rem; margin-bottom: 0.6rem; }
+  .checklist-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.45rem 0.3rem; border-bottom: 1px solid rgba(10,26,62,0.04); cursor: pointer; }
+  .checklist-item:hover { background: rgba(10,26,62,0.02); }
+  .checklist-box { width: 16px; height: 16px; border: 1.5px solid rgba(10,26,62,0.25); flex-shrink: 0; position: relative; background: white; }
+  .checklist-box.checked { background: var(--navy); border-color: var(--navy); }
+  .checklist-box.checked::after { content: '\2713'; position: absolute; top: -1px; left: 2px; font-size: 0.65rem; color: white; font-weight: 700; }
+  .checklist-text { font-size: 0.82rem; color: var(--text); line-height: 1.5; }
+  .checklist-text.checked { color: var(--text-muted); text-decoration: line-through; }
+
+  /* ===== 面接対策ノート ===== */
+  .ip-company-chips { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
+  .ip-company-chip { padding: 0.35rem 0.85rem; border: 1.5px solid rgba(10,26,62,0.18); background: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.78rem; cursor: pointer; color: var(--text-muted); transition: all 0.15s; white-space: nowrap; display: flex; align-items: center; gap: 0.4rem; }
+  .ip-company-chip:hover { border-color: var(--navy); color: var(--navy); }
+  .ip-company-chip.active { border-color: var(--navy); background: var(--navy); color: white; }
+  .ip-company-chip-badge { font-size: 0.62rem; background: rgba(255,255,255,0.25); padding: 0.05rem 0.35rem; border-radius: 8px; }
+  .ip-company-chip.active .ip-company-chip-badge { background: rgba(255,255,255,0.25); }
+  .ip-add-chip-btn { padding: 0.35rem 0.75rem; border: 1.5px dashed rgba(10,26,62,0.18); background: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.78rem; cursor: pointer; color: var(--text-muted); transition: all 0.15s; }
+  .ip-add-chip-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .ip-company-panel { display: none; }
+  .ip-company-panel.active { display: block; }
+  .ip-company-meta-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .ip-company-meta-tag { font-size: 0.72rem; color: var(--text-muted); }
+  .ip-progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.2rem; font-size: 0.75rem; color: var(--text-muted); }
+  .ip-progress-track { flex: 1; height: 4px; background: rgba(10,26,62,0.08); border-radius: 2px; overflow: hidden; }
+  .ip-progress-fill { height: 100%; background: #2d7a3a; border-radius: 2px; transition: width 0.4s; }
+  .ip-tabs { display: flex; border-bottom: 2px solid rgba(10,26,62,0.08); margin-bottom: 1.2rem; }
+  .ip-tab-btn { padding: 0.6rem 1rem; background: none; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; display: flex; align-items: center; gap: 0.35rem; }
+  .ip-tab-btn:hover { color: var(--navy); }
+  .ip-tab-btn.active { color: var(--navy); font-weight: 700; border-bottom-color: var(--navy); }
+  .ip-tab-count { font-size: 0.62rem; background: rgba(10,26,62,0.08); padding: 0.1rem 0.4rem; border-radius: 8px; }
+  .ip-tab-btn.active .ip-tab-count { background: var(--navy); color: white; }
+  .ip-tab-panel { display: none; }
+  .ip-tab-panel.active { display: block; }
+  .ip-gk-box { background: rgba(10,26,62,0.02); border: 1px solid rgba(10,26,62,0.1); padding: 1rem 1.1rem; margin-bottom: 1rem; }
+  .ip-gk-box-title { font-size: 0.78rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+  .ip-gk-hint { font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.65rem; }
+  .ip-qa-list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .ip-qa-card { background: white; border: 1px solid rgba(10,26,62,0.1); transition: border-color 0.15s; }
+  .ip-qa-card.ready { border-left: 3px solid #2d7a3a; }
+  .ip-qa-card-hdr { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.8rem 0.95rem 0.65rem; cursor: pointer; }
+  .ip-qa-cat { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.07em; padding: 0.12rem 0.5rem; border-radius: 2px; flex-shrink: 0; margin-top: 0.1rem; background: rgba(10,26,62,0.08); color: var(--navy); }
+  .ip-qa-cat.動機背景   { background: #e8f0fe; color: #1a56c4; }
+  .ip-qa-cat.具体的行動 { background: #e6f4ea; color: #2d7a3a; }
+  .ip-qa-cat.困難課題   { background: #fdecea; color: #c62828; }
+  .ip-qa-cat.思考プロセス { background: #f3e8fd; color: #7b1fa2; }
+  .ip-qa-cat.結果成果   { background: #e0f7fa; color: #006064; }
+  .ip-qa-cat.自己成長   { background: #fff8e1; color: #b8860b; }
+  .ip-qa-cat.企業接続   { background: rgba(192,0,26,0.08); color: var(--crimson); }
+  .ip-qa-cat.定番       { background: rgba(10,26,62,0.08); color: var(--navy); }
+  .ip-qa-cat.カスタム   { background: rgba(201,168,76,0.12); color: var(--gold); }
+  .ip-qa-question { font-size: 0.86rem; font-weight: 700; color: var(--navy); line-height: 1.5; flex: 1; }
+  .ip-qa-ready-icon { font-size: 0.72rem; color: #2d7a3a; flex-shrink: 0; margin-top: 0.1rem; }
+  .ip-qa-body { padding: 0 0.95rem 0.9rem; display: none; }
+  .ip-qa-body.open { display: block; }
+  .ip-qa-sub-label { font-size: 0.67rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; margin-top: 0.7rem; margin-bottom: 0.3rem; }
+  .ip-qa-answer-wrap { position: relative; }
+  .ip-qa-answer { width: 100%; padding: 0.7rem 0.8rem 1.6rem; border: 1px solid rgba(10,26,62,0.15); background: white; font-family: 'Noto Sans JP',sans-serif; font-size: 0.83rem; resize: vertical; outline: none; line-height: 1.7; min-height: 90px; }
+  .ip-qa-answer:focus { border-color: var(--navy); }
+  .ip-qa-charcount { position: absolute; bottom: 0.4rem; right: 0.55rem; font-size: 0.67rem; color: var(--text-muted); }
+  .ip-qa-actions { display: flex; gap: 0.45rem; margin-top: 0.55rem; flex-wrap: wrap; align-items: center; }
+  .ip-qa-save-btn { font-size: 0.72rem; padding: 0.3rem 0.8rem; background: var(--navy); color: white; border: none; cursor: pointer; font-family: 'Noto Sans JP',sans-serif; transition: background 0.15s; }
+  .ip-qa-save-btn:hover { background: var(--crimson); }
+  .ip-qa-ai-btn { font-size: 0.72rem; padding: 0.3rem 0.8rem; border: 1px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-family: 'Noto Sans JP',sans-serif; transition: all 0.15s; }
+  .ip-qa-ai-btn:hover { background: var(--gold); color: white; }
+  .ip-qa-ai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .ip-qa-ready-btn { font-size: 0.72rem; padding: 0.3rem 0.7rem; border: 1px solid rgba(10,26,62,0.2); background: none; cursor: pointer; font-family: 'Noto Sans JP',sans-serif; color: var(--text-muted); transition: all 0.15s; margin-left: auto; }
+  .ip-qa-ready-btn.on { border-color: #2d7a3a; color: #2d7a3a; background: #f0f9f1; }
+  .ip-qa-del-btn { font-size: 0.68rem; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0.15rem; }
+  .ip-qa-del-btn:hover { color: var(--crimson); }
+  .ip-qa-feedback { margin-top: 0.7rem; padding: 0.9rem; background: rgba(201,168,76,0.07); border-left: 3px solid var(--gold); font-size: 0.82rem; line-height: 1.8; white-space: pre-wrap; color: var(--text); display: none; }
+  .ip-qa-feedback.show { display: block; }
+  .ip-add-q-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.55rem; background: none; border: 1.5px dashed rgba(10,26,62,0.18); color: var(--text-muted); font-family: 'Noto Sans JP',sans-serif; font-size: 0.78rem; cursor: pointer; width: 100%; justify-content: center; transition: all 0.2s; margin-top: 0.7rem; }
+  .ip-add-q-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .ip-empty-company { text-align: center; padding: 2rem; font-size: 0.82rem; color: var(--text-muted); }
+  /* 面接モーダル */
+  .ip-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2500; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .ip-modal-overlay.open { display: flex; }
+  .ip-modal { background: white; width: 100%; max-width: 500px; padding: 1.8rem; max-height: 90vh; overflow-y: auto; }
+
+  /* ===== ES Bank button styles (reused) ===== */
+  .es-bank-btn { font-size: 0.72rem; padding: 0.22rem 0.6rem; border: 1px solid rgba(10,26,62,0.2); background: none; cursor: pointer; font-family: 'Noto Sans JP',sans-serif; color: var(--text-muted); transition: all 0.15s; }
+  .es-bank-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .es-bank-btn.primary { border-color: var(--navy); color: var(--navy); }
+
+  /* ===== 自分史 ===== */
+  .js-period-accordion { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+  .js-period { border: 1px solid rgba(10,26,62,0.14); background: white; }
+  .js-period-header { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.1rem; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: 'Noto Sans JP',sans-serif; transition: background 0.15s; }
+  .js-period-header:hover { background: rgba(10,26,62,0.03); }
+  .js-period-header-left { display: flex; align-items: center; gap: 0.75rem; }
+  .js-period-badge { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; padding: 0.15rem 0.6rem; border-radius: 2px; color: white; flex-shrink: 0; }
+  .js-period-badge.elem   { background: #4a7c59; }
+  .js-period-badge.junior { background: #3a6080; }
+  .js-period-badge.high   { background: #6b3a7d; }
+  .js-period-badge.college{ background: var(--navy); }
+  .js-period-label { font-size: 0.9rem; font-weight: 700; color: var(--navy); }
+  .js-period-target { font-size: 0.7rem; color: var(--text-muted); margin-left: 0.4rem; }
+  .js-period-arrow { font-size: 0.75rem; color: var(--text-muted); transition: transform 0.2s; }
+  .js-period-arrow.open { transform: rotate(180deg); }
+  .js-period-body { border-top: 1px solid rgba(10,26,62,0.08); padding: 0.9rem 1.1rem; display: none; }
+  .js-period-body.open { display: block; }
+  .js-period-hint { font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.65rem; }
+  .js-char-bar-wrap { margin-top: 1.2rem; }
+  .js-char-bar-label { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.35rem; display: flex; justify-content: space-between; }
+  .js-char-bar-track { height: 6px; background: rgba(10,26,62,0.08); border-radius: 3px; overflow: hidden; }
+  .js-char-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s, background 0.3s; }
+  .js-char-bar-fill.ok   { background: #2d7a3a; }
+  .js-char-bar-fill.warn { background: var(--gold); }
+  .js-char-bar-fill.over { background: var(--crimson); }
+  .js-total-counter { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 1rem; background: rgba(10,26,62,0.04); margin-bottom: 1rem; }
+  .js-total-num { font-size: 1rem; font-weight: 700; color: var(--navy); font-family: 'Noto Serif JP',serif; }
+  .js-total-status { font-size: 0.75rem; }
+  .js-output-area { margin-top: 1.2rem; }
+  .js-output-text { white-space: pre-wrap; font-size: 0.88rem; line-height: 1.9; color: var(--text); background: white; padding: 1.4rem; border: 1px solid rgba(10,26,62,0.12); }
+  .js-section-counter { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .js-sec-chip { font-size: 0.7rem; padding: 0.15rem 0.6rem; border-radius: 2px; font-weight: 600; }
+  .js-sec-chip.ok   { background: #e6f4ea; color: #2d7a3a; }
+  .js-sec-chip.warn { background: #fff8e1; color: #b8860b; }
+  .js-sec-chip.over { background: #fdecea; color: var(--crimson); }
+  .js-action-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.75rem; }
+  .js-chat-area { margin-top: 1.5rem; border-top: 2px solid rgba(10,26,62,0.1); padding-top: 1.2rem; }
+
+  /* ===== AI shared form styles ===== */
+  .ai-form-group { margin-bottom: 1rem; }
+  .ai-label { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem; font-weight: 500; }
+  .ai-input { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid rgba(10,26,62,0.18); background: white; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; }
+  .ai-input:focus { border-color: var(--navy); }
+  .ai-textarea { width: 100%; padding: 0.8rem 0.9rem; border: 1px solid rgba(10,26,62,0.18); background: white; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; outline: none; resize: vertical; min-height: 140px; line-height: 1.75; transition: border-color 0.2s; }
+  .ai-textarea:focus { border-color: var(--navy); }
+  .ai-submit-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.8rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s; }
+  .ai-submit-btn:hover:not(:disabled) { background: var(--crimson); }
+  .ai-submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .ai-error-msg { font-size: 0.78rem; color: var(--crimson); margin-top: 0.5rem; min-height: 1.2em; }
+
+  /* ===== ES Modal shared ===== */
+  .es-modal-title { font-family: 'Noto Serif JP',serif; font-size: 1.05rem; color: var(--navy); margin-bottom: 1.2rem; font-weight: 700; }
+  .es-modal-actions { display: flex; gap: 0.75rem; margin-top: 1.4rem; }
+  .es-modal-save { flex: 1; padding: 0.75rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+  .es-modal-save:hover { background: var(--crimson); }
+  .es-modal-cancel { padding: 0.75rem 1.2rem; background: none; border: 1px solid rgba(10,26,62,0.2); color: var(--text-muted); font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; cursor: pointer; }
+  .es-modal-select { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid rgba(10,26,62,0.18); background: white; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; outline: none; }
+
+  /* ===== ES Chat shared ===== */
+  .es-chat-msgs { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1rem; max-height: 520px; overflow-y: auto; padding-right: 0.25rem; }
+  .es-chat-bubble { max-width: 88%; padding: 0.75rem 1rem; font-size: 0.86rem; line-height: 1.78; white-space: pre-wrap; word-break: break-word; }
+  .es-chat-bubble.user { background: var(--navy); color: white; border-radius: 2px 0 2px 2px; }
+  .es-chat-bubble.ai { background: var(--gray); border-left: 3px solid var(--navy); }
+  .es-chat-input-row { display: flex; gap: 0.5rem; align-items: flex-end; }
+  .es-chat-input { flex: 1; padding: 0.75rem 0.9rem; border: 1px solid rgba(10,26,62,0.18); font-family: 'Noto Sans JP',sans-serif; font-size: 0.87rem; resize: vertical; min-height: 72px; line-height: 1.65; outline: none; transition: border-color 0.2s; }
+  .es-chat-input:focus { border-color: var(--navy); }
+  .es-chat-send { padding: 0.72rem 1.2rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; align-self: flex-end; transition: background 0.2s; }
+  .es-chat-send:hover:not(:disabled) { background: var(--crimson); }
+  .es-chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ===== Gakuchika button accents ===== */
+  .gk-btn { font-size: 0.72rem; padding: 0.22rem 0.6rem; border: 1px solid rgba(10,26,62,0.2); background: none; cursor: pointer; font-family: 'Noto Sans JP',sans-serif; color: var(--text-muted); transition: all 0.15s; }
+  .gk-btn.accent { border-color: var(--gold); color: var(--gold); }
+  .gk-btn.accent:hover { background: var(--gold); color: white; }
+
+  /* ===== ES View copy btn ===== */
+  .es-view-copy-btn { padding: 0.75rem 1.2rem; background: none; border: 1px solid rgba(10,26,62,0.2); color: var(--text-muted); font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; cursor: pointer; }
+  .es-view-copy-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav style="justify-content:center;">
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a>
+  <span class="nav-member-badge" id="member-badge" style="display:none;position:absolute;right:5vw;font-size:0.72rem;color:var(--gold-light);"></span>
+  <button class="logout-btn" id="logout-btn" style="display:none;position:absolute;right:5vw;" onclick="logout()">ログアウト</button>
+</nav>
+
+<div class="mobile-menu-m" id="mobile-menu-m" style="display:none;">
+</div>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+  <div class="pw-box">
+    <div class="pw-icon">&#128100;</div>
+    <h2 class="pw-title">面接対策ページ</h2>
+    <p class="pw-sub" id="auth-gate-copy">このページは慶應就活ナビのメンバー限定です。<br>個人アカウントでログインすると閲覧できます。</p>
+    <div class="gate-actions">
+      <a class="pw-btn" id="gate-login-btn" href="account.html?mode=login&amp;returnTo=interview-page.html">ログインして入る &rarr;</a>
+      <a class="pw-link-btn" href="account.html?mode=signup&amp;returnTo=interview-page.html">新しくアカウントを作る</a>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERS CONTENT -->
+<div id="members-content">
+
+  <div class="members-hero">
+    <div class="members-hero-inner">
+      <div class="members-badge">INTERVIEW PREP</div>
+      <h1>面接対策</h1>
+      <p id="members-hero-copy">面接対策ノート・チェックリスト・自分史作成ツールをまとめています。</p>
+    </div>
+  </div>
+
+  <div class="members-main">
+
+    <!-- ===== 面接対策ノート ===== -->
+    <div class="m-section" id="interview-prep-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">INTERVIEW PREP</div>
+          <div class="m-section-title">面接対策ノート</div>
+        </div>
+      </div>
+      <div class="m-section-body">
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.65;">深掘り質問をAIが自動生成。回答をメモしてAIに添削してもらい、面接本番に備えましょう。</div>
+
+        <!-- 企業チップ -->
+        <div class="ip-company-chips" id="ip-company-chips">
+          <button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ テーマを追加</button>
+        </div>
+
+        <!-- 企業が未登録のとき -->
+        <div class="ip-empty-company" id="ip-no-company">テーマを追加して面接対策を始めましょう。</div>
+
+        <!-- 企業パネル群 -->
+        <div id="ip-panels"></div>
+      </div>
+    </div>
+
+    <!-- ===== 面接チェックリスト ===== -->
+    <div class="m-section" id="interview-checklist-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">INTERVIEW PREP</div>
+          <div class="m-section-title">面接チェックリスト</div>
+        </div>
+      </div>
+      <div class="checklist-progress-bar"><div class="checklist-progress-fill" id="cl-fill" style="width:0%"></div></div>
+      <div class="checklist-progress-text"><span id="cl-progress-text">0 / 0 完了</span><button class="checklist-reset-btn" onclick="resetChecklist()" style="font-size:0.7rem;color:var(--text-muted);background:none;border:1px solid rgba(10,26,62,0.15);padding:0.2rem 0.6rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">リセット</button></div>
+      <div id="checklist-body"></div>
+    </div>
+
+    <!-- ===== 自分史作成ツール ===== -->
+    <div class="m-section" id="jibunshi-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">PERSONAL HISTORY</div>
+          <div class="m-section-title">自分史作成ツール</div>
+        </div>
+      </div>
+      <div class="m-section-body">
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1.2rem;line-height:1.7;">
+          三井物産ESを参考にした自分史フォーマット。<br>
+          各時代のエピソードをメモすると、AIが字数配分・文体を守って自分史を生成します。<br>
+          <span style="font-size:0.72rem;">目標2000字（最大2500字）/ 小学:中学:高校:大学 = 10:20:30:40</span>
+        </div>
+
+        <!-- 字数合計インジケーター -->
+        <div class="js-total-counter" id="js-total-counter" style="display:none;">
+          <div>
+            <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:0.2rem;">生成済み自分史の文字数</div>
+            <div class="js-total-num" id="js-total-num">0字</div>
+          </div>
+          <div class="js-total-status" id="js-total-status"></div>
+        </div>
+
+        <!-- 各時代 入力アコーディオン -->
+        <div class="js-period-accordion">
+          <!-- 小学校以前 -->
+          <div class="js-period">
+            <button class="js-period-header" onclick="toggleJsPeriod(this)">
+              <div class="js-period-header-left">
+                <span class="js-period-badge elem">ELEMENTARY</span>
+                <span class="js-period-label">小学校以前</span>
+                <span class="js-period-target">目安 約200字 (10%)</span>
+              </div>
+              <span class="js-period-arrow">&#9660;</span>
+            </button>
+            <div class="js-period-body">
+              <div class="js-period-hint">家庭環境・習い事・遊び・印象的な体験など。「なぜそれに熱中したか」を一言添えると◎</div>
+              <textarea class="ai-textarea" id="js-elem" placeholder="例）サッカーを5歳から始め、チームで動くことの楽しさを知った。父の影響で毎週図書館に通い、読書が習慣になった。" style="min-height:100px;" oninput="updateJsCharCount()"></textarea>
+            </div>
+          </div>
+          <!-- 中学時代 -->
+          <div class="js-period">
+            <button class="js-period-header" onclick="toggleJsPeriod(this)">
+              <div class="js-period-header-left">
+                <span class="js-period-badge junior">JUNIOR HIGH</span>
+                <span class="js-period-label">中学時代</span>
+                <span class="js-period-target">目安 約400字 (20%)</span>
+              </div>
+              <span class="js-period-arrow">&#9660;</span>
+            </button>
+            <div class="js-period-body">
+              <div class="js-period-hint">部活・勉強・人間関係など。転換点・葛藤・それを乗り越えた経緯を端的に。</div>
+              <textarea class="ai-textarea" id="js-junior" placeholder="例）吹奏楽部でパートリーダーを務めた。メンバーの意欲の差に悩んだが、個別に話し合いの場を設けることで課題を解決。チームを動かすことへの関心が生まれた。" style="min-height:120px;" oninput="updateJsCharCount()"></textarea>
+            </div>
+          </div>
+          <!-- 高校時代 -->
+          <div class="js-period">
+            <button class="js-period-header" onclick="toggleJsPeriod(this)">
+              <div class="js-period-header-left">
+                <span class="js-period-badge high">HIGH SCHOOL</span>
+                <span class="js-period-label">高校時代</span>
+                <span class="js-period-target">目安 約600字 (30%)</span>
+              </div>
+              <span class="js-period-arrow">&#9660;</span>
+            </button>
+            <div class="js-period-body">
+              <div class="js-period-hint">最も力を入れたこと・リーダー経験・失敗と学び。大学進学の動機と接続できるとなおよい。</div>
+              <textarea class="ai-textarea" id="js-high" placeholder="例）生徒会長として文化祭を主導。企画段階で予算削減を余儀なくされ、外部スポンサー獲得を提案。交渉の結果、過去最大規模の出展数を実現した。この経験が課題解決への自信の源となっている。" style="min-height:140px;" oninput="updateJsCharCount()"></textarea>
+            </div>
+          </div>
+          <!-- 大学以降 -->
+          <div class="js-period">
+            <button class="js-period-header" onclick="toggleJsPeriod(this)">
+              <div class="js-period-header-left">
+                <span class="js-period-badge college">UNIVERSITY</span>
+                <span class="js-period-label">大学以降</span>
+                <span class="js-period-target">目安 約800字 (40%)</span>
+              </div>
+              <span class="js-period-arrow">&#9660;</span>
+            </button>
+            <div class="js-period-body">
+              <div class="js-period-hint">学業・サークル・インターン・留学・アルバイトなど。自分の強みがどう発揮されたか・どう深まったかを中心に。</div>
+              <textarea class="ai-textarea" id="js-college" placeholder="例）経済学部で計量経済学を専攻。3年次にコンサルのインターンで仮説思考の実践を経験。また体育会ラグビー部では副将としてチーム再建に関わり、戦略立案・対話によるモチベーション向上を実践した。" style="min-height:160px;" oninput="updateJsCharCount()"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ガクチカ参照オプション -->
+        <div class="ai-form-group" id="js-gk-ref-section">
+          <label class="ai-label" style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;">
+            <input type="checkbox" id="js-use-gakuchika" style="width:15px;height:15px;cursor:pointer;" onchange="toggleJsGkSelector()">
+            登録済みのガクチカを自分史に組み込む
+          </label>
+          <div id="js-gk-selector" style="display:none;margin-top:0.65rem;">
+            <div style="font-size:0.73rem;color:var(--text-muted);margin-bottom:0.5rem;">組み込むガクチカを選択（複数可）</div>
+            <div id="js-gk-selector-list" style="display:flex;flex-direction:column;gap:0.3rem;max-height:160px;overflow-y:auto;border:1px solid rgba(10,26,62,0.1);padding:0.5rem;"></div>
+          </div>
+        </div>
+
+        <!-- 任意: アピールしたい特性 -->
+        <div class="ai-form-group">
+          <label class="ai-label">全時代を通じて伝えたい特性・価値観（任意）</label>
+          <input type="text" class="ai-input" id="js-traits" placeholder="例：粘り強さ、チームで課題を解決する力、好奇心と行動力">
+        </div>
+
+        <button class="ai-submit-btn" id="js-generate-btn" onclick="submitJibunshi()">&#10022; 自分史を生成する</button>
+
+        <!-- 出力エリア -->
+        <div class="js-output-area" id="js-output-area" style="display:none;">
+          <div class="js-section-counter" id="js-section-counter"></div>
+          <div class="js-char-bar-wrap">
+            <div class="js-char-bar-label">
+              <span>文字数</span>
+              <span id="js-bar-label-text"></span>
+            </div>
+            <div class="js-char-bar-track"><div class="js-char-bar-fill ok" id="js-bar-fill"></div></div>
+          </div>
+          <div class="js-output-text" id="js-output-text"></div>
+          <div class="js-action-row">
+            <button class="es-view-copy-btn" onclick="copyJibunshi()" style="font-size:0.8rem;padding:0.5rem 1rem;">コピー</button>
+            <button class="gk-btn accent" onclick="saveJibunshiToEsBank()" style="font-size:0.8rem;padding:0.5rem 1rem;">ES保管庫に保存</button>
+          </div>
+
+          <!-- チャット -->
+          <div class="js-chat-area" id="js-chat-area">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--navy);margin-bottom:0.75rem;">&#10022; AIと対話して修正・ブラッシュアップ</div>
+            <div class="es-chat-msgs" id="js-chat-msgs"></div>
+            <div class="es-chat-input-row">
+              <textarea class="es-chat-input" id="js-chat-input" placeholder="「高校時代をもう少し具体的に」「大学部分を短くして」など自由に指示できます" rows="2" onkeydown="jsHandleChatKey(event)"></textarea>
+              <button class="es-chat-send" onclick="sendJsChat()">送信</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 面接対策 テーマ追加・編集モーダル -->
+<div class="ip-modal-overlay" id="ip-company-modal">
+  <div class="ip-modal">
+    <div class="es-modal-title" id="ip-cm-title">テーマを追加する</div>
+    <input type="hidden" id="ip-cm-id">
+    <div class="ai-form-group">
+      <label class="ai-label">テーマ名 <span style="color:var(--crimson)">*</span></label>
+      <input type="text" class="ai-input" id="ip-cm-name" placeholder="例：志望動機、ガクチカ深掘り">
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">カテゴリ</label>
+      <input type="text" class="ai-input" id="ip-cm-industry" placeholder="例：自己分析、業界研究">
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">メモ</label>
+      <input type="text" class="ai-input" id="ip-cm-position" placeholder="例：よく聞かれる質問を重点的に">
+    </div>
+    <div class="ai-form-group" style="display:none;">
+      <label class="ai-label">選考状況</label>
+      <select class="es-modal-select" id="ip-cm-status">
+        <option value="">未設定</option>
+      </select>
+    </div>
+    <div class="ai-error-msg" id="ip-cm-error"></div>
+    <div class="es-modal-actions">
+      <button class="es-modal-cancel" onclick="ipCloseCompanyModal()">キャンセル</button>
+      <button class="es-modal-save" onclick="ipSaveCompany()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 面接対策 カスタム質問追加モーダル -->
+<div class="ip-modal-overlay" id="ip-cq-modal">
+  <div class="ip-modal">
+    <div class="es-modal-title">質問を追加する</div>
+    <input type="hidden" id="ip-cq-company-id">
+    <div class="ai-form-group">
+      <label class="ai-label">質問文 <span style="color:var(--crimson)">*</span></label>
+      <textarea class="ai-textarea" id="ip-cq-question" placeholder="例：あなたが最も誇りに思う経験を教えてください。" style="min-height:80px;"></textarea>
+    </div>
+    <div class="ai-error-msg" id="ip-cq-error"></div>
+    <div class="es-modal-actions">
+      <button class="es-modal-cancel" onclick="ipCloseCqModal()">キャンセル</button>
+      <button class="es-modal-save" onclick="ipSaveCustomQuestion()">追加する</button>
+    </div>
+  </div>
+</div>
+
+<!-- スクロールトップボタン -->
+<button class="scroll-top-btn" id="scroll-top-btn" aria-label="ページトップへ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script src="auth.js"></script>
+<script>
+  // ===== Constants =====
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+
+  // ===== callAuthApi =====
+  async function callAuthApi(action, extraPayload) {
+    const sessionToken = KeioNaviAuth.getSessionToken();
+    if (!sessionToken) throw new Error('ログインが必要です。');
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify(Object.assign({ action, sessionToken }, extraPayload || {})),
+      redirect: 'follow',
+    });
+    const data = await res.json().catch(() => null);
+    if (!data || data.status !== 'ok') throw new Error((data && data.message) || 'エラーが発生しました。');
+    return data;
+  }
+
+  // ===== Auth & Nav helpers =====
+  function logout() {
+    KeioNaviAuth.logout();
+    location.reload();
+  }
+
+  function toggleMobileMenuM() {
+    document.getElementById('hamburger-m').classList.toggle('open');
+    document.getElementById('mobile-menu-m').classList.toggle('open');
+  }
+
+  function updateAuthGate() {
+    const copy = document.getElementById('auth-gate-copy');
+    const loginBtn = document.getElementById('gate-login-btn');
+    if (copy) {
+      copy.innerHTML = 'このページは慶應就活ナビのメンバー限定です。\x3cbr>個人アカウントでログインすると閲覧できます。';
+    }
+    if (loginBtn) {
+      loginBtn.href = 'account.html?mode=login&returnTo=interview-page.html';
+    }
+  }
+
+  let hasLoadedContent = false;
+
+  function showMembers(user) {
+    document.getElementById('password-screen').style.display = 'none';
+    document.getElementById('members-content').style.display = 'block';
+    document.getElementById('member-badge').style.display = 'inline-block';
+    document.getElementById('logout-btn').style.display = 'inline-block';
+    const mobileLogout = document.getElementById('mobile-logout-btn');
+    if (mobileLogout) mobileLogout.style.display = 'block';
+    document.getElementById('member-badge').textContent = (user?.username || '会員') + ' さん';
+    document.getElementById('members-hero-copy').textContent = (user?.username || 'あなた') + ' さんの面接対策ツールです。';
+    if (!hasLoadedContent) {
+      hasLoadedContent = true;
+      loadAll();
+    }
+  }
+
+  async function loadAll() {
+    initChecklist();
+    ipInit();
+    // Load gakuchika for jibunshi selector
+    loadGakuchika();
+  }
+
+  // ===== Scroll top button =====
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('scroll-top-btn');
+    if (window.scrollY > 400) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // ===== ガクチカ保管庫（自分史のガクチカ参照に必要） =====
+  let gakuchikaEntries = [];
+
+  async function loadGakuchika() {
+    try {
+      const data = await callAuthApi('readMyGakuchika');
+      gakuchikaEntries = data.entries || [];
+    } catch(e) {
+      console.warn('ガクチカ読み込み失敗:', e.message);
+    }
+  }
+
+  // ===== チェックリスト =====
+  const CL_KEY = 'keio_navi_checklist_v1';
+  const CL_GROUPS = [
+    { title: '面接前の準備', items: [
+      { id:'cl1', text:'業界研究は完了しているか' },
+      { id:'cl2', text:'自分の強み・弱みを整理したか' },
+      { id:'cl3', text:'逆質問を3つ以上準備したか' },
+      { id:'cl4', text:'志望動機を1分で話せるか' },
+      { id:'cl5', text:'提出したESの内容を確認したか' },
+    ]},
+    { title: '当日の準備', items: [
+      { id:'cl6', text:'服装・身だしなみを確認したか' },
+      { id:'cl7', text:'会場のアクセスを確認したか（余裕を持って出発）' },
+      { id:'cl8', text:'筆記用具・履歴書のコピーを用意したか' },
+      { id:'cl9', text:'携帯のマナーモードを設定したか' },
+    ]},
+    { title: 'よく聞かれる質問の準備', items: [
+      { id:'cl10', text:'自己紹介（1分）を練習したか' },
+      { id:'cl11', text:'ガクチカ（学生時代頑張ったこと）を話せるか' },
+      { id:'cl12', text:'志望動機を具体的に説明できるか' },
+      { id:'cl13', text:'自己PR（強み）を話せるか' },
+      { id:'cl14', text:'入社後やりたいことを伝えられるか' },
+    ]},
+  ];
+  const CL_TOTAL = CL_GROUPS.reduce((s, g) => s + g.items.length, 0);
+
+  function readChecklist() { try { return JSON.parse(localStorage.getItem(CL_KEY) || '[]'); } catch { return []; } }
+  function writeChecklist(arr) { localStorage.setItem(CL_KEY, JSON.stringify(arr)); }
+
+  function renderChecklist() {
+    const checked = readChecklist();
+    const count = checked.length;
+    const pct = Math.round(count / CL_TOTAL * 100);
+    document.getElementById('cl-fill').style.width = pct + '%';
+    document.getElementById('cl-progress-text').textContent = count + ' / ' + CL_TOTAL + ' 完了（' + pct + '%）';
+    document.getElementById('checklist-body').innerHTML = CL_GROUPS.map(function(g) {
+      return '<div class="checklist-group">' +
+        '<div class="checklist-group-title">' + g.title + '</div>' +
+        g.items.map(function(item) {
+          var done = checked.includes(item.id);
+          return '<div class="checklist-item" onclick="toggleCheck(\'' + item.id + '\')">' +
+            '<div class="checklist-box' + (done ? ' checked' : '') + '"></div>' +
+            '<span class="checklist-text' + (done ? ' checked' : '') + '">' + item.text + '</span>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    }).join('');
+  }
+
+  function toggleCheck(id) {
+    var arr = readChecklist();
+    var idx = arr.indexOf(id);
+    if (idx >= 0) arr.splice(idx, 1); else arr.push(id);
+    writeChecklist(arr);
+    renderChecklist();
+  }
+  function resetChecklist() { writeChecklist([]); renderChecklist(); }
+  function initChecklist() { renderChecklist(); }
+
+  // ===== 面接対策ノート =====
+  const IP_STORAGE_KEY = 'keio_navi_interview_prep_v1';
+  const IP_STANDARD_QUESTIONS = [
+    { category: '定番', question: '自己PRをしてください（1分程度）' },
+    { category: '定番', question: 'ガクチカを教えてください（1分程度）' },
+    { category: '定番', question: '志望動機を教えてください' },
+    { category: '定番', question: '当社でやりたいことは何ですか？' },
+    { category: '定番', question: '強みと弱みを教えてください' },
+    { category: '定番', question: '挫折経験・失敗経験を教えてください' },
+    { category: '定番', question: '10年後のキャリアはどのように考えていますか？' },
+    { category: '定番', question: '最近気になったニュースはありますか？' },
+    { category: '定番', question: '当社への逆質問はありますか？（2〜3個）' },
+  ];
+
+  let ipDb = { companies: [], questions: [] };
+  let ipCurrentCompanyId = null;
+
+  function ipLoadDb() {
+    try { ipDb = JSON.parse(localStorage.getItem(IP_STORAGE_KEY) || '{"companies":[],"questions":[]}'); } catch(e) {}
+    if (!ipDb.companies) ipDb.companies = [];
+    if (!ipDb.questions) ipDb.questions = [];
+  }
+
+  function ipSaveDb() { localStorage.setItem(IP_STORAGE_KEY, JSON.stringify(ipDb)); }
+
+  function ipGenId(p) { return p + '_' + Date.now() + '_' + Math.floor(Math.random() * 10000); }
+
+  function ipGetQsByCompany(cid)    { return ipDb.questions.filter(function(q) { return q.companyId === cid; }); }
+  function ipGetQsByType(cid, type) { return ipGetQsByCompany(cid).filter(function(q) { return q.type === type; }); }
+
+  function ipInit() {
+    ipLoadDb();
+    ipRender();
+  }
+
+  function ipRender() {
+    ipRenderChips();
+    ipRenderPanels();
+  }
+
+  function ipRenderChips() {
+    var el = document.getElementById('ip-company-chips');
+    var noCoEl = document.getElementById('ip-no-company');
+    noCoEl.style.display = ipDb.companies.length ? 'none' : '';
+
+    var chips = ipDb.companies.map(function(c) {
+      var qs = ipGetQsByCompany(c.id);
+      var ready = qs.filter(function(q) { return q.ready; }).length;
+      return '<button class="ip-company-chip' + (c.id === ipCurrentCompanyId ? ' active' : '') + '" onclick="ipSelectCompany(\'' + c.id + '\')">' +
+        c.name + '<span class="ip-company-chip-badge">' + ready + '/' + qs.length + '</span>' +
+      '</button>';
+    }).join('');
+    el.innerHTML = chips + '<button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ テーマを追加</button>';
+  }
+
+  function ipSelectCompany(id) {
+    ipCurrentCompanyId = id;
+    ipRender();
+  }
+
+  function ipRenderPanels() {
+    var el = document.getElementById('ip-panels');
+    if (!ipDb.companies.length) { el.innerHTML = ''; return; }
+
+    el.innerHTML = ipDb.companies.map(function(c) {
+      var gkQs  = ipGetQsByType(c.id, 'gakuchika');
+      var stdQs = ipGetQsByType(c.id, 'standard');
+      var cusQs = ipGetQsByType(c.id, 'custom');
+      var allQs = ipGetQsByCompany(c.id);
+      var readyCount = allQs.filter(function(q) { return q.ready; }).length;
+      var pct = allQs.length ? Math.round(readyCount / allQs.length * 100) : 0;
+      var isActive = c.id === ipCurrentCompanyId;
+
+      return '<div class="ip-company-panel' + (isActive ? ' active' : '') + '" id="ip-panel-' + c.id + '">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">' +
+          '<div style="font-size:0.75rem;color:var(--text-muted);">' +
+            (c.industry ? c.industry + (c.position ? ' \xb7 ' + c.position : '') : (c.position || '')) +
+            (c.status ? ' &nbsp;|&nbsp; \x3cstrong style=color:var(--navy)>' + c.status + '\x3c/strong>' : '') +
+          '</div>' +
+          '<div style="display:flex;gap:0.4rem;">' +
+            '<button class="es-bank-btn primary" onclick="ipOpenEditCompany(\'' + c.id + '\')">編集</button>' +
+            '<button class="es-bank-btn" onclick="ipDeleteCompany(\'' + c.id + '\')">削除</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ip-progress-row">' +
+          '<span style="font-size:0.73rem;">準備完了 ' + readyCount + '/' + allQs.length + '問</span>' +
+          '<div class="ip-progress-track"><div class="ip-progress-fill" style="width:' + pct + '%"></div></div>' +
+          '<span style="font-size:0.73rem;">' + pct + '%</span>' +
+        '</div>' +
+        '<div class="ip-tabs">' +
+          '<button class="ip-tab-btn active" data-iptab="ip-t-gk-' + c.id + '" onclick="ipSwitchTab(this)">ガクチカ深掘り<span class="ip-tab-count">' + gkQs.length + '</span></button>' +
+          '<button class="ip-tab-btn" data-iptab="ip-t-std-' + c.id + '" onclick="ipSwitchTab(this)">定番質問<span class="ip-tab-count">' + stdQs.length + '</span></button>' +
+          '<button class="ip-tab-btn" data-iptab="ip-t-cus-' + c.id + '" onclick="ipSwitchTab(this)">カスタム<span class="ip-tab-count">' + cusQs.length + '</span></button>' +
+        '</div>' +
+        '<div class="ip-tab-panel active" id="ip-t-gk-' + c.id + '">' +
+          '<div class="ip-gk-box">' +
+            '<div class="ip-gk-box-title">ガクチカを入力 → 深掘り質問を自動生成</div>' +
+            '<div class="ip-gk-hint">「なぜ」「具体的に」「困難は」など面接官が実際に聞く深掘り質問を10〜12問生成します。</div>' +
+            '<textarea class="ai-textarea" id="ip-gk-input-' + c.id + '" placeholder="ガクチカを貼り付けてください..." style="min-height:110px;"></textarea>' +
+            '<button class="ai-submit-btn" id="ip-gen-btn-' + c.id + '" onclick="ipGenerateQuestions(\'' + c.id + '\')" style="margin-top:0.6rem;padding:0.65rem;">&#10022; 深掘り質問を生成する</button>' +
+            '<div class="ai-error-msg" id="ip-gen-err-' + c.id + '"></div>' +
+          '</div>' +
+          '<div class="ip-qa-list" id="ip-gk-list-' + c.id + '">' +
+            (gkQs.length ? gkQs.map(function(q) { return ipRenderQaCard(q); }).join('') : '<div style="text-align:center;padding:1rem;font-size:0.8rem;color:var(--text-muted);">まだ質問がありません。ガクチカを入力して生成してください。</div>') +
+          '</div>' +
+        '</div>' +
+        '<div class="ip-tab-panel" id="ip-t-std-' + c.id + '">' +
+          '<div class="ip-qa-list" id="ip-std-list-' + c.id + '">' +
+            stdQs.map(function(q) { return ipRenderQaCard(q); }).join('') +
+          '</div>' +
+        '</div>' +
+        '<div class="ip-tab-panel" id="ip-t-cus-' + c.id + '">' +
+          '<div class="ip-qa-list" id="ip-cus-list-' + c.id + '">' +
+            (cusQs.length ? cusQs.map(function(q) { return ipRenderQaCard(q); }).join('') : '<div style="text-align:center;padding:1rem;font-size:0.8rem;color:var(--text-muted);">まだカスタム質問がありません。</div>') +
+          '</div>' +
+          '<button class="ip-add-q-btn" onclick="ipOpenAddCq(\'' + c.id + '\')">+ 質問を追加する</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function ipSwitchTab(btn) {
+    var panel = btn.closest('.ip-company-panel');
+    panel.querySelectorAll('.ip-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    panel.querySelectorAll('.ip-tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.iptab).classList.add('active');
+  }
+
+  function ipRenderQaCard(q) {
+    var catKey = (q.category || '').replace(/[・\s]/g, '');
+    return '<div class="ip-qa-card' + (q.ready ? ' ready' : '') + '" id="ip-card-' + q.id + '">' +
+      '<div class="ip-qa-card-hdr" onclick="ipToggleCard(\'' + q.id + '\')">' +
+        '<span class="ip-qa-cat ' + catKey + '">' + (q.category || '質問') + '</span>' +
+        '<span class="ip-qa-question">' + q.question + '</span>' +
+        (q.ready ? '<span class="ip-qa-ready-icon">\u2713</span>' : '') +
+      '</div>' +
+      '<div class="ip-qa-body' + (q.answer ? ' open' : '') + '" id="ip-body-' + q.id + '">' +
+        '<div class="ip-qa-sub-label">回答メモ（面接本番で話す内容）</div>' +
+        '<div class="ip-qa-answer-wrap">' +
+          '<textarea class="ip-qa-answer" id="ip-ans-' + q.id + '" oninput="ipUpdateCharCount(\'' + q.id + '\')" placeholder="ここに回答をメモしましょう...">' + (q.answer || '') + '\x3c/textarea>' +
+          '<div class="ip-qa-charcount" id="ip-cc-' + q.id + '">' + (q.answer||'').length + '字</div>' +
+        '</div>' +
+        '<div class="ip-qa-actions">' +
+          '<button class="ip-qa-save-btn" onclick="ipSaveAnswer(\'' + q.id + '\')">保存</button>' +
+          '<button class="ip-qa-ai-btn" id="ip-ai-btn-' + q.id + '" onclick="ipEvaluateAnswer(\'' + q.id + '\')">&#10022; AI添削</button>' +
+          '<button class="ip-qa-ready-btn' + (q.ready ? ' on' : '') + '" onclick="ipToggleReady(\'' + q.id + '\')">' + (q.ready ? '\u2713 準備完了' : '準備完了にする') + '</button>' +
+          '<button class="ip-qa-del-btn" onclick="ipDeleteQuestion(\'' + q.id + '\')">&#10005;</button>' +
+        '</div>' +
+        '<div class="ip-qa-feedback' + (q.aiFeedback ? ' show' : '') + '" id="ip-fb-' + q.id + '">' + (q.aiFeedback || '') + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function ipToggleCard(id) { document.getElementById('ip-body-' + id).classList.toggle('open'); }
+
+  function ipUpdateCharCount(id) {
+    var ta = document.getElementById('ip-ans-' + id);
+    var cc = document.getElementById('ip-cc-' + id);
+    if (ta && cc) cc.textContent = ta.value.length + '字';
+  }
+
+  function ipSaveAnswer(id) {
+    var q = ipDb.questions.find(function(q) { return q.id === id; });
+    if (!q) return;
+    q.answer = document.getElementById('ip-ans-' + id).value;
+    ipSaveDb();
+    var btn = document.querySelector('#ip-card-' + id + ' .ip-qa-save-btn');
+    var orig = btn.textContent;
+    btn.textContent = '保存しました \u2713';
+    setTimeout(function() { btn.textContent = orig; }, 1200);
+  }
+
+  function ipToggleReady(id) {
+    var q = ipDb.questions.find(function(q) { return q.id === id; });
+    if (!q) return;
+    q.answer = document.getElementById('ip-ans-' + id).value;
+    q.ready = !q.ready;
+    ipSaveDb();
+    var card = document.getElementById('ip-card-' + id);
+    if (card) card.outerHTML = ipRenderQaCard(q);
+    ipRenderChips();
+    ipUpdateProgress(q.companyId);
+  }
+
+  function ipUpdateProgress(cid) {
+    var allQs = ipGetQsByCompany(cid);
+    var ready = allQs.filter(function(q) { return q.ready; }).length;
+    var pct   = allQs.length ? Math.round(ready / allQs.length * 100) : 0;
+    var panel = document.getElementById('ip-panel-' + cid);
+    if (!panel) return;
+    var label = panel.querySelector('.ip-progress-row span');
+    var fill  = panel.querySelector('.ip-progress-fill');
+    var pctEl = panel.querySelectorAll('.ip-progress-row span')[1];
+    if (label) label.textContent = '準備完了 ' + ready + '/' + allQs.length + '問';
+    if (fill)  fill.style.width = pct + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
+  }
+
+  function ipDeleteQuestion(id) {
+    if (!confirm('この質問を削除しますか？')) return;
+    var q = ipDb.questions.find(function(q) { return q.id === id; });
+    var cid = q ? q.companyId : null;
+    ipDb.questions = ipDb.questions.filter(function(q) { return q.id !== id; });
+    ipSaveDb();
+    if (cid) { var card = document.getElementById('ip-card-' + id); if (card) card.remove(); ipUpdateProgress(cid); }
+    ipRenderChips();
+  }
+
+  function ipEnsureStandardQuestions(cid) {
+    if (ipGetQsByType(cid, 'standard').length) return;
+    IP_STANDARD_QUESTIONS.forEach(function(sq) {
+      ipDb.questions.push({ id: ipGenId('q'), companyId: cid, type: 'standard', category: sq.category, question: sq.question, answer: '', aiFeedback: '', ready: false, createdAt: new Date().toISOString() });
+    });
+    ipSaveDb();
+  }
+
+  // ── 企業 CRUD ──
+  function ipOpenAddCompany() {
+    document.getElementById('ip-cm-title').textContent = 'テーマを追加する';
+    ['ip-cm-id','ip-cm-name','ip-cm-industry','ip-cm-position'].forEach(function(id) { document.getElementById(id).value = ''; });
+    document.getElementById('ip-cm-status').value = '';
+    document.getElementById('ip-cm-error').textContent = '';
+    document.getElementById('ip-company-modal').classList.add('open');
+  }
+
+  function ipOpenEditCompany(id) {
+    var c = ipDb.companies.find(function(c) { return c.id === id; });
+    if (!c) return;
+    document.getElementById('ip-cm-title').textContent = 'テーマを編集する';
+    document.getElementById('ip-cm-id').value       = c.id;
+    document.getElementById('ip-cm-name').value     = c.name     || '';
+    document.getElementById('ip-cm-industry').value = c.industry || '';
+    document.getElementById('ip-cm-position').value = c.position || '';
+    document.getElementById('ip-cm-status').value   = c.status   || '';
+    document.getElementById('ip-cm-error').textContent = '';
+    document.getElementById('ip-company-modal').classList.add('open');
+  }
+
+  function ipCloseCompanyModal() { document.getElementById('ip-company-modal').classList.remove('open'); }
+
+  function ipSaveCompany() {
+    var name = document.getElementById('ip-cm-name').value.trim();
+    if (!name) { document.getElementById('ip-cm-error').textContent = 'テーマ名を入力してください。'; return; }
+    var id = document.getElementById('ip-cm-id').value;
+    if (id) {
+      var c = ipDb.companies.find(function(c) { return c.id === id; });
+      if (c) { c.name = name; c.industry = document.getElementById('ip-cm-industry').value.trim(); c.position = document.getElementById('ip-cm-position').value.trim(); c.status = document.getElementById('ip-cm-status').value; }
+      ipSaveDb();
+      ipCloseCompanyModal();
+      ipSelectCompany(id);
+    } else {
+      var newId = ipGenId('c');
+      ipDb.companies.push({ id: newId, name: name, industry: document.getElementById('ip-cm-industry').value.trim(), position: document.getElementById('ip-cm-position').value.trim(), status: document.getElementById('ip-cm-status').value, createdAt: new Date().toISOString() });
+      ipEnsureStandardQuestions(newId);
+      ipSaveDb();
+      ipCloseCompanyModal();
+      ipSelectCompany(newId);
+    }
+  }
+
+  function ipDeleteCompany(id) {
+    var c = ipDb.companies.find(function(c) { return c.id === id; });
+    if (!c || !confirm('「' + c.name + '」の全データを削除しますか？')) return;
+    ipDb.companies = ipDb.companies.filter(function(c) { return c.id !== id; });
+    ipDb.questions = ipDb.questions.filter(function(q) { return q.companyId !== id; });
+    ipSaveDb();
+    if (ipCurrentCompanyId === id) ipCurrentCompanyId = ipDb.companies.length ? ipDb.companies[0].id : null;
+    ipRender();
+  }
+
+  // ── カスタム質問 ──
+  function ipOpenAddCq(cid) {
+    document.getElementById('ip-cq-company-id').value = cid;
+    document.getElementById('ip-cq-question').value = '';
+    document.getElementById('ip-cq-error').textContent = '';
+    document.getElementById('ip-cq-modal').classList.add('open');
+  }
+
+  function ipCloseCqModal() { document.getElementById('ip-cq-modal').classList.remove('open'); }
+
+  function ipSaveCustomQuestion() {
+    var question = document.getElementById('ip-cq-question').value.trim();
+    if (!question) { document.getElementById('ip-cq-error').textContent = '質問を入力してください。'; return; }
+    var cid = document.getElementById('ip-cq-company-id').value;
+    ipDb.questions.push({ id: ipGenId('q'), companyId: cid, type: 'custom', category: 'カスタム', question: question, answer: '', aiFeedback: '', ready: false, createdAt: new Date().toISOString() });
+    ipSaveDb();
+    ipCloseCqModal();
+    ipSelectCompany(cid);
+  }
+
+  // ── AI: 深掘り質問生成 ──
+  async function ipGenerateQuestions(cid) {
+    var gkText = document.getElementById('ip-gk-input-' + cid).value.trim();
+    if (!gkText) { document.getElementById('ip-gen-err-' + cid).textContent = 'ガクチカを入力してください。'; return; }
+    document.getElementById('ip-gen-err-' + cid).textContent = '';
+    var c   = ipDb.companies.find(function(c) { return c.id === cid; });
+    var btn = document.getElementById('ip-gen-btn-' + cid);
+    btn.disabled = true; btn.textContent = 'AIが生成中...';
+    try {
+      var data = await callAuthApi('callClaude', {
+        toolType: 'generateInterviewQuestions',
+        input: { gakuchikaText: gkText, company: c ? c.name : '', position: c ? c.position : '' }
+      });
+      var raw = data.result || '';
+      var m = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+      if (m) raw = m[1];
+      var questions;
+      try { questions = JSON.parse(raw.trim()); } catch(e) { throw new Error('AIの返答を解析できませんでした。再試行してください。'); }
+      ipDb.questions = ipDb.questions.filter(function(q) { return !(q.companyId === cid && q.type === 'gakuchika'); });
+      questions.forEach(function(item) {
+        ipDb.questions.push({ id: ipGenId('q'), companyId: cid, type: 'gakuchika', category: item.category || 'ガクチカ深掘り', question: item.question || '', answer: '', aiFeedback: '', ready: false, createdAt: new Date().toISOString() });
+      });
+      ipSaveDb();
+      ipSelectCompany(cid);
+    } catch(e) {
+      document.getElementById('ip-gen-err-' + cid).textContent = '生成に失敗しました: ' + e.message;
+    } finally {
+      btn.disabled = false; btn.textContent = '\u2726 深掘り質問を生成する';
+    }
+  }
+
+  // ── AI: 回答評価 ──
+  async function ipEvaluateAnswer(id) {
+    var q = ipDb.questions.find(function(q) { return q.id === id; });
+    if (!q) return;
+    var answer = document.getElementById('ip-ans-' + id).value.trim();
+    if (!answer) { alert('回答を入力してください。'); return; }
+    var c   = ipDb.companies.find(function(c) { return c.id === q.companyId; });
+    var btn = document.getElementById('ip-ai-btn-' + id);
+    btn.disabled = true; btn.textContent = '評価中...';
+    try {
+      var data = await callAuthApi('callClaude', {
+        toolType: 'evaluateInterviewAnswer',
+        input: { question: q.question, answer: answer, company: c ? c.name : '', position: c ? c.position : '' }
+      });
+      q.answer = answer;
+      q.aiFeedback = data.result || '';
+      ipSaveDb();
+      var fbEl = document.getElementById('ip-fb-' + id);
+      if (fbEl) { fbEl.textContent = q.aiFeedback; fbEl.classList.add('show'); }
+    } catch(e) {
+      alert('AI評価に失敗しました: ' + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = '\u2726 AI添削';
+    }
+  }
+
+  // ===== 自分史作成ツール =====
+  var JS_TARGETS = { elem: 200, junior: 400, high: 600, college: 800 };
+  var JS_MAX = 2500;
+  var JS_IDEAL = 2000;
+  var jsChatHistory = [];
+  var jsCurrentText = '';
+
+  function updateJsCharCount() {
+    // 入力フェーズは特に操作なし（生成後にのみ表示）
+  }
+
+  var jsGkSelected = new Set();
+
+  function toggleJsGkSelector() {
+    var checked = document.getElementById('js-use-gakuchika').checked;
+    var selector = document.getElementById('js-gk-selector');
+    selector.style.display = checked ? 'block' : 'none';
+    if (checked) renderJsGkSelectorList();
+  }
+
+  function renderJsGkSelectorList() {
+    var el = document.getElementById('js-gk-selector-list');
+    if (!gakuchikaEntries.length) {
+      el.innerHTML = '<div style="font-size:0.8rem;color:var(--text-muted);padding:0.3rem;">ガクチカが登録されていません。先にガクチカ保管庫で登録してください。</div>';
+      return;
+    }
+    el.innerHTML = gakuchikaEntries.map(function(g) {
+      return '<label style="display:flex;align-items:center;gap:0.55rem;cursor:pointer;padding:0.3rem 0.2rem;font-size:0.82rem;">' +
+        '<input type="checkbox" ' + (jsGkSelected.has(g.id) ? 'checked' : '') + ' onchange="toggleJsGkItem(\'' + g.id + '\', this)" style="cursor:pointer;">' +
+        '<span>' +
+          '\x3cstrong style="color:var(--navy);">' + (g.title || '（タイトルなし）') + '\x3c/strong>' +
+          (g.category ? '<span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.4rem;">' + g.category + '</span>' : '') +
+        '</span>' +
+      '</label>';
+    }).join('');
+  }
+
+  function toggleJsGkItem(id, checkbox) {
+    if (checkbox.checked) jsGkSelected.add(id);
+    else jsGkSelected.delete(id);
+  }
+
+  function toggleJsPeriod(btn) {
+    var body  = btn.nextElementSibling;
+    var arrow = btn.querySelector('.js-period-arrow');
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+
+  async function submitJibunshi() {
+    var btn = document.getElementById('js-generate-btn');
+    btn.disabled = true; btn.textContent = 'AIが生成中...';
+    document.getElementById('js-output-area').style.display = 'none';
+    try {
+      var useGk = document.getElementById('js-use-gakuchika').checked;
+      var selectedGk = useGk
+        ? gakuchikaEntries.filter(function(g) { return jsGkSelected.size === 0 ? true : jsGkSelected.has(g.id); })
+        : [];
+      var data = await callAuthApi('callClaude', {
+        toolType: 'generateJibunshi',
+        input: {
+          periods: {
+            elementary: document.getElementById('js-elem').value.trim(),
+            junior:     document.getElementById('js-junior').value.trim(),
+            high:       document.getElementById('js-high').value.trim(),
+            college:    document.getElementById('js-college').value.trim(),
+          },
+          traits:    document.getElementById('js-traits').value.trim(),
+          gakuchika: selectedGk,
+        }
+      });
+      jsCurrentText = data.result || '';
+      jsChatHistory = [
+        { role: 'user', content: '自分史を生成してください。' },
+        { role: 'assistant', content: jsCurrentText },
+      ];
+      renderJibunshiOutput(jsCurrentText);
+      document.getElementById('js-chat-msgs').innerHTML = '';
+      document.getElementById('js-output-area').style.display = 'block';
+      document.getElementById('js-total-counter').style.display = 'flex';
+    } catch(e) {
+      alert('生成に失敗しました: ' + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = '\u2726 自分史を生成する';
+    }
+  }
+
+  function renderJibunshiOutput(text) {
+    jsCurrentText = text;
+    document.getElementById('js-output-text').textContent = text;
+
+    var sectionDefs = [
+      { key: 'elem',    label: '小学校以前', target: 200 },
+      { key: 'junior',  label: '中学時代',   target: 400 },
+      { key: 'high',    label: '高校時代',   target: 600 },
+      { key: 'college', label: '大学以降',   target: 800 },
+    ];
+    var chips = sectionDefs.map(function(s) {
+      var re = new RegExp('【' + s.label + '】([\\s\\S]*?)(?=【|$)');
+      var m  = text.match(re);
+      if (!m) return '';
+      var count = m[1].replace(/（\d+字）/g, '').trim().length;
+      var pct   = count / s.target;
+      var cls   = pct < 0.7 ? 'warn' : pct > 1.4 ? 'over' : 'ok';
+      return '<span class="js-sec-chip ' + cls + '">' + s.label + ': ' + count + '字</span>';
+    }).join('');
+    document.getElementById('js-section-counter').innerHTML = chips;
+
+    var totalRaw = text.length;
+    var pct   = Math.min((totalRaw / JS_MAX) * 100, 100);
+    var fill  = document.getElementById('js-bar-fill');
+    fill.style.width = pct + '%';
+    fill.className = 'js-char-bar-fill ' + (totalRaw > JS_MAX ? 'over' : totalRaw >= 1800 ? 'ok' : 'warn');
+    document.getElementById('js-bar-label-text').textContent = totalRaw + '字 / 目標 ' + JS_IDEAL + '字（上限 ' + JS_MAX + '字）';
+
+    document.getElementById('js-total-num').textContent = totalRaw + '字';
+    var statusEl = document.getElementById('js-total-status');
+    if (totalRaw > JS_MAX) {
+      statusEl.textContent = '\u26a0 上限超過 — 削ることを検討してください';
+      statusEl.style.color = 'var(--crimson)';
+    } else if (totalRaw >= 1800) {
+      statusEl.textContent = '\u2713 適切な字数です';
+      statusEl.style.color = '#2d7a3a';
+    } else {
+      statusEl.textContent = '\u25b3 もう少し加筆できます';
+      statusEl.style.color = 'var(--gold)';
+    }
+    document.getElementById('js-total-counter').style.display = 'flex';
+  }
+
+  function copyJibunshi() {
+    navigator.clipboard.writeText(jsCurrentText).then(function() {
+      var btn = document.querySelector('#js-output-area .es-view-copy-btn');
+      var orig = btn.textContent;
+      btn.textContent = 'コピーしました！';
+      setTimeout(function() { btn.textContent = orig; }, 1500);
+    }).catch(function() {});
+  }
+
+  function saveJibunshiToEsBank() {
+    // Redirect to members.html ES bank
+    window.open('members.html#es-bank-section', '_blank');
+    alert('ES保管庫への保存は会員ページから行ってください。自分史のテキストはクリップボードにコピーされます。');
+    navigator.clipboard.writeText(jsCurrentText).catch(function() {});
+  }
+
+  // ── 自分史チャット ──
+  var JS_CHAT_SYSTEM = 'あなたは三井物産などの総合商社の採用を熟知したESコーチです。学生が書いた自分史について、指摘・修正・ブラッシュアップを対話形式でサポートします。修正案を出す際はすぐに使える文章として提示してください。自分史の目標字数は2000字（最大2500字）で、時代比率は小学校以前10%/中学20%/高校30%/大学40%です。日本語で回答してください。';
+
+  function jsHandleChatKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendJsChat(); }
+  }
+
+  function appendJsChatBubble(role, text) {
+    var el = document.getElementById('js-chat-msgs');
+    var div = document.createElement('div');
+    div.className = 'es-chat-bubble ' + (role === 'user' ? 'user' : 'ai');
+    div.textContent = text;
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  async function sendJsChat() {
+    var input = document.getElementById('js-chat-input');
+    var msg   = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    appendJsChatBubble('user', msg);
+    jsChatHistory.push({ role: 'user', content: msg });
+
+    var sendBtn = document.querySelector('#js-chat-area .es-chat-send');
+    sendBtn.disabled = true;
+    try {
+      var systemWithText = JS_CHAT_SYSTEM + '\n\n現在の自分史:\n' + jsCurrentText;
+      var data = await callAuthApi('callClaude', {
+        toolType: 'esChatMessage',
+        input: { messages: jsChatHistory, systemPrompt: systemWithText }
+      });
+      var reply = data.result || '';
+      jsChatHistory.push({ role: 'assistant', content: reply });
+      appendJsChatBubble('ai', reply);
+
+      if (reply.includes('【小学校以前】') || reply.includes('【中学時代】') || reply.includes('【高校時代】') || reply.includes('【大学以降】')) {
+        renderJibunshiOutput(reply);
+      }
+    } catch(e) {
+      appendJsChatBubble('ai', '\u26a0 エラー: ' + e.message);
+    } finally {
+      sendBtn.disabled = false;
+    }
+  }
+
+  // ===== 初期化 =====
+  var currentMember = KeioNaviAuth.getCurrentUser();
+  if (currentMember) showMembers(currentMember);
+  else updateAuthGate();
+</script>
+<style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
+<nav class="bottom-tab-bar">
+  <a href="account.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>マイページ</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>ES</span></a>
+  <a href="interview-page.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="resources.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>資料</span></a>
+  <a href="glossary.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>用語集</span></a>
+</nav>
+</body>
+</html>

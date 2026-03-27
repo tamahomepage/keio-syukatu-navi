@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>新入生の方へ | 慶應就活ナビ</title>
 <meta name="description" content="慶應就活ナビへようこそ。就活を、ひとりで戦わなくていい。新入生向けの就活支援コミュニティ紹介ページです。">
+
+<!-- OGP -->
+<meta property="og:title" content="新入生の方へ | 慶應就活ナビ">
+<meta property="og:description" content="就活は、今から始まっている。慶應生のための就活支援コミュニティへようこそ。">
+<meta property="og:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+<meta property="og:url" content="https://naotama1123.github.io/keio-syukatu-navi/orientation.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="慶應就活ナビ">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="新入生の方へ | 慶應就活ナビ">
+<meta name="twitter:description" content="就活は、今から始まっている。慶應生のための就活支援コミュニティへようこそ。">
+<meta name="twitter:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
@@ -163,11 +177,81 @@
   footer a:hover { color: var(--gold); }
   .footer-note { font-size: 0.65rem; color: rgba(255,255,255,0.2); margin-top: 1rem; }
 
+  /* HAMBURGER */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: rgba(255,255,255,0.8);
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: rgba(10,26,62,0.98);
+    backdrop-filter: blur(12px);
+    z-index: 99;
+    flex-direction: column;
+    padding: 1.5rem 2rem 2rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--gold-light, #e8c96c); }
+  .mobile-menu-cta {
+    margin-top: 1rem;
+    background: var(--crimson) !important;
+    color: white !important;
+    text-align: center;
+    padding: 0.9rem !important;
+    border: none !important;
+    font-weight: 700;
+  }
+
   @media (max-width: 768px) {
     .why-grid, .get-grid, .voices-grid, .events-grid { grid-template-columns: 1fr; }
     .section { padding: 4rem 1.5rem; }
+    .hamburger { display: flex; }
+    .nav-links { display: none; }
   }
+
+  /* ===== SCROLL REVEAL ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 </style>
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "YOUR_PROJECT_ID");
+</script>
 </head>
 <body>
 
@@ -181,13 +265,25 @@
     <li><a href="#faq">FAQ</a></li>
     <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="nav-cta" target="_blank">参加する</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#why" onclick="closeMenu()">なぜ今？</a>
+  <a href="#get" onclick="closeMenu()">できること</a>
+  <a href="#events" onclick="closeMenu()">イベント</a>
+  <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="index.html" onclick="closeMenu()">トップページへ戻る</a>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="mobile-menu-cta" target="_blank">参加する</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-inner">
-    <div class="hero-badge">2025年度 新入生の方へ</div>
+    <div class="hero-badge">2026年度 新入生の方へ</div>
     <h1 class="hero-title">
       就活は、<br><span>今から</span>始まっている。
     </h1>
@@ -211,21 +307,21 @@
 <!-- WHY NOW -->
 <section class="section why-section" id="why">
   <div class="section-inner">
-    <div class="section-label">WHY NOW</div>
-    <h2 class="section-title">1年生から入る理由</h2>
-    <p class="section-desc">就活は「準備した人が勝つ」ゲームです。早く始めるほど、選択肢が広がります。</p>
+    <div class="section-label reveal">WHY NOW</div>
+    <h2 class="section-title reveal">1年生から入る理由</h2>
+    <p class="section-desc reveal">就活は「準備した人が勝つ」ゲームです。早く始めるほど、選択肢が広がります。</p>
     <div class="why-grid">
-      <div class="why-card">
+      <div class="why-card reveal">
         <div class="why-num">01</div>
         <div class="why-title">業界研究は今から</div>
         <div class="why-desc">「どんな仕事があるのか」を知らないまま3年生になる人がほとんど。企業分析ノートを今から読んでおくだけで、視野が広がります。</div>
       </div>
-      <div class="why-card">
+      <div class="why-card reveal" style="transition-delay:0.1s;">
         <div class="why-num">02</div>
         <div class="why-title">情報格差が存在する</div>
         <div class="why-desc">就活の情報は人脈で流通します。早くから動いている人は、選考情報・OB紹介・内定者の体験談を持っています。このコミュニティはその格差を埋めます。</div>
       </div>
-      <div class="why-card">
+      <div class="why-card reveal" style="transition-delay:0.2s;">
         <div class="why-num">03</div>
         <div class="why-title">仲間が財産になる</div>
         <div class="why-desc">同じ目標を持つ仲間と早くから繋がっておくことで、情報共有だけでなく、ES添削・面接練習・メンタルサポートができる関係が生まれます。</div>
@@ -237,8 +333,8 @@
 <!-- WHAT YOU GET -->
 <section class="section get-section" id="get">
   <div class="section-inner">
-    <div class="section-label">WHAT YOU GET</div>
-    <h2 class="section-title">参加すると使えるもの</h2>
+    <div class="section-label reveal">WHAT YOU GET</div>
+    <h2 class="section-title reveal">参加すると使えるもの</h2>
     <p class="section-desc">アカウント登録後に使える会員ページには、就活を有利に進めるためのコンテンツが揃っています。</p>
     <div class="get-grid">
       <div class="get-card">
@@ -267,6 +363,15 @@
         <div>
           <div class="get-title">企業研究クイズ</div>
           <div class="get-desc">蓄積された企業ノートをもとに、どの企業かを当てる4択クイズ。楽しみながら業界・企業知識が身につきます。</div>
+        </div>
+      </div>
+      <div class="get-card">
+        <div class="get-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div>
+          <div class="get-title">過去問ライブラリ</div>
+          <div class="get-desc">メンバーが持ち寄った慶應の講義の過去問・試験情報を学部・科目別に検索できます。テスト対策も仲間と一緒に。</div>
         </div>
       </div>
     </div>
@@ -331,14 +436,13 @@
   <a href="index.html">トップページ</a>
   <a href="account.html">ログイン / アカウント</a>
   <a href="index.html#contact">お問い合わせ</a>
-  <div class="footer-note">© 慶應就活ナビ — 大学公式ではありません。有志の学生による非営利団体です。</div>
+  <div class="footer-note">© 2026 慶應就活ナビ — 大学公式ではありません。有志の学生による非営利団体です。</div>
 </footer>
 
-<script src="auth.js"></script>
 <script>
 
   // ===== 新歓イベント スプシ連携（GASプロキシ経由）=====
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbzyBJqVPgGXxHX7_RFuN4MyyOen-viaxX5hE36WLibZ0hVL6-H9hlJXQSAdi-XsRf1k6A/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
 
   async function loadOrientationEvents() {
     const el = document.getElementById('orientation-events');
@@ -375,9 +479,25 @@
   }
 
   loadOrientationEvents();
+
+  // スクロールアニメーション
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revealObs.observe(el));
+
   function toggleFaq(el) {
     const item = el.parentElement;
     item.classList.toggle('open');
+  }
+  function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('open');
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('mobile-menu').classList.remove('open');
   }
 </script>
 </body>

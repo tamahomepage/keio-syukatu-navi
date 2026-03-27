@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>就活用語集 ｜ 慶應就活ナビ</title>
+<meta name="description" content="就活でよく使われる用語をわかりやすく解説。ES、GD、OB訪問、ケース面接など、就活初心者でも安心の用語辞典です。">
+
+<!-- OGP -->
+<meta property="og:title" content="就活用語集 | 慶應就活ナビ">
+<meta property="og:description" content="就活でよく使われる用語をわかりやすく解説。就活初心者でも安心の用語辞典。">
+<meta property="og:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+<meta property="og:url" content="https://naotama1123.github.io/keio-syukatu-navi/glossary.html">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.8rem 5vw; background: rgba(10,26,62,0.97);
+    backdrop-filter: blur(10px); border-bottom: 1px solid rgba(201,168,76,0.18);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--gold-light); text-decoration: none; letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .nav-link { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.75rem; padding: 0.4rem 0.8rem; border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s; }
+  .nav-link:hover { color: var(--gold-light); border-color: rgba(201,168,76,0.35); }
+  .nav-link.active { color: var(--gold-light); border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.08); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 5.5rem 1.2rem 4rem; }
+
+  .page-header { margin-bottom: 2rem; text-align: center; }
+  .page-label { font-size: 0.7rem; letter-spacing: 0.15em; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+  .page-title { font-family: 'Noto Serif JP', serif; font-size: 1.6rem; font-weight: 700; color: var(--navy); margin-top: 0.3rem; }
+  .page-desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.6rem; line-height: 1.7; }
+
+  .search-bar {
+    display: flex; gap: 0.5rem; margin-bottom: 1.5rem; position: sticky; top: 3.5rem; z-index: 50;
+    background: var(--cream); padding: 0.8rem 0;
+  }
+  .search-input {
+    flex: 1; padding: 0.7rem 1rem; border: 1.5px solid rgba(10,26,62,0.15); font-size: 0.88rem;
+    font-family: 'Noto Sans JP', sans-serif; background: white; transition: border-color 0.2s;
+  }
+  .search-input:focus { outline: none; border-color: var(--gold); }
+  .search-count { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+  .category-tabs {
+    display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+  }
+  .cat-tab {
+    padding: 0.35rem 0.8rem; font-size: 0.75rem; border: 1px solid rgba(10,26,62,0.15);
+    background: white; color: var(--text-muted); cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+    transition: all 0.2s; font-weight: 500;
+  }
+  .cat-tab:hover { border-color: var(--navy); color: var(--navy); }
+  .cat-tab.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+  .glossary-group { margin-bottom: 2rem; }
+  .group-title {
+    font-family: 'Noto Serif JP', serif; font-size: 1.05rem; font-weight: 700; color: var(--navy);
+    border-left: 4px solid var(--gold); padding-left: 0.8rem; margin-bottom: 1rem;
+  }
+
+  .term-card {
+    background: var(--white); border: 1px solid rgba(10,26,62,0.08); margin-bottom: 0.6rem;
+    transition: border-color 0.2s;
+  }
+  .term-card:hover { border-color: rgba(201,168,76,0.4); }
+  .term-header {
+    padding: 0.9rem 1.2rem; cursor: pointer; display: flex; align-items: center;
+    justify-content: space-between; gap: 0.8rem;
+  }
+  .term-name { font-weight: 700; font-size: 0.9rem; color: var(--navy); }
+  .term-reading { font-size: 0.72rem; color: var(--text-muted); margin-left: 0.5rem; }
+  .term-cat-badge {
+    font-size: 0.62rem; padding: 0.15rem 0.5rem; border: 1px solid rgba(10,26,62,0.12);
+    color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; white-space: nowrap;
+  }
+  .term-arrow { font-size: 0.8rem; color: rgba(10,26,62,0.3); transition: transform 0.2s; flex-shrink: 0; }
+  .term-card.open .term-arrow { transform: rotate(90deg); }
+  .term-body {
+    display: none; padding: 0 1.2rem 1rem; font-size: 0.84rem; line-height: 1.9; color: var(--text);
+  }
+  .term-card.open .term-body { display: block; }
+  .term-body .example {
+    margin-top: 0.6rem; padding: 0.6rem 0.8rem; background: var(--gray);
+    font-size: 0.8rem; color: var(--text-muted); border-left: 3px solid var(--gold);
+  }
+  .term-body .related {
+    margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .term-body .related a {
+    color: var(--crimson); text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+  }
+
+  .no-results { text-align: center; padding: 3rem 1rem; font-size: 0.88rem; color: var(--text-muted); }
+
+  footer {
+    text-align: center; padding: 2rem 1rem; font-size: 0.72rem; color: var(--text-muted);
+    border-top: 1px solid rgba(10,26,62,0.08); margin-top: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    main { padding: 5rem 0.8rem 3rem; }
+    .search-bar { top: 3.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Keio Navi</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">トップ</a>
+    <a href="members.html" class="nav-link">会員ページ</a>
+    <a href="glossary.html" class="nav-link active">用語集</a>
+    <a href="account.html" class="nav-link">マイページ</a>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div class="page-label">GLOSSARY</div>
+    <div class="page-title">就活用語集</div>
+    <div class="page-desc">就活でよく使われる用語をカテゴリ別にわかりやすく解説しています。<br>気になる用語をクリックすると詳しい説明が表示されます。</div>
+  </div>
+
+  <div class="search-bar">
+    <input class="search-input" type="text" id="search" placeholder="用語を検索..." oninput="filterTerms()">
+  </div>
+
+  <div class="category-tabs" id="category-tabs"></div>
+  <div class="search-count" id="search-count"></div>
+  <div id="glossary-content"></div>
+</main>
+
+<footer>慶應就活ナビ &copy; 2026</footer>
+
+<script>
+const GLOSSARY = [
+  // ── 選考プロセス ──
+  { term: 'ES', reading: 'イーエス', fullName: 'エントリーシート', category: '選考プロセス',
+    desc: '企業に応募する際に提出する書類。志望動機、自己PR、学生時代に力を入れたこと（ガクチカ）などを記入する。企業ごとにフォーマットや設問が異なる。',
+    example: '「三菱商事のESの設問は "あなたが信念を持って成し遂げたこと" です。」',
+    related: ['ガクチカ', '自己PR', 'OpenES'] },
+  { term: 'OpenES', reading: 'オープンイーエス', category: '選考プロセス',
+    desc: 'リクナビが提供する共通ESフォーマット。一度作成すれば複数の企業に提出できる。自己PR（400字）と学生時代に最も打ち込んだこと（400字）が基本項目。',
+    related: ['ES'] },
+  { term: 'SPI', reading: 'エスピーアイ', category: '選考プロセス',
+    desc: 'リクルートが開発した適性検査。言語（国語）・非言語（数学）・性格検査の3パートで構成される。多くの企業がES提出後の選考で課す。Webテスト形式とテストセンター形式がある。',
+    example: '「SPIの非言語は推論と確率が頻出です。」',
+    related: ['Webテスト', '玉手箱', 'テストセンター'] },
+  { term: 'Webテスト', reading: 'ウェブテスト', category: '選考プロセス',
+    desc: '自宅PCで受験する適性検査の総称。SPI、玉手箱、TG-WEBなどの種類がある。監視なしのため不正対策で制限時間が厳しい。',
+    related: ['SPI', '玉手箱'] },
+  { term: '玉手箱', reading: 'たまてばこ', category: '選考プロセス',
+    desc: '日本SHL社が提供するWebテスト。計数（図表の読み取り）、言語（長文読解）、英語、性格検査で構成される。金融・コンサル・商社で多く使われる。SPIより時間制限が厳しい傾向。',
+    related: ['SPI', 'Webテスト'] },
+  { term: 'テストセンター', reading: 'テストセンター', category: '選考プロセス',
+    desc: 'SPIを専用会場で受験する形式。本人確認があるため信頼性が高い。過去の受験結果を使い回せる（結果送信）。問題の正答率に応じて難易度が変動する。',
+    related: ['SPI'] },
+  { term: 'GD', reading: 'ジーディー', fullName: 'グループディスカッション', category: '選考プロセス',
+    desc: '4〜8人程度のグループでテーマについて議論し、結論を出す選考形式。発言力だけでなく、傾聴力・論理的思考力・チームワークが評価される。',
+    example: '「GDでは "まず時間配分を決めましょう" と提案するとスムーズです。」',
+    related: ['ケース面接'] },
+  { term: 'ケース面接', reading: 'ケースめんせつ', category: '選考プロセス',
+    desc: 'コンサル業界で頻出の面接形式。「〇〇の売上を2倍にするには？」のようなビジネス課題を与えられ、論理的に回答する。フェルミ推定と組み合わせて出題されることも多い。',
+    example: '「マッキンゼーのケース面接ではフレームワークの暗記よりも思考プロセスが見られます。」',
+    related: ['フェルミ推定', 'GD'] },
+  { term: 'フェルミ推定', reading: 'フェルミすいてい', category: '選考プロセス',
+    desc: '「日本にピアノ調律師は何人いるか？」のような、正確な数値がわからない問題を論理的に概算する手法。コンサル・外資系企業の面接で出題される。',
+    related: ['ケース面接'] },
+  { term: '最終面接', reading: 'さいしゅうめんせつ', category: '選考プロセス',
+    desc: '選考の最終段階の面接。役員や社長が面接官を務めることが多い。「なぜウチなのか」「入社後に何をしたいか」といった志望度を深く問われる。最終でも落ちることはある。',
+    related: ['逆質問', '内定'] },
+  { term: '逆質問', reading: 'ぎゃくしつもん', category: '選考プロセス',
+    desc: '面接の最後に「何か質問はありますか？」と聞かれた際に学生側が面接官に質問すること。企業への関心度や理解度を示すチャンス。「特にありません」はNG。',
+    example: '「御社で活躍している若手に共通する資質は何ですか？」' },
+  { term: '圧迫面接', reading: 'あっぱくめんせつ', category: '選考プロセス',
+    desc: 'わざと否定的な反応や厳しい質問をして、ストレス耐性や対応力を見る面接手法。近年は減少傾向だが、一部の企業で行われる。冷静に論理的に返すことが重要。' },
+  { term: 'リクルーター面談', reading: 'リクルーターめんだん', category: '選考プロセス',
+    desc: '企業の若手社員（リクルーター）がカフェ等でカジュアルに面談する形式。実質的な選考の一部であることが多い。銀行・保険・インフラ系に多い。',
+    example: '「メガバンクはリクルーター面談が3回以上あることも。」' },
+
+  // ── 自己分析・準備 ──
+  { term: 'ガクチカ', reading: 'ガクチカ', fullName: '学生時代に力を入れたこと', category: '自己分析・準備',
+    desc: 'ESや面接で最も頻出のテーマ。サークル・バイト・ゼミ・留学などの経験をSTAR法（状況・課題・行動・結果）で整理するとわかりやすい。複数のエピソードを用意しておくとよい。',
+    example: '「ガクチカは "何をしたか" より "なぜそうしたか・何を学んだか" が大事。」',
+    related: ['自己PR', 'STAR法', 'ES'] },
+  { term: '自己PR', reading: 'じこピーアール', category: '自己分析・準備',
+    desc: '自分の強みや長所を企業にアピールすること。ESでは400字程度、面接では1分程度で伝えるのが一般的。「強み → 根拠となるエピソード → 入社後の活かし方」の構成が基本。',
+    related: ['ガクチカ', 'ES'] },
+  { term: 'STAR法', reading: 'スターほう', category: '自己分析・準備',
+    desc: 'エピソードを構造的に伝えるフレームワーク。Situation（状況）、Task（課題）、Action（行動）、Result（結果）の頭文字。ガクチカや自己PRの整理に使う。',
+    related: ['ガクチカ'] },
+  { term: '自己分析', reading: 'じこぶんせき', category: '自己分析・準備',
+    desc: '自分の価値観・強み・弱み・やりたいことを整理するプロセス。就活の最初のステップとされる。モチベーショングラフ、自分史、他己分析などの手法がある。',
+    related: ['他己分析'] },
+  { term: '他己分析', reading: 'たこぶんせき', category: '自己分析・準備',
+    desc: '友人・家族・先輩などに自分の印象や強み弱みを聞くこと。自分では気づかない特徴を発見できる。自己分析と組み合わせると効果的。',
+    related: ['自己分析'] },
+  { term: '業界研究', reading: 'ぎょうかいけんきゅう', category: '自己分析・準備',
+    desc: '各業界の特徴・ビジネスモデル・市場規模・将来性を調べること。志望動機の根拠を作るために不可欠。業界地図やIR資料が情報源となる。',
+    related: ['企業研究', 'IR'] },
+  { term: '企業研究', reading: 'きぎょうけんきゅう', category: '自己分析・準備',
+    desc: '特定の企業について詳しく調べること。事業内容・強み・社風・選考フロー・求める人材像などを把握する。企業HP、IR資料、OB訪問、説明会が情報源。',
+    related: ['業界研究', 'OB訪問', 'IR'] },
+
+  // ── 企業・採用用語 ──
+  { term: '内定', reading: 'ないてい', category: '企業・採用用語',
+    desc: '企業から正式に採用が決まること。内定承諾書に署名すると「内定承諾」となる。法的には労働契約の予約にあたり、正当な理由なく取り消すことは企業側にはできない。',
+    related: ['内々定', '承諾期限'] },
+  { term: '内々定', reading: 'ないないてい', category: '企業・採用用語',
+    desc: '正式な内定（10月1日以降）の前に、実質的な採用決定を口頭で伝えること。法的拘束力は内定より弱い。6月〜9月頃に出ることが多い。',
+    related: ['内定'] },
+  { term: '承諾期限', reading: 'しょうだくきげん', category: '企業・採用用語',
+    desc: '内定や内々定を承諾するかどうかの回答期限。「1週間以内」と言われることが多い。他社の選考と並行している場合は正直に相談するのがベター。' },
+  { term: 'OB訪問', reading: 'オービーほうもん', category: '企業・採用用語',
+    desc: '企業で働いているOB・OG（卒業生）に話を聞くこと。リアルな社風や仕事内容を知れる。選考に直結する場合もある。ビズリーチ・キャンパス等のアプリで依頼可能。',
+    example: '「総合商社はOB訪問の回数を見ている企業もあります。」',
+    related: ['企業研究'] },
+  { term: 'IR', reading: 'アイアール', fullName: 'Investor Relations', category: '企業・採用用語',
+    desc: '企業が投資家向けに公開している情報。有価証券報告書、決算短信、中期経営計画などが含まれる。企業研究で売上・利益・成長戦略を把握するのに使う。',
+    related: ['企業研究'] },
+  { term: 'ジョブ', reading: 'ジョブ', category: '企業・採用用語',
+    desc: '外資系企業やコンサルの選考で行われる数日間の実務体験型選考。少人数のチームで実際のプロジェクトに近い課題に取り組む。ここでの評価が内定に直結する。',
+    related: ['インターン'] },
+  { term: 'インターン', reading: 'インターン', fullName: 'インターンシップ', category: '企業・採用用語',
+    desc: '企業での就業体験。1dayから数週間まで期間はさまざま。近年はインターン参加が本選考の優遇（早期選考ルート）につながるケースが増えている。',
+    example: '「サマーインターンの参加者は本選考で1次面接免除になる企業もあります。」',
+    related: ['ジョブ', '早期選考'] },
+  { term: '早期選考', reading: 'そうきせんこう', category: '企業・採用用語',
+    desc: '通常の選考スケジュールより前に行われる選考。インターン参加者やリクルーター経由で案内されることが多い。一般ルートより通過率が高い傾向。',
+    related: ['インターン'] },
+  { term: '総合職', reading: 'そうごうしょく', category: '企業・採用用語',
+    desc: '将来の幹部候補として、転勤や部署異動を前提に幅広い業務を経験するコース。日系大手の主流。対義語は「一般職」「エリア総合職」。' },
+  { term: 'BtoB', reading: 'ビートゥービー', fullName: 'Business to Business', category: '企業・採用用語',
+    desc: '企業向けにサービスや製品を提供するビジネスモデル。素材メーカーや商社が典型例。消費者の知名度は低いが、業界シェアが高い優良企業が多い。',
+    related: ['BtoC'] },
+  { term: 'BtoC', reading: 'ビートゥーシー', fullName: 'Business to Consumer', category: '企業・採用用語',
+    desc: '消費者向けにサービスや製品を提供するビジネスモデル。食品メーカー、小売、ゲーム会社など。ブランド認知が高く応募が集中しやすい。',
+    related: ['BtoB'] },
+
+  // ── 就活サービス・制度 ──
+  { term: 'マイナビ', reading: 'マイナビ', category: '就活サービス・制度',
+    desc: '就活情報サイト大手。企業検索、説明会予約、ESのテンプレートなどが利用できる。合同企業説明会も主催している。',
+    related: ['リクナビ'] },
+  { term: 'リクナビ', reading: 'リクナビ', category: '就活サービス・制度',
+    desc: 'リクルートが運営する就活情報サイト。OpenESの機能が特徴。SPIの模擬テストも受験可能。',
+    related: ['マイナビ', 'OpenES', 'SPI'] },
+  { term: 'ONE CAREER', reading: 'ワンキャリア', category: '就活サービス・制度',
+    desc: '選考体験記や企業の口コミが豊富な就活サイト。実際に選考を受けた学生の体験談が読めるのが最大の特徴。上位校の学生の利用率が高い。' },
+  { term: '就活エージェント', reading: 'しゅうかつエージェント', category: '就活サービス・制度',
+    desc: 'キャリアアドバイザーが面談を通じて企業を紹介してくれるサービス。ES添削や面接練習も受けられる。内定承諾で企業から報酬を得るモデルのため、学生は無料で利用可能。' },
+  { term: '合説', reading: 'ごうせつ', fullName: '合同企業説明会', category: '就活サービス・制度',
+    desc: '複数の企業が一堂に会して説明会を行うイベント。業界研究の入口として有効。マイナビやリクナビ主催の大規模なものから、大学主催の小規模なものまである。' },
+
+  // ── ビジネス・マナー ──
+  { term: 'お祈りメール', reading: 'おいのりメール', category: 'ビジネス・マナー',
+    desc: '不合格通知メールの俗称。「今後のご活躍をお祈り申し上げます」という定型文で締められることから。「祈られた」「お祈り食らった」などと使う。',
+    example: '「第一志望からお祈りメール来た...切り替えよう。」' },
+  { term: 'NNT', reading: 'エヌエヌティー', fullName: '無い内定', category: 'ビジネス・マナー',
+    desc: '内定がまだ1社もない状態のネットスラング。「No Naitei」の略。10月以降にこの状態だと焦りを感じる学生が多い。',
+    related: ['内定'] },
+  { term: 'ガクチカ難民', reading: 'ガクチカなんみん', category: 'ビジネス・マナー',
+    desc: 'ガクチカとして書けるエピソードが見つからない状態。コロナ禍以降、サークルやバイトの経験が限られた学生に増えた。日常の小さな経験でも掘り下げれば十分使える。',
+    related: ['ガクチカ'] },
+  { term: 'サイレント', reading: 'サイレント', fullName: 'サイレントお祈り', category: 'ビジネス・マナー',
+    desc: '選考の合否連絡が来ない状態。不合格の場合に通知をしない企業がある。2週間以上連絡がなければ不合格の可能性が高い。' },
+  { term: 'クールビズ', reading: 'クールビズ', category: 'ビジネス・マナー',
+    desc: '夏季の軽装勤務。面接で「クールビズでお越しください」と言われた場合、ジャケットなし・ノーネクタイでOK。ただし初回面接では念のためジャケットを持参する学生も多い。' },
+  { term: '私服面接', reading: 'しふくめんせつ', category: 'ビジネス・マナー',
+    desc: '「私服でお越しください」と指定される面接。本当に私服（オフィスカジュアル）で行くべき。スーツで行くと「指示を読んでいない」と思われるリスクがある。',
+    example: '「ベンチャーの私服面接はきれいめカジュアルが無難です。」' }
+];
+
+// カテゴリ一覧を生成
+const categories = [...new Set(GLOSSARY.map(t => t.category))];
+let activeCategory = '';
+
+function renderCategoryTabs() {
+  const el = document.getElementById('category-tabs');
+  el.innerHTML = `<button class="cat-tab ${!activeCategory ? 'active' : ''}" onclick="setCategory('')">すべて</button>` +
+    categories.map(c =>
+      `<button class="cat-tab ${activeCategory === c ? 'active' : ''}" onclick="setCategory('${c}')">${c}</button>`
+    ).join('');
+}
+
+function setCategory(cat) {
+  activeCategory = cat;
+  renderCategoryTabs();
+  filterTerms();
+}
+
+function filterTerms() {
+  const query = document.getElementById('search').value.trim().toLowerCase();
+  const filtered = GLOSSARY.filter(t => {
+    if (activeCategory && t.category !== activeCategory) return false;
+    if (!query) return true;
+    return t.term.toLowerCase().includes(query)
+      || (t.reading && t.reading.toLowerCase().includes(query))
+      || (t.fullName && t.fullName.toLowerCase().includes(query))
+      || t.desc.toLowerCase().includes(query);
+  });
+
+  document.getElementById('search-count').textContent = `${filtered.length}件の用語`;
+  renderGlossary(filtered);
+}
+
+function renderGlossary(terms) {
+  const el = document.getElementById('glossary-content');
+  if (!terms.length) {
+    el.innerHTML = '<div class="no-results">該当する用語が見つかりませんでした。</div>';
+    return;
+  }
+
+  // カテゴリ別にグループ化
+  const groups = {};
+  terms.forEach(t => {
+    if (!groups[t.category]) groups[t.category] = [];
+    groups[t.category].push(t);
+  });
+
+  el.innerHTML = Object.keys(groups).map(cat => {
+    const items = groups[cat].map(t => {
+      const fullNameStr = t.fullName ? `（${t.fullName}）` : '';
+      const relatedHtml = t.related && t.related.length
+        ? `<div class="related">関連: ${t.related.map(r => `<a onclick="jumpToTerm('${r}')">${r}</a>`).join('、')}</div>`
+        : '';
+      const exampleHtml = t.example
+        ? `<div class="example">${t.example}</div>` : '';
+
+      return `<div class="term-card" id="term-${encodeURIComponent(t.term)}">
+        <div class="term-header" onclick="this.parentElement.classList.toggle('open')">
+          <div>
+            <span class="term-name">${t.term}</span>
+            <span class="term-reading">${t.reading || ''}${fullNameStr}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <span class="term-cat-badge">${t.category}</span>
+            <span class="term-arrow">&#9654;</span>
+          </div>
+        </div>
+        <div class="term-body">
+          ${t.desc}
+          ${exampleHtml}
+          ${relatedHtml}
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="glossary-group">
+      <div class="group-title">${cat}</div>
+      ${items}
+    </div>`;
+  }).join('');
+}
+
+function jumpToTerm(termName) {
+  // 検索をリセットしてすべて表示
+  document.getElementById('search').value = '';
+  activeCategory = '';
+  renderCategoryTabs();
+  filterTerms();
+
+  // スクロール＆開く
+  setTimeout(() => {
+    const el = document.getElementById('term-' + encodeURIComponent(termName));
+    if (el) {
+      el.classList.add('open');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.style.borderColor = 'var(--gold)';
+      setTimeout(() => { el.style.borderColor = ''; }, 2000);
+    }
+  }, 100);
+}
+
+// 初期表示
+renderCategoryTabs();
+filterTerms();
+</script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>リソース ｜ 慶應就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 68px;
+    background: rgba(10,26,62,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold-light); text-decoration: none; }
+  .nav-back { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold-light); }
+  .nav-member-badge {
+    font-size: 0.68rem; background: rgba(201,168,76,0.15); color: var(--gold);
+    padding: 0.2rem 0.7rem; border: 1px solid rgba(201,168,76,0.3); letter-spacing: 0.1em;
+  }
+  .nav-link-active {
+    color: var(--gold-light) !important; font-weight: 700;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.15rem;
+  }
+
+  /* ===== PASSWORD SCREEN ===== */
+  #password-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--navy); padding: 2rem;
+  }
+  .pw-box {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.2);
+    padding: 3rem 2.5rem; max-width: 420px; width: 100%; text-align: center;
+    position: relative;
+  }
+  .pw-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--crimson), var(--gold));
+  }
+  .pw-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .pw-title { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.5rem; }
+  .pw-sub { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; line-height: 1.8; }
+  .pw-btn {
+    display: block;
+    width: 100%; padding: 0.9rem; background: var(--navy);
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold-light);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem;
+    font-weight: 500; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .pw-btn:hover { background: rgba(201,168,76,0.1); }
+  .gate-actions { display: grid; gap: 0.75rem; }
+  .pw-link-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; color: rgba(255,255,255,0.72);
+    text-decoration: none; padding: 0.85rem 1rem;
+    border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s;
+  }
+  .pw-link-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+
+  /* ===== MEMBERS CONTENT ===== */
+  #members-content { display: none; padding-top: 68px; }
+
+  /* ===== HERO ===== */
+  .members-hero {
+    background: var(--navy); padding: 60px 5vw 50px;
+    border-bottom: 1px solid rgba(201,168,76,0.15); position: relative; overflow: hidden;
+  }
+  .members-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 40% 80% at 90% 50%, rgba(192,0,26,0.1) 0%, transparent 70%);
+  }
+  .members-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+  .members-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1px solid rgba(201,168,76,0.4); padding: 0.3rem 0.9rem;
+    font-size: 0.68rem; color: var(--gold); letter-spacing: 0.15em; font-weight: 600;
+    margin-bottom: 1.2rem;
+  }
+  .members-hero h1 { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; color: var(--white); margin-bottom: 0.5rem; }
+  .members-hero p { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+
+  /* ===== MAIN LAYOUT ===== */
+  .members-main { max-width: 1200px; margin: 0 auto; padding: 3rem 5vw 6rem; }
+
+  /* ===== SECTION ===== */
+  .m-section { margin-bottom: 4rem; }
+  .m-section-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(10,26,62,0.1);
+  }
+  .m-section-icon {
+    width: 36px; height: 36px; background: var(--navy);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .m-section-icon svg { width: 16px; height: 16px; }
+  .m-section-title { font-family: 'Noto Serif JP', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
+  .m-section-label { font-size: 0.68rem; color: var(--crimson); letter-spacing: 0.15em; font-weight: 700; }
+
+  /* ===== EVENTS PRIORITY ===== */
+  .priority-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
+  .priority-row {
+    display: grid; grid-template-columns: 90px 1fr auto;
+    align-items: center; gap: 1.5rem; padding: 1.2rem 1.5rem;
+    background: var(--white); border-left: 3px solid var(--gold);
+    transition: background 0.2s;
+  }
+  .priority-row:hover { background: #f8f5f0; }
+  .priority-date-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--navy); line-height: 1; }
+  .priority-date-month { font-size: 0.65rem; color: var(--crimson); font-weight: 700; letter-spacing: 0.1em; }
+  .priority-title { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; color: var(--navy); font-weight: 700; margin-bottom: 0.25rem; }
+  .priority-meta { font-size: 0.78rem; color: var(--text-muted); }
+  .priority-badge {
+    font-size: 0.62rem; background: var(--gold); color: var(--navy);
+    padding: 0.2rem 0.6rem; font-weight: 700; letter-spacing: 0.08em; white-space: nowrap;
+  }
+
+  /* ===== FILES ===== */
+  .files-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,26,62,0.08); }
+  .file-card {
+    background: var(--white); padding: 1.5rem;
+    transition: background 0.2s; text-decoration: none;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .file-card:hover { background: #f8f5f0; }
+  .file-icon { font-size: 1.5rem; }
+  .file-name { font-size: 0.88rem; color: var(--navy); font-weight: 700; line-height: 1.5; }
+  .file-meta { font-size: 0.72rem; color: var(--text-muted); }
+  .file-link { font-size: 0.75rem; color: var(--crimson); margin-top: auto; }
+
+  /* ===== BOOKS ===== */
+  .books-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(10,26,62,0.08); }
+  .book-card { background: var(--white); padding: 1.5rem; }
+  .book-title { font-family: 'Noto Serif JP', serif; font-size: 0.9rem; color: var(--navy); font-weight: 700; margin-bottom: 0.4rem; line-height: 1.5; }
+  .book-author { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.8rem; }
+  .book-status {
+    display: inline-block; font-size: 0.68rem; font-weight: 700;
+    padding: 0.2rem 0.7rem; letter-spacing: 0.06em;
+  }
+  .book-available { background: rgba(0,160,80,0.1); color: #00703c; border: 1px solid rgba(0,160,80,0.25); }
+  .book-lending { background: rgba(192,0,26,0.08); color: var(--crimson); border: 1px solid rgba(192,0,26,0.2); }
+  .book-apply-btn {
+    display: inline-block; font-size: 0.75rem; font-weight: 600;
+    padding: 0.45rem 1rem; letter-spacing: 0.06em; text-decoration: none;
+    background: var(--navy); color: white; transition: background 0.2s;
+  }
+  .book-apply-btn:hover { background: var(--crimson); }
+  .book-apply-btn.disabled {
+    background: rgba(10,26,62,0.08); color: var(--text-muted); cursor: not-allowed;
+  }
+
+  /* ===== LOADING / EMPTY ===== */
+  .m-loading { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; background: var(--white); }
+  .m-empty { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; background: var(--white); line-height: 2; }
+  .sheet-note { font-size: 0.7rem; color: rgba(10,26,62,0.3); text-align: right; margin-top: 0.8rem; }
+
+  /* ===== SCROLL TOP ===== */
+  .scroll-top-btn {
+    position: fixed; right: 1.4rem; bottom: 1.6rem; z-index: 150;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--navy); border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light); font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 16px rgba(10,26,62,0.35);
+  }
+  .scroll-top-btn.visible { opacity: 1; pointer-events: auto; }
+  .scroll-top-btn:hover { background: var(--crimson); transform: translateY(-2px); }
+
+  /* ===== HAMBURGER ===== */
+  .hamburger-m {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger-m span {
+    display: block; width: 22px; height: 2px;
+    background: rgba(255,255,255,0.7); transition: all 0.3s;
+  }
+  .hamburger-m.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger-m.open span:nth-child(2) { opacity: 0; }
+  .hamburger-m.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu-m {
+    display: none; position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: rgba(10,26,62,0.98); backdrop-filter: blur(12px);
+    z-index: 99; flex-direction: column;
+    padding: 1.2rem 5vw 1.8rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .mobile-menu-m.open { display: flex; }
+  .mobile-menu-m a, .mobile-menu-m button {
+    color: rgba(255,255,255,0.75); text-decoration: none;
+    font-size: 0.9rem; padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 0.04em; transition: color 0.2s;
+    background: none; border-top: none; border-left: none; border-right: none;
+    font-family: 'Noto Sans JP', sans-serif; cursor: pointer; text-align: left;
+  }
+  .mobile-menu-m a:hover, .mobile-menu-m button:hover { color: var(--gold-light); }
+
+  /* ===== LOGOUT ===== */
+  .logout-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5);
+    padding: 0.3rem 0.8rem; font-size: 0.72rem; font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.06em;
+  }
+  .logout-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .hamburger-m { display: flex; }
+    .nav-desktop-links { display: none; }
+  }
+  @media (max-width: 760px) {
+    .files-grid, .books-grid { grid-template-columns: 1fr 1fr; }
+    .priority-row { grid-template-columns: 60px 1fr; }
+    .priority-row > :nth-child(3) { grid-column: 2; }
+  }
+  @media (max-width: 500px) {
+    .files-grid, .books-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav style="justify-content:center;">
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a>
+  <span class="nav-member-badge" id="member-badge" style="display:none;position:absolute;right:5vw;font-size:0.72rem;color:var(--gold-light);"></span>
+  <button class="logout-btn" id="logout-btn" style="display:none;position:absolute;right:5vw;" onclick="logout()">ログアウト</button>
+</nav>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+  <div class="pw-box">
+    <div class="pw-icon">&#128218;</div>
+    <h2 class="pw-title">リソース</h2>
+    <p class="pw-sub" id="auth-gate-copy">このページは慶應就活ナビのメンバー限定です。<br>個人アカウントでログインすると閲覧できます。</p>
+    <div class="gate-actions">
+      <a class="pw-btn" id="gate-login-btn" href="account.html?mode=login&amp;returnTo=resources.html">ログインして入る →</a>
+      <a class="pw-link-btn" href="account.html?mode=signup&amp;returnTo=resources.html">新しくアカウントを作る</a>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERS CONTENT -->
+<div id="members-content">
+
+  <div class="members-hero">
+    <div class="members-hero-inner">
+      <div class="members-badge">MEMBERS ONLY</div>
+      <h1>リソース</h1>
+      <p id="members-hero-copy">限定イベント・資料・輪読会をまとめています。</p>
+    </div>
+  </div>
+
+  <div class="members-main">
+
+    <!-- イベント先行案内 -->
+    <div class="m-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">PRIORITY ACCESS</div>
+          <div class="m-section-title">イベント先行案内</div>
+        </div>
+      </div>
+      <div class="priority-list" id="priority-list">
+        <div class="m-loading">読み込み中...</div>
+      </div>
+      <p class="sheet-note" id="priority-note"></p>
+    </div>
+
+    <!-- 限定資料・ファイル -->
+    <div class="m-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">FILES</div>
+          <div class="m-section-title">限定資料・ファイル</div>
+        </div>
+      </div>
+      <div class="files-grid" id="files-grid">
+        <div class="m-loading" style="grid-column:1/-1;">読み込み中...</div>
+      </div>
+      <p class="sheet-note" id="files-note"></p>
+    </div>
+
+    <!-- 輪読会 貸出状況 -->
+    <div class="m-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">BOOKS</div>
+          <div class="m-section-title">輪読会 貸出状況</div>
+        </div>
+      </div>
+      <div class="books-grid" id="books-grid">
+        <div class="m-loading" style="grid-column:1/-1;">読み込み中...</div>
+      </div>
+      <p class="sheet-note" id="books-note"></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- Scroll Top -->
+<button class="scroll-top-btn" id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</button>
+
+<script src="auth.js"></script>
+<script>
+  // ===== 定数 =====
+  const PRIORITY_KEY  = 'priority';
+  const FILES_KEY     = 'files';
+  const BOOKS_KEY     = 'books';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const LENDING_FORM  = 'https://docs.google.com/forms/d/e/1FAIpQLScmV_ubANH5RNIHD_wEH3yakHbs5YqdegrPysSfpFo4veAg4Q/viewform';
+
+  // ===== Auth & Nav =====
+  function logout() {
+    KeioNaviAuth.logout();
+    location.reload();
+  }
+
+  function toggleMobileMenuM() {
+    document.getElementById('hamburger-m').classList.toggle('open');
+    document.getElementById('mobile-menu-m').classList.toggle('open');
+  }
+
+  function showMembers(user) {
+    document.getElementById('password-screen').style.display = 'none';
+    document.getElementById('members-content').style.display = 'block';
+    document.getElementById('member-badge').style.display = 'inline-block';
+    document.getElementById('logout-btn').style.display = 'inline-block';
+    document.getElementById('member-badge').textContent = (user?.username || '会員') + ' さん';
+    var industryMsg = user?.desiredIndustry ? '\u3010' + user.desiredIndustry + '\u3011志望 ' : '';
+    document.getElementById('members-hero-copy').textContent = industryMsg + (user?.username || 'あなた') + ' さん向けに、限定イベント・資料・輪読会をまとめています。';
+    loadAll();
+  }
+
+  // ===== GAS Fetch =====
+  async function fetchViaGAS(sheetKey) {
+    if (!GAS_PROXY_URL) throw new Error('GAS_PROXY_URLが設定されていません');
+    var res = await fetch(GAS_PROXY_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'read', sheetKey: sheetKey }),
+      redirect: 'follow',
+    });
+    var data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message || '読み込みに失敗しました');
+    if (!Array.isArray(data.rows)) throw new Error('GASからのレスポンスが不正です（rows がありません）');
+    return data.rows;
+  }
+
+  // ===== イベント先行案内 =====
+  async function loadPriority() {
+    var el = document.getElementById('priority-list');
+    var note = document.getElementById('priority-note');
+    var sample = [
+      ['2025/06/01', 'GD練習会（先行募集）', 'オンライン・先着10名'],
+      ['2025/06/15', '業界研究会（会員限定）', '三田キャンパス'],
+    ];
+    var rows;
+    try {
+      rows = PRIORITY_KEY ? (await fetchViaGAS(PRIORITY_KEY)) : sample;
+    } catch(err) {
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 読み込みエラー: ' + err.message + '</div>';
+      console.error('PRIORITY_KEY:', err); return;
+    }
+    if (!rows.length) { el.innerHTML = '<div class="m-empty">現在の先行案内はありません。</div>'; return; }
+    var WEEKDAYS = ['日','月','火','水','木','金','土'];
+    el.innerHTML = rows.map(function(r) {
+      var isUndated = !r[0] || r[0] === '日付未定' || r[0] === '未定' || r[0] === 'TBD';
+      var d = isUndated ? null : new Date(r[0].replace(/\//g,'-'));
+      var month = (!isUndated && d && !isNaN(d)) ? d.toLocaleDateString('ja-JP',{month:'short'}) : '';
+      var day = isUndated ? '未定' : (d && !isNaN(d) ? d.getDate() : '\u2013');
+      var wd = (!isUndated && d && !isNaN(d)) ? WEEKDAYS[d.getDay()] + '曜' : '';
+      var dayStyle = isUndated ? "font-family:'Noto Sans JP',sans-serif;font-size:0.85rem;font-weight:700;color:var(--text-muted);" : '';
+      var title = (r[1]||'\u2013').replace(/\x3c/g,'&lt;');
+      var meta = (r[2]||'').replace(/\x3c/g,'&lt;');
+      return '<div class="priority-row">'
+        + '<div><div class="priority-date-month">' + month + '</div><div class="priority-date-num" style="' + dayStyle + '">' + day + '</div><div style="font-size:0.65rem;color:var(--text-muted)">' + wd + '</div></div>'
+        + '<div><div class="priority-title">' + title + '</div><div class="priority-meta">' + meta + '</div></div>'
+        + '<div><span class="priority-badge">先行案内</span></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ===== 限定資料 =====
+  async function loadFiles() {
+    var el = document.getElementById('files-grid');
+    var note = document.getElementById('files-note');
+    var sample = [
+      ['業界研究まとめ（金融）', '主要金融機関の業務・選考フロー', '', '2025/05/01'],
+      ['ES例文集 vol.1', 'メンバー提供のES実例', '', '2025/05/10'],
+      ['面接頻出質問リスト', 'よく聞かれる質問と回答例', '', '2025/05/15'],
+    ];
+    var rows;
+    try {
+      rows = FILES_KEY ? (await fetchViaGAS(FILES_KEY)) : sample;
+    } catch(err) {
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 読み込みエラー: ' + err.message + '</div>';
+      console.error('FILES_KEY:', err); return;
+    }
+    if (!rows.length) { el.innerHTML = '<div class="m-empty" style="grid-column:1/-1;">限定資料はまだ準備中です。<br>LINEコミュニティで配布情報をお知らせします。</div>'; return; }
+    el.innerHTML = rows.map(function(r) {
+      var hasLink = r[2] && r[2].indexOf('http') === 0;
+      var name = (r[0]||'\u2013').replace(/\x3c/g,'&lt;');
+      var desc = (r[1]||'').replace(/\x3c/g,'&lt;');
+      var date = (r[3]||'').replace(/\x3c/g,'&lt;');
+      if (hasLink) {
+        return '<a href="' + r[2] + '" target="_blank" class="file-card">'
+          + '<div class="file-icon">\ud83d\udcc4</div>'
+          + '<div class="file-name">' + name + '</div>'
+          + '<div class="file-meta">' + desc + '</div>'
+          + '<div class="file-meta" style="margin-top:auto;">' + date + '</div>'
+          + '<div class="file-link">開く \u2192</div>'
+          + '</a>';
+      } else {
+        return '<div class="file-card">'
+          + '<div class="file-icon">\ud83d\udcc4</div>'
+          + '<div class="file-name">' + name + '</div>'
+          + '<div class="file-meta">' + desc + '</div>'
+          + '<div class="file-meta" style="margin-top:auto;">' + date + '</div>'
+          + '<div class="file-link" style="color:var(--text-muted)">準備中</div>'
+          + '</div>';
+      }
+    }).join('');
+  }
+
+  // ===== 貸出状況 =====
+  async function loadBooks() {
+    var el = document.getElementById('books-grid');
+    var note = document.getElementById('books-note');
+    var sample = [
+      ['外資系コンサルの問題解決力', '高田貴久', '貸出可', ''],
+      ['戦略思考トレーニング', '西村克己', '貸出中', '山田'],
+      ['絶対内定2026', '杉村太郎', '貸出可', ''],
+      ['1分で話せ', '伊藤羊一', '貸出中', '鈴木'],
+    ];
+    var rows;
+    try {
+      rows = BOOKS_KEY ? (await fetchViaGAS(BOOKS_KEY)) : sample;
+    } catch(err) {
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 読み込みエラー: ' + err.message + '</div>';
+      console.error('BOOKS_KEY:', err); return;
+    }
+    if (!rows.length) { el.innerHTML = '<div class="m-empty" style="grid-column:1/-1;">現在貸出可能な本はありません。<br>LINEコミュニティで輪読会の情報をご確認ください。</div>'; return; }
+    el.innerHTML = rows.map(function(r) {
+      var available = !r[2] || r[2].indexOf('可') >= 0 || r[2].toLowerCase().indexOf('available') >= 0;
+      var formUrl = LENDING_FORM + '?usp=pp_url&entry.title=' + encodeURIComponent(r[0]||'');
+      var title = (r[0]||'\u2013').replace(/\x3c/g,'&lt;');
+      var author = (r[1]||'').replace(/\x3c/g,'&lt;');
+      var status = (r[2]||'\u2013').replace(/\x3c/g,'&lt;');
+      var holder = r[3] ? r[3].replace(/\x3c/g,'&lt;') : '';
+      return '<div class="book-card">'
+        + '<div class="book-title">' + title + '</div>'
+        + '<div class="book-author">' + author + '</div>'
+        + '<span class="book-status ' + (available ? 'book-available' : 'book-lending') + '">' + status + '</span>'
+        + (!available && holder ? '<div class="book-holder" style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">保有: ' + holder + '</div>' : '')
+        + '<div style="margin-top:1rem;">'
+        + (available
+          ? '<a href="' + formUrl + '" target="_blank" class="book-apply-btn">貸出申請する \u2192</a>'
+          : '<span class="book-apply-btn disabled">貸出中</span>')
+        + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ===== ロード =====
+  async function loadAll() {
+    await Promise.all([loadPriority(), loadFiles(), loadBooks()]);
+  }
+
+  // ===== Scroll Top =====
+  var scrollTopBtn = document.getElementById('scroll-top-btn');
+  window.addEventListener('scroll', function() {
+    scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+
+  // ===== 初期化 =====
+  (function init() {
+    var user = KeioNaviAuth.requireAuth({ returnTo: 'resources.html', redirect: false });
+    if (user) {
+      showMembers(user);
+    } else {
+      document.getElementById('password-screen').style.display = 'flex';
+    }
+  })();
+</script>
+<style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
+<nav class="bottom-tab-bar">
+  <a href="account.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>マイページ</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>ES</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="resources.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>資料</span></a>
+  <a href="glossary.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>用語集</span></a>
+</nav>
+</body>
+</html>

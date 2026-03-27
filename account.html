@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>アカウント | 慶應就活ナビ</title>
 <meta name="description" content="慶應就活ナビの個人アカウント作成・ログイン・プロフィール管理ページです。">
+
+<!-- OGP -->
+<meta property="og:title" content="アカウント | 慶應就活ナビ">
+<meta property="og:description" content="慶應就活ナビの会員登録・ログインページ。無料で参加して、就活情報を手に入れよう。">
+<meta property="og:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+<meta property="og:url" content="https://naotama1123.github.io/keio-syukatu-navi/account.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="慶應就活ナビ">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="アカウント | 慶應就活ナビ">
+<meta name="twitter:description" content="慶應就活ナビの会員登録・ログインページ。無料で参加して、就活情報を手に入れよう。">
+<meta name="twitter:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -389,6 +403,19 @@
   }
 
   .submit-btn:hover { background: #dc0b25; }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .submit-btn:disabled:hover { background: var(--crimson); }
+
+  /* パスワード表示トグル */
+  .pw-field-wrap { position: relative; }
+  .pw-field-wrap .field-input { padding-right: 2.8rem; }
+  .pw-toggle {
+    position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; padding: 0.2rem;
+    color: var(--text-muted); font-size: 1rem; line-height: 1;
+    transition: color 0.2s;
+  }
+  .pw-toggle:hover { color: var(--navy); }
 
   .subtle-btn {
     border: 1px solid rgba(10, 26, 62, 0.15);
@@ -599,6 +626,13 @@
     .quick-launch { flex-direction: column; align-items: flex-start; }
   }
 </style>
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "YOUR_PROJECT_ID");
+</script>
 </head>
 <body>
 <nav>
@@ -637,7 +671,7 @@
         </div>
         <div class="intro-item">
           <div class="intro-item-title">登録時に必要な情報を整理</div>
-          <div class="intro-item-desc">ユーザー名、パスワード、志望業界、第1〜第3志望、LINE情報をまとめて登録できます。</div>
+          <div class="intro-item-desc">メールアドレス、パスワード、志望業界、第1〜第3志望、LINE情報をまとめて登録できます。</div>
         </div>
       </div>
 
@@ -661,13 +695,20 @@
       <div class="tabs">
         <button class="tab-btn active" type="button" data-mode="signup">新規登録</button>
         <button class="tab-btn" type="button" data-mode="login">ログイン</button>
+        <button class="tab-btn" type="button" data-mode="reset">パスワードリセット</button>
       </div>
 
       <form class="auth-form" id="signup-form">
         <label class="field-group">
-          <span class="field-label">ユーザー名</span>
-          <input class="field-input" type="text" name="username" placeholder="例: kei_shukatsu" required>
-          <span class="field-help">本名でなくて大丈夫です。ログイン時にもこのユーザー名を使います。</span>
+          <span class="field-label">メールアドレス</span>
+          <input class="field-input" type="email" name="email" placeholder="example@keio.jp" required>
+          <span class="field-help">ログインとパスワードリセットに使用します。</span>
+        </label>
+
+        <label class="field-group">
+          <span class="field-label">表示名</span>
+          <input class="field-input" type="text" name="displayName" placeholder="例: kei_shukatsu" required>
+          <span class="field-help">本名でなくて大丈夫です。他のメンバーに表示される名前です。</span>
         </label>
 
         <label class="field-group">
@@ -709,8 +750,22 @@
 
         <label class="field-group">
           <span class="field-label">パスワード</span>
-          <input class="field-input" type="password" name="password" minlength="8" placeholder="8文字以上" required>
+          <div class="pw-field-wrap">
+            <input class="field-input" type="password" name="password" minlength="8" placeholder="8文字以上" required>
+            <button type="button" class="pw-toggle" aria-label="パスワードを表示/非表示" onclick="togglePw(this)">👁</button>
+          </div>
           <span class="field-help">パスワードはサーバー側でハッシュ化して保存する前提です。フロントには平文で保持しません。</span>
+        </label>
+
+        <label class="field-group">
+          <span class="field-label">紹介コード（任意）</span>
+          <input class="field-input" type="text" name="referralCode" placeholder="お持ちの場合は入力">
+          <span class="field-help">既存メンバーからの紹介コードがあれば入力してください。</span>
+        </label>
+
+        <label class="field-group" style="flex-direction:row; align-items:flex-start; gap:0.6rem; cursor:pointer;">
+          <input type="checkbox" name="agreePrivacy" required style="margin-top:0.25rem; width:18px; height:18px; flex-shrink:0; cursor:pointer;">
+          <span class="field-help" style="font-size:0.78rem; line-height:1.7;"><a href="privacy.html" target="_blank" style="color:var(--crimson); text-decoration:underline;">プライバシーポリシー・利用規約</a>を読み、同意します。AI生成コンテンツは参考情報であり、本サービスはその結果について責任を負いません。</span>
         </label>
 
         <div class="form-actions">
@@ -720,17 +775,54 @@
 
       <form class="auth-form" id="login-form" hidden>
         <label class="field-group">
-          <span class="field-label">ユーザー名</span>
-          <input class="field-input" type="text" name="username" placeholder="登録したユーザー名" required>
+          <span class="field-label">メールアドレス</span>
+          <input class="field-input" type="email" name="email" placeholder="登録したメールアドレス" required>
         </label>
 
         <label class="field-group">
           <span class="field-label">パスワード</span>
-          <input class="field-input" type="password" name="password" minlength="8" placeholder="登録したパスワード" required>
+          <div class="pw-field-wrap">
+            <input class="field-input" type="password" name="password" minlength="8" placeholder="登録したパスワード" required>
+            <button type="button" class="pw-toggle" aria-label="パスワードを表示/非表示" onclick="togglePw(this)">👁</button>
+          </div>
         </label>
 
         <div class="form-actions">
           <button class="submit-btn" type="submit">ログインする</button>
+        </div>
+        <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:1rem; line-height:1.6;">パスワードを忘れた場合は<a href="#" onclick="switchMode('reset'); return false;" style="color:var(--crimson); text-decoration:underline;">こちら</a>からリセットできます。</p>
+      </form>
+
+      <form class="auth-form" id="reset-request-form" hidden>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.7;">登録したメールアドレスを入力してください。パスワードリセット用のリンクをメールで送信します。</p>
+        <label class="field-group">
+          <span class="field-label">メールアドレス</span>
+          <input class="field-input" type="email" name="email" placeholder="登録したメールアドレス" required>
+        </label>
+        <div class="form-actions">
+          <button class="submit-btn" type="submit">リセットメールを送信</button>
+        </div>
+        <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:1rem;">アカウントをお持ちの方は<a href="#" onclick="switchMode('login'); return false;" style="color:var(--crimson); text-decoration:underline;">ログイン</a>へ</p>
+      </form>
+
+      <form class="auth-form" id="reset-password-form" hidden>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.7;">新しいパスワードを設定してください。</p>
+        <label class="field-group">
+          <span class="field-label">新しいパスワード</span>
+          <div class="pw-field-wrap">
+            <input class="field-input" type="password" name="newPassword" minlength="8" placeholder="8文字以上" required>
+            <button type="button" class="pw-toggle" aria-label="パスワードを表示/非表示" onclick="togglePw(this)">👁</button>
+          </div>
+        </label>
+        <label class="field-group">
+          <span class="field-label">パスワード確認</span>
+          <div class="pw-field-wrap">
+            <input class="field-input" type="password" name="confirmPassword" minlength="8" placeholder="もう一度入力" required>
+            <button type="button" class="pw-toggle" aria-label="パスワードを表示/非表示" onclick="togglePw(this)">👁</button>
+          </div>
+        </label>
+        <div class="form-actions">
+          <button class="submit-btn" type="submit">パスワードをリセットする</button>
         </div>
       </form>
     </div>
@@ -777,15 +869,43 @@
           <div class="quick-link-title">企業マッチング</div>
           <div class="quick-link-desc">気になる企業を自分のアカウントで保存しながら探せます。</div>
         </a>
+        <a href="members.html#interview-prep-section" class="quick-link">
+          <div class="quick-link-label">INTERVIEW</div>
+          <div class="quick-link-title">面接対策ノート</div>
+          <div class="quick-link-desc">企業別に深掘り質問を生成・回答をAI添削して面接に備えます。</div>
+        </a>
+        <a href="community.html" class="quick-link">
+          <div class="quick-link-label">COMMUNITY</div>
+          <div class="quick-link-title">仲間を見つける</div>
+          <div class="quick-link-desc">同じ業界・企業を志望するメンバーとつながれます。</div>
+        </a>
+      </div>
+
+      <!-- 紹介プログラム -->
+      <div class="settings-block" id="referral-block">
+        <h3 class="settings-title">友達を招待する</h3>
+        <p class="settings-sub">紹介コードをシェアして、就活ナビの仲間を増やそう。</p>
+        <div style="display:flex; align-items:center; gap:0.8rem; margin-top:0.8rem; flex-wrap:wrap;">
+          <code id="referral-code" style="display:inline-block; padding:0.6rem 1.2rem; background:var(--gray); font-size:0.95rem; font-weight:700; letter-spacing:0.08em; color:var(--navy); border-left:3px solid var(--gold);">-</code>
+          <button type="button" class="subtle-btn" onclick="copyReferralCode()" style="font-size:0.78rem;">コピー</button>
+          <button type="button" class="subtle-btn" onclick="copyReferralLink()" style="font-size:0.78rem;">招待リンクをコピー</button>
+        </div>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.6rem;" id="referral-count">紹介実績: -</p>
       </div>
 
       <div class="settings-block">
         <h3 class="settings-title">登録情報を編集する</h3>
-        <p class="settings-sub">ユーザー名、志望業界、志望企業、LINE情報を更新できます。</p>
+        <p class="settings-sub">表示名、志望業界、志望企業、LINE情報を更新できます。メールアドレスは変更できません。</p>
         <form class="settings-form" id="profile-form">
           <label class="field-group">
-            <span class="field-label">ユーザー名</span>
-            <input class="field-input" type="text" name="username" required>
+            <span class="field-label">メールアドレス</span>
+            <input class="field-input" type="email" name="email" disabled style="opacity:0.6; cursor:not-allowed;">
+            <span class="field-help">メールアドレスは変更できません。</span>
+          </label>
+
+          <label class="field-group">
+            <span class="field-label">表示名</span>
+            <input class="field-input" type="text" name="displayName" required>
           </label>
 
           <label class="field-group">
@@ -826,6 +946,13 @@
         </form>
       </div>
 
+      <div class="settings-block" id="liked-companies-block" style="display:none;">
+        <h3 class="settings-title">気になる企業リスト</h3>
+        <p class="settings-sub">企業マッチングで「気になる」した企業の一覧です。</p>
+        <div id="liked-companies-list" style="display:grid; gap:0.5rem;"></div>
+        <a href="match.html" style="display:inline-block; margin-top:1rem; font-size:0.8rem; color:var(--crimson); font-weight:700; text-decoration:underline; text-underline-offset:3px;">企業マッチングへ →</a>
+      </div>
+
       <div class="settings-block">
         <h3 class="settings-title">パスワードを変更する</h3>
         <p class="settings-sub">現在のパスワードを確認したうえで、新しいパスワードに更新します。</p>
@@ -833,11 +960,17 @@
           <div class="grid-two">
             <label class="field-group">
               <span class="field-label">現在のパスワード</span>
-              <input class="field-input" type="password" name="currentPassword" minlength="8" required>
+              <div class="pw-field-wrap">
+                <input class="field-input" type="password" name="currentPassword" minlength="8" required>
+                <button type="button" class="pw-toggle" aria-label="パスワードを表示/非表示" onclick="togglePw(this)">👁</button>
+              </div>
             </label>
             <label class="field-group">
               <span class="field-label">新しいパスワード</span>
-              <input class="field-input" type="password" name="nextPassword" minlength="8" required>
+              <div class="pw-field-wrap">
+                <input class="field-input" type="password" name="nextPassword" minlength="8" required>
+                <button type="button" class="pw-toggle" aria-label="パスワードを表示/非表示" onclick="togglePw(this)">👁</button>
+              </div>
             </label>
           </div>
           <button class="subtle-btn" type="submit">パスワードを更新する</button>
@@ -847,14 +980,55 @@
       <div class="logout-wrap">
         <button class="subtle-btn" type="button" id="logout-btn">ログアウト</button>
       </div>
+
+      <!-- 退会 -->
+      <div class="settings-block" id="delete-account-block" style="margin-top:2rem; border-top:1px solid rgba(192,0,26,0.15); padding-top:1.5rem;">
+        <h3 class="settings-title" style="color:var(--crimson);">アカウントを削除する</h3>
+        <p class="settings-sub" style="line-height:1.7;">アカウントを削除すると、以下のデータが全て削除されます。この操作は取り消せません。</p>
+        <ul style="font-size:0.78rem; color:var(--text-muted); margin:0.8rem 0 1.2rem 1.2rem; line-height:2;">
+          <li>プロフィール情報（メールアドレス、表示名、LINE情報）</li>
+          <li>気になる企業リスト</li>
+          <li>就活進捗データ</li>
+          <li>ES保管庫・ガクチカ保管庫のデータ</li>
+          <li>面接対策ノートのデータ</li>
+          <li>グループ参加情報</li>
+        </ul>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:1rem;">※ 掲示板への投稿は「退会済みユーザー」として匿名化されます。</p>
+        <button class="subtle-btn" type="button" id="delete-account-btn" style="color:var(--crimson); border-color:rgba(192,0,26,0.3);">退会する</button>
+      </div>
     </div>
   </section>
 </main>
 
+<!-- 退会確認モーダル -->
+<div id="delete-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center; padding:1rem;">
+  <div style="background:white; max-width:420px; width:100%;">
+    <div style="background:var(--crimson); padding:1rem 1.5rem;">
+      <div style="color:white; font-family:'Noto Serif JP',serif; font-size:0.95rem; font-weight:700;">アカウント削除の確認</div>
+    </div>
+    <div style="padding:1.5rem;">
+      <p style="font-size:0.85rem; color:var(--text); margin-bottom:1rem; line-height:1.7;">本当にアカウントを削除しますか？<br>全てのデータが完全に削除されます。この操作は取り消せません。</p>
+      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.8rem;">確認のためパスワードを入力してください。</p>
+      <label class="field-group" style="margin-bottom:1rem;">
+        <div class="pw-field-wrap">
+          <input class="field-input" type="password" id="delete-confirm-password" placeholder="パスワード">
+          <button type="button" class="pw-toggle" aria-label="パスワードを表示/非表示" onclick="togglePw(this)">👁</button>
+        </div>
+      </label>
+      <div id="delete-error" style="font-size:0.78rem; color:var(--crimson); margin-bottom:0.8rem;"></div>
+      <div style="display:flex; gap:0.8rem; justify-content:flex-end;">
+        <button type="button" class="subtle-btn" onclick="closeDeleteModal()">キャンセル</button>
+        <button type="button" class="subtle-btn" id="delete-confirm-btn" style="color:white; background:var(--crimson); border-color:var(--crimson);">削除を実行する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="auth.js"></script>
 <script>
   const params = new URLSearchParams(location.search);
-  const requestedMode = params.get('mode') === 'login' ? 'login' : 'signup';
+  const resetToken = params.get('token') || '';
+  const requestedMode = resetToken ? 'reset-confirm' : (params.get('mode') === 'login' ? 'login' : (params.get('mode') === 'reset' ? 'reset' : 'signup'));
   const returnTo = params.get('returnTo') || '';
 
   const flash = document.getElementById('flash');
@@ -867,6 +1041,8 @@
   const continueBtn = document.getElementById('continue-btn');
   const signupForm = document.getElementById('signup-form');
   const loginForm = document.getElementById('login-form');
+  const resetRequestForm = document.getElementById('reset-request-form');
+  const resetPasswordForm = document.getElementById('reset-password-form');
   const profileForm = document.getElementById('profile-form');
   const passwordForm = document.getElementById('password-form');
   const memberDetailNote = document.getElementById('member-detail-note');
@@ -875,14 +1051,34 @@
 
   if (returnTo) KeioNaviAuth.setReturnTo(returnTo);
 
+  let flashTimer = null;
   function showFlash(message, type) {
     flash.textContent = message;
     flash.className = 'flash show ' + type;
+    if (flashTimer) clearTimeout(flashTimer);
+    if (type !== 'error') {
+      flashTimer = setTimeout(clearFlash, 4000);
+    }
   }
 
   function clearFlash() {
     flash.textContent = '';
     flash.className = 'flash';
+  }
+
+  function togglePw(btn) {
+    const input = btn.previousElementSibling;
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    btn.textContent = isHidden ? '🙈' : '👁';
+  }
+
+  function setSubmitLoading(form, loading, defaultLabel) {
+    const btn = form.querySelector('[type="submit"]');
+    if (!btn) return;
+    btn.disabled = loading;
+    if (loading) btn.dataset.origText = btn.textContent;
+    btn.textContent = loading ? '処理中...' : (btn.dataset.origText || defaultLabel);
   }
 
   function field(form, name) {
@@ -997,10 +1193,12 @@
 
   function switchMode(mode) {
     document.querySelectorAll('.tab-btn').forEach(button => {
-      button.classList.toggle('active', button.dataset.mode === mode);
+      button.classList.toggle('active', button.dataset.mode === mode || (button.dataset.mode === 'reset' && (mode === 'reset' || mode === 'reset-confirm')));
     });
     signupForm.hidden = mode !== 'signup';
     loginForm.hidden = mode !== 'login';
+    resetRequestForm.hidden = mode !== 'reset';
+    resetPasswordForm.hidden = mode !== 'reset-confirm';
     clearFlash();
   }
 
@@ -1011,7 +1209,7 @@
 
   function updateIntroForUser(user) {
     if (user) {
-      statusTitle.textContent = user.username + ' さんでログイン中';
+      statusTitle.textContent = user.displayName + ' さんでログイン中';
       statusDesc.textContent = '会員ページと企業マッチングをそのまま開けます。志望企業やLINE情報の変更もこの画面から行えます。';
     } else if (returnTo) {
       statusTitle.textContent = '会員機能を使う準備ができています';
@@ -1028,7 +1226,7 @@
       guestView.hidden = false;
       memberView.hidden = true;
       panelTitle.textContent = '会員登録 / ログイン';
-      panelSub.textContent = 'ユーザー名、パスワード、志望業界、第1〜第3志望、LINE情報を登録できます。';
+      panelSub.textContent = 'メールアドレス、パスワード、志望業界、第1〜第3志望、LINE情報を登録できます。';
       memberDetailNote.textContent = '';
       updateIntroForUser(null);
       refreshSignupLineQrStatus();
@@ -1041,7 +1239,7 @@
     panelSub.textContent = 'アカウント情報の確認と編集、会員機能への移動ができます。';
     updateIntroForUser(user);
 
-    document.getElementById('member-title').textContent = user.username + ' さんのマイページ';
+    document.getElementById('member-title').textContent = user.displayName + ' さんのマイページ';
     document.getElementById('member-summary').textContent = '志望業界: ' + (user.desiredIndustry || '未設定');
 
     const preferredCompanies = (user.preferredCompanies || []).filter(Boolean);
@@ -1059,16 +1257,41 @@
       ? '現行の会員ページに入るだけで、気になる企業 ' + likedCount + ' 社に合わせて選考情報が優先表示され、企業ノートと締切リマインダーも追いやすくなります。'
       : '現行の会員ページにはそのまま入れます。先に企業マッチでいいねしておくと、その会員ページの中で選考情報・企業ノート・締切リマインダーが個別化されます。';
 
-    field(profileForm, 'username').value = user.username || '';
+    field(profileForm, 'email').value = user.email || '';
+    field(profileForm, 'displayName').value = user.displayName || '';
     field(profileForm, 'desiredIndustry').dataset.currentValue = user.desiredIndustry || '';
     populateIndustrySelects();
     field(profileForm, 'desiredIndustry').value = user.desiredIndustry || '';
+
+    // 紹介プログラム情報を取得
+    loadReferralInfo();
     field(profileForm, 'preferredCompany1').value = user.preferredCompany1 || '';
     field(profileForm, 'preferredCompany2').value = user.preferredCompany2 || '';
     field(profileForm, 'preferredCompany3').value = user.preferredCompany3 || '';
     field(profileForm, 'lineName').value = user.lineName || '';
     field(profileForm, 'lineQr').value = '';
     refreshProfileLineQrStatus();
+
+    // 気になる企業リスト
+    const liked = KeioNaviAuth.getLikedCompanies();
+    const likedBlock = document.getElementById('liked-companies-block');
+    const likedList = document.getElementById('liked-companies-list');
+    likedBlock.style.display = '';
+    if (liked.length > 0) {
+      likedList.innerHTML = liked.map(c => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:0.7rem 1rem; background:var(--gray); border-left:3px solid var(--gold);">
+          <div>
+            <div style="font-size:0.88rem; font-weight:700; color:var(--navy);">${c.name || '–'}</div>
+            ${c.industry ? `<div style="font-size:0.7rem; color:var(--text-muted);">${c.industry}</div>` : ''}
+          </div>
+          <span style="font-size:0.65rem; color:var(--crimson); font-weight:700;">♥</span>
+        </div>`).join('');
+    } else {
+      likedList.innerHTML = `<div style="text-align:center; padding:1.2rem; color:var(--text-muted); font-size:0.82rem; line-height:2;">
+        まだ気になる企業がありません。<br>
+        <a href="match.html" style="display:inline-block; margin-top:0.5rem; padding:0.45rem 1.1rem; background:var(--navy); color:white; font-size:0.75rem; font-weight:700; text-decoration:none; letter-spacing:0.05em;">企業マッチングを試す →</a>
+      </div>`;
+    }
 
     const target = returnTo || '';
     continueBtn.hidden = !target;
@@ -1090,7 +1313,7 @@
     navLinks.innerHTML = `
       <a href="members.html" class="nav-link">会員ページ</a>
       <a href="match.html" class="nav-link primary">企業マッチング</a>
-      <a href="index.html" class="nav-link">${user.username} さん</a>
+      <a href="index.html" class="nav-link">${user.displayName} さん</a>
     `;
   }
 
@@ -1129,8 +1352,10 @@
       return;
     }
 
+    setSubmitLoading(form, true);
     const result = await KeioNaviAuth.createAccount({
-      username: field(form, 'username').value,
+      email: field(form, 'email').value,
+      displayName: field(form, 'displayName').value,
       desiredIndustry: field(form, 'desiredIndustry').value,
       preferredCompany1: field(form, 'preferredCompany1').value,
       preferredCompany2: field(form, 'preferredCompany2').value,
@@ -1139,7 +1364,9 @@
       lineQrDataUrl: lineQrUpload.dataUrl,
       lineQrFileName: lineQrUpload.fileName,
       password: field(form, 'password').value,
+      referralCode: field(form, 'referralCode').value,
     });
+    setSubmitLoading(form, false);
 
     if (!result.ok) {
       showFlash(result.error, 'error');
@@ -1154,7 +1381,9 @@
   loginForm.addEventListener('submit', async event => {
     event.preventDefault();
     const form = event.currentTarget;
-    const result = await KeioNaviAuth.login(field(form, 'username').value, field(form, 'password').value);
+    setSubmitLoading(form, true);
+    const result = await KeioNaviAuth.login(field(form, 'email').value, field(form, 'password').value);
+    setSubmitLoading(form, false);
 
     if (!result.ok) {
       showFlash(result.error, 'error');
@@ -1177,8 +1406,9 @@
       return;
     }
 
+    setSubmitLoading(form, true);
     const result = await KeioNaviAuth.updateCurrentUser({
-      username: field(form, 'username').value,
+      displayName: field(form, 'displayName').value,
       desiredIndustry: field(form, 'desiredIndustry').value,
       preferredCompany1: field(form, 'preferredCompany1').value,
       preferredCompany2: field(form, 'preferredCompany2').value,
@@ -1187,6 +1417,7 @@
       lineQrDataUrl: lineQrUpload.dataUrl,
       lineQrFileName: lineQrUpload.fileName,
     });
+    setSubmitLoading(form, false);
 
     if (!result.ok) {
       showFlash(result.error, 'error');
@@ -1202,7 +1433,9 @@
   passwordForm.addEventListener('submit', async event => {
     event.preventDefault();
     const form = event.currentTarget;
+    setSubmitLoading(form, true);
     const result = await KeioNaviAuth.changePassword(field(form, 'currentPassword').value, field(form, 'nextPassword').value);
+    setSubmitLoading(form, false);
 
     if (!result.ok) {
       showFlash(result.error, 'error');
@@ -1222,10 +1455,122 @@
     showFlash('ログアウトしました。', 'info');
   });
 
+  // アカウント削除
+  function openDeleteModal() {
+    document.getElementById('delete-confirm-password').value = '';
+    document.getElementById('delete-error').textContent = '';
+    document.getElementById('delete-modal').style.display = 'flex';
+  }
+  function closeDeleteModal() {
+    document.getElementById('delete-modal').style.display = 'none';
+  }
+  window.closeDeleteModal = closeDeleteModal;
+
+  document.getElementById('delete-account-btn').addEventListener('click', openDeleteModal);
+  document.getElementById('delete-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('delete-modal')) closeDeleteModal();
+  });
+
+  document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
+    const pw = document.getElementById('delete-confirm-password').value;
+    const errorEl = document.getElementById('delete-error');
+    const btn = document.getElementById('delete-confirm-btn');
+    if (!pw) { errorEl.textContent = 'パスワードを入力してください。'; return; }
+
+    btn.disabled = true;
+    btn.textContent = '処理中...';
+    errorEl.textContent = '';
+
+    const result = await KeioNaviAuth.deleteAccount(pw);
+    if (!result.ok) {
+      errorEl.textContent = result.error;
+      btn.disabled = false;
+      btn.textContent = '削除を実行する';
+      return;
+    }
+
+    closeDeleteModal();
+    switchMode('signup');
+    renderNav();
+    renderMemberView();
+    showFlash(result.message || 'アカウントを削除しました。ご利用ありがとうございました。', 'success');
+  });
+
   continueBtn.addEventListener('click', () => {
     const target = returnTo || KeioNaviAuth.consumeReturnTo();
     if (target) location.href = target;
   });
+
+  // パスワードリセットリクエスト
+  resetRequestForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setSubmitLoading(form, true);
+    const result = await KeioNaviAuth.requestPasswordReset(field(form, 'email').value);
+    setSubmitLoading(form, false);
+
+    if (!result.ok) {
+      showFlash(result.error, 'error');
+      return;
+    }
+
+    form.reset();
+    showFlash(result.message || 'リセット用のメールを送信しました。メールを確認してください。', 'success');
+  });
+
+  // パスワードリセット実行
+  resetPasswordForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const newPw = field(form, 'newPassword').value;
+    const confirmPw = field(form, 'confirmPassword').value;
+
+    if (newPw !== confirmPw) {
+      showFlash('パスワードが一致しません。', 'error');
+      return;
+    }
+
+    setSubmitLoading(form, true);
+    const result = await KeioNaviAuth.resetPassword(resetToken, newPw);
+    setSubmitLoading(form, false);
+
+    if (!result.ok) {
+      showFlash(result.error, 'error');
+      return;
+    }
+
+    form.reset();
+    showFlash(result.message || 'パスワードをリセットしました。', 'success');
+    setTimeout(() => switchMode('login'), 2000);
+  });
+
+  // 紹介プログラム
+  async function loadReferralInfo() {
+    const result = await KeioNaviAuth.getReferralInfo();
+    if (!result.ok) return;
+
+    document.getElementById('referral-code').textContent = result.referralCode || '-';
+    document.getElementById('referral-count').textContent = '紹介実績: ' + (result.referralCount || 0) + '人';
+  }
+
+  function copyReferralCode() {
+    const code = document.getElementById('referral-code').textContent;
+    navigator.clipboard.writeText(code).then(() => showFlash('紹介コードをコピーしました。', 'success'));
+  }
+
+  function copyReferralLink() {
+    const code = document.getElementById('referral-code').textContent;
+    const link = location.origin + location.pathname + '?mode=signup&ref=' + encodeURIComponent(code);
+    navigator.clipboard.writeText(link).then(() => showFlash('招待リンクをコピーしました。', 'success'));
+  }
+  window.copyReferralCode = copyReferralCode;
+  window.copyReferralLink = copyReferralLink;
+
+  // URLの紹介コードを自動入力
+  const refCode = params.get('ref');
+  if (refCode && signupForm.elements.namedItem('referralCode')) {
+    signupForm.elements.namedItem('referralCode').value = refCode;
+  }
 
   switchMode(requestedMode);
   populateIndustrySelects();

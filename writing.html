@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES・ガクチカを書く ｜ 慶應就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 68px;
+    background: rgba(10,26,62,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold-light); text-decoration: none; }
+  .nav-back { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold-light); }
+  .nav-member-badge {
+    font-size: 0.68rem; background: rgba(201,168,76,0.15); color: var(--gold);
+    padding: 0.2rem 0.7rem; border: 1px solid rgba(201,168,76,0.3); letter-spacing: 0.1em;
+  }
+  .nav-link-active {
+    color: var(--gold-light) !important; font-weight: 700;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.15rem;
+  }
+
+  /* ===== PASSWORD SCREEN ===== */
+  #password-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--navy); padding: 2rem;
+  }
+  .pw-box {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.2);
+    padding: 3rem 2.5rem; max-width: 420px; width: 100%; text-align: center;
+    position: relative;
+  }
+  .pw-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--crimson), var(--gold));
+  }
+  .pw-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .pw-title { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.5rem; }
+  .pw-sub { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; line-height: 1.8; }
+  .pw-btn {
+    display: block;
+    width: 100%; padding: 0.9rem; background: var(--navy);
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold-light);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem;
+    font-weight: 500; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .pw-btn:hover { background: rgba(201,168,76,0.1); }
+  .gate-actions { display: grid; gap: 0.75rem; }
+  .pw-link-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; color: rgba(255,255,255,0.72);
+    text-decoration: none; padding: 0.85rem 1rem;
+    border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s;
+  }
+  .pw-link-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+
+  /* ===== MEMBERS CONTENT ===== */
+  #members-content { display: none; padding-top: 68px; }
+
+  /* ===== HERO ===== */
+  .members-hero {
+    background: var(--navy); padding: 60px 5vw 50px;
+    border-bottom: 1px solid rgba(201,168,76,0.15); position: relative; overflow: hidden;
+  }
+  .members-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 40% 80% at 90% 50%, rgba(192,0,26,0.1) 0%, transparent 70%);
+  }
+  .members-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+  .members-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1px solid rgba(201,168,76,0.4); padding: 0.3rem 0.9rem;
+    font-size: 0.68rem; color: var(--gold); letter-spacing: 0.15em; font-weight: 600;
+    margin-bottom: 1.2rem;
+  }
+  .members-hero h1 { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; color: var(--white); margin-bottom: 0.5rem; }
+  .members-hero p { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+
+  /* ===== MAIN LAYOUT ===== */
+  .members-main { max-width: 1200px; margin: 0 auto; padding: 3rem 5vw 6rem; }
+
+  /* ===== SECTION ===== */
+  .m-section { margin-bottom: 4rem; }
+  .m-section-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(10,26,62,0.1);
+  }
+  .m-section-icon {
+    width: 36px; height: 36px; background: var(--navy);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .m-section-icon svg { width: 16px; height: 16px; }
+  .m-section-title { font-family: 'Noto Serif JP', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
+  .m-section-label { font-size: 0.68rem; color: var(--crimson); letter-spacing: 0.15em; font-weight: 700; }
+
+  /* ===== MODAL (shared) ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(10,26,62,0.7); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 2rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--cream); max-width: 680px; width: 100%;
+    max-height: 85vh; overflow-y: auto; position: relative;
+    border-top: 3px solid var(--gold);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .modal-header {
+    position: sticky; top: 0; background: var(--navy);
+    padding: 1.2rem 1.5rem; display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; z-index: 1;
+  }
+  .modal-close {
+    background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6);
+    width: 32px; height: 32px; font-size: 1rem; cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .modal-close:hover { border-color: var(--crimson); color: var(--crimson); }
+  .modal-body { padding: 1.8rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+  /* ===== LOADING ===== */
+  .m-loading { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; background: var(--white); }
+  .m-empty { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; background: var(--white); line-height: 2; }
+
+  @keyframes genSpin { to { transform: rotate(360deg); } }
+
+  /* ===== SCROLL TOP ===== */
+  .scroll-top-btn {
+    position: fixed; right: 1.4rem; bottom: 1.6rem; z-index: 150;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--navy); border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light); font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 16px rgba(10,26,62,0.35);
+  }
+  .scroll-top-btn.visible { opacity: 1; pointer-events: auto; }
+  .scroll-top-btn:hover { background: var(--crimson); transform: translateY(-2px); }
+
+  /* ===== HAMBURGER (members) ===== */
+  .hamburger-m {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger-m span {
+    display: block; width: 22px; height: 2px;
+    background: rgba(255,255,255,0.7); transition: all 0.3s;
+  }
+  .hamburger-m.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger-m.open span:nth-child(2) { opacity: 0; }
+  .hamburger-m.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu-m {
+    display: none; position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: rgba(10,26,62,0.98); backdrop-filter: blur(12px);
+    z-index: 99; flex-direction: column;
+    padding: 1.2rem 5vw 1.8rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .mobile-menu-m.open { display: flex; }
+  .mobile-menu-m a, .mobile-menu-m button {
+    color: rgba(255,255,255,0.75); text-decoration: none;
+    font-size: 0.9rem; padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 0.04em; transition: color 0.2s;
+    background: none; border-top: none; border-left: none; border-right: none;
+    font-family: 'Noto Sans JP', sans-serif; cursor: pointer; text-align: left;
+  }
+  .mobile-menu-m a:hover, .mobile-menu-m button:hover { color: var(--gold-light); }
+
+  @media (max-width: 768px) {
+    .hamburger-m { display: flex; }
+    .nav-desktop-links { display: none; }
+  }
+
+  /* ===== LOGOUT ===== */
+  .logout-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5);
+    padding: 0.3rem 0.8rem; font-size: 0.72rem; font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.06em;
+  }
+  .logout-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+
+  /* ===== SELF PR TOOL ===== */
+  .pr-step { border: 1px solid rgba(10,26,62,0.1); background: white; margin-bottom: 0.7rem; }
+  .pr-step-head { background: var(--navy); padding: 0.5rem 1rem; display: flex; align-items: center; gap: 0.6rem; }
+  .pr-step-letter { font-family: 'Playfair Display',serif; font-size: 1rem; color: var(--gold); font-weight: 700; }
+  .pr-step-name { font-size: 0.72rem; color: rgba(255,255,255,0.8); letter-spacing: 0.06em; }
+  .pr-step-hint { font-size: 0.65rem; color: rgba(255,255,255,0.45); margin-left: auto; }
+  .pr-step-body { padding: 0.6rem; }
+  .pr-textarea { width: 100%; padding: 0.5rem; border: 1px solid rgba(10,26,62,0.15); font-family: 'Noto Sans JP',sans-serif; font-size: 0.82rem; line-height: 1.7; outline: none; resize: vertical; min-height: 52px; transition: border-color 0.2s; }
+  .pr-textarea:focus { border-color: var(--navy); }
+  .pr-preview-wrap { background: rgba(10,26,62,0.02); border: 1px solid rgba(10,26,62,0.08); border-left: 3px solid var(--navy); padding: 1rem 1.2rem; margin-bottom: 0.6rem; min-height: 60px; }
+  .pr-preview { font-size: 0.85rem; line-height: 1.9; white-space: pre-wrap; color: var(--text); }
+  .pr-char-count { font-size: 0.68rem; color: var(--text-muted); text-align: right; margin-bottom: 0.8rem; }
+  .pr-copy-btn { padding: 0.6rem 1.5rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.08em; transition: background 0.2s; }
+  .pr-copy-btn:hover { background: var(--crimson); }
+
+  /* ===== ES BOARD ===== */
+  .board-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+  .board-post-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; letter-spacing: 0.06em; transition: background 0.2s; }
+  .board-post-btn:hover { background: var(--crimson); }
+  .board-card { background: white; border: 1px solid rgba(10,26,62,0.1); border-top: 3px solid var(--navy); padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+  .board-card-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+  .board-card-company { font-family: 'Noto Serif JP',serif; font-size: 0.9rem; font-weight: 700; color: var(--navy); }
+  .board-card-user { font-size: 0.65rem; color: var(--text-muted); }
+  .board-card-q { font-size: 0.75rem; font-weight: 700; color: var(--crimson); background: rgba(192,0,26,0.06); padding: 0.3rem 0.6rem; display: inline-block; margin-bottom: 0.5rem; }
+  .board-card-text { font-size: 0.82rem; line-height: 1.85; color: var(--text); margin-bottom: 0.8rem; white-space: pre-wrap; }
+  .board-comments { border-top: 1px solid rgba(10,26,62,0.07); padding-top: 0.7rem; }
+  .board-comment { font-size: 0.78rem; line-height: 1.7; padding: 0.35rem 0; border-bottom: 1px solid rgba(10,26,62,0.04); }
+  .board-comment-user { font-weight: 700; color: var(--navy); margin-right: 0.3rem; }
+  .board-comment-row { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
+  .board-comment-input { flex: 1; padding: 0.45rem 0.6rem; border: 1px solid rgba(10,26,62,0.15); font-family: 'Noto Sans JP',sans-serif; font-size: 0.78rem; outline: none; }
+  .board-comment-input:focus { border-color: var(--navy); }
+  .board-comment-submit { padding: 0.45rem 0.9rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.72rem; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+  .board-comment-submit:hover { background: var(--crimson); }
+  .board-modal-overlay { display: none; position: fixed; inset: 0; z-index: 250; background: rgba(0,0,0,0.55); align-items: flex-start; justify-content: center; padding: 2rem 1rem; overflow-y: auto; }
+  .board-modal-overlay.open { display: flex; }
+  .board-modal-box { background: white; width: min(560px, 100%); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .board-modal-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .board-modal-title { font-family: 'Noto Serif JP',serif; font-size: 0.95rem; color: white; font-weight: 700; }
+  .board-modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .board-field-label { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem; }
+  .board-field-input, .board-field-textarea { width: 100%; padding: 0.7rem; border: 1px solid rgba(10,26,62,0.2); font-family: 'Noto Sans JP',sans-serif; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+  .board-field-input:focus, .board-field-textarea:focus { border-color: var(--navy); }
+  .board-field-textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
+  .board-submit-btn { width: 100%; padding: 0.85rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; letter-spacing: 0.06em; transition: background 0.2s; }
+  .board-submit-btn:hover { background: var(--crimson); }
+
+  /* ===== AI TOOLS ===== */
+  .ai-tool-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 2px solid rgba(10,26,62,0.1); }
+  .ai-tab-btn { padding: 0.6rem 1.2rem; background: none; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.82rem; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+  .ai-tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 700; }
+  .ai-tab-btn.coming-soon { cursor: default; opacity: 0.5; position: relative; }
+  .ai-tab-btn.coming-soon .soon-badge { font-size: 0.62rem; background: var(--gold); color: var(--navy); border-radius: 3px; padding: 0.1rem 0.35rem; margin-left: 0.4rem; font-weight: 700; vertical-align: middle; }
+  .ai-tab-panel { display: none; }
+  .ai-tab-panel.active { display: block; }
+  .ai-form-group { margin-bottom: 1rem; }
+  .ai-label { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.35rem; font-weight: 500; }
+  .ai-input { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid rgba(10,26,62,0.18); background: white; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; }
+  .ai-input:focus { border-color: var(--navy); }
+  .ai-textarea { width: 100%; padding: 0.8rem 0.9rem; border: 1px solid rgba(10,26,62,0.18); background: white; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; outline: none; resize: vertical; min-height: 140px; line-height: 1.75; transition: border-color 0.2s; }
+  .ai-textarea:focus { border-color: var(--navy); }
+  .ai-submit-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.8rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s; }
+  .ai-submit-btn:hover:not(:disabled) { background: var(--crimson); }
+  .ai-submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .ai-result-box { margin-top: 1.5rem; background: var(--gray); border-left: 3px solid var(--navy); padding: 1.2rem 1.4rem; font-size: 0.88rem; line-height: 1.85; white-space: pre-wrap; min-height: 80px; display: none; }
+  .ai-result-box.visible { display: block; }
+  .ai-result-box.loading { color: var(--text-muted); font-style: italic; }
+  .ai-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ai-error-msg { font-size: 0.78rem; color: var(--crimson); margin-top: 0.5rem; min-height: 1.2em; }
+  .ai-note { font-size: 0.75rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.2rem; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); padding: 0.6rem 0.9rem; }
+  .ai-char-count { font-size: 0.72rem; color: var(--text-muted); text-align: right; margin-top: 0.2rem; }
+
+  /* ===== ガクチカ保管庫 ===== */
+  .gk-empty { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; }
+  .gk-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .gk-card { background: white; border: 1px solid rgba(10,26,62,0.12); padding: 1rem 1.2rem; }
+  .gk-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
+  .gk-card-title { font-weight: 700; font-size: 0.92rem; color: var(--navy); }
+  .gk-card-category { display: inline-block; font-size: 0.68rem; padding: 0.1rem 0.55rem; border: 1px solid rgba(201,168,76,0.4); color: var(--gold); font-weight: 600; letter-spacing: 0.05em; flex-shrink: 0; margin-top: 0.15rem; }
+  .gk-card-body { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; white-space: pre-wrap; max-height: 64px; overflow: hidden; transition: max-height 0.2s; cursor: pointer; }
+  .gk-card-body.expanded { max-height: none; }
+  .gk-card-footer { display: flex; gap: 0.5rem; margin-top: 0.6rem; flex-wrap: wrap; align-items: center; }
+  .gk-btn { font-size: 0.72rem; padding: 0.22rem 0.6rem; border: 1px solid rgba(10,26,62,0.2); background: none; cursor: pointer; font-family: 'Noto Sans JP',sans-serif; color: var(--text-muted); transition: all 0.15s; }
+  .gk-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .gk-btn.primary { border-color: var(--navy); color: var(--navy); }
+  .gk-btn.accent { border-color: var(--gold); color: var(--gold); }
+  .gk-btn.accent:hover { background: var(--gold); color: white; }
+  .gk-add-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.2rem; background: none; border: 1.5px dashed rgba(10,26,62,0.2); color: var(--text-muted); font-family: 'Noto Sans JP',sans-serif; font-size: 0.82rem; cursor: pointer; width: 100%; justify-content: center; transition: all 0.2s; margin-bottom: 1rem; }
+  .gk-add-btn:hover { border-color: var(--navy); color: var(--navy); }
+  /* ガクチカモーダル */
+  .gk-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2300; display: none; align-items: flex-start; justify-content: center; padding: 1rem; overflow-y: auto; }
+  .gk-modal-overlay.open { display: flex; }
+  .gk-modal { background: white; width: 100%; max-width: 620px; margin: auto; padding: 2rem; }
+  .gk-modal-title { font-family: 'Noto Serif JP',serif; font-size: 1.05rem; color: var(--navy); margin-bottom: 1.4rem; font-weight: 700; }
+  .gk-section-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.3rem; margin-top: 0.9rem; }
+  .gk-star-hint { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.5rem; line-height: 1.5; }
+  .gk-category-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+  .gk-cat-btn { font-size: 0.75rem; padding: 0.3rem 0.75rem; border: 1px solid rgba(10,26,62,0.2); background: none; cursor: pointer; font-family: 'Noto Sans JP',sans-serif; color: var(--text-muted); transition: all 0.15s; }
+  .gk-cat-btn.selected { border-color: var(--navy); background: var(--navy); color: white; }
+  /* ES生成モーダル */
+  .gk-gen-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2400; display: none; align-items: flex-start; justify-content: center; padding: 1rem; overflow-y: auto; }
+  .gk-gen-overlay.open { display: flex; }
+  .gk-gen-modal { background: white; width: 100%; max-width: 640px; margin: auto; padding: 2rem; }
+  .gk-gen-select-list { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; max-height: 200px; overflow-y: auto; border: 1px solid rgba(10,26,62,0.1); padding: 0.6rem; }
+  .gk-gen-item { padding: 0.5rem 0.65rem; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; transition: background 0.12s; border: 1px solid transparent; }
+  .gk-gen-item:hover { background: rgba(10,26,62,0.03); }
+  .gk-gen-item.selected { border-color: var(--navy); background: rgba(10,26,62,0.04); }
+  .gk-gen-item-check { width: 16px; height: 16px; border: 1.5px solid rgba(10,26,62,0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.65rem; color: white; background: transparent; }
+  .gk-gen-item.selected .gk-gen-item-check { background: var(--navy); border-color: var(--navy); }
+  .gk-gen-result { margin-top: 1.2rem; border-top: 1px solid rgba(10,26,62,0.1); padding-top: 1rem; }
+  .gk-gen-result-text { white-space: pre-wrap; font-size: 0.85rem; line-height: 1.8; color: var(--text); background: rgba(10,26,62,0.02); padding: 1rem; border: 1px solid rgba(10,26,62,0.08); }
+
+  /* ===== ES保管庫 ===== */
+  .es-bank-empty { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; }
+  .es-bank-company { border: 1px solid rgba(10,26,62,0.12); margin-bottom: 0.6rem; background: white; }
+  .es-bank-company-header { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.2rem; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: 'Noto Sans JP',sans-serif; transition: background 0.15s; }
+  .es-bank-company-header:hover { background: rgba(10,26,62,0.03); }
+  .es-bank-company-name { font-weight: 700; font-size: 0.92rem; color: var(--navy); }
+  .es-bank-company-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.1rem; }
+  .es-bank-company-arrow { font-size: 0.8rem; color: var(--text-muted); transition: transform 0.2s; }
+  .es-bank-company-arrow.open { transform: rotate(180deg); }
+  .es-bank-company-body { border-top: 1px solid rgba(10,26,62,0.08); padding: 0.5rem 1.2rem 0.75rem; display: none; }
+  .es-bank-company-body.open { display: block; }
+  .es-bank-entry { padding: 0.65rem 0; border-bottom: 1px solid rgba(10,26,62,0.06); }
+  .es-bank-entry:last-child { border-bottom: none; }
+  .es-bank-question { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+  .es-bank-text { font-size: 0.85rem; line-height: 1.7; white-space: pre-wrap; max-height: 80px; overflow: hidden; cursor: pointer; }
+  .es-bank-text.expanded { max-height: none; }
+  .es-bank-entry-footer { display: flex; gap: 0.5rem; margin-top: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .es-bank-result { font-size: 0.68rem; padding: 0.12rem 0.5rem; border-radius: 3px; font-weight: 600; }
+  .es-bank-result.pass { background: #e6f4ea; color: #2d7a3a; }
+  .es-bank-result.fail { background: #fdecea; color: #c62828; }
+  .es-bank-result.pending { background: rgba(10,26,62,0.06); color: var(--text-muted); }
+  .es-bank-btn { font-size: 0.72rem; padding: 0.22rem 0.6rem; border: 1px solid rgba(10,26,62,0.2); background: none; cursor: pointer; font-family: 'Noto Sans JP',sans-serif; color: var(--text-muted); transition: all 0.15s; }
+  .es-bank-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .es-bank-btn.primary { border-color: var(--navy); color: var(--navy); }
+  .es-bank-add-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1.2rem; background: none; border: 1.5px dashed rgba(10,26,62,0.2); color: var(--text-muted); font-family: 'Noto Sans JP',sans-serif; font-size: 0.82rem; cursor: pointer; width: 100%; justify-content: center; transition: all 0.2s; margin-bottom: 1rem; }
+  .es-bank-add-btn:hover { border-color: var(--navy); color: var(--navy); }
+  /* ES添削 複数設問 */
+  .esr-questions { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1rem; }
+  .esr-question-block { border: 1px solid rgba(10,26,62,0.15); padding: 0.9rem 1rem 0.75rem; position: relative; background: white; }
+  .esr-question-num { font-size: 0.7rem; font-weight: 700; color: var(--navy); letter-spacing: 0.1em; margin-bottom: 0.55rem; }
+  .esr-remove-btn { position: absolute; top: 0.5rem; right: 0.7rem; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0; }
+  .esr-remove-btn:hover { color: var(--crimson); }
+  .esr-actions-row { display: flex; gap: 0.75rem; margin-bottom: 1.2rem; flex-wrap: wrap; align-items: center; }
+  /* ES保管庫モーダル */
+  .es-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .es-modal-overlay.open { display: flex; }
+  .es-modal { background: white; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; padding: 1.8rem; }
+  .es-modal-title { font-family: 'Noto Serif JP',serif; font-size: 1.05rem; color: var(--navy); margin-bottom: 1.2rem; font-weight: 700; }
+  .es-modal-actions { display: flex; gap: 0.75rem; margin-top: 1.4rem; }
+  .es-modal-save { flex: 1; padding: 0.75rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+  .es-modal-save:hover { background: var(--crimson); }
+  .es-modal-cancel { padding: 0.75rem 1.2rem; background: none; border: 1px solid rgba(10,26,62,0.2); color: var(--text-muted); font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; cursor: pointer; }
+  .es-modal-select { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid rgba(10,26,62,0.18); background: white; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; outline: none; }
+  .es-load-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 2100; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .es-load-modal-overlay.open { display: flex; }
+  .es-load-modal { background: white; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; padding: 1.8rem; }
+  .es-load-entry { padding: 0.75rem 0; border-bottom: 1px solid rgba(10,26,62,0.07); cursor: pointer; transition: background 0.15s; }
+  .es-load-entry:hover { background: rgba(10,26,62,0.03); }
+  .es-load-entry:last-child { border-bottom: none; }
+  .es-load-entry-company { font-weight: 700; font-size: 0.88rem; color: var(--navy); }
+  .es-load-entry-q { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; }
+  .es-load-entry-check { font-size: 0.72rem; color: var(--crimson); font-weight: 600; float: right; }
+
+  /* ES閲覧モーダル */
+  .es-view-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2200; display: none; align-items: flex-start; justify-content: center; padding: 1rem; overflow-y: auto; }
+  .es-view-overlay.open { display: flex; }
+  .es-view-modal { background: white; width: 100%; max-width: 680px; margin: auto; padding: 2rem; position: relative; }
+  .es-view-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; border-bottom: 2px solid rgba(10,26,62,0.1); padding-bottom: 1rem; }
+  .es-view-company { font-family: 'Noto Serif JP',serif; font-size: 1.15rem; font-weight: 700; color: var(--navy); }
+  .es-view-industry { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .es-view-close { background: none; border: none; font-size: 1.4rem; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0; flex-shrink: 0; }
+  .es-view-close:hover { color: var(--navy); }
+  .es-view-section { margin-bottom: 1.2rem; }
+  .es-view-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.35rem; }
+  .es-view-question-text { font-size: 0.88rem; color: var(--navy); background: rgba(10,26,62,0.04); padding: 0.65rem 0.9rem; }
+  .es-view-estext { font-size: 0.9rem; line-height: 1.85; white-space: pre-wrap; color: var(--text); background: rgba(10,26,62,0.02); padding: 1rem; border: 1px solid rgba(10,26,62,0.08); position: relative; }
+  .es-view-charcount { font-size: 0.72rem; color: var(--text-muted); text-align: right; margin-top: 0.3rem; }
+  .es-view-meta-row { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.2rem; }
+  .es-view-memo { font-size: 0.85rem; color: var(--text-muted); white-space: pre-wrap; background: rgba(10,26,62,0.03); padding: 0.65rem 0.9rem; }
+  .es-view-actions { display: flex; gap: 0.75rem; margin-top: 1.4rem; }
+  .es-view-edit-btn { flex: 1; padding: 0.75rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+  .es-view-edit-btn:hover { background: var(--crimson); }
+  .es-view-copy-btn { padding: 0.75rem 1.2rem; background: none; border: 1px solid rgba(10,26,62,0.2); color: var(--text-muted); font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; cursor: pointer; }
+  .es-view-copy-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+  /* ===== ESチャット ===== */
+  .es-chat-area { margin-top: 1.5rem; border-top: 2px solid rgba(10,26,62,0.1); padding-top: 1.2rem; }
+  .es-chat-intro { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.85rem; }
+  .es-chat-messages { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1rem; max-height: 520px; overflow-y: auto; padding-right: 0.25rem; }
+  .es-chat-bubble-wrap { display: flex; flex-direction: column; }
+  .es-chat-bubble-wrap.user { align-items: flex-end; }
+  .es-chat-bubble-wrap.ai { align-items: flex-start; }
+  .es-chat-label { font-size: 0.67rem; color: var(--text-muted); margin-bottom: 0.2rem; letter-spacing: 0.04em; }
+  .es-chat-bubble { max-width: 88%; padding: 0.75rem 1rem; font-size: 0.86rem; line-height: 1.78; white-space: pre-wrap; word-break: break-word; }
+  .es-chat-bubble.user { background: var(--navy); color: white; border-radius: 2px 0 2px 2px; }
+  .es-chat-bubble.ai { background: var(--gray); border-left: 3px solid var(--navy); }
+  .es-chat-input-row { display: flex; gap: 0.5rem; align-items: flex-end; }
+  .es-chat-input { flex: 1; padding: 0.75rem 0.9rem; border: 1px solid rgba(10,26,62,0.18); font-family: 'Noto Sans JP',sans-serif; font-size: 0.87rem; resize: vertical; min-height: 72px; line-height: 1.65; outline: none; transition: border-color 0.2s; }
+  .es-chat-input:focus { border-color: var(--navy); }
+  .es-chat-send-btn { padding: 0.72rem 1.2rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; align-self: flex-end; transition: background 0.2s; }
+  .es-chat-send-btn:hover:not(:disabled) { background: var(--crimson); }
+  .es-chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav style="justify-content:center;">
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a>
+  <span class="nav-member-badge" id="member-badge" style="display:none;position:absolute;right:5vw;font-size:0.72rem;color:var(--gold-light);"></span>
+  <button class="logout-btn" id="logout-btn" style="display:none;position:absolute;right:5vw;" onclick="logout()">ログアウト</button>
+</nav>
+
+<div class="mobile-menu-m" id="mobile-menu-m" style="display:none;">
+  <a href="account.html">マイページ</a>
+  <button id="mobile-logout-btn" style="display:none;" onclick="logout()">ログアウト</button>
+</div>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+  <div class="pw-box">
+    <div class="pw-icon">&#x1f4dd;</div>
+    <h2 class="pw-title">ES・ガクチカを書く</h2>
+    <p class="pw-sub" id="auth-gate-copy">このページは慶應就活ナビのメンバー限定です。<br>個人アカウントでログインすると閲覧できます。</p>
+    <div class="gate-actions">
+      <a class="pw-btn" id="gate-login-btn" href="account.html?mode=login&amp;returnTo=writing.html">ログインして入る →</a>
+      <a class="pw-link-btn" href="account.html?mode=signup&amp;returnTo=writing.html">新しくアカウントを作る</a>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERS CONTENT -->
+<div id="members-content">
+
+  <div class="members-hero">
+    <div class="members-hero-inner">
+      <div class="members-badge">MEMBERS ONLY</div>
+      <h1>ES・ガクチカを書く</h1>
+      <p id="members-hero-copy">ガクチカの保管・ES作成・添削・自己PR作成ツールをまとめています。</p>
+    </div>
+  </div>
+
+  <div class="members-main">
+
+    <div style="margin:2.5rem 0 1.5rem; padding:0 0.5rem;">
+      <div style="font-size:0.65rem; letter-spacing:0.18em; color:var(--gold); font-weight:700; text-transform:uppercase;">WRITE</div>
+      <div style="font-family:'Noto Serif JP',serif; font-size:1.2rem; font-weight:700; color:var(--navy); margin-top:0.2rem;">ES・ガクチカを書く</div>
+      <div style="width:40px; height:2px; background:var(--gold); margin-top:0.5rem;"></div>
+    </div>
+
+    <!-- ===== ガクチカ保管庫 ===== -->
+    <div class="m-section" id="gakuchika-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">MY GAKUCHIKA</div>
+          <div class="m-section-title">ガクチカ保管庫</div>
+        </div>
+      </div>
+      <div class="m-section-body">
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.6;">エピソードをSTAR法（状況・課題・行動・結果）でメモしておくと、ES生成・面接対策に活用できます。</div>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+          <button class="gk-add-btn" onclick="openGakuchikaModal()" style="flex:1;margin-bottom:0;">＋ ガクチカを追加する</button>
+          <button class="gk-add-btn" onclick="exportGakuchikaToPdf()" style="flex:0 0 auto;width:auto;padding:0.45rem 1rem;margin-bottom:0;border-style:solid;border-color:var(--navy);color:var(--navy);">PDF出力</button>
+        </div>
+        <div id="gakuchika-list"><div class="m-loading">読み込み中...</div></div>
+        <div style="margin-top:1rem;text-align:center;">
+          <button class="gk-btn accent" onclick="openGkGenModal()" style="font-size:0.8rem;padding:0.45rem 1.2rem;">✦ ガクチカからESを生成する</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ES保管庫 ===== -->
+    <div class="m-section" id="es-bank-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">MY ES BANK</div>
+          <div class="m-section-title">ES保管庫</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+        <button class="es-bank-add-btn" onclick="openEsBankModal()" style="flex:1;margin-bottom:0;">＋ ESを追加する</button>
+        <button class="es-bank-add-btn" onclick="exportEsToPdf()" style="flex:0 0 auto;width:auto;padding:0.45rem 1rem;margin-bottom:0;border-style:solid;border-color:var(--navy);color:var(--navy);">PDF出力</button>
+      </div>
+      <div id="es-bank-list"><div class="m-loading">読み込み中...</div></div>
+    </div>
+
+    <!-- ES添削掲示板 -->
+    <div class="m-section" id="es-board-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">ES REVIEW</div>
+          <div class="m-section-title">ES添削掲示板</div>
+        </div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.2rem;">自分のESを投稿してメンバーからフィードバックをもらおう。コメントは匿名で投稿できます。</p>
+      <div class="board-toolbar">
+        <span style="font-size:0.78rem;color:var(--text-muted);" id="board-count">読み込み中...</span>
+        <button class="board-post-btn" id="board-post-btn">＋ ESを投稿する</button>
+      </div>
+      <div id="board-list"></div>
+    </div>
+
+    <!-- 自己PR補助ツール（PREP法） -->
+    <div class="m-section" id="self-pr-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">SELF PR</div>
+          <div class="m-section-title">自己PR補助ツール（PREP法）</div>
+        </div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.2rem;">PREP法（結論→理由→具体例→結論）で自己PRを組み立てよう。入力した内容は自動でプレビューに反映されます。</p>
+      <div id="pr-steps"></div>
+      <div class="pr-preview-wrap"><div class="pr-preview" id="pr-preview">（入力するとここにプレビューが表示されます）</div></div>
+      <div class="pr-char-count" id="pr-char-count">0文字</div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;">
+        <button class="pr-copy-btn" onclick="copyPR()">クリップボードにコピー</button>
+        <button class="pr-copy-btn" onclick="aiReviewPR()" id="pr-ai-btn" style="background:var(--navy);color:white;border-color:var(--navy);">AIに添削してもらう</button>
+      </div>
+      <div id="pr-ai-result" style="display:none;margin-top:1.2rem;padding:1rem;background:var(--gray);font-size:0.82rem;line-height:1.8;white-space:pre-wrap;border-left:3px solid var(--gold);"></div>
+    </div>
+
+    <!-- ===== AI就活サポートツール ===== -->
+    <div class="m-section" id="ai-tools-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="18" cy="8" r="4" fill="white" stroke="none"/><path d="M16 8h4M18 6v4" stroke="white" stroke-width="1.5"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">AI TOOLS</div>
+          <div class="m-section-title">AI就活サポートツール</div>
+        </div>
+      </div>
+      <p class="ai-note">⚠ AI回答は参考情報です。最終判断は必ずご自身で行ってください。GASを経由してAnthropicのAPIを呼び出しています（要ログイン）。</p>
+
+      <!-- タブ切り替え -->
+      <div class="ai-tool-tabs">
+        <button class="ai-tab-btn active" data-tab="es-review">&#x1f4dd; ES添削</button>
+        <button class="ai-tab-btn coming-soon" disabled>&#x1f3a4; 面接練習<span class="soon-badge">近日公開</span></button>
+        <button class="ai-tab-btn coming-soon" disabled>&#x1f504; ES流用<span class="soon-badge">近日公開</span></button>
+      </div>
+
+      <!-- タブ1: ES自動添削 -->
+      <div class="ai-tab-panel active" id="ai-tab-es-review">
+        <div class="ai-form-group">
+          <input type="hidden" class="ai-input" id="esr-company" value="">
+        </div>
+        <div class="esr-questions" id="esr-questions">
+          <div class="esr-question-block" data-index="0">
+            <div class="esr-question-num">設問 1</div>
+            <div style="display:flex;gap:0.6rem;margin-bottom:0.55rem;">
+              <div class="ai-form-group" style="flex:1;margin-bottom:0;">
+                <input type="text" class="ai-input esr-q-input" placeholder="設問テキスト（任意）">
+              </div>
+              <div class="ai-form-group" style="width:90px;margin-bottom:0;">
+                <input type="number" class="ai-input esr-limit-input" placeholder="字数制限" min="1" style="text-align:center;">
+              </div>
+            </div>
+            <div class="ai-form-group" style="margin-bottom:0.25rem;">
+              <textarea class="ai-textarea esr-t-input" placeholder="ES内容をここに貼り付けてください..." oninput="updateEsrCharCount(this)"></textarea>
+              <div class="ai-char-count">0 字</div>
+            </div>
+          </div>
+        </div>
+        <div class="esr-actions-row">
+          <button class="es-bank-add-btn" style="width:auto;flex:1;min-width:130px;margin-bottom:0;" onclick="addEsrQuestion()">＋ 設問を追加</button>
+          <button class="es-bank-btn primary" onclick="openLoadFromBankModal()" style="padding:0.45rem 0.9rem;white-space:nowrap;">&#x1f4c2; 保管庫から読み込む</button>
+        </div>
+        <button class="ai-submit-btn" id="esr-submit-btn" onclick="submitEsReview()">
+          <span class="btn-text">✨ AIに添削してもらう</span>
+        </button>
+        <div class="ai-error-msg" id="esr-error"></div>
+        <div class="ai-result-box" id="esr-result"></div>
+        <!-- チャットエリア（添削後に表示） -->
+        <div class="es-chat-area" id="esr-chat-area" style="display:none;">
+          <div class="es-chat-intro">&#x1f4ac; 修正したESを貼り直したり、気になる点を質問したりしながらAIと一緒にブラッシュアップできます</div>
+          <div class="es-chat-messages" id="esr-chat-messages"></div>
+          <div class="es-chat-input-row">
+            <textarea class="es-chat-input" id="esr-chat-input" placeholder="例：「第2段落を修正しました。確認してください」「もっと具体性を出すにはどうすればいいですか？」"></textarea>
+            <button class="es-chat-send-btn" id="esr-chat-send" onclick="sendEsrChat()">送信</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- タブ2: 面接練習AIコーチ -->
+      <div class="ai-tab-panel" id="ai-tab-interview-coach">
+        <div class="ai-form-group">
+          <label class="ai-label">面接質問</label>
+          <input type="text" class="ai-input" id="ic-question" placeholder="例：あなたの強みを教えてください">
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-label">志望職種（任意）</label>
+          <input type="text" class="ai-input" id="ic-jobtype" placeholder="例：総合職、営業、エンジニア">
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-label">あなたの回答 <span style="color:var(--crimson)">*</span></label>
+          <textarea class="ai-textarea" id="ic-answer" placeholder="面接で話す回答をここに入力してください..." oninput="updateCharCount('ic-answer','ic-char')"></textarea>
+          <div class="ai-char-count" id="ic-char">0 字</div>
+        </div>
+        <button class="ai-submit-btn" id="ic-submit-btn" onclick="submitInterviewCoach()">
+          <span class="btn-text">&#x1f3a4; AIコーチに評価してもらう</span>
+        </button>
+        <div class="ai-error-msg" id="ic-error"></div>
+        <div class="ai-result-box" id="ic-result"></div>
+      </div>
+
+      <!-- タブ3: ES流用支援 -->
+      <div class="ai-tab-panel" id="ai-tab-es-rewrite">
+        <div class="ai-form-group">
+          <label class="ai-label">元のES <span style="color:var(--crimson)">*</span></label>
+          <textarea class="ai-textarea" id="rw-original" placeholder="流用したい元のESを貼り付けてください..." oninput="updateCharCount('rw-original','rw-char1')"></textarea>
+          <div class="ai-char-count" id="rw-char1">0 字</div>
+        </div>
+        <div class="ai-form-group">
+          <input type="hidden" class="ai-input" id="rw-company" value="">
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-label">新しい設問（任意）</label>
+          <input type="text" class="ai-input" id="rw-question" placeholder="例：志望動機を300字以内で教えてください">
+        </div>
+        <button class="ai-submit-btn" id="rw-submit-btn" onclick="submitEsRewrite()">
+          <span class="btn-text">&#x1f504; AIに流用ESを作ってもらう</span>
+        </button>
+        <div class="ai-error-msg" id="rw-error"></div>
+        <div class="ai-result-box" id="rw-result"></div>
+      </div>
+    </div>
+
+  </div><!-- /members-main -->
+</div><!-- /members-content -->
+
+<!-- ===== MODALS ===== -->
+
+<!-- ガクチカ 追加・編集モーダル -->
+<div class="gk-modal-overlay" id="gk-modal">
+  <div class="gk-modal">
+    <div class="gk-modal-title" id="gk-modal-title">ガクチカを追加する</div>
+    <input type="hidden" id="gk-modal-id">
+    <div class="ai-form-group">
+      <label class="ai-label">タイトル <span style="color:var(--crimson)">*</span></label>
+      <input type="text" class="ai-input" id="gk-modal-title-input" placeholder="例：テニスサークルでの主将経験">
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">カテゴリ</label>
+      <div class="gk-category-grid" id="gk-cat-grid">
+        <button class="gk-cat-btn" data-cat="部活・サークル" onclick="selectGkCat(this)">部活・サークル</button>
+        <button class="gk-cat-btn" data-cat="バイト" onclick="selectGkCat(this)">バイト</button>
+        <button class="gk-cat-btn" data-cat="研究・ゼミ" onclick="selectGkCat(this)">研究・ゼミ</button>
+        <button class="gk-cat-btn" data-cat="インターン" onclick="selectGkCat(this)">インターン</button>
+        <button class="gk-cat-btn" data-cat="ボランティア" onclick="selectGkCat(this)">ボランティア</button>
+        <button class="gk-cat-btn" data-cat="留学・海外経験" onclick="selectGkCat(this)">留学・海外経験</button>
+        <button class="gk-cat-btn" data-cat="資格・自己学習" onclick="selectGkCat(this)">資格・自己学習</button>
+        <button class="gk-cat-btn" data-cat="その他" onclick="selectGkCat(this)">その他</button>
+      </div>
+      <input type="hidden" id="gk-modal-category">
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">時期</label>
+      <select class="ai-input" id="gk-modal-period" style="padding:0.5rem 0.8rem;">
+        <option value="">選択してください</option>
+        <option value="大学">大学</option>
+        <option value="高校">高校</option>
+        <option value="中学">中学</option>
+        <option value="小学校">小学校</option>
+        <option value="幼少期">幼少期</option>
+      </select>
+    </div>
+    <div class="gk-star-hint">&#x1f4a1; STAR法でメモすると、ESや面接でそのまま活用できます（入力は任意）</div>
+    <div class="ai-form-group">
+      <div class="gk-section-label">S — 状況（Situation）</div>
+      <textarea class="ai-textarea" id="gk-modal-situation" placeholder="当時どんな状況・環境にいたか" style="min-height:70px;"></textarea>
+    </div>
+    <div class="ai-form-group">
+      <div class="gk-section-label">T — 課題・目標（Task）</div>
+      <textarea class="ai-textarea" id="gk-modal-task" placeholder="直面した課題や設定した目標" style="min-height:70px;"></textarea>
+    </div>
+    <div class="ai-form-group">
+      <div class="gk-section-label">A — 行動（Action）</div>
+      <textarea class="ai-textarea" id="gk-modal-action" placeholder="自分がとった具体的な行動（なぜその行動を選んだか）" style="min-height:90px;"></textarea>
+    </div>
+    <div class="ai-form-group">
+      <div class="gk-section-label">R — 結果・成果（Result）</div>
+      <textarea class="ai-textarea" id="gk-modal-result" placeholder="結果・成果（数値や具体的な変化があると◎）" style="min-height:70px;"></textarea>
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">アピールポイント・学び</label>
+      <textarea class="ai-textarea" id="gk-modal-appeal" placeholder="このエピソードで伝えたい強み・学んだこと" style="min-height:70px;"></textarea>
+    </div>
+    <div class="ai-error-msg" id="gk-modal-error"></div>
+    <div class="es-modal-actions">
+      <button class="es-modal-cancel" onclick="closeGakuchikaModal()">キャンセル</button>
+      <button class="es-modal-save" onclick="saveGakuchikaEntry()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ガクチカ 閲覧モーダル -->
+<div class="es-view-overlay" id="gk-view-modal">
+  <div class="es-view-modal">
+    <div class="es-view-modal-header">
+      <div>
+        <div class="es-view-company" id="gk-view-title"></div>
+        <div class="es-view-industry" id="gk-view-category"></div>
+      </div>
+      <button class="es-view-close" onclick="closeGkViewModal()">✕</button>
+    </div>
+    <div id="gk-view-star-sections"></div>
+    <div class="es-view-section" id="gk-view-appeal-section">
+      <div class="es-view-label">アピールポイント・学び</div>
+      <div class="es-view-memo" id="gk-view-appeal"></div>
+    </div>
+    <div class="es-view-actions">
+      <button class="es-view-copy-btn" onclick="openGkGenModalWithEntry(currentGkViewId)">このガクチカでES生成</button>
+      <button class="es-view-edit-btn" id="gk-view-edit-btn">編集する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ガクチカ → ES生成モーダル -->
+<div class="gk-gen-overlay" id="gk-gen-modal">
+  <div class="gk-gen-modal">
+    <div class="es-modal-title">ガクチカからESを生成する</div>
+    <div class="ai-form-group">
+      <label class="ai-label">使用するガクチカを選択（複数可）</label>
+      <div class="gk-gen-select-list" id="gk-gen-select-list"></div>
+    </div>
+    <div class="ai-form-group">
+      <input type="hidden" class="ai-input" id="gk-gen-company" value="">
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">設問テキスト</label>
+      <input type="text" class="ai-input" id="gk-gen-question" placeholder="例：学生時代に最も力を入れたこと（400字以内）">
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">字数制限</label>
+      <input type="number" class="ai-input" id="gk-gen-charlimit" placeholder="例：400（空欄で制限なし）" min="1">
+    </div>
+    <div class="ai-error-msg" id="gk-gen-error"></div>
+    <div id="gk-gen-result" style="display:none;">
+      <div class="gk-gen-result">
+        <div class="es-view-label" style="margin-bottom:0.5rem;">生成結果</div>
+        <div class="gk-gen-result-text" id="gk-gen-result-text"></div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;">
+          <button class="es-view-copy-btn" onclick="copyGkGenResult()" style="font-size:0.78rem;padding:0.45rem 0.9rem;">コピー</button>
+          <button class="gk-btn accent" onclick="saveGkGenToEsBank()" style="font-size:0.78rem;padding:0.45rem 0.9rem;">ES保管庫に保存</button>
+        </div>
+      </div>
+    </div>
+    <div class="es-modal-actions">
+      <button class="es-modal-cancel" onclick="closeGkGenModal()">閉じる</button>
+      <button class="es-modal-save" id="gk-gen-submit-btn" onclick="submitGkGen()">ESを生成する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ES保管庫 追加・編集モーダル -->
+<div class="es-modal-overlay" id="es-bank-modal">
+  <div class="es-modal">
+    <div class="es-modal-title" id="es-bank-modal-title">ESを追加する</div>
+    <input type="hidden" id="es-modal-id">
+    <div class="ai-form-group">
+      <label class="ai-label">会社名 <span style="color:var(--crimson)">*</span></label>
+      <input type="text" class="ai-input" id="es-modal-company" placeholder="例：三菱商事">
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">業界</label>
+      <input type="text" class="ai-input" id="es-modal-industry" placeholder="例：総合商社、メガバンク">
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">設問テキスト</label>
+      <input type="text" class="ai-input" id="es-modal-question" placeholder="例：学生時代に最も力を入れたこと（400字）">
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">ES内容 <span style="color:var(--crimson)">*</span></label>
+      <textarea class="ai-textarea" id="es-modal-estext" placeholder="ESの内容を貼り付けてください..." style="min-height:160px;"></textarea>
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">選考結果</label>
+      <select class="es-modal-select" id="es-modal-result">
+        <option value="">未確定</option>
+        <option value="通過">通過</option>
+        <option value="不通過">不通過</option>
+      </select>
+    </div>
+    <div class="ai-form-group">
+      <label class="ai-label">メモ（工夫した点など）</label>
+      <textarea class="ai-textarea" id="es-modal-memo" placeholder="任意" style="min-height:80px;"></textarea>
+    </div>
+    <div class="ai-error-msg" id="es-modal-error"></div>
+    <div class="es-modal-actions">
+      <button class="es-modal-cancel" onclick="closeEsBankModal()">キャンセル</button>
+      <button class="es-modal-save" onclick="saveEsBankEntry()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ES保管庫 読み込みモーダル -->
+<div class="es-load-modal-overlay" id="es-load-modal">
+  <div class="es-load-modal">
+    <div class="es-modal-title">保管庫から読み込む</div>
+    <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:1rem;">追加したいESをクリックしてください（複数選択可）</p>
+    <div id="es-load-list"></div>
+    <div class="es-modal-actions">
+      <button class="es-modal-cancel" onclick="closeLoadFromBankModal()">キャンセル</button>
+      <button class="es-modal-save" onclick="applyLoadFromBank()">追加する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ES保管庫 閲覧モーダル -->
+<div class="es-view-overlay" id="es-view-modal">
+  <div class="es-view-modal">
+    <div class="es-view-modal-header">
+      <div>
+        <div class="es-view-company" id="es-view-company"></div>
+        <div class="es-view-industry" id="es-view-industry"></div>
+      </div>
+      <button class="es-view-close" onclick="closeEsViewModal()">✕</button>
+    </div>
+    <div class="es-view-section" id="es-view-question-section">
+      <div class="es-view-label">設問</div>
+      <div class="es-view-question-text" id="es-view-question"></div>
+    </div>
+    <div class="es-view-section">
+      <div class="es-view-label">ES内容</div>
+      <div class="es-view-estext" id="es-view-estext"></div>
+      <div class="es-view-charcount" id="es-view-charcount"></div>
+    </div>
+    <div class="es-view-meta-row">
+      <div id="es-view-result-badge"></div>
+    </div>
+    <div class="es-view-section" id="es-view-memo-section">
+      <div class="es-view-label">メモ</div>
+      <div class="es-view-memo" id="es-view-memo"></div>
+    </div>
+    <div class="es-view-actions">
+      <button class="es-view-copy-btn" onclick="copyEsViewText()">コピー</button>
+      <button class="es-view-edit-btn" id="es-view-edit-btn" onclick="">編集する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ES添削掲示板 投稿モーダル -->
+<div class="board-modal-overlay" id="board-modal">
+  <div class="board-modal-box">
+    <div class="board-modal-header">
+      <span class="board-modal-title">ESを投稿する</span>
+      <button id="board-modal-close" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">✕</button>
+    </div>
+    <div class="board-modal-body">
+      <div>
+        <label class="board-field-label">タイトル <span style="color:var(--crimson);">*</span></label>
+        <input type="text" id="bm-company" class="board-field-input" placeholder="例：志望動機（総合商社）">
+      </div>
+      <div>
+        <label class="board-field-label">設問 <span style="color:var(--crimson);">*</span></label>
+        <input type="text" id="bm-question" class="board-field-input" placeholder="例：学生時代に最も力を入れたことを400字以内で">
+      </div>
+      <div>
+        <label class="board-field-label">ESの内容 <span style="color:var(--crimson);">*</span></label>
+        <textarea id="bm-text" class="board-field-textarea" placeholder="ここにESの内容を貼り付けてください..."></textarea>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-muted);line-height:1.7;background:rgba(10,26,62,0.04);padding:0.7rem 0.9rem;">
+        投稿は全会員に公開されます。個人を特定できる情報は含めないようにしてください。
+      </div>
+      <div style="font-size:0.78rem;color:var(--crimson);min-height:1em;" id="bm-error"></div>
+      <button id="bm-submit" class="board-submit-btn">投稿する</button>
+    </div>
+  </div>
+</div>
+
+<!-- スクロールトップボタン -->
+<button class="scroll-top-btn" id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#x25B2;</button>
+
+<script src="auth.js"></script>
+<script>
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const GAS_URL = GAS_PROXY_URL;
+
+  function logout() {
+    KeioNaviAuth.logout();
+    location.reload();
+  }
+
+  function toggleMobileMenuM() {
+    document.getElementById('hamburger-m').classList.toggle('open');
+    document.getElementById('mobile-menu-m').classList.toggle('open');
+  }
+
+  function showMembers(user) {
+    document.getElementById('password-screen').style.display = 'none';
+    document.getElementById('members-content').style.display = 'block';
+    document.getElementById('member-badge').style.display = 'inline-block';
+    document.getElementById('logout-btn').style.display = 'inline-block';
+    document.getElementById('member-badge').textContent = (user?.username || '会員') + ' さん';
+    const mobileLogout = document.getElementById('mobile-logout-btn');
+    if (mobileLogout) mobileLogout.style.display = 'block';
+    loadAll();
+  }
+
+  // ── GAS認証API 共通呼び出し ──
+  async function callAuthApi(action, extraPayload) {
+    const sessionToken = KeioNaviAuth.getSessionToken();
+    if (!sessionToken) throw new Error('ログインが必要です。');
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify(Object.assign({ action, sessionToken }, extraPayload || {})),
+      redirect: 'follow',
+    });
+    const data = await res.json().catch(() => null);
+    if (!data || data.status !== 'ok') throw new Error((data && data.message) || 'エラーが発生しました。');
+    return data;
+  }
+
+  async function callClaudeApi(toolType, input) {
+    const sessionToken = KeioNaviAuth.getSessionToken();
+    if (!sessionToken) throw new Error('ログインが必要です。');
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'callClaude', sessionToken, toolType, input }),
+      redirect: 'follow',
+    });
+    const data = await res.json().catch(() => null);
+    if (!data || data.status !== 'ok') throw new Error((data && data.message) || 'AI処理に失敗しました。');
+    return data.result;
+  }
+
+  // ===== 自己PR補助ツール =====
+  const PR_KEY = 'keio_navi_self_pr_v1';
+  const PR_STEPS = [
+    { letter:'P', name:'Point（結論）', hint:'私の強みは〇〇です', field:'p1' },
+    { letter:'R', name:'Reason（理由）', hint:'なぜなら〇〇だからです', field:'r1' },
+    { letter:'E', name:'Example（具体例）', hint:'例えば〇〇という経験では…', field:'e1' },
+    { letter:'P', name:'Point（まとめ）', hint:'この強みを活かして〇〇に貢献できます', field:'p2' },
+  ];
+
+  function readPR() { try { return JSON.parse(localStorage.getItem(PR_KEY) || '{}'); } catch { return {}; } }
+
+  function initPRTool() {
+    var saved = readPR();
+    document.getElementById('pr-steps').innerHTML = PR_STEPS.map(function(s) {
+      return '<div class="pr-step">'
+        + '<div class="pr-step-head">'
+        + '<span class="pr-step-letter">' + s.letter + '</span>'
+        + '<span class="pr-step-name">' + s.name + '</span>'
+        + '<span class="pr-step-hint">' + s.hint + '</span>'
+        + '</div>'
+        + '<div class="pr-step-body">'
+        + '<textarea class="pr-textarea" id="pr-' + s.field + '" placeholder="' + s.hint + '" oninput="updatePRPreview()">' + (saved[s.field] || '').replace(/\x3c/g, '\x26lt;') + '</textarea>'
+        + '</div></div>';
+    }).join('');
+    updatePRPreview();
+  }
+
+  function updatePRPreview() {
+    var data = {};
+    PR_STEPS.forEach(function(s) {
+      var el = document.getElementById('pr-' + s.field);
+      data[s.field] = el ? el.value : '';
+    });
+    localStorage.setItem(PR_KEY, JSON.stringify(data));
+    var text = PR_STEPS.map(function(s) { return data[s.field].trim(); }).filter(Boolean).join('\n\n');
+    document.getElementById('pr-preview').textContent = text || '（入力するとここにプレビューが表示されます）';
+    document.getElementById('pr-char-count').textContent = text.length + '文字';
+  }
+
+  async function aiReviewPR() {
+    var text = document.getElementById('pr-preview').textContent;
+    if (!text || text.includes('入力すると')) { alert('先にPREP法で自己PRを入力してください。'); return; }
+
+    var btn = document.getElementById('pr-ai-btn');
+    var resultEl = document.getElementById('pr-ai-result');
+    btn.disabled = true;
+    btn.textContent = 'AI分析中...';
+    resultEl.style.display = 'block';
+    resultEl.textContent = '分析中...';
+
+    try {
+      var data = await callAuthApi('callClaude', {
+        toolType: 'interviewCoach',
+        input: {
+          question: '自己PRをしてください（1分程度）',
+          answer: text,
+          jobType: ''
+        }
+      });
+      resultEl.textContent = data.result || 'AI分析結果が空でした。';
+    } catch (e) {
+      resultEl.textContent = 'エラー: ' + e.message;
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'AIに添削してもらう';
+  }
+
+  function copyPR() {
+    var text = document.getElementById('pr-preview').textContent;
+    if (!text || text.includes('入力すると')) return;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.querySelector('.pr-copy-btn');
+      var orig = btn.textContent;
+      btn.textContent = 'コピーしました！';
+      setTimeout(function() { btn.textContent = orig; }, 1500);
+    });
+  }
+
+  // ===== ES添削掲示板 =====
+  const BOARD_POSTS_KEY = 'keio_navi_board_posts_v1';
+
+  function readLocalPosts() { try { return JSON.parse(localStorage.getItem(BOARD_POSTS_KEY) || '[]'); } catch { return []; } }
+  function writeLocalPosts(arr) { localStorage.setItem(BOARD_POSTS_KEY, JSON.stringify(arr)); }
+
+  async function loadBoardPosts() {
+    var countEl = document.getElementById('board-count');
+    var listEl = document.getElementById('board-list');
+    var posts = readLocalPosts();
+    try {
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'readBoardPosts', sessionToken: KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '' }),
+      });
+      var data = await res.json();
+      if (data.status === 'ok' && Array.isArray(data.posts)) {
+        posts = data.posts;
+        writeLocalPosts(posts);
+      }
+    } catch(e) { /* GAS未設定時はlocalを使う */ }
+    renderBoardPosts(posts);
+    if (countEl) countEl.textContent = posts.length ? posts.length + '件の投稿' : '投稿はまだありません';
+  }
+
+  function renderBoardPosts(posts) {
+    var listEl = document.getElementById('board-list');
+    var currentUser = KeioNaviAuth.getCurrentUser();
+    if (!posts.length) {
+      listEl.innerHTML = '<div class="m-empty">まだ投稿がありません。最初のESを共有してみよう！</div>';
+      return;
+    }
+    listEl.innerHTML = posts.map(function(p) {
+      var comments = (p.comments || []).map(function(c) {
+        return '<div class="board-comment"><span class="board-comment-user">' + (c.username || '匿名') + '</span>' + (c.commentText || c.text || '').replace(/\x3c/g, '\x26lt;') + '</div>';
+      }).join('');
+      return '<div class="board-card">'
+        + '<div class="board-card-head">'
+        + '<span class="board-card-company">' + (p.company || '').replace(/\x3c/g, '\x26lt;') + '</span>'
+        + '<span class="board-card-user">' + (p.username || '匿名') + ' \xb7 ' + (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ja-JP') : '') + '</span>'
+        + '</div>'
+        + '<div class="board-card-q">' + (p.question || '').replace(/\x3c/g, '\x26lt;') + '</div>'
+        + '<div class="board-card-text">' + (p.esText || p.text || '').replace(/\x3c/g, '\x26lt;') + '</div>'
+        + '<div class="board-comments">'
+        + '<div id="comments-' + p.id + '">' + comments + '</div>'
+        + '<div class="board-comment-row">'
+        + '<input class="board-comment-input" id="ci-' + p.id + '" placeholder="フィードバックを書く...">'
+        + '<button class="board-comment-submit" onclick="submitComment(\'' + p.id + '\')">送信</button>'
+        + '</div></div></div>';
+    }).join('');
+  }
+
+  async function submitComment(postId) {
+    var input = document.getElementById('ci-' + postId);
+    var text = input.value.trim();
+    if (!text) return;
+    var currentUser = KeioNaviAuth.getCurrentUser();
+    var username = currentUser ? currentUser.username : '匿名';
+    var posts = readLocalPosts();
+    var post = posts.find(function(p) { return p.id === postId; });
+    if (post) {
+      if (!post.comments) post.comments = [];
+      var comment = { id: Date.now().toString(), postId: postId, username: username, commentText: text, createdAt: new Date().toISOString() };
+      post.comments.push(comment);
+      writeLocalPosts(posts);
+    }
+    try {
+      await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'addBoardComment', postId: postId, commentText: text, sessionToken: KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '' }),
+      });
+    } catch(e) {}
+    input.value = '';
+    renderBoardPosts(readLocalPosts());
+  }
+
+  function initBoardModal() {
+    document.getElementById('board-post-btn').addEventListener('click', function() {
+      document.getElementById('bm-error').textContent = '';
+      document.getElementById('bm-company').value = '';
+      document.getElementById('bm-question').value = '';
+      document.getElementById('bm-text').value = '';
+      document.getElementById('board-modal').classList.add('open');
+    });
+    document.getElementById('board-modal-close').addEventListener('click', function() {
+      document.getElementById('board-modal').classList.remove('open');
+    });
+    document.getElementById('board-modal').addEventListener('click', function(e) {
+      if (e.target === document.getElementById('board-modal'))
+        document.getElementById('board-modal').classList.remove('open');
+    });
+    document.getElementById('bm-submit').addEventListener('click', async function() {
+      var company = document.getElementById('bm-company').value.trim();
+      var question = document.getElementById('bm-question').value.trim();
+      var esText = document.getElementById('bm-text').value.trim();
+      if (!company || !question || !esText) {
+        document.getElementById('bm-error').textContent = 'すべての項目を入力してください。'; return;
+      }
+      var currentUser = KeioNaviAuth.getCurrentUser();
+      var post = {
+        id: Date.now().toString(),
+        company: company, question: question, esText: esText,
+        username: currentUser ? currentUser.username : '匿名',
+        createdAt: new Date().toISOString(),
+        comments: [],
+      };
+      var posts = readLocalPosts();
+      posts.unshift(post);
+      writeLocalPosts(posts);
+      try {
+        await fetch(GAS_PROXY_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'writeBoardPost', company: post.company, question: post.question, esText: post.esText, username: post.username, createdAt: post.createdAt, id: post.id, sessionToken: KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '' }),
+        });
+      } catch(e) {}
+      document.getElementById('board-modal').classList.remove('open');
+      renderBoardPosts(readLocalPosts());
+      var countEl = document.getElementById('board-count');
+      if (countEl) countEl.textContent = readLocalPosts().length + '件の投稿';
+    });
+  }
+
+  // ===== PDF出力 =====
+  function exportEsToPdf() {
+    if (!esBankEntries.length) { alert('ESが保存されていません。'); return; }
+    var groups = {};
+    esBankEntries.forEach(function(e) {
+      if (!groups[e.company]) groups[e.company] = [];
+      groups[e.company].push(e);
+    });
+    var user = KeioNaviAuth.getCurrentUser();
+    var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ES保管庫 - ' + (user ? user.displayName : '') + '</title>'
+      + '<style>'
+      + '@page { margin: 20mm; }'
+      + 'body { font-family: "Noto Sans JP", "Hiragino Sans", sans-serif; color: #1a1a2e; font-size: 11pt; line-height: 1.8; }'
+      + 'h1 { font-size: 16pt; border-bottom: 2px solid #0a1a3e; padding-bottom: 6px; margin-bottom: 16px; color: #0a1a3e; }'
+      + 'h2 { font-size: 13pt; color: #0a1a3e; margin-top: 24px; margin-bottom: 8px; border-left: 4px solid #c9a84c; padding-left: 10px; }'
+      + '.question { font-weight: 700; margin-top: 12px; margin-bottom: 4px; font-size: 10.5pt; }'
+      + '.answer { white-space: pre-wrap; margin-bottom: 16px; padding: 8px 12px; background: #f8f6f2; }'
+      + '.meta { font-size: 9pt; color: #888; margin-bottom: 4px; }'
+      + '.page-break { page-break-before: always; }'
+      + '@media print { button { display: none !important; } }'
+      + '</style></head><body>'
+      + '<button onclick="window.print()" style="position:fixed;top:10px;right:10px;padding:8px 20px;background:#0a1a3e;color:white;border:none;cursor:pointer;font-size:12px;z-index:99;">PDF保存 / 印刷</button>'
+      + '<h1>ES保管庫</h1>';
+    if (user) html += '<p class="meta">' + user.displayName + ' | 出力日: ' + new Date().toLocaleDateString('ja-JP') + '</p>';
+
+    var first = true;
+    Object.keys(groups).forEach(function(company) {
+      if (!first) html += '<div class="page-break"></div>';
+      first = false;
+      html += '<h2>' + company + '</h2>';
+      groups[company].forEach(function(entry) {
+        if (entry.questions) {
+          entry.questions.forEach(function(q) {
+            html += '<div class="question">' + (q.question || '設問') + '</div><div class="answer">' + (q.answer || '').replace(/\x3c/g, '\x26lt;') + '</div>';
+          });
+        } else {
+          if (entry.question) html += '<div class="question">' + entry.question + '</div>';
+          html += '<div class="answer">' + (entry.esText || '').replace(/\x3c/g, '\x26lt;') + '</div>';
+        }
+      });
+    });
+    html += '</body></html>';
+    var w = window.open('', '_blank');
+    w.document.write(html);
+    w.document.close();
+  }
+
+  function exportGakuchikaToPdf() {
+    if (!gakuchikaEntries.length) { alert('ガクチカが保存されていません。'); return; }
+    var user = KeioNaviAuth.getCurrentUser();
+    var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ガクチカ保管庫 - ' + (user ? user.displayName : '') + '</title>'
+      + '<style>'
+      + '@page { margin: 20mm; }'
+      + 'body { font-family: "Noto Sans JP", "Hiragino Sans", sans-serif; color: #1a1a2e; font-size: 11pt; line-height: 1.8; }'
+      + 'h1 { font-size: 16pt; border-bottom: 2px solid #0a1a3e; padding-bottom: 6px; margin-bottom: 16px; color: #0a1a3e; }'
+      + 'h2 { font-size: 13pt; color: #0a1a3e; margin-top: 24px; margin-bottom: 8px; border-left: 4px solid #c9a84c; padding-left: 10px; }'
+      + '.label { font-weight: 700; font-size: 10pt; color: #555; margin-top: 8px; }'
+      + '.content { white-space: pre-wrap; margin-bottom: 8px; padding: 6px 12px; background: #f8f6f2; }'
+      + '.meta { font-size: 9pt; color: #888; margin-bottom: 4px; }'
+      + '.page-break { page-break-before: always; }'
+      + '@media print { button { display: none !important; } }'
+      + '</style></head><body>'
+      + '<button onclick="window.print()" style="position:fixed;top:10px;right:10px;padding:8px 20px;background:#0a1a3e;color:white;border:none;cursor:pointer;font-size:12px;z-index:99;">PDF保存 / 印刷</button>'
+      + '<h1>ガクチカ保管庫</h1>';
+    if (user) html += '<p class="meta">' + user.displayName + ' | 出力日: ' + new Date().toLocaleDateString('ja-JP') + '</p>';
+
+    gakuchikaEntries.forEach(function(entry, i) {
+      if (i > 0) html += '<div class="page-break"></div>';
+      html += '<h2>' + (entry.title || 'ガクチカ ' + (i + 1)) + '</h2>';
+      if (entry.category) html += '<p class="meta">カテゴリ: ' + entry.category + '</p>';
+      var starFields = [
+        { key: 'situation', label: 'Situation（状況）' },
+        { key: 'task', label: 'Task（課題）' },
+        { key: 'action', label: 'Action（行動）' },
+        { key: 'result', label: 'Result（結果）' }
+      ];
+      starFields.forEach(function(f) {
+        if (entry[f.key]) {
+          html += '<div class="label">' + f.label + '</div><div class="content">' + (entry[f.key] || '').replace(/\x3c/g, '\x26lt;') + '</div>';
+        }
+      });
+      if (entry.fullText) {
+        html += '<div class="label">本文</div><div class="content">' + entry.fullText.replace(/\x3c/g, '\x26lt;') + '</div>';
+      }
+    });
+    html += '</body></html>';
+    var w = window.open('', '_blank');
+    w.document.write(html);
+    w.document.close();
+  }
+
+  // ── ES保管庫 ──
+  var esBankEntries = [];
+  var esBankEditId  = null;
+  var loadBankSelected = new Set();
+
+  async function loadEsBank() {
+    var el = document.getElementById('es-bank-list');
+    try {
+      var data = await callAuthApi('readMyES');
+      esBankEntries = data.entries || [];
+      renderEsBank();
+    } catch(e) {
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 ' + e.message + '</div>';
+    }
+  }
+
+  function renderEsBank() {
+    var el = document.getElementById('es-bank-list');
+    if (!esBankEntries.length) {
+      el.innerHTML = '<div class="es-bank-empty">まだESが保存されていません。<br>「ESを追加する」から登録してみましょう。</div>';
+      return;
+    }
+    var groups = {};
+    esBankEntries.forEach(function(e) {
+      if (!groups[e.company]) groups[e.company] = [];
+      groups[e.company].push(e);
+    });
+    el.innerHTML = Object.entries(groups).map(function(pair) {
+      var company = pair[0], entries = pair[1];
+      return '<div class="es-bank-company">'
+        + '<button class="es-bank-company-header" onclick="toggleEsCompany(this)">'
+        + '<div><div class="es-bank-company-name">' + company + '</div>'
+        + '<div class="es-bank-company-meta">' + entries.length + '件の設問' + (entries[0].industry ? ' \xb7 ' + entries[0].industry : '') + '</div></div>'
+        + '<span class="es-bank-company-arrow">\u25bc</span></button>'
+        + '<div class="es-bank-company-body">'
+        + entries.map(function(e) {
+          return '<div class="es-bank-entry">'
+            + (e.question ? '<div class="es-bank-question">\ud83d\udccc ' + e.question + '</div>' : '')
+            + '<div class="es-bank-text" onclick="this.classList.toggle(\'expanded\')">' + e.esText + '</div>'
+            + '<div class="es-bank-entry-footer">'
+            + resultBadge(e.result)
+            + '<button class="es-bank-btn" onclick="openEsViewModal(\'' + e.id + '\')">閲覧</button>'
+            + '<button class="es-bank-btn primary" onclick="openEsBankModal(\'' + e.id + '\')">編集</button>'
+            + '<button class="es-bank-btn" onclick="deleteEsBankEntry(\'' + e.id + '\')">削除</button>'
+            + '</div></div>';
+        }).join('')
+        + '</div></div>';
+    }).join('');
+  }
+
+  function resultBadge(result) {
+    if (result === '通過')   return '<span class="es-bank-result pass">通過</span>';
+    if (result === '不通過') return '<span class="es-bank-result fail">不通過</span>';
+    return result ? '<span class="es-bank-result pending">' + result + '</span>' : '';
+  }
+
+  function toggleEsCompany(btn) {
+    var body  = btn.nextElementSibling;
+    var arrow = btn.querySelector('.es-bank-company-arrow');
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+
+  function openEsBankModal(id) {
+    esBankEditId = id || null;
+    var entry = id ? esBankEntries.find(function(e) { return e.id === id; }) : null;
+    document.getElementById('es-bank-modal-title').textContent = id ? 'ESを編集する' : 'ESを追加する';
+    document.getElementById('es-modal-id').value        = id || '';
+    document.getElementById('es-modal-company').value   = entry ? entry.company  : '';
+    document.getElementById('es-modal-industry').value  = entry ? entry.industry : '';
+    document.getElementById('es-modal-question').value  = entry ? entry.question : '';
+    document.getElementById('es-modal-estext').value    = entry ? entry.esText   : '';
+    document.getElementById('es-modal-result').value    = entry ? entry.result   : '';
+    document.getElementById('es-modal-memo').value      = entry ? entry.memo     : '';
+    document.getElementById('es-modal-error').textContent = '';
+    document.getElementById('es-bank-modal').classList.add('open');
+  }
+
+  function closeEsBankModal() {
+    document.getElementById('es-bank-modal').classList.remove('open');
+  }
+
+  async function saveEsBankEntry() {
+    var errEl = document.getElementById('es-modal-error');
+    errEl.textContent = '';
+    var es = {
+      id:       document.getElementById('es-modal-id').value,
+      company:  document.getElementById('es-modal-company').value.trim(),
+      industry: document.getElementById('es-modal-industry').value.trim(),
+      question: document.getElementById('es-modal-question').value.trim(),
+      esText:   document.getElementById('es-modal-estext').value.trim(),
+      result:   document.getElementById('es-modal-result').value,
+      memo:     document.getElementById('es-modal-memo').value.trim(),
+    };
+    if (!es.company || !es.esText) { errEl.textContent = '会社名とES内容は必須です。'; return; }
+    var saveBtn = document.querySelector('#es-bank-modal .es-modal-save');
+    saveBtn.disabled = true; saveBtn.textContent = '保存中...';
+    try {
+      await callAuthApi('writeES', { es: es });
+      closeEsBankModal();
+      await loadEsBank();
+    } catch(e) {
+      errEl.textContent = e.message;
+    } finally {
+      saveBtn.disabled = false; saveBtn.textContent = '保存する';
+    }
+  }
+
+  async function deleteEsBankEntry(id) {
+    if (!confirm('このESを削除しますか？')) return;
+    try {
+      await callAuthApi('deleteES', { id: id });
+      await loadEsBank();
+    } catch(e) {
+      alert(e.message);
+    }
+  }
+
+  function openEsViewModal(id) {
+    var e = esBankEntries.find(function(entry) { return entry.id === id; });
+    if (!e) return;
+    document.getElementById('es-view-company').textContent = e.company || '';
+    document.getElementById('es-view-industry').textContent = e.industry || '';
+    var qSection = document.getElementById('es-view-question-section');
+    if (e.question) {
+      document.getElementById('es-view-question').textContent = e.question;
+      qSection.style.display = '';
+    } else {
+      qSection.style.display = 'none';
+    }
+    document.getElementById('es-view-estext').textContent = e.esText || '';
+    var charLen = (e.esText || '').length;
+    document.getElementById('es-view-charcount').textContent = charLen + '文字';
+    document.getElementById('es-view-result-badge').innerHTML = resultBadge(e.result);
+    var memoSection = document.getElementById('es-view-memo-section');
+    if (e.memo) {
+      document.getElementById('es-view-memo').textContent = e.memo;
+      memoSection.style.display = '';
+    } else {
+      memoSection.style.display = 'none';
+    }
+    var editBtn = document.getElementById('es-view-edit-btn');
+    editBtn.onclick = function() { closeEsViewModal(); openEsBankModal(id); };
+    document.getElementById('es-view-modal').classList.add('open');
+  }
+
+  function closeEsViewModal() {
+    document.getElementById('es-view-modal').classList.remove('open');
+  }
+
+  function copyEsViewText() {
+    var text = document.getElementById('es-view-estext').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.querySelector('.es-view-copy-btn');
+      var orig = btn.textContent;
+      btn.textContent = 'コピーしました！';
+      setTimeout(function() { btn.textContent = orig; }, 1500);
+    }).catch(function() {});
+  }
+
+  // ── ガクチカ保管庫 ──
+  var gakuchikaEntries = [];
+  var gkEditId = null;
+  var currentGkViewId = null;
+
+  var GK_STAR_LABELS = { situation: '状況（S）', task: '課題・目標（T）', action: '行動（A）', result: '結果・成果（R）' };
+
+  async function loadGakuchika() {
+    var el = document.getElementById('gakuchika-list');
+    try {
+      var data = await callAuthApi('readMyGakuchika');
+      gakuchikaEntries = data.entries || [];
+      renderGakuchika();
+    } catch(e) {
+      el.innerHTML = '<div class="gk-empty" style="color:var(--crimson);">\u26a0 ' + e.message + '</div>';
+    }
+  }
+
+  function renderGakuchika() {
+    var el = document.getElementById('gakuchika-list');
+    if (!gakuchikaEntries.length) {
+      el.innerHTML = '<div class="gk-empty">まだガクチカが登録されていません。<br>「ガクチカを追加する」からメモしてみましょう。</div>';
+      return;
+    }
+    el.innerHTML = '<div class="gk-list">' + gakuchikaEntries.map(function(g) {
+      return '<div class="gk-card">'
+        + '<div class="gk-card-header">'
+        + '<div class="gk-card-title">' + (g.title || '（タイトルなし）') + '</div>'
+        + (g.category ? '<span class="gk-card-category">' + g.category + '</span>' : '')
+        + '</div>'
+        + '<div class="gk-card-body" onclick="this.classList.toggle(\'expanded\')">' + (g.action || g.situation || g.appeal || '（詳細未入力）') + '</div>'
+        + '<div class="gk-card-footer">'
+        + '<button class="gk-btn" onclick="openGkViewModal(\'' + g.id + '\')">閲覧</button>'
+        + '<button class="gk-btn primary" onclick="openGakuchikaModal(\'' + g.id + '\')">編集</button>'
+        + '<button class="gk-btn" onclick="deleteGakuchikaEntry(\'' + g.id + '\')">削除</button>'
+        + '<button class="gk-btn accent" onclick="openGkGenModalWithEntry(\'' + g.id + '\')">ESを生成</button>'
+        + '</div></div>';
+    }).join('') + '</div>';
+  }
+
+  function openGkViewModal(id) {
+    var g = gakuchikaEntries.find(function(e) { return e.id === id; });
+    if (!g) return;
+    currentGkViewId = id;
+    document.getElementById('gk-view-title').textContent = g.title || '（タイトルなし）';
+    document.getElementById('gk-view-category').textContent = g.category || '';
+    var starEl = document.getElementById('gk-view-star-sections');
+    starEl.innerHTML = Object.entries(GK_STAR_LABELS).filter(function(pair) { return g[pair[0]]; }).map(function(pair) {
+      return '<div class="es-view-section"><div class="es-view-label">' + pair[1] + '</div><div class="es-view-memo">' + g[pair[0]] + '</div></div>';
+    }).join('');
+    var appealSection = document.getElementById('gk-view-appeal-section');
+    if (g.appeal) {
+      document.getElementById('gk-view-appeal').textContent = g.appeal;
+      appealSection.style.display = '';
+    } else {
+      appealSection.style.display = 'none';
+    }
+    document.getElementById('gk-view-edit-btn').onclick = function() { closeGkViewModal(); openGakuchikaModal(id); };
+    document.getElementById('gk-view-modal').classList.add('open');
+  }
+
+  function closeGkViewModal() {
+    document.getElementById('gk-view-modal').classList.remove('open');
+    currentGkViewId = null;
+  }
+
+  function openGakuchikaModal(id) {
+    gkEditId = id || null;
+    var g = id ? gakuchikaEntries.find(function(e) { return e.id === id; }) : null;
+    document.getElementById('gk-modal-title').textContent = id ? 'ガクチカを編集する' : 'ガクチカを追加する';
+    document.getElementById('gk-modal-id').value                   = id || '';
+    document.getElementById('gk-modal-title-input').value          = g ? g.title     : '';
+    document.getElementById('gk-modal-category').value             = g ? g.category  : '';
+    document.getElementById('gk-modal-situation').value            = g ? g.situation : '';
+    document.getElementById('gk-modal-task').value                 = g ? g.task      : '';
+    document.getElementById('gk-modal-action').value               = g ? g.action    : '';
+    document.getElementById('gk-modal-result').value               = g ? g.result    : '';
+    document.getElementById('gk-modal-appeal').value               = g ? g.appeal    : '';
+    document.getElementById('gk-modal-error').textContent          = '';
+    document.querySelectorAll('.gk-cat-btn').forEach(function(btn) {
+      btn.classList.toggle('selected', g && btn.dataset.cat === g.category);
+    });
+    document.getElementById('gk-modal').classList.add('open');
+  }
+
+  function closeGakuchikaModal() {
+    document.getElementById('gk-modal').classList.remove('open');
+  }
+
+  function selectGkCat(btn) {
+    document.querySelectorAll('.gk-cat-btn').forEach(function(b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+    document.getElementById('gk-modal-category').value = btn.dataset.cat;
+  }
+
+  async function saveGakuchikaEntry() {
+    var errEl = document.getElementById('gk-modal-error');
+    errEl.textContent = '';
+    var g = {
+      id:        document.getElementById('gk-modal-id').value,
+      title:     document.getElementById('gk-modal-title-input').value.trim(),
+      category:  document.getElementById('gk-modal-category').value,
+      situation: document.getElementById('gk-modal-situation').value.trim(),
+      task:      document.getElementById('gk-modal-task').value.trim(),
+      action:    document.getElementById('gk-modal-action').value.trim(),
+      result:    document.getElementById('gk-modal-result').value.trim(),
+      appeal:    document.getElementById('gk-modal-appeal').value.trim(),
+    };
+    if (!g.title) { errEl.textContent = 'タイトルを入力してください。'; return; }
+    var saveBtn = document.querySelector('#gk-modal .es-modal-save');
+    saveBtn.disabled = true; saveBtn.textContent = '保存中...';
+    try {
+      await callAuthApi('writeGakuchika', { gakuchika: g });
+      closeGakuchikaModal();
+      await loadGakuchika();
+    } catch(e) {
+      errEl.textContent = e.message;
+    } finally {
+      saveBtn.disabled = false; saveBtn.textContent = '保存する';
+    }
+  }
+
+  async function deleteGakuchikaEntry(id) {
+    if (!confirm('このガクチカを削除しますか？')) return;
+    try {
+      await callAuthApi('deleteGakuchika', { id: id });
+      await loadGakuchika();
+    } catch(e) {
+      alert(e.message);
+    }
+  }
+
+  // ── ガクチカ → ES生成 ──
+  var gkGenSelected = new Set();
+
+  function openGkGenModal() {
+    gkGenSelected = new Set();
+    renderGkGenSelectList();
+    document.getElementById('gk-gen-result').style.display = 'none';
+    document.getElementById('gk-gen-error').textContent = '';
+    document.getElementById('gk-gen-modal').classList.add('open');
+  }
+
+  function openGkGenModalWithEntry(id) {
+    closeGkViewModal();
+    gkGenSelected = new Set([id]);
+    renderGkGenSelectList();
+    document.getElementById('gk-gen-result').style.display = 'none';
+    document.getElementById('gk-gen-error').textContent = '';
+    document.getElementById('gk-gen-modal').classList.add('open');
+  }
+
+  function renderGkGenSelectList() {
+    var el = document.getElementById('gk-gen-select-list');
+    if (!gakuchikaEntries.length) {
+      el.innerHTML = '<div style="font-size:0.82rem;color:var(--text-muted);padding:0.5rem;">ガクチカが登録されていません。先にガクチカを追加してください。</div>';
+      return;
+    }
+    el.innerHTML = gakuchikaEntries.map(function(g) {
+      return '<div class="gk-gen-item' + (gkGenSelected.has(g.id) ? ' selected' : '') + '" onclick="toggleGkGenItem(\'' + g.id + '\', this)">'
+        + '<div class="gk-gen-item-check">\u2713</div>'
+        + '<div>'
+        + '<div style="font-weight:600;font-size:0.85rem;color:var(--navy);">' + (g.title || '（タイトルなし）') + '</div>'
+        + (g.category ? '<div style="font-size:0.72rem;color:var(--text-muted);">' + g.category + '</div>' : '')
+        + '</div></div>';
+    }).join('');
+  }
+
+  function toggleGkGenItem(id, el) {
+    if (gkGenSelected.has(id)) { gkGenSelected.delete(id); el.classList.remove('selected'); }
+    else { gkGenSelected.add(id); el.classList.add('selected'); }
+  }
+
+  function closeGkGenModal() {
+    document.getElementById('gk-gen-modal').classList.remove('open');
+  }
+
+  async function submitGkGen() {
+    var errEl = document.getElementById('gk-gen-error');
+    errEl.textContent = '';
+    if (!gkGenSelected.size) { errEl.textContent = 'ガクチカを1つ以上選択してください。'; return; }
+    var selectedEntries = gakuchikaEntries.filter(function(g) { return gkGenSelected.has(g.id); });
+    var company   = document.getElementById('gk-gen-company').value.trim();
+    var question  = document.getElementById('gk-gen-question').value.trim();
+    var charLimit = document.getElementById('gk-gen-charlimit').value.trim();
+    var btn = document.getElementById('gk-gen-submit-btn');
+    btn.disabled = true; btn.textContent = 'AIが生成中...';
+    document.getElementById('gk-gen-result').style.display = 'none';
+    try {
+      var data = await callAuthApi('callClaude', {
+        toolType: 'generateEsFromGakuchika',
+        input: { gakuchika: selectedEntries, company: company, question: question, charLimit: charLimit ? parseInt(charLimit) : 0 }
+      });
+      document.getElementById('gk-gen-result-text').textContent = data.result || '';
+      document.getElementById('gk-gen-result').style.display = 'block';
+    } catch(e) {
+      errEl.textContent = e.message;
+    } finally {
+      btn.disabled = false; btn.textContent = 'ESを生成する';
+    }
+  }
+
+  function copyGkGenResult() {
+    var text = document.getElementById('gk-gen-result-text').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.querySelector('#gk-gen-result .es-view-copy-btn');
+      var orig = btn.textContent;
+      btn.textContent = 'コピーしました！';
+      setTimeout(function() { btn.textContent = orig; }, 1500);
+    }).catch(function() {});
+  }
+
+  function saveGkGenToEsBank() {
+    var company   = document.getElementById('gk-gen-company').value.trim();
+    var question  = document.getElementById('gk-gen-question').value.trim();
+    var esText    = document.getElementById('gk-gen-result-text').textContent;
+    closeGkGenModal();
+    openEsBankModal();
+    if (company) document.getElementById('es-modal-company').value  = company;
+    if (question) document.getElementById('es-modal-question').value = question;
+    if (esText)  document.getElementById('es-modal-estext').value   = esText;
+  }
+
+  // ── 保管庫から読み込みモーダル ──
+  function openLoadFromBankModal() {
+    loadBankSelected = new Set();
+    var listEl = document.getElementById('es-load-list');
+    if (!esBankEntries.length) {
+      listEl.innerHTML = '<div class="es-bank-empty">保管庫にESがありません。先にESを追加してください。</div>';
+    } else {
+      listEl.innerHTML = esBankEntries.map(function(e, i) {
+        return '<div class="es-load-entry" onclick="toggleLoadSelect(this, ' + i + ')" data-idx="' + i + '">'
+          + '<span class="es-load-entry-check" style="display:none;">\u2714 選択中</span>'
+          + '<div class="es-load-entry-company">' + e.company + '</div>'
+          + '<div class="es-load-entry-q">' + (e.question || '（設問なし）') + '</div></div>';
+      }).join('');
+    }
+    document.getElementById('es-load-modal').classList.add('open');
+  }
+
+  function toggleLoadSelect(el, idx) {
+    if (loadBankSelected.has(idx)) {
+      loadBankSelected.delete(idx);
+      el.style.background = '';
+      el.querySelector('.es-load-entry-check').style.display = 'none';
+    } else {
+      loadBankSelected.add(idx);
+      el.style.background = 'rgba(10,26,62,0.05)';
+      el.querySelector('.es-load-entry-check').style.display = 'inline';
+    }
+  }
+
+  function closeLoadFromBankModal() {
+    document.getElementById('es-load-modal').classList.remove('open');
+  }
+
+  function applyLoadFromBank() {
+    if (!loadBankSelected.size) { closeLoadFromBankModal(); return; }
+    var selected = Array.from(loadBankSelected).map(function(i) { return esBankEntries[i]; });
+    if (selected.length === 1 && selected[0].company) {
+      document.getElementById('esr-company').value = selected[0].company;
+    }
+    var container = document.getElementById('esr-questions');
+    container.innerHTML = '';
+    esrQuestionCount = 0;
+    selected.forEach(function(e) {
+      addEsrQuestion(e.question, e.esText);
+    });
+    closeLoadFromBankModal();
+  }
+
+  // ── ES添削 複数設問 ──
+  var esrQuestionCount = 1;
+
+  function addEsrQuestion(question, esText) {
+    var container = document.getElementById('esr-questions');
+    var idx = container.querySelectorAll('.esr-question-block').length;
+    var block = document.createElement('div');
+    block.className = 'esr-question-block';
+    block.dataset.index = idx;
+    block.innerHTML = '<div class="esr-question-num">設問 ' + (idx + 1) + '</div>'
+      + (idx > 0 ? '<button class="esr-remove-btn" onclick="removeEsrQuestion(this)">\u2715</button>' : '')
+      + '<div style="display:flex;gap:0.6rem;margin-bottom:0.55rem;">'
+      + '<div class="ai-form-group" style="flex:1;margin-bottom:0;">'
+      + '<input type="text" class="ai-input esr-q-input" placeholder="設問テキスト（任意）" value="' + (question || '') + '">'
+      + '</div>'
+      + '<div class="ai-form-group" style="width:90px;margin-bottom:0;">'
+      + '<input type="number" class="ai-input esr-limit-input" placeholder="字数制限" min="1" style="text-align:center;">'
+      + '</div></div>'
+      + '<div class="ai-form-group" style="margin-bottom:0.25rem;">'
+      + '<textarea class="ai-textarea esr-t-input" placeholder="ES内容をここに貼り付けてください..." oninput="updateEsrCharCount(this)">' + (esText || '') + '</textarea>'
+      + '<div class="ai-char-count">' + (esText || '').length + ' 字</div></div>';
+    container.appendChild(block);
+    renumberEsrBlocks();
+  }
+
+  function removeEsrQuestion(btn) {
+    btn.closest('.esr-question-block').remove();
+    renumberEsrBlocks();
+  }
+
+  function renumberEsrBlocks() {
+    document.querySelectorAll('.esr-question-block').forEach(function(block, i) {
+      block.querySelector('.esr-question-num').textContent = '設問 ' + (i + 1);
+    });
+  }
+
+  function updateEsrCharCount(textarea) {
+    var count = textarea.closest('.ai-form-group').querySelector('.ai-char-count');
+    if (count) count.textContent = textarea.value.length + ' 字';
+  }
+
+  function initAiTools() {
+    document.querySelectorAll('.ai-tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.ai-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+        document.querySelectorAll('.ai-tab-panel').forEach(function(p) { p.classList.remove('active'); });
+        btn.classList.add('active');
+        document.getElementById('ai-tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+  }
+
+  function updateCharCount(textareaId, countId) {
+    var len = document.getElementById(textareaId).value.length;
+    document.getElementById(countId).textContent = len + ' 字';
+  }
+
+  function setAiLoading(btnId, resultId, errorId, loading) {
+    var btn = document.getElementById(btnId);
+    var result = document.getElementById(resultId);
+    var errEl = document.getElementById(errorId);
+    if (loading) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="ai-spinner"></span><span class="btn-text">AIが分析中…</span>';
+      result.className = 'ai-result-box visible loading';
+      result.textContent = '\ud83e\udd16 AIが分析しています。しばらくお待ちください（30〜60秒）…';
+      errEl.textContent = '';
+    } else {
+      btn.disabled = false;
+    }
+  }
+
+  function showAiResult(btnId, resultId, originalLabel, text) {
+    var btn = document.getElementById(btnId);
+    btn.disabled = false;
+    btn.innerHTML = '<span class="btn-text">' + originalLabel + '</span>';
+    var result = document.getElementById(resultId);
+    result.className = 'ai-result-box visible';
+    result.textContent = text;
+  }
+
+  // ── ESチャット ──
+  var esrChatHistory = [];
+  var ESR_CHAT_SYSTEM = 'あなたは新卒就職活動のプロフェッショナルなESコーチです。慶應義塾大学の学生のESについて対話形式でサポートしています。日本語で具体的かつ建設的にアドバイスしてください。';
+
+  function initEsrChat(company, entries, aiResponse) {
+    var userContent = '【企業名】' + (company || '（未記入）') + '\n\n以下のESを添削してください。\n\n' +
+      entries.map(function(e, i) {
+        var lim = e.charLimit ? '（字数制限: ' + e.charLimit + '字）' : '';
+        return '【設問' + (i+1) + '】' + (e.question || '') + lim + '\n\n' + e.esText;
+      }).join('\n\n---\n\n');
+    esrChatHistory = [
+      { role: 'user',      content: userContent },
+      { role: 'assistant', content: aiResponse }
+    ];
+    var msgEl = document.getElementById('esr-chat-messages');
+    msgEl.innerHTML = '';
+    appendChatBubble('ai', aiResponse);
+    document.getElementById('esr-chat-area').style.display = 'block';
+    document.getElementById('esr-chat-area').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function appendChatBubble(role, text) {
+    var container = document.getElementById('esr-chat-messages');
+    var wrap = document.createElement('div');
+    wrap.className = 'es-chat-bubble-wrap ' + role;
+    var label = document.createElement('div');
+    label.className = 'es-chat-label';
+    label.textContent = role === 'user' ? 'あなた' : 'AIコーチ';
+    var bubble = document.createElement('div');
+    bubble.className = 'es-chat-bubble ' + role;
+    bubble.textContent = text;
+    wrap.appendChild(label);
+    wrap.appendChild(bubble);
+    container.appendChild(wrap);
+    container.scrollTop = container.scrollHeight;
+    return bubble;
+  }
+
+  async function sendEsrChat() {
+    var inputEl  = document.getElementById('esr-chat-input');
+    var sendBtn  = document.getElementById('esr-chat-send');
+    var text     = inputEl.value.trim();
+    if (!text || sendBtn.disabled) return;
+
+    appendChatBubble('user', text);
+    esrChatHistory.push({ role: 'user', content: text });
+    inputEl.value = '';
+    sendBtn.disabled = true;
+    sendBtn.textContent = '送信中…';
+
+    var loadingBubble = appendChatBubble('ai', '\ud83e\udd16 考え中…');
+    loadingBubble.style.fontStyle = 'italic';
+    loadingBubble.style.color = 'var(--text-muted)';
+
+    try {
+      var result = await callClaudeApi('esChatMessage', {
+        messages:     esrChatHistory,
+        systemPrompt: ESR_CHAT_SYSTEM
+      });
+      loadingBubble.textContent = result;
+      loadingBubble.style.fontStyle = '';
+      loadingBubble.style.color = '';
+      esrChatHistory.push({ role: 'assistant', content: result });
+    } catch(e) {
+      loadingBubble.textContent = '\u26a0 ' + e.message;
+      loadingBubble.style.color = 'var(--crimson)';
+      esrChatHistory.pop();
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.textContent = '送信';
+    }
+  }
+
+  async function submitEsReview() {
+    var errEl = document.getElementById('esr-error');
+    errEl.textContent = '';
+    var company = document.getElementById('esr-company').value.trim();
+    var blocks  = document.querySelectorAll('.esr-question-block');
+    var entries = [];
+    blocks.forEach(function(block) {
+      var q     = block.querySelector('.esr-q-input').value.trim();
+      var t     = block.querySelector('.esr-t-input').value.trim();
+      var limit = block.querySelector('.esr-limit-input').value.trim();
+      if (t) entries.push({ question: q, esText: t, charLimit: limit ? parseInt(limit) : null });
+    });
+    if (!entries.length) { errEl.textContent = 'ES内容を入力してください。'; return; }
+
+    setAiLoading('esr-submit-btn', 'esr-result', 'esr-error', true);
+    try {
+      var result;
+      if (entries.length === 1) {
+        result = await callClaudeApi('esReview', { company: company, question: entries[0].question, esText: entries[0].esText });
+      } else {
+        result = await callClaudeApi('esMultiReview', { company: company, entries: entries });
+      }
+      showAiResult('esr-submit-btn', 'esr-result', '\u2728 AIに添削してもらう', result);
+      document.getElementById('esr-chat-area').style.display = 'none';
+      document.getElementById('esr-chat-messages').innerHTML = '';
+      initEsrChat(company, entries, result);
+    } catch (err) {
+      errEl.textContent = err.message;
+      document.getElementById('esr-result').className = 'ai-result-box';
+      var btn = document.getElementById('esr-submit-btn');
+      btn.disabled = false;
+      btn.innerHTML = '<span class="btn-text">\u2728 AIに添削してもらう</span>';
+    }
+  }
+
+  async function submitInterviewCoach() {
+    var answer = document.getElementById('ic-answer').value.trim();
+    if (!answer) { document.getElementById('ic-error').textContent = '回答を入力してください。'; return; }
+    document.getElementById('ic-error').textContent = '';
+    setAiLoading('ic-submit-btn', 'ic-result', 'ic-error', true);
+    try {
+      var result = await callClaudeApi('interviewCoach', {
+        question: document.getElementById('ic-question').value.trim(),
+        jobType:  document.getElementById('ic-jobtype').value.trim(),
+        answer: answer,
+      });
+      showAiResult('ic-submit-btn', 'ic-result', '\ud83c\udfa4 AIコーチに評価してもらう', result);
+    } catch (err) {
+      document.getElementById('ic-error').textContent = err.message;
+      document.getElementById('ic-result').className = 'ai-result-box';
+      var btn = document.getElementById('ic-submit-btn');
+      btn.disabled = false;
+      btn.innerHTML = '<span class="btn-text">\ud83c\udfa4 AIコーチに評価してもらう</span>';
+    }
+  }
+
+  async function submitEsRewrite() {
+    var originalEs = document.getElementById('rw-original').value.trim();
+    var targetCompany = document.getElementById('rw-company').value.trim();
+    if (!originalEs) { document.getElementById('rw-error').textContent = '元のES内容を入力してください。'; return; }
+    if (!targetCompany) { targetCompany = '（未指定）'; }
+    document.getElementById('rw-error').textContent = '';
+    setAiLoading('rw-submit-btn', 'rw-result', 'rw-error', true);
+    try {
+      var result = await callClaudeApi('esRewrite', {
+        originalEs: originalEs,
+        targetCompany: targetCompany,
+        targetQuestion: document.getElementById('rw-question').value.trim(),
+      });
+      showAiResult('rw-submit-btn', 'rw-result', '\ud83d\udd04 AIに流用ESを作ってもらう', result);
+    } catch (err) {
+      document.getElementById('rw-error').textContent = err.message;
+      document.getElementById('rw-result').className = 'ai-result-box';
+      var btn = document.getElementById('rw-submit-btn');
+      btn.disabled = false;
+      btn.innerHTML = '<span class="btn-text">\ud83d\udd04 AIに流用ESを作ってもらう</span>';
+    }
+  }
+
+  // ===== loadAll =====
+  async function loadAll() {
+    initPRTool();
+    initBoardModal();
+    loadBoardPosts();
+    loadEsBank();
+    loadGakuchika();
+    initAiTools();
+  }
+
+  // ===== スクロールトップ =====
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('scroll-top-btn');
+    if (window.scrollY > 400) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // ===== 初期化 =====
+  (function init() {
+    var user = KeioNaviAuth.requireAuth({ returnTo: 'writing.html', redirect: false });
+    if (user) {
+      showMembers(user);
+    } else {
+      document.getElementById('password-screen').style.display = 'flex';
+    }
+  })();
+</script>
+<style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
+<nav class="bottom-tab-bar">
+  <a href="account.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>マイページ</span></a>
+  <a href="writing.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>ES</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="resources.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>資料</span></a>
+  <a href="glossary.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>用語集</span></a>
+</nav>
+</body>
+</html>
