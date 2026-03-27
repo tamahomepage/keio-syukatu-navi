@@ -1,5 +1,5 @@
 (function () {
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbzyBJqVPgGXxHX7_RFuN4MyyOen-viaxX5hE36WLibZ0hVL6-H9hlJXQSAdi-XsRf1k6A/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
   const SESSION_TOKEN_KEY = 'keio_navi_session_token_v1';
   const USER_CACHE_KEY = 'keio_navi_current_user_cache_v1';
   const LIKED_CACHE_KEY = 'keio_navi_liked_cache_v1';
@@ -83,9 +83,10 @@
 
   function normalizeUser(user) {
     if (!user || typeof user !== 'object') return null;
-    const username = trimText(user.username || user.name);
+    const email = trimText(user.email || user.username || user.name);
+    const displayName = trimText(user.displayName) || (email ? email.split('@')[0] : '');
     const desiredIndustry = trimText(user.desiredIndustry || user.desiredIndustries);
-    if (!username) return null;
+    if (!email) return null;
 
     const preferredCompanies = normalizePreferredCompanies(user);
     const lineName = trimText(user.lineName);
@@ -94,8 +95,12 @@
 
     return {
       id: trimText(user.id),
-      username,
-      usernameKey: normalizeTextKey(user.usernameKey || username),
+      email,
+      emailKey: normalizeTextKey(user.emailKey || user.usernameKey || email),
+      displayName,
+      // 後方互換性
+      username: displayName,
+      usernameKey: normalizeTextKey(user.emailKey || user.usernameKey || email),
       desiredIndustry,
       preferredCompanies,
       preferredCompany1: preferredCompanies[0] || '',
@@ -104,9 +109,10 @@
       lineName,
       lineQrUrl,
       hasLineQr,
+      referralCode: trimText(user.referralCode),
       createdAt: user.createdAt || '',
       updatedAt: user.updatedAt || '',
-      name: username,
+      name: displayName,
       desiredIndustries: desiredIndustry,
     };
   }
@@ -119,7 +125,10 @@
     );
 
     return {
-      username: trimText(data && (data.username || data.name)),
+      email: trimText(data && data.email),
+      displayName: trimText(data && (data.displayName || data.username || data.name)),
+      // 後方互換性
+      username: trimText(data && (data.displayName || data.username || data.name)),
       desiredIndustry: trimText(data && (data.desiredIndustry || data.desiredIndustries)),
       preferredCompanies,
       preferredCompany1: preferredCompanies[0] || '',
@@ -180,11 +189,22 @@
       throw new Error('GAS_PROXY_URL が設定されていません。');
     }
 
-    const response = await fetch(GAS_PROXY_URL, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      redirect: 'follow',
-    });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30000);
+    let response;
+    try {
+      response = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        redirect: 'follow',
+        signal: controller.signal,
+      });
+    } catch (fetchError) {
+      clearTimeout(timer);
+      if (fetchError.name === 'AbortError') throw new Error('サーバーへの接続がタイムアウトしました。時間をおいて再試行してください。');
+      throw fetchError;
+    }
+    clearTimeout(timer);
 
     const data = await response.json().catch(() => null);
     if (!data || data.status !== 'ok') {
@@ -194,10 +214,18 @@
     return data;
   }
 
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
   function validateProfile(profile, options) {
     const password = trimText(options && options.password);
 
-    if (!profile.username) return 'ユーザー名を入力してください。';
+    if (options && options.requireEmail) {
+      if (!profile.email) return 'メールアドレスを入力してください。';
+      if (!validateEmail(profile.email)) return '正しいメールアドレスの形式で入力してください。';
+    }
+    if (!profile.displayName && !profile.username) return '表示名を入力してください。';
     if (!profile.desiredIndustry) return '志望業界を選択してください。';
     if (!profile.preferredCompany1) return '第1志望の企業名を入力してください。';
     if (!profile.lineName) return 'LINE名を入力してください。';
@@ -229,6 +257,7 @@
   async function createAccount(data) {
     const profile = buildProfilePayload(data);
     const error = validateProfile(profile, {
+      requireEmail: true,
       requirePassword: true,
       password: data && data.password,
       requireLineQr: true,
@@ -238,13 +267,15 @@
     try {
       const result = await postToGas({
         action: 'authRegister',
-        username: profile.username,
+        email: profile.email,
+        displayName: profile.displayName,
         desiredIndustry: profile.desiredIndustry,
         preferredCompanies: profile.preferredCompanies,
         lineName: profile.lineName,
         lineQrDataUrl: profile.lineQrDataUrl,
         lineQrFileName: profile.lineQrFileName,
         password: trimText(data && data.password),
+        referralCode: trimText(data && data.referralCode),
       });
 
       setCachedSession(result.sessionToken, result.user, result.likedCompanies || []);
@@ -254,18 +285,18 @@
     }
   }
 
-  async function login(username, password) {
-    const normalizedUsername = trimText(username);
+  async function login(email, password) {
+    const normalizedEmail = trimText(email);
     const normalizedPassword = trimText(password);
 
-    if (!normalizedUsername || !normalizedPassword) {
-      return { ok: false, error: 'ユーザー名とパスワードを入力してください。' };
+    if (!normalizedEmail || !normalizedPassword) {
+      return { ok: false, error: 'メールアドレスとパスワードを入力してください。' };
     }
 
     try {
       const result = await postToGas({
         action: 'authLogin',
-        username: normalizedUsername,
+        email: normalizedEmail,
         password: normalizedPassword,
       });
 
@@ -283,6 +314,7 @@
     if (!sessionToken) return;
     fetch(GAS_PROXY_URL, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'authLogout', sessionToken }),
       redirect: 'follow',
     }).catch(() => {});
@@ -304,7 +336,7 @@
       const result = await postToGas({
         action: 'authUpdateProfile',
         sessionToken,
-        username: profile.username,
+        displayName: profile.displayName,
         desiredIndustry: profile.desiredIndustry,
         preferredCompanies: profile.preferredCompanies,
         lineName: profile.lineName,
@@ -345,6 +377,21 @@
     }
   }
 
+  async function deleteAccount(password) {
+    const sessionToken = getSessionToken();
+    if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
+    const pw = trimText(password);
+    if (!pw) return { ok: false, error: 'パスワードを入力してください。' };
+
+    try {
+      const result = await postToGas({ action: 'authDeleteAccount', sessionToken, password: pw });
+      clearSessionCache();
+      return { ok: true, message: result.message };
+    } catch (serverError) {
+      return { ok: false, error: serverError.message };
+    }
+  }
+
   function setLikedCompanies(items) {
     const normalized = normalizeLikedCompanies(items);
     writeJSON(LIKED_CACHE_KEY, normalized);
@@ -364,6 +411,72 @@
     const next = liked.concat(normalizedCompany);
     setLikedCompanies(next);
     return next;
+  }
+
+  async function requestPasswordReset(email) {
+    const normalizedEmail = trimText(email);
+    if (!normalizedEmail) return { ok: false, error: 'メールアドレスを入力してください。' };
+    if (!validateEmail(normalizedEmail)) return { ok: false, error: '正しいメールアドレスの形式で入力してください。' };
+
+    try {
+      const result = await postToGas({ action: 'authRequestPasswordReset', email: normalizedEmail });
+      return { ok: true, message: result.message };
+    } catch (serverError) {
+      return { ok: false, error: serverError.message };
+    }
+  }
+
+  async function resetPassword(resetToken, newPassword) {
+    const token = trimText(resetToken);
+    const password = trimText(newPassword);
+    if (!token) return { ok: false, error: 'リセットトークンが必要です。' };
+    if (password.length < 8) return { ok: false, error: '新しいパスワードは8文字以上で設定してください。' };
+
+    try {
+      const result = await postToGas({ action: 'authResetPassword', resetToken: token, newPassword: password });
+      return { ok: true, message: result.message };
+    } catch (serverError) {
+      return { ok: false, error: serverError.message };
+    }
+  }
+
+  async function getReferralInfo() {
+    const sessionToken = getSessionToken();
+    if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
+
+    try {
+      const result = await postToGas({ action: 'authGetReferralInfo', sessionToken });
+      return { ok: true, referralCode: result.referralCode, referralCount: result.referralCount };
+    } catch (serverError) {
+      return { ok: false, error: serverError.message };
+    }
+  }
+
+  async function readMyProgress() {
+    const sessionToken = getSessionToken();
+    if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
+    try {
+      const result = await postToGas({ action: 'readMyProgress', sessionToken });
+      return { ok: true, entries: result.entries };
+    } catch (e) { return { ok: false, error: e.message }; }
+  }
+
+  async function writeProgress(entry) {
+    const sessionToken = getSessionToken();
+    if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
+    try {
+      const result = await postToGas({ action: 'writeProgress', sessionToken, ...entry });
+      return { ok: true, id: result.id };
+    } catch (e) { return { ok: false, error: e.message }; }
+  }
+
+  async function deleteProgress(id) {
+    const sessionToken = getSessionToken();
+    if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
+    try {
+      await postToGas({ action: 'deleteProgress', sessionToken, id });
+      return { ok: true };
+    } catch (e) { return { ok: false, error: e.message }; }
   }
 
   function getRedirectTarget(explicitReturnTo) {
@@ -405,6 +518,14 @@
     getCurrentUser,
     updateCurrentUser,
     changePassword,
+    deleteAccount,
+    requestPasswordReset,
+    resetPassword,
+    getReferralInfo,
+    readMyProgress,
+    writeProgress,
+    deleteProgress,
+    postToGas,
     setReturnTo,
     consumeReturnTo,
     getRedirectTarget,
@@ -414,5 +535,6 @@
     clearLikedCompanies,
     addLikedCompany,
     formatDate,
+    getSessionToken,
   };
 })();
