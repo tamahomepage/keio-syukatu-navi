@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>就活準備度チェック | 就活ナビ</title>
+<meta name="description" content="1分であなたの就活準備度を診断">
+
+<!-- OGP -->
+<meta property="og:title" content="就活準備度チェック | 就活ナビ">
+<meta property="og:description" content="1分であなたの就活準備度を診断">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="就活ナビ">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="就活準備度チェック | 就活ナビ">
+<meta name="twitter:description" content="1分であなたの就活準備度を診断">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --navy-light: #142254;
+    --crimson: #c0001a;
+    --crimson-light: #e8001f;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vw;
+    height: 68px;
+    background: rgba(10, 26, 62, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+
+  .nav-back {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--gold-light); }
+
+  /* ===== HERO ===== */
+  .hero {
+    padding: 140px 5vw 60px;
+    background: var(--navy);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(192,0,26,0.04) 0%, transparent 50%);
+    animation: heroGlow 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes heroGlow {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-3%, 2%); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: var(--white);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    color: var(--gold-light);
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    margin-bottom: 2rem;
+  }
+
+  .hero-start-btn {
+    display: inline-block;
+    background: var(--crimson);
+    color: var(--white);
+    padding: 1rem 3rem;
+    border: none;
+    border-radius: 3px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .hero-start-btn:hover {
+    background: var(--crimson-light);
+    transform: translateY(-1px);
+  }
+
+  /* ===== QUIZ CONTAINER ===== */
+  .quiz-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 5vw 80px;
+    display: none;
+  }
+
+  .quiz-container.active { display: block; }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .progress-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.05em;
+  }
+
+  .progress-bar-track {
+    width: 100%;
+    height: 6px;
+    background: var(--gray);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy), var(--gold));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* ===== QUESTION CARD ===== */
+  .question-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 2px 20px rgba(10,26,62,0.06);
+    border: 1px solid rgba(10,26,62,0.06);
+    animation: cardIn 0.4s ease;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-number {
+    font-size: 0.72rem;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .question-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .answer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .answer-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: var(--cream);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.5;
+  }
+
+  .answer-btn:hover {
+    border-color: var(--navy);
+    background: rgba(10,26,62,0.03);
+  }
+
+  .answer-btn.selected {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+  }
+
+  /* ===== RESULTS ===== */
+  .results-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 5vw 80px;
+    display: none;
+    text-align: center;
+  }
+
+  .results-container.active { display: block; }
+
+  .result-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    box-shadow: 0 4px 30px rgba(10,26,62,0.08);
+    border: 1px solid rgba(10,26,62,0.06);
+    animation: cardIn 0.5s ease;
+    margin-bottom: 2rem;
+  }
+
+  /* Gauge */
+  .gauge-wrapper {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 2rem;
+  }
+
+  .gauge-svg {
+    width: 200px;
+    height: 200px;
+    transform: rotate(-90deg);
+  }
+
+  .gauge-bg {
+    fill: none;
+    stroke: var(--gray);
+    stroke-width: 12;
+  }
+
+  .gauge-fill {
+    fill: none;
+    stroke: url(#gaugeGradient);
+    stroke-width: 12;
+    stroke-linecap: round;
+    stroke-dasharray: 502;
+    stroke-dashoffset: 502;
+    transition: stroke-dashoffset 1.5s ease;
+  }
+
+  .gauge-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .gauge-percent {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .gauge-percent-sign {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+  }
+
+  .result-level {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .result-score {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .result-desc {
+    font-size: 1rem;
+    color: var(--text);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  /* Weak points */
+  .weak-section {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 20px rgba(10,26,62,0.06);
+    border: 1px solid rgba(10,26,62,0.06);
+    text-align: left;
+    margin-bottom: 2rem;
+    animation: cardIn 0.6s ease;
+  }
+
+  .weak-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--gray);
+  }
+
+  .weak-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--gray);
+  }
+
+  .weak-item:last-child { border-bottom: none; }
+
+  .weak-item-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--crimson);
+    margin-bottom: 0.4rem;
+  }
+
+  .weak-item-tip {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* CTA */
+  .result-cta {
+    display: inline-block;
+    background: var(--crimson);
+    color: var(--white);
+    padding: 1rem 2.5rem;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    transition: background 0.2s, transform 0.2s;
+    margin-bottom: 2rem;
+  }
+
+  .result-cta:hover {
+    background: var(--crimson-light);
+    transform: translateY(-1px);
+  }
+
+  /* Share */
+  .share-section {
+    margin-top: 1.5rem;
+  }
+
+  .share-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.08em;
+  }
+
+  .share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .share-btn:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
+
+  .share-btn-x {
+    background: #000;
+    color: #fff;
+  }
+
+  .share-btn-line {
+    background: #06C755;
+    color: #fff;
+  }
+
+  /* Retry */
+  .retry-btn {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.7rem 2rem;
+    background: transparent;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    border-radius: 3px;
+    font-size: 0.85rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .retry-btn:hover {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  /* ===== CONFETTI ===== */
+  .confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 200;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #060e20;
+    padding: 3rem 5vw 2rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--gold-light);
+  }
+
+  .footer-link {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-link:hover { color: var(--gold-light); }
+
+  .footer-copy {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.05em;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .hero { padding: 120px 5vw 50px; }
+    .hero-title { font-size: 1.6rem; }
+    .question-card { padding: 2rem 1.5rem; }
+    .result-card { padding: 2rem 1.5rem; }
+    .gauge-wrapper { width: 160px; height: 160px; }
+    .gauge-svg { width: 160px; height: 160px; }
+    .gauge-percent { font-size: 2.4rem; }
+    .share-buttons { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">就活ナビ</a>
+  <a href="index.html" class="nav-back">トップへ戻る</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">あなたの就活準備度は？</h1>
+    <p class="hero-subtitle">1分で診断</p>
+    <button class="hero-start-btn" id="start-btn" onclick="startQuiz()">診断スタート</button>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<div class="quiz-container" id="quiz-container">
+  <div class="progress-section">
+    <div class="progress-label" id="progress-label">Q1 / 8</div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+  </div>
+  <div id="question-area"></div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-container" id="results-container">
+  <div class="result-card">
+    <div class="gauge-wrapper">
+      <svg class="gauge-svg" viewBox="0 0 180 180">
+        <defs>
+          <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#0a1a3e"/>
+            <stop offset="50%" stop-color="#c9a84c"/>
+            <stop offset="100%" stop-color="#c0001a"/>
+          </linearGradient>
+        </defs>
+        <circle class="gauge-bg" cx="90" cy="90" r="80"/>
+        <circle class="gauge-fill" id="gauge-fill" cx="90" cy="90" r="80"/>
+      </svg>
+      <div class="gauge-text">
+        <span class="gauge-percent" id="gauge-percent">0</span>
+        <span class="gauge-percent-sign">%</span>
+      </div>
+    </div>
+    <div class="result-level" id="result-level"></div>
+    <div class="result-score" id="result-score"></div>
+    <p class="result-desc" id="result-desc"></p>
+    <a href="account.html?mode=signup" class="result-cta">就活ナビで準備を加速する &rarr;</a>
+  </div>
+
+  <div class="weak-section" id="weak-section">
+    <div class="weak-title">改善ポイント</div>
+    <div id="weak-items"></div>
+  </div>
+
+  <div class="share-section">
+    <div class="share-label">結果をシェアする</div>
+    <div class="share-buttons">
+      <a class="share-btn share-btn-x" id="share-x" href="#" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X
+      </a>
+      <a class="share-btn share-btn-line" id="share-line" href="#" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.104-.51-.281l-2.443-3.338v3.021c0 .346-.282.629-.631.629-.345 0-.627-.283-.627-.629V8.108c0-.27.173-.51.43-.595.063-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.346 0 .631.285.631.63v4.771zm-5.741 0c0 .346-.282.629-.631.629-.345 0-.627-.283-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.283-.63-.629V8.108c0-.345.285-.63.63-.63.349 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+        LINE
+      </a>
+    </div>
+  </div>
+
+  <button class="retry-btn" onclick="retryQuiz()">もう一度診断する</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">就活ナビ</span>
+    <a href="index.html" class="footer-link">トップページへ</a>
+    <div class="footer-copy">&copy; 2026 就活ナビ. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- CONFETTI CANVAS -->
+<canvas class="confetti-canvas" id="confetti-canvas"></canvas>
+
+<script>
+(function() {
+  // ===== QUIZ DATA =====
+  var questions = [
+    {
+      id: 'self_analysis',
+      label: '自己分析',
+      text: '自己分析をどのくらいやった？',
+      answers: [
+        { text: 'まだ何もしていない', score: 0 },
+        { text: 'なんとなく考えた', score: 1 },
+        { text: 'ガクチカを1つ以上書いた', score: 2 },
+        { text: '強み・弱み・価値観を整理した', score: 3 }
+      ]
+    },
+    {
+      id: 'es',
+      label: 'ES（エントリーシート）',
+      text: 'ESを書いた経験は？',
+      answers: [
+        { text: '書いたことがない', score: 0 },
+        { text: '下書きはある', score: 1 },
+        { text: '提出したことがある', score: 2 },
+        { text: '添削を受けて改善した', score: 3 }
+      ]
+    },
+    {
+      id: 'interview',
+      label: '面接対策',
+      text: '面接の準備は？',
+      answers: [
+        { text: '何もしていない', score: 0 },
+        { text: '想定質問を考えた', score: 1 },
+        { text: '模擬面接をやった', score: 2 },
+        { text: 'フィードバックをもとに改善した', score: 3 }
+      ]
+    },
+    {
+      id: 'company_research',
+      label: '志望業界・企業研究',
+      text: '志望業界・企業は？',
+      answers: [
+        { text: 'まだ決まっていない', score: 0 },
+        { text: 'なんとなくある', score: 1 },
+        { text: '3社以上リストアップした', score: 2 },
+        { text: '企業研究をして志望理由が書ける', score: 3 }
+      ]
+    },
+    {
+      id: 'peers',
+      label: '就活仲間',
+      text: '就活仲間は？',
+      answers: [
+        { text: 'いない', score: 0 },
+        { text: '友達と話す程度', score: 1 },
+        { text: '情報交換する仲間がいる', score: 2 },
+        { text: '一緒に面接練習する仲間がいる', score: 3 }
+      ]
+    },
+    {
+      id: 'schedule',
+      label: 'スケジュール管理',
+      text: '就活スケジュールの把握は？',
+      answers: [
+        { text: '何も知らない', score: 0 },
+        { text: 'なんとなく知っている', score: 1 },
+        { text: '主要な締切を把握している', score: 2 },
+        { text: 'カレンダーで管理している', score: 3 }
+      ]
+    },
+    {
+      id: 'obog',
+      label: 'OB/OG訪問',
+      text: 'OB/OG訪問は？',
+      answers: [
+        { text: 'したことがない', score: 0 },
+        { text: 'やりたいと思っている', score: 1 },
+        { text: '1回はした', score: 2 },
+        { text: '複数回して業界理解を深めた', score: 3 }
+      ]
+    },
+    {
+      id: 'mindset',
+      label: 'メンタル・モチベーション',
+      text: '就活への気持ちは？',
+      answers: [
+        { text: '不安で何も手につかない', score: 0 },
+        { text: '不安だけど少しずつやっている', score: 1 },
+        { text: 'やるべきことは分かっている', score: 2 },
+        { text: '自信を持って進められている', score: 3 }
+      ]
+    }
+  ];
+
+  var improvementTips = {
+    self_analysis: 'まずは自分の強み・弱み・価値観を書き出してみましょう。ガクチカ（学生時代に力を入れたこと）を1つ言語化するところから始めると効果的です。',
+    es: 'ESは書いて終わりではなく、第三者に読んでもらいフィードバックを受けることが重要です。まずは1社分の志望動機を書いてみましょう。',
+    interview: '面接は練習量がものを言います。友人や就活仲間と模擬面接をし合い、話し方や内容のブラッシュアップを重ねましょう。',
+    company_research: '興味のある業界を3つ選び、各業界から2〜3社をピックアップして企業研究を始めましょう。IR資料やOB/OG訪問が理解を深める近道です。',
+    peers: '就活は情報戦です。同じ志望業界の仲間を見つけて情報交換し、面接練習を一緒にすると飛躍的に成長できます。',
+    schedule: '主要企業のインターン・本選考スケジュールを調べ、カレンダーアプリで管理しましょう。締切を逆算してTO DOを設定するのがポイントです。',
+    obog: 'OB/OG訪問は企業理解を深める最良の手段です。大学のキャリアセンターやOB/OG訪問サービスを活用して、まず1人にコンタクトを取ってみましょう。',
+    mindset: '不安は誰にでもあります。小さな行動を1つずつ積み重ねることで自信がついてきます。まずは今日できることを1つだけ決めて実行してみましょう。'
+  };
+
+  var currentQ = 0;
+  var scores = [];
+  var BRAND = '就活ナビ';
+
+  // ===== START =====
+  window.startQuiz = function() {
+    document.getElementById('hero-section').style.display = 'none';
+    document.getElementById('quiz-container').classList.add('active');
+    currentQ = 0;
+    scores = [];
+    renderQuestion();
+  };
+
+  // ===== RENDER QUESTION =====
+  function renderQuestion() {
+    var q = questions[currentQ];
+    var area = document.getElementById('question-area');
+    var pLabel = document.getElementById('progress-label');
+    var pFill = document.getElementById('progress-fill');
+
+    pLabel.textContent = 'Q' + (currentQ + 1) + ' / 8';
+    pFill.style.width = ((currentQ + 1) / 8 * 100) + '%';
+
+    var html = '<div class="question-card">';
+    html += '<div class="question-number">QUESTION ' + (currentQ + 1) + '</div>';
+    html += '<div class="question-text">' + q.text + '</div>';
+    html += '<div class="answer-list">';
+    for (var i = 0; i < q.answers.length; i++) {
+      html += '<button class="answer-btn" data-score="' + q.answers[i].score + '" onclick="selectAnswer(this, ' + q.answers[i].score + ')">' + q.answers[i].text + '</button>';
+    }
+    html += '</div></div>';
+    area.innerHTML = html;
+  }
+
+  // ===== SELECT ANSWER =====
+  window.selectAnswer = function(btn, score) {
+    var btns = btn.parentElement.querySelectorAll('.answer-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.remove('selected');
+      btns[i].style.pointerEvents = 'none';
+    }
+    btn.classList.add('selected');
+
+    scores.push({ id: questions[currentQ].id, score: score });
+    currentQ++;
+
+    setTimeout(function() {
+      if (currentQ < questions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }, 300);
+  };
+
+  // ===== SHOW RESULTS =====
+  function showResults() {
+    document.getElementById('quiz-container').classList.remove('active');
+    document.getElementById('results-container').classList.add('active');
+
+    var totalScore = 0;
+    for (var i = 0; i < scores.length; i++) {
+      totalScore += scores[i].score;
+    }
+
+    var level, percent, desc;
+    if (totalScore <= 6) {
+      level = '就活ビギナー';
+      percent = 20;
+      desc = 'まだ始まったばかり。まずは自己分析から始めよう！焦らず一歩ずつ進めていけば大丈夫です。';
+    } else if (totalScore <= 12) {
+      level = '就活スターター';
+      percent = 40;
+      desc = '基礎はできてきた！ESと面接対策を強化して、選考に備えよう。';
+    } else if (totalScore <= 18) {
+      level = '就活ファイター';
+      percent = 65;
+      desc = '順調に進んでいる！実践を重ねてブラッシュアップしていこう。';
+    } else {
+      level = '就活マスター';
+      percent = 90;
+      desc = '準備万端！自信を持って選考に臨もう。あなたの努力はきっと実を結ぶはず。';
+    }
+
+    document.getElementById('result-level').textContent = level;
+    document.getElementById('result-score').textContent = totalScore + ' / 24 点';
+    document.getElementById('result-desc').textContent = desc;
+
+    // Animate gauge
+    var circumference = 2 * Math.PI * 80;
+    var offset = circumference - (percent / 100) * circumference;
+    setTimeout(function() {
+      document.getElementById('gauge-fill').style.strokeDashoffset = offset;
+    }, 100);
+
+    // Animate percent number
+    animateNumber(document.getElementById('gauge-percent'), 0, percent, 1200);
+
+    // Find 2 lowest scoring categories
+    var sorted = scores.slice().sort(function(a, b) { return a.score - b.score; });
+    var weakItems = [];
+    var seen = {};
+    for (var j = 0; j < sorted.length && weakItems.length < 2; j++) {
+      if (!seen[sorted[j].id]) {
+        seen[sorted[j].id] = true;
+        weakItems.push(sorted[j]);
+      }
+    }
+
+    var weakHTML = '';
+    for (var k = 0; k < weakItems.length; k++) {
+      var qData = questions.filter(function(q) { return q.id === weakItems[k].id; })[0];
+      weakHTML += '<div class="weak-item">';
+      weakHTML += '<div class="weak-item-label">' + qData.label + '（' + weakItems[k].score + '/3点）</div>';
+      weakHTML += '<div class="weak-item-tip">' + improvementTips[weakItems[k].id] + '</div>';
+      weakHTML += '</div>';
+    }
+    document.getElementById('weak-items').innerHTML = weakHTML;
+
+    // Share URLs
+    var shareText = encodeURIComponent('就活準備度チェックの結果: ' + level + ' (' + totalScore + '/24) #就活 #就活ナビ');
+    var shareUrl = encodeURIComponent(window.location.href);
+    document.getElementById('share-x').href = 'https://twitter.com/intent/tweet?text=' + shareText + '&url=' + shareUrl;
+    document.getElementById('share-line').href = 'https://social-plugins.line.me/lineit/share?url=' + shareUrl + '&text=' + shareText;
+
+    // Confetti
+    launchConfetti();
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ===== ANIMATE NUMBER =====
+  function animateNumber(el, from, to, duration) {
+    var start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(from + (to - from) * eased);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // ===== RETRY =====
+  window.retryQuiz = function() {
+    document.getElementById('results-container').classList.remove('active');
+    document.getElementById('hero-section').style.display = '';
+    // Reset gauge
+    document.getElementById('gauge-fill').style.strokeDashoffset = 502;
+    document.getElementById('gauge-percent').textContent = '0';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // ===== CONFETTI =====
+  function launchConfetti() {
+    var canvas = document.getElementById('confetti-canvas');
+    var ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var particles = [];
+    var colors = ['#0a1a3e', '#c9a84c', '#c0001a', '#e8c96c', '#faf7f2', '#142254'];
+    var total = 120;
+
+    for (var i = 0; i < total; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        w: Math.random() * 8 + 4,
+        h: Math.random() * 4 + 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vx: (Math.random() - 0.5) * 3,
+        vy: Math.random() * 3 + 2,
+        rot: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 8,
+        opacity: 1
+      });
+    }
+
+    var frame = 0;
+    var maxFrames = 180;
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      frame++;
+
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.rotSpeed;
+        p.vy += 0.04;
+
+        if (frame > maxFrames - 40) {
+          p.opacity = Math.max(0, p.opacity - 0.025);
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.globalAlpha = p.opacity;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      }
+
+      if (frame < maxFrames) {
+        requestAnimationFrame(draw);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+})();
+</script>
+</body>
+</html>

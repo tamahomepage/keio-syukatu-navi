@@ -2,6 +2,19 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>新入生の方へ | 慶應就活ナビ</title>
 <meta name="description" content="慶應就活ナビへようこそ。就活を、ひとりで戦わなくていい。新入生向けの就活支援コミュニティ紹介ページです。">
@@ -246,11 +259,15 @@
   .reveal.visible { opacity: 1; transform: translateY(0); }
 </style>
 <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "YOUR_PROJECT_ID");
+    (function(projectId){
+        if (!projectId) return;
+        window.clarity = window.clarity || function(){ (window.clarity.q = window.clarity.q || []).push(arguments); };
+        var script = document.createElement("script");
+        script.async = 1;
+        script.src = "https://www.clarity.ms/tag/" + projectId;
+        var firstScript = document.getElementsByTagName("script")[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+    })("");
 </script>
 </head>
 <body>
@@ -442,7 +459,7 @@
 <script>
 
   // ===== 新歓イベント スプシ連携（GASプロキシ経由）=====
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
 
   async function loadOrientationEvents() {
     const el = document.getElementById('orientation-events');

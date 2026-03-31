@@ -2,7 +2,20 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>仲間を見つける ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -237,7 +250,7 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
   const flash = document.getElementById('flash');
   let flashTimer = null;
 
@@ -262,13 +275,15 @@
   }
 
   function renderMemberCard(m) {
-    const companies = (m.preferredCompanies || []).filter(Boolean).join(' / ');
-    const lineBtn = m.lineQrUrl
-      ? `<a href="${m.lineQrUrl}" target="_blank" class="member-line-btn">LINE で繋がる</a>`
-      : (m.lineName ? `<span style="font-size:0.72rem;color:var(--text-muted);margin-top:0.6rem;display:block;">LINE: ${m.lineName}</span>` : '');
+    const companies = (m.preferredCompanies || []).filter(Boolean).map(escHtml).join(' / ');
+    const badge = m.isMe ? '<span style="font-size:0.65rem;background:var(--gold);color:white;padding:0.1rem 0.4rem;margin-left:0.4rem;">あなた</span>' : '';
+    const lineUrl = safeHttpUrl(m.lineQrUrl);
+    const lineBtn = lineUrl
+      ? `<a href="${escAttr(lineUrl)}" target="_blank" rel="noopener noreferrer" class="member-line-btn">LINE で繋がる</a>`
+      : (m.lineName ? `<span style="font-size:0.72rem;color:var(--text-muted);margin-top:0.6rem;display:block;">LINE: ${escHtml(m.lineName)}</span>` : '');
     return `<div class="member-card">
-      <div class="member-name">${m.displayName || '名前未設定'}</div>
-      <div class="member-industry">${m.desiredIndustry || ''}</div>
+      <div class="member-name">${escHtml(m.displayName || '名前未設定')}${badge}</div>
+      <div class="member-industry">${escHtml(m.desiredIndustry || '')}</div>
       ${companies ? `<div class="member-companies">志望: ${companies}</div>` : ''}
       ${lineBtn}
     </div>`;
@@ -328,14 +343,16 @@
     }
     el.innerHTML = groups.map(g => {
       const typeLabel = g.type === 'industry' ? '業界別' : g.type === 'company' ? '企業別' : 'その他';
+      const groupIdArg = encodeInlineArg(g.id);
+      const groupNameArg = encodeInlineArg(g.name || '');
       const actions = g.isMember
-        ? `<button class="btn-view" onclick="viewGroupMembers('${g.id}','${(g.name||'').replace(/'/g,"\\'")}')">メンバー</button>
-           <button class="btn-leave" onclick="leaveGroupAction('${g.id}')">退出</button>`
-        : `<button class="btn-join" onclick="joinGroupAction('${g.id}')">参加する</button>`;
+        ? `<button class="btn-view" onclick="viewGroupMembers(decodeURIComponent('${groupIdArg}'),decodeURIComponent('${groupNameArg}'))">メンバー</button>
+           <button class="btn-leave" onclick="leaveGroupAction(decodeURIComponent('${groupIdArg}'))">退出</button>`
+        : `<button class="btn-join" onclick="joinGroupAction(decodeURIComponent('${groupIdArg}'))">参加する</button>`;
       return `<div class="group-card">
         <div class="group-info">
-          <div class="group-name">${g.name}</div>
-          <div class="group-meta">${typeLabel} | ${g.memberCount}人参加${g.description ? ' | ' + g.description : ''}</div>
+          <div class="group-name">${escHtml(g.name || '')}</div>
+          <div class="group-meta">${typeLabel} | ${Number(g.memberCount) || 0}人参加${g.description ? ' | ' + escHtml(g.description) : ''}</div>
         </div>
         <div class="group-actions">${actions}</div>
       </div>`;
@@ -387,10 +404,7 @@
         document.getElementById('gm-modal-body').innerHTML = '<div class="empty-msg">メンバーがいません。</div>';
         return;
       }
-      document.getElementById('gm-modal-body').innerHTML = members.map(m => {
-        const badge = m.isMe ? '<span style="font-size:0.65rem;background:var(--gold);color:white;padding:0.1rem 0.4rem;margin-left:0.4rem;">あなた</span>' : '';
-        return renderMemberCard({ ...m, displayName: (m.displayName || '') + badge });
-      }).join('');
+      document.getElementById('gm-modal-body').innerHTML = members.map(m => renderMemberCard(m)).join('');
     } catch (e) {
       document.getElementById('gm-modal-body').innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${e.message}</div>`;
     }
@@ -423,7 +437,1333 @@
       searchByCompany();
     }
     loadGroups();
+    loadConsultations();
+    loadGDSessions();
+    loadQuestions();
   }
 </script>
-</body>
+
+<!-- ===== 就活相談掲示板 ===== -->
+<style>
+.consul-post { border:1px solid rgba(10,26,62,0.1); padding:1rem 1.2rem; margin-bottom:0.8rem; background:white; }
+.consul-post-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
+.consul-cat { font-size:0.68rem; background:rgba(201,168,76,0.12); color:#7a5f10; padding:0.15rem 0.5rem; font-weight:700; }
+.consul-meta { font-size:0.7rem; color:var(--text-muted); }
+.consul-title-text { font-weight:700; font-size:0.88rem; color:var(--navy); margin-bottom:0.4rem; }
+.consul-body { font-size:0.8rem; color:var(--text); line-height:1.7; margin-bottom:0.6rem; }
+.consul-comments { border-top:1px solid rgba(10,26,62,0.06); padding-top:0.6rem; }
+.consul-comment { font-size:0.78rem; color:var(--text); padding:0.4rem 0; border-bottom:1px solid rgba(10,26,62,0.04); line-height:1.6; }
+.consul-comment-author { font-weight:700; color:var(--navy); font-size:0.72rem; }
+.consul-comment-form { display:flex; gap:0.4rem; margin-top:0.5rem; }
+.consul-comment-form input { flex:1; padding:0.4rem 0.6rem; border:1px solid rgba(10,26,62,0.12); font-size:0.78rem; font-family:'Noto Sans JP',sans-serif; }
+.consul-comment-form button { padding:0.4rem 0.8rem; background:var(--navy); color:white; border:none; font-size:0.72rem; cursor:pointer; font-weight:700; font-family:'Noto Sans JP',sans-serif; white-space:nowrap; }
+.gd-session { border:1px solid rgba(10,26,62,0.1); padding:1rem 1.2rem; margin-bottom:0.8rem; background:white; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+.gd-info { flex:1; min-width:200px; }
+.gd-title-text { font-weight:700; font-size:0.88rem; color:var(--navy); }
+.gd-meta { font-size:0.72rem; color:var(--text-muted); margin-top:0.2rem; }
+.gd-actions { display:flex; gap:0.5rem; flex-shrink:0; }
+</style>
+
+<div class="section" style="margin:0 0 1.5rem;">
+  <div class="section-header">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <div>
+      <div class="section-label">CONSULTATION BOARD</div>
+      <div class="section-title">就活相談掲示板</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem;">
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <select id="consul-category" style="padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;">
+          <option value="業界選び">業界選び</option>
+          <option value="ES・書類">ES・書類</option>
+          <option value="面接">面接</option>
+          <option value="内定・承諾">内定・承諾</option>
+          <option value="メンタル">メンタル</option>
+          <option value="その他">その他</option>
+        </select>
+        <input type="text" id="consul-title" placeholder="タイトル" style="flex:1;min-width:150px;padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;">
+      </div>
+      <textarea id="consul-body" placeholder="相談内容を書いてください..." style="width:100%;padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;min-height:80px;resize:vertical;"></textarea>
+      <button class="filter-btn" onclick="postConsultation()" style="align-self:flex-end;">投稿する</button>
+    </div>
+    <div id="consul-feed">
+      <div class="empty-msg">読み込み中...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== GD練習マッチング ===== -->
+<div class="section" style="margin:0 0 1.5rem;">
+  <div class="section-header">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+    </div>
+    <div>
+      <div class="section-label">GD PRACTICE</div>
+      <div class="section-title">GD練習マッチング</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1rem;">グループディスカッションの練習セッションを作成・参加できます。</p>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem;padding:1rem;background:var(--gray);border:1px solid rgba(10,26,62,0.06);">
+      <div style="font-size:0.78rem;font-weight:700;color:var(--navy);margin-bottom:0.3rem;">セッションを作成</div>
+      <input type="text" id="gd-title" placeholder="セッションタイトル" style="padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;">
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <input type="date" id="gd-date" style="padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;flex:1;min-width:140px;">
+        <input type="time" id="gd-time" style="padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;flex:1;min-width:100px;">
+        <select id="gd-max" style="padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;">
+          <option value="4">最大4人</option>
+          <option value="5">最大5人</option>
+          <option value="6" selected>最大6人</option>
+          <option value="8">最大8人</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:0.5rem;">
+        <button class="filter-btn" onclick="createGDSessionAction()" style="flex:1;">セッション作成</button>
+        <button class="filter-btn" onclick="generateGDThemeAction()" style="flex:1;background:var(--gold);color:var(--navy);">AIテーマ生成</button>
+      </div>
+      <div id="gd-theme-result" style="display:none;padding:0.6rem;background:white;border:1px solid rgba(201,168,76,0.3);font-size:0.8rem;line-height:1.6;color:var(--text);"></div>
+    </div>
+    <div id="gd-session-list">
+      <div class="empty-msg">読み込み中...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 就活相談掲示板 =====
+async function loadConsultations() {
+  var el = document.getElementById('consul-feed');
+  try {
+    var data = await callApi('readConsultations');
+    renderConsultations(data.posts || data.consultations || []);
+  } catch (e) {
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+  }
+}
+
+function renderConsultations(posts) {
+  var el = document.getElementById('consul-feed');
+  if (!posts.length) {
+    el.innerHTML = '\x3cdiv class="empty-msg">まだ相談がありません。最初の投稿をしてみましょう。\x3c/div>';
+    return;
+  }
+  el.innerHTML = posts.map(function(p) {
+    var postIdArg = encodeInlineArg(p.id);
+    var author = escHtml(p.displayName || p.author || '匿名');
+    var body = escHtml(p.text || p.body || '');
+    var title = escHtml(p.title || '');
+    var dateLabel = p.createdAt ? new Date(p.createdAt).toLocaleDateString('ja-JP') : escHtml(p.date || '');
+    var commentsHtml = (p.comments || []).map(function(c) {
+      return '\x3cdiv class="consul-comment">\x3cspan class="consul-comment-author">' + escHtml(c.displayName || c.author || '匿名') + '\x3c/span> ' + escHtml(c.text || c.commentText || '') + '\x3c/div>';
+    }).join('');
+    return '\x3cdiv class="consul-post">'
+      + '\x3cdiv class="consul-post-header">\x3cspan class="consul-cat">' + escHtml(p.category || '') + '\x3c/span>\x3cspan class="consul-meta">' + author + ' | ' + dateLabel + '\x3c/span>\x3c/div>'
+      + '\x3cdiv class="consul-title-text">' + title + '\x3c/div>'
+      + '\x3cdiv class="consul-body">' + body + '\x3c/div>'
+      + '\x3cdiv class="consul-comments">' + commentsHtml
+      + '\x3cdiv class="consul-comment-form">\x3cinput type="text" id="consul-cmt-' + escAttr(p.id || '') + '" placeholder="コメントを入力...">\x3cbutton onclick="addComment(decodeURIComponent(\'' + postIdArg + '\'))">送信\x3c/button>\x3c/div>'
+      + '\x3c/div>\x3c/div>';
+  }).join('');
+}
+
+async function postConsultation() {
+  var title = document.getElementById('consul-title').value.trim();
+  var body = document.getElementById('consul-body').value.trim();
+  if (!title || !body) { showFlash('タイトルと内容を入力してください。', 'error'); return; }
+  try {
+    await callApi('writeConsultation', {
+      category: document.getElementById('consul-category').value,
+      title: title,
+      body: body
+    });
+    document.getElementById('consul-title').value = '';
+    document.getElementById('consul-body').value = '';
+    showFlash('投稿しました。', 'success');
+    loadConsultations();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function addComment(postId) {
+  var input = document.getElementById('consul-cmt-' + postId);
+  var text = input.value.trim();
+  if (!text) return;
+  try {
+    await callApi('addConsultationComment', { postId: postId, text: text });
+    input.value = '';
+    loadConsultations();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+// ===== GD練習マッチング =====
+async function loadGDSessions() {
+  var el = document.getElementById('gd-session-list');
+  try {
+    var data = await callApi('readGDSessions');
+    renderGDSessions(data.sessions || []);
+  } catch (e) {
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+  }
+}
+
+function renderGDSessions(sessions) {
+  var el = document.getElementById('gd-session-list');
+  var currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
+  if (!sessions.length) {
+    el.innerHTML = '\x3cdiv class="empty-msg">まだセッションがありません。作成してみましょう。\x3c/div>';
+    return;
+  }
+  el.innerHTML = sessions.map(function(s) {
+    var sessionIdArg = encodeInlineArg(s.id);
+    var isParticipant = !!s.isParticipant || ((s.participants || []).some(function(p) { return currentUser && p.userId === currentUser.id; }));
+    var actions = isParticipant
+      ? '\x3cbutton class="btn-leave" onclick="leaveGDAction(decodeURIComponent(\'' + sessionIdArg + '\'))">退出\x3c/button>'
+      : '\x3cbutton class="btn-join" onclick="joinGDAction(decodeURIComponent(\'' + sessionIdArg + '\'))">参加する\x3c/button>';
+    return '\x3cdiv class="gd-session">'
+      + '\x3cdiv class="gd-info">'
+      + '\x3cdiv class="gd-title-text">' + escHtml(s.title || 'GDセッション') + '\x3c/div>'
+      + '\x3cdiv class="gd-meta">' + escHtml(s.scheduledDate || s.date || '') + ' ' + escHtml(s.scheduledTime || s.time || '') + ' | ' + (Number(s.participantCount) || 0) + '/' + (Number(s.maxParticipants) || 6) + '人参加\x3c/div>'
+      + '\x3c/div>'
+      + '\x3cdiv class="gd-actions">' + actions + '\x3c/div>'
+      + '\x3c/div>';
+  }).join('');
+}
+
+async function createGDSessionAction() {
+  var title = document.getElementById('gd-title').value.trim();
+  var date = document.getElementById('gd-date').value;
+  var time = document.getElementById('gd-time').value;
+  if (!title || !date || !time) { showFlash('タイトル・日付・時間を入力してください。', 'error'); return; }
+  try {
+    await callApi('createGDSession', {
+      title: title, date: date, time: time,
+      maxParticipants: parseInt(document.getElementById('gd-max').value)
+    });
+    document.getElementById('gd-title').value = '';
+    showFlash('セッションを作成しました。', 'success');
+    loadGDSessions();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function joinGDAction(sessionId) {
+  try {
+    await callApi('joinGDSession', { sessionId: sessionId });
+    showFlash('セッションに参加しました。', 'success');
+    loadGDSessions();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function leaveGDAction(sessionId) {
+  try {
+    await callApi('leaveGDSession', { sessionId: sessionId });
+    showFlash('セッションを退出しました。', 'success');
+    loadGDSessions();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function generateGDThemeAction() {
+  var el = document.getElementById('gd-theme-result');
+  el.style.display = 'block';
+  el.textContent = 'AIテーマを生成中...';
+  try {
+    var data = await callApi('generateGDTheme');
+    el.textContent = data.theme || 'テーマを生成できませんでした。';
+    document.getElementById('gd-title').value = data.theme || '';
+  } catch (e) {
+    el.textContent = e.message;
+    el.style.color = 'var(--crimson)';
+  }
+}
+</script>
+
+<!-- ===== 面接練習マッチング ===== -->
+<style>
+.pm-filter-tabs { display:flex; gap:0.4rem; margin-bottom:1rem; flex-wrap:wrap; }
+.pm-filter-tab { padding:0.4rem 0.9rem; border:1px solid rgba(10,26,62,0.15); background:white; font-size:0.75rem; cursor:pointer; font-family:'Noto Sans JP',sans-serif; color:var(--text-muted); transition:all 0.2s; font-weight:500; }
+.pm-filter-tab:hover { border-color:var(--gold); color:var(--navy); }
+.pm-filter-tab.active { background:var(--navy); color:white; border-color:var(--navy); font-weight:700; }
+.pm-post-btn { display:inline-flex; align-items:center; gap:0.3rem; padding:0.5rem 1.2rem; background:var(--crimson); color:white; border:none; font-size:0.8rem; cursor:pointer; font-weight:700; font-family:'Noto Sans JP',sans-serif; letter-spacing:0.03em; transition:opacity 0.2s; margin-bottom:1rem; }
+.pm-post-btn:hover { opacity:0.85; }
+.pm-card { border:1px solid rgba(10,26,62,0.1); padding:1rem 1.2rem; margin-bottom:0.8rem; background:white; transition:border-color 0.2s; }
+.pm-card:hover { border-color:var(--gold); }
+.pm-card[data-type="面接練習"] { border-left:4px solid var(--crimson); }
+.pm-card[data-type="GD練習"] { border-left:4px solid var(--navy); }
+.pm-card[data-type="ケース面接"] { border-left:4px solid var(--gold); }
+.pm-card.closed { opacity:0.6; }
+.pm-card-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; gap:0.5rem; flex-wrap:wrap; }
+.pm-type-badge { font-size:0.68rem; padding:0.15rem 0.6rem; font-weight:700; display:inline-block; border-radius:2px; color:white; }
+.pm-type-badge[data-type="面接練習"] { background:var(--crimson); }
+.pm-type-badge[data-type="GD練習"] { background:var(--navy); }
+.pm-type-badge[data-type="ケース面接"] { background:var(--gold); color:var(--navy); }
+.pm-status-badge { font-size:0.65rem; padding:0.12rem 0.5rem; font-weight:700; border-radius:2px; }
+.pm-status-open { background:rgba(76,175,80,0.12); color:#2e7d32; }
+.pm-status-closed { background:rgba(107,107,126,0.1); color:var(--text-muted); }
+.pm-card-meta { font-size:0.7rem; color:var(--text-muted); }
+.pm-card-info { margin:0.4rem 0; }
+.pm-card-info-row { font-size:0.78rem; color:var(--text); line-height:1.7; }
+.pm-card-info-row strong { color:var(--navy); font-weight:600; font-size:0.72rem; }
+.pm-card-message { font-size:0.8rem; color:var(--text); line-height:1.7; margin:0.5rem 0; background:var(--gray); padding:0.6rem 0.8rem; border-radius:2px; }
+.pm-participants { margin:0.6rem 0; }
+.pm-participants-label { font-size:0.72rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem; }
+.pm-participant-list { display:flex; gap:0.4rem; flex-wrap:wrap; align-items:center; }
+.pm-participant-avatar { width:26px; height:26px; border-radius:50%; background:var(--navy); color:white; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:700; flex-shrink:0; }
+.pm-participant-name { font-size:0.72rem; color:var(--text-muted); }
+.pm-slots-left { font-size:0.72rem; color:var(--crimson); font-weight:600; }
+.pm-card-actions { display:flex; gap:0.5rem; margin-top:0.6rem; flex-wrap:wrap; align-items:center; }
+.pm-join-btn { padding:0.35rem 1rem; background:var(--navy); color:white; border:none; font-size:0.75rem; cursor:pointer; font-weight:700; font-family:'Noto Sans JP',sans-serif; transition:all 0.2s; }
+.pm-join-btn:hover { background:var(--crimson); }
+.pm-joined-badge { font-size:0.7rem; padding:0.25rem 0.7rem; background:rgba(76,175,80,0.15); color:#2e7d32; font-weight:700; border-radius:2px; }
+.pm-cancel-btn { padding:0.3rem 0.8rem; background:none; border:1px solid rgba(192,0,26,0.25); color:var(--crimson); font-size:0.7rem; cursor:pointer; font-family:'Noto Sans JP',sans-serif; font-weight:600; transition:opacity 0.2s; }
+.pm-cancel-btn:hover { opacity:0.7; }
+.pm-owner-btn { padding:0.3rem 0.8rem; background:none; border:1px solid rgba(10,26,62,0.2); color:var(--text-muted); font-size:0.7rem; cursor:pointer; font-family:'Noto Sans JP',sans-serif; font-weight:600; transition:opacity 0.2s; }
+.pm-owner-btn:hover { opacity:0.7; }
+.pm-line-info { font-size:0.72rem; color:var(--navy); background:rgba(76,175,80,0.08); padding:0.4rem 0.7rem; margin-top:0.5rem; border-left:3px solid #2e7d32; }
+.pm-line-info strong { color:#2e7d32; }
+.pm-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center; padding:1rem; }
+.pm-modal-overlay.open { display:flex; }
+.pm-modal-box { background:white; max-width:520px; width:100%; max-height:80vh; overflow-y:auto; }
+.pm-modal-header { background:var(--navy); padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; }
+.pm-modal-title { color:white; font-family:'Noto Serif JP',serif; font-size:0.95rem; font-weight:700; }
+.pm-modal-close { background:none; border:none; color:rgba(255,255,255,0.6); font-size:1.2rem; cursor:pointer; }
+.pm-modal-body { padding:1.5rem; }
+.pm-modal-body label { display:block; font-size:0.78rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem; margin-top:0.8rem; }
+.pm-modal-body label:first-child { margin-top:0; }
+.pm-modal-body input[type="text"], .pm-modal-body select, .pm-modal-body textarea { width:100%; padding:0.5rem 0.8rem; border:1px solid rgba(10,26,62,0.15); font-size:0.82rem; font-family:'Noto Sans JP',sans-serif; }
+.pm-modal-body textarea { min-height:100px; resize:vertical; }
+.pm-modal-submit { margin-top:1.2rem; width:100%; padding:0.6rem; background:var(--crimson); color:white; border:none; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Noto Sans JP',sans-serif; letter-spacing:0.05em; transition:opacity 0.2s; }
+.pm-modal-submit:hover { opacity:0.85; }
+</style>
+
+<div class="section" style="margin:0 0 1.5rem;">
+  <div class="section-header">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div>
+      <div class="section-label">PRACTICE MATCHING</div>
+      <div class="section-title">面接練習マッチング</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <button class="pm-post-btn" onclick="document.getElementById('pm-post-modal').classList.add('open')">＋ 練習相手を募集</button>
+    <div class="pm-filter-tabs">
+      <button class="pm-filter-tab active" data-filter="すべて" onclick="filterPM(this)">すべて</button>
+      <button class="pm-filter-tab" data-filter="面接練習" onclick="filterPM(this)">面接練習</button>
+      <button class="pm-filter-tab" data-filter="GD練習" onclick="filterPM(this)">GD練習</button>
+      <button class="pm-filter-tab" data-filter="ケース面接" onclick="filterPM(this)">ケース面接</button>
+    </div>
+    <div id="pm-feed">
+      <div class="empty-msg">読み込み中...</div>
+    </div>
+  </div>
+</div>
+
+<!-- 練習募集投稿モーダル -->
+<div class="pm-modal-overlay" id="pm-post-modal">
+  <div class="pm-modal-box">
+    <div class="pm-modal-header">
+      <span class="pm-modal-title">練習相手を募集する</span>
+      <button class="pm-modal-close" onclick="document.getElementById('pm-post-modal').classList.remove('open')">&times;</button>
+    </div>
+    <div class="pm-modal-body">
+      <label>練習タイプ</label>
+      <select id="pm-new-type">
+        <option value="面接練習">面接練習</option>
+        <option value="GD練習">GD練習</option>
+        <option value="ケース面接">ケース面接</option>
+      </select>
+      <label>志望業界（任意）</label>
+      <input type="text" id="pm-new-industry" placeholder="例: IT / コンサル / 商社">
+      <label>希望日時</label>
+      <input type="text" id="pm-new-date" placeholder="例: 今週土曜午後 / 3/30 14:00〜">
+      <label>最大人数</label>
+      <select id="pm-new-max">
+        <option value="2" selected>2人</option>
+        <option value="3">3人</option>
+        <option value="4">4人</option>
+        <option value="5">5人</option>
+        <option value="6">6人</option>
+      </select>
+      <label>ひとこと</label>
+      <textarea id="pm-new-message" placeholder="練習したい内容や自分のレベル感など"></textarea>
+      <button class="pm-modal-submit" onclick="submitPracticeRequest()">募集を投稿する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 面接練習マッチング =====
+var pmAllRequests = [];
+var pmCurrentFilter = 'すべて';
+
+async function loadPracticeRequests() {
+  var el = document.getElementById('pm-feed');
+  try {
+    var data = await callApi('readPracticeRequests');
+    pmAllRequests = data.requests || [];
+    renderPracticeRequests();
+  } catch (e) {
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+  }
+}
+
+function filterPM(btn) {
+  document.querySelectorAll('.pm-filter-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  pmCurrentFilter = btn.getAttribute('data-filter');
+  renderPracticeRequests();
+}
+
+function pmTimeAgo(iso) {
+  if (!iso) return '';
+  var diff = Date.now() - new Date(iso).getTime();
+  var mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'たった今';
+  if (mins < 60) return mins + '分前';
+  var hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + '時間前';
+  var days = Math.floor(hrs / 24);
+  if (days < 30) return days + '日前';
+  return new Date(iso).toLocaleDateString('ja-JP');
+}
+
+function pmInitial(name) {
+  if (!name) return '?';
+  return name.charAt(0);
+}
+
+function renderPracticeRequests() {
+  var el = document.getElementById('pm-feed');
+  var filtered = pmAllRequests;
+  if (pmCurrentFilter !== 'すべて') {
+    filtered = filtered.filter(function(r) { return r.type === pmCurrentFilter; });
+  }
+  if (!filtered.length) {
+    el.innerHTML = '\x3cdiv class="empty-msg">まだ募集がありません。最初の募集を投稿してみましょう！\x3c/div>';
+    return;
+  }
+  el.innerHTML = filtered.map(function(r) {
+    var isClosed = r.status !== '募集中';
+    var slotsLeft = r.maxMembers - r.participants.length;
+
+    // Participants display
+    var partHtml = '';
+    if (r.participants.length > 0) {
+      partHtml = r.participants.map(function(p) {
+        return '\x3cspan class="pm-participant-avatar" title="' + escAttr(p.displayName) + '">' + escHtml(pmInitial(p.displayName)) + '\x3c/span>'
+             + '\x3cspan class="pm-participant-name">' + escHtml(p.displayName || '---') + '\x3c/span>';
+      }).join('');
+    }
+
+    // Action buttons
+    var actionsHtml = '';
+    if (r.isOwner) {
+      if (!isClosed) {
+        actionsHtml += '\x3cbutton class="pm-owner-btn" onclick="closePracticeReq(\'' + escAttr(r.id) + '\')">締切にする\x3c/button>';
+      }
+      actionsHtml += '\x3cbutton class="pm-owner-btn" style="border-color:rgba(192,0,26,0.25);color:var(--crimson);" onclick="deletePracticeReq(\'' + escAttr(r.id) + '\')">削除\x3c/button>';
+    } else if (r.isParticipant) {
+      actionsHtml += '\x3cspan class="pm-joined-badge">参加中\x3c/span>';
+      actionsHtml += '\x3cbutton class="pm-cancel-btn" onclick="leavePracticeReq(\'' + escAttr(r.id) + '\')">キャンセル\x3c/button>';
+    } else if (!isClosed && slotsLeft > 0) {
+      actionsHtml += '\x3cbutton class="pm-join-btn" onclick="joinPracticeReq(\'' + escAttr(r.id) + '\')">参加する\x3c/button>';
+    }
+
+    // LINE info (shown when joined)
+    var lineHtml = '';
+    if (r.isParticipant && r.creatorLineName) {
+      lineHtml = '\x3cdiv class="pm-line-info">\x3cstrong>LINE:\x3c/strong> ' + escHtml(r.creatorLineName) + '（募集者に連絡してみましょう）\x3c/div>';
+    }
+
+    // Industry display
+    var industryHtml = r.industry ? '\x3cdiv class="pm-card-info-row">\x3cstrong>志望業界:\x3c/strong> ' + escHtml(r.industry) + '\x3c/div>' : '';
+
+    return '\x3cdiv class="pm-card' + (isClosed ? ' closed' : '') + '" data-type="' + escAttr(r.type) + '">'
+      + '\x3cdiv class="pm-card-top">'
+        + '\x3cdiv>\x3cspan class="pm-type-badge" data-type="' + escAttr(r.type) + '">' + escHtml(r.type) + '\x3c/span>'
+        + (isClosed ? ' \x3cspan class="pm-status-badge pm-status-closed">締切\x3c/span>' : ' \x3cspan class="pm-status-badge pm-status-open">募集中\x3c/span>')
+        + '\x3c/div>'
+        + '\x3cdiv class="pm-card-meta">' + escHtml(r.displayName || '名前未設定') + ' ・ ' + pmTimeAgo(r.createdAt) + '\x3c/div>'
+      + '\x3c/div>'
+      + '\x3cdiv class="pm-card-info">'
+        + industryHtml
+        + '\x3cdiv class="pm-card-info-row">\x3cstrong>希望日時:\x3c/strong> ' + escHtml(r.preferredDate) + '\x3c/div>'
+      + '\x3c/div>'
+      + (r.message ? '\x3cdiv class="pm-card-message">' + escHtml(r.message) + '\x3c/div>' : '')
+      + '\x3cdiv class="pm-participants">'
+        + '\x3cdiv class="pm-participants-label">参加者 ' + r.participants.length + '/' + r.maxMembers + '人'
+        + (!isClosed && slotsLeft > 0 ? ' \x3cspan class="pm-slots-left">（あと' + slotsLeft + '人募集中）\x3c/span>' : '')
+        + '\x3c/div>'
+        + '\x3cdiv class="pm-participant-list">' + (partHtml || '\x3cspan class="pm-participant-name">まだ参加者はいません\x3c/span>') + '\x3c/div>'
+      + '\x3c/div>'
+      + '\x3cdiv class="pm-card-actions">' + actionsHtml + '\x3c/div>'
+      + lineHtml
+    + '\x3c/div>';
+  }).join('');
+}
+
+async function submitPracticeRequest() {
+  var type     = document.getElementById('pm-new-type').value;
+  var industry = document.getElementById('pm-new-industry').value.trim();
+  var date     = document.getElementById('pm-new-date').value.trim();
+  var max      = document.getElementById('pm-new-max').value;
+  var message  = document.getElementById('pm-new-message').value.trim();
+
+  if (!date) { showFlash('希望日時を入力してください。', 'error'); return; }
+
+  try {
+    await callApi('postPracticeRequest', { type: type, industry: industry, preferredDate: date, maxMembers: parseInt(max, 10), message: message });
+    document.getElementById('pm-post-modal').classList.remove('open');
+    document.getElementById('pm-new-industry').value = '';
+    document.getElementById('pm-new-date').value = '';
+    document.getElementById('pm-new-max').value = '2';
+    document.getElementById('pm-new-message').value = '';
+    showFlash('募集を投稿しました。', 'success');
+    loadPracticeRequests();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function joinPracticeReq(id) {
+  try {
+    await callApi('joinPracticeRequest', { requestId: id });
+    showFlash('参加しました！募集者のLINE情報を確認してください。', 'success');
+    loadPracticeRequests();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function leavePracticeReq(id) {
+  if (!confirm('参加をキャンセルしますか？')) return;
+  try {
+    await callApi('leavePracticeRequest', { requestId: id });
+    showFlash('参加をキャンセルしました。', 'success');
+    loadPracticeRequests();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function closePracticeReq(id) {
+  if (!confirm('この募集を締め切りますか？')) return;
+  try {
+    await callApi('closePracticeRequest', { requestId: id });
+    showFlash('募集を締め切りました。', 'success');
+    loadPracticeRequests();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function deletePracticeReq(id) {
+  if (!confirm('この募集を削除しますか？')) return;
+  try {
+    await callApi('deletePracticeRequest', { requestId: id });
+    showFlash('募集を削除しました。', 'success');
+    loadPracticeRequests();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+document.getElementById('pm-post-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('pm-post-modal'))
+    document.getElementById('pm-post-modal').classList.remove('open');
+});
+
+// Load practice requests on init
+(function() {
+  var checkReadyPM = setInterval(function() {
+    if (typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken && KeioNaviAuth.getSessionToken()) {
+      clearInterval(checkReadyPM);
+      loadPracticeRequests();
+    }
+  }, 200);
+  setTimeout(function() { clearInterval(checkReadyPM); }, 10000);
+})();
+</script>
+
+<!-- ===== 質問・相談掲示板 ===== -->
+<style>
+.qa-filter-tabs { display:flex; gap:0.4rem; margin-bottom:1rem; flex-wrap:wrap; }
+.qa-filter-tab { padding:0.4rem 0.9rem; border:1px solid rgba(10,26,62,0.15); background:white; font-size:0.75rem; cursor:pointer; font-family:'Noto Sans JP',sans-serif; color:var(--text-muted); transition:all 0.2s; font-weight:500; }
+.qa-filter-tab:hover { border-color:var(--gold); color:var(--navy); }
+.qa-filter-tab.active { background:var(--navy); color:white; border-color:var(--navy); font-weight:700; }
+.qa-post-btn { display:inline-flex; align-items:center; gap:0.3rem; padding:0.5rem 1.2rem; background:var(--crimson); color:white; border:none; font-size:0.8rem; cursor:pointer; font-weight:700; font-family:'Noto Sans JP',sans-serif; letter-spacing:0.03em; transition:opacity 0.2s; margin-bottom:1rem; }
+.qa-post-btn:hover { opacity:0.85; }
+.qa-card { border:1px solid rgba(10,26,62,0.1); padding:1rem 1.2rem; margin-bottom:0.8rem; background:white; cursor:pointer; transition:border-color 0.2s; }
+.qa-card:hover { border-color:var(--gold); }
+.qa-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; gap:0.5rem; flex-wrap:wrap; }
+.qa-cat-badge { font-size:0.65rem; padding:0.12rem 0.5rem; font-weight:700; display:inline-block; }
+.qa-cat-badge[data-cat="ES・ガクチカ"] { background:rgba(192,0,26,0.08); color:var(--crimson); }
+.qa-cat-badge[data-cat="面接"] { background:rgba(10,26,62,0.08); color:var(--navy); }
+.qa-cat-badge[data-cat="企業研究"] { background:rgba(201,168,76,0.15); color:#7a5f10; }
+.qa-cat-badge[data-cat="その他"] { background:rgba(107,107,126,0.1); color:var(--text-muted); }
+.qa-card-meta { font-size:0.7rem; color:var(--text-muted); }
+.qa-card-title { font-weight:700; font-size:0.88rem; color:var(--navy); margin-bottom:0.3rem; font-family:'Noto Serif JP',serif; }
+.qa-card-preview { font-size:0.78rem; color:var(--text-muted); line-height:1.6; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.qa-card-footer { display:flex; align-items:center; gap:0.6rem; margin-top:0.5rem; }
+.qa-reply-count { font-size:0.72rem; color:var(--text-muted); }
+.qa-delete-btn { font-size:0.7rem; color:var(--crimson); background:none; border:1px solid rgba(192,0,26,0.2); padding:0.2rem 0.6rem; cursor:pointer; font-family:'Noto Sans JP',sans-serif; transition:opacity 0.2s; }
+.qa-delete-btn:hover { opacity:0.7; }
+.qa-expanded { display:none; margin-top:0.8rem; border-top:1px solid rgba(10,26,62,0.06); padding-top:0.8rem; }
+.qa-expanded.open { display:block; }
+.qa-full-body { font-size:0.8rem; color:var(--text); line-height:1.8; margin-bottom:0.8rem; white-space:pre-wrap; }
+.qa-reply { padding:0.5rem 0; border-bottom:1px solid rgba(10,26,62,0.04); }
+.qa-reply-author { font-weight:700; color:var(--navy); font-size:0.72rem; }
+.qa-reply-time { font-size:0.65rem; color:var(--text-muted); margin-left:0.4rem; }
+.qa-reply-body { font-size:0.78rem; color:var(--text); line-height:1.6; margin-top:0.2rem; }
+.qa-reply-form { display:flex; gap:0.4rem; margin-top:0.6rem; }
+.qa-reply-form textarea { flex:1; padding:0.4rem 0.6rem; border:1px solid rgba(10,26,62,0.12); font-size:0.78rem; font-family:'Noto Sans JP',sans-serif; min-height:50px; resize:vertical; }
+.qa-reply-form button { padding:0.4rem 0.8rem; background:var(--navy); color:white; border:none; font-size:0.72rem; cursor:pointer; font-weight:700; font-family:'Noto Sans JP',sans-serif; white-space:nowrap; align-self:flex-end; }
+.qa-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center; padding:1rem; }
+.qa-modal-overlay.open { display:flex; }
+.qa-modal-box { background:white; max-width:520px; width:100%; max-height:80vh; overflow-y:auto; }
+.qa-modal-header { background:var(--navy); padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; }
+.qa-modal-title { color:white; font-family:'Noto Serif JP',serif; font-size:0.95rem; font-weight:700; }
+.qa-modal-close { background:none; border:none; color:rgba(255,255,255,0.6); font-size:1.2rem; cursor:pointer; }
+.qa-modal-body { padding:1.5rem; }
+.qa-modal-body label { display:block; font-size:0.78rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem; margin-top:0.8rem; }
+.qa-modal-body label:first-child { margin-top:0; }
+.qa-modal-body input[type="text"], .qa-modal-body select, .qa-modal-body textarea { width:100%; padding:0.5rem 0.8rem; border:1px solid rgba(10,26,62,0.15); font-size:0.82rem; font-family:'Noto Sans JP',sans-serif; }
+.qa-modal-body textarea { min-height:120px; resize:vertical; }
+.qa-anon-label { display:flex !important; align-items:center; gap:0.5rem; font-weight:500 !important; color:var(--text) !important; cursor:pointer; }
+.qa-anon-label input[type="checkbox"] { width:16px; height:16px; accent-color:var(--navy); }
+.qa-modal-submit { margin-top:1.2rem; width:100%; padding:0.6rem; background:var(--crimson); color:white; border:none; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Noto Sans JP',sans-serif; letter-spacing:0.05em; transition:opacity 0.2s; }
+.qa-modal-submit:hover { opacity:0.85; }
+</style>
+
+<div class="section" style="margin:0 0 1.5rem;">
+  <div class="section-header">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div>
+      <div class="section-label">Q&A BOARD</div>
+      <div class="section-title">質問・相談掲示板</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <button class="qa-post-btn" onclick="document.getElementById('qa-post-modal').classList.add('open')">＋ 質問を投稿</button>
+    <div class="qa-filter-tabs">
+      <button class="qa-filter-tab active" data-filter="すべて" onclick="filterQA(this)">すべて</button>
+      <button class="qa-filter-tab" data-filter="ES・ガクチカ" onclick="filterQA(this)">ES・ガクチカ</button>
+      <button class="qa-filter-tab" data-filter="面接" onclick="filterQA(this)">面接</button>
+      <button class="qa-filter-tab" data-filter="企業研究" onclick="filterQA(this)">企業研究</button>
+      <button class="qa-filter-tab" data-filter="その他" onclick="filterQA(this)">その他</button>
+    </div>
+    <div id="qa-feed">
+      <div class="empty-msg">読み込み中...</div>
+    </div>
+  </div>
+</div>
+
+<!-- QA投稿モーダル -->
+<div class="qa-modal-overlay" id="qa-post-modal">
+  <div class="qa-modal-box">
+    <div class="qa-modal-header">
+      <span class="qa-modal-title">質問を投稿する</span>
+      <button class="qa-modal-close" onclick="document.getElementById('qa-post-modal').classList.remove('open')">&times;</button>
+    </div>
+    <div class="qa-modal-body">
+      <label>タイトル</label>
+      <input type="text" id="qa-new-title" placeholder="質問のタイトルを入力">
+      <label>カテゴリ</label>
+      <select id="qa-new-category">
+        <option value="ES・ガクチカ">ES・ガクチカ</option>
+        <option value="面接">面接</option>
+        <option value="企業研究">企業研究</option>
+        <option value="その他">その他</option>
+      </select>
+      <label>質問内容</label>
+      <textarea id="qa-new-body" placeholder="質問の詳細を書いてください..."></textarea>
+      <label class="qa-anon-label">
+        <input type="checkbox" id="qa-new-anon">
+        匿名で投稿する
+      </label>
+      <button class="qa-modal-submit" onclick="submitQuestion()">投稿する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 質問・相談掲示板 =====
+var qaAllQuestions = [];
+var qaCurrentFilter = 'すべて';
+
+async function loadQuestions() {
+  var el = document.getElementById('qa-feed');
+  try {
+    var data = await callApi('readQuestions');
+    qaAllQuestions = data.questions || [];
+    renderQuestions();
+  } catch (e) {
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+  }
+}
+
+function filterQA(btn) {
+  document.querySelectorAll('.qa-filter-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  qaCurrentFilter = btn.getAttribute('data-filter');
+  renderQuestions();
+}
+
+function qaTimeAgo(iso) {
+  if (!iso) return '';
+  var diff = Date.now() - new Date(iso).getTime();
+  var mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'たった今';
+  if (mins < 60) return mins + '分前';
+  var hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + '時間前';
+  var days = Math.floor(hrs / 24);
+  if (days < 30) return days + '日前';
+  return new Date(iso).toLocaleDateString('ja-JP');
+}
+
+function escHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function escAttr(s) { return escHtml(s).replace(/'/g, '&#39;'); }
+function encodeInlineArg(value) { return encodeURIComponent(String(value || '')); }
+function safeHttpUrl(value) {
+  var raw = String(value || '').trim();
+  if (!raw) return '';
+  try {
+    var url = new URL(raw, window.location.href);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+    return url.href;
+  } catch (e) {
+    return '';
+  }
+}
+
+function renderQuestions() {
+  var el = document.getElementById('qa-feed');
+  var filtered = qaCurrentFilter === 'すべて' ? qaAllQuestions : qaAllQuestions.filter(function(q) { return q.category === qaCurrentFilter; });
+  if (!filtered.length) {
+    el.innerHTML = '\x3cdiv class="empty-msg">まだ質問がありません。最初の質問を投稿してみましょう。\x3c/div>';
+    return;
+  }
+  var user = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
+  var myId = user ? user.id : '';
+  el.innerHTML = filtered.map(function(q) {
+    var repliesHtml = (q.replies || []).map(function(r) {
+      return '\x3cdiv class="qa-reply">'
+        + '\x3cspan class="qa-reply-author">' + escHtml(r.displayName || '匿名') + '\x3c/span>'
+        + '\x3cspan class="qa-reply-time">' + qaTimeAgo(r.createdAt) + '\x3c/span>'
+        + '\x3cdiv class="qa-reply-body">' + escHtml(r.body || '') + '\x3c/div>'
+        + '\x3c/div>';
+    }).join('');
+    var deleteBtn = (q.userId === myId) ? ' \x3cbutton class="qa-delete-btn" onclick="event.stopPropagation();deleteQuestionAction(\'' + q.id + '\')">削除\x3c/button>' : '';
+    return '\x3cdiv class="qa-card" onclick="toggleQAExpand(this)">'
+      + '\x3cdiv class="qa-card-header">'
+      + '\x3cdiv>\x3cspan class="qa-cat-badge" data-cat="' + escHtml(q.category) + '">' + escHtml(q.category) + '\x3c/span>\x3c/div>'
+      + '\x3cdiv class="qa-card-meta">' + escHtml(q.displayName) + ' | ' + qaTimeAgo(q.createdAt) + '\x3c/div>'
+      + '\x3c/div>'
+      + '\x3cdiv class="qa-card-title">' + escHtml(q.title) + '\x3c/div>'
+      + '\x3cdiv class="qa-card-preview">' + escHtml(q.body) + '\x3c/div>'
+      + '\x3cdiv class="qa-card-footer">'
+      + '\x3cspan class="qa-reply-count">&#128172; ' + (q.replyCount || 0) + '件の返信\x3c/span>'
+      + deleteBtn
+      + '\x3c/div>'
+      + '\x3cdiv class="qa-expanded">'
+      + '\x3cdiv class="qa-full-body">' + escHtml(q.body) + '\x3c/div>'
+      + repliesHtml
+      + '\x3cdiv class="qa-reply-form">'
+      + '\x3ctextarea id="qa-reply-' + q.id + '" placeholder="返信を入力..." onclick="event.stopPropagation();"\x3e\x3c/textarea>'
+      + '\x3cbutton onclick="event.stopPropagation();submitReply(\'' + q.id + '\')">返信する\x3c/button>'
+      + '\x3c/div>'
+      + '\x3c/div>'
+      + '\x3c/div>';
+  }).join('');
+}
+
+function toggleQAExpand(card) {
+  var exp = card.querySelector('.qa-expanded');
+  var preview = card.querySelector('.qa-card-preview');
+  if (exp.classList.contains('open')) {
+    exp.classList.remove('open');
+    preview.style.display = '';
+  } else {
+    exp.classList.add('open');
+    preview.style.display = 'none';
+  }
+}
+
+async function submitQuestion() {
+  var title = document.getElementById('qa-new-title').value.trim();
+  var body = document.getElementById('qa-new-body').value.trim();
+  var category = document.getElementById('qa-new-category').value;
+  var anonymous = document.getElementById('qa-new-anon').checked;
+  if (!title || !body) { showFlash('タイトルと質問内容を入力してください。', 'error'); return; }
+  try {
+    await callApi('postQuestion', { title: title, body: body, category: category, anonymous: anonymous });
+    document.getElementById('qa-new-title').value = '';
+    document.getElementById('qa-new-body').value = '';
+    document.getElementById('qa-new-anon').checked = false;
+    document.getElementById('qa-post-modal').classList.remove('open');
+    showFlash('質問を投稿しました。', 'success');
+    loadQuestions();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function submitReply(questionId) {
+  var input = document.getElementById('qa-reply-' + questionId);
+  var body = input.value.trim();
+  if (!body) return;
+  try {
+    await callApi('postReply', { questionId: questionId, body: body });
+    input.value = '';
+    showFlash('返信しました。', 'success');
+    loadQuestions();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function deleteQuestionAction(questionId) {
+  if (!confirm('この質問を削除しますか？')) return;
+  try {
+    await callApi('deleteQuestion', { questionId: questionId });
+    showFlash('質問を削除しました。', 'success');
+    loadQuestions();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+document.getElementById('qa-post-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('qa-post-modal'))
+    document.getElementById('qa-post-modal').classList.remove('open');
+});
+
+// Load on init
+(function() {
+  var checkReady = setInterval(function() {
+    if (typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken && KeioNaviAuth.getSessionToken()) {
+      clearInterval(checkReady);
+      loadQuestions();
+    }
+  }, 200);
+  setTimeout(function() { clearInterval(checkReady); }, 10000);
+})();
+</script>
+
+<!-- ===== ES添削掲示板 ===== -->
+<style>
+.board-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+.board-post-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; letter-spacing: 0.06em; transition: background 0.2s; }
+.board-post-btn:hover { background: var(--crimson); }
+.board-card { background: white; border: 1px solid rgba(10,26,62,0.1); border-top: 3px solid var(--navy); padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
+.board-card-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+.board-card-company { font-family: 'Noto Serif JP',serif; font-size: 0.9rem; font-weight: 700; color: var(--navy); }
+.board-card-user { font-size: 0.65rem; color: var(--text-muted); }
+.board-card-q { font-size: 0.75rem; font-weight: 700; color: var(--crimson); background: rgba(192,0,26,0.06); padding: 0.3rem 0.6rem; display: inline-block; margin-bottom: 0.5rem; }
+.board-card-text { font-size: 0.82rem; line-height: 1.85; color: var(--text); margin-bottom: 0.8rem; white-space: pre-wrap; }
+.board-comments { border-top: 1px solid rgba(10,26,62,0.07); padding-top: 0.7rem; }
+.board-comment { font-size: 0.78rem; line-height: 1.7; padding: 0.35rem 0; border-bottom: 1px solid rgba(10,26,62,0.04); }
+.board-comment-user { font-weight: 700; color: var(--navy); margin-right: 0.3rem; }
+.board-comment-row { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
+.board-comment-input { flex: 1; padding: 0.45rem 0.6rem; border: 1px solid rgba(10,26,62,0.15); font-family: 'Noto Sans JP',sans-serif; font-size: 0.78rem; outline: none; }
+.board-comment-input:focus { border-color: var(--navy); }
+.board-comment-submit { padding: 0.45rem 0.9rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.72rem; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+.board-comment-submit:hover { background: var(--crimson); }
+.board-modal-overlay { display: none; position: fixed; inset: 0; z-index: 250; background: rgba(0,0,0,0.55); align-items: flex-start; justify-content: center; padding: 2rem 1rem; overflow-y: auto; }
+.board-modal-overlay.open { display: flex; }
+.board-modal-box { background: white; width: min(560px, 100%); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.board-modal-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.board-modal-title { font-family: 'Noto Serif JP',serif; font-size: 0.95rem; color: white; font-weight: 700; }
+.board-modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.board-field-label { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem; }
+.board-field-input, .board-field-textarea { width: 100%; padding: 0.7rem; border: 1px solid rgba(10,26,62,0.2); font-family: 'Noto Sans JP',sans-serif; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+.board-field-input:focus, .board-field-textarea:focus { border-color: var(--navy); }
+.board-field-textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
+.board-submit-btn { width: 100%; padding: 0.85rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; letter-spacing: 0.06em; transition: background 0.2s; }
+.board-submit-btn:hover { background: var(--crimson); }
+</style>
+
+<div class="section" style="margin:0 0 1.5rem;">
+  <div class="section-header">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <div>
+      <div class="section-label">ES REVIEW</div>
+      <div class="section-title">ES添削掲示板</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.2rem;">自分のESを投稿してメンバーからフィードバックをもらおう。コメントは匿名で投稿できます。</p>
+    <div class="board-toolbar">
+      <span style="font-size:0.78rem;color:var(--text-muted);" id="board-count">読み込み中...</span>
+      <button class="board-post-btn" id="board-post-btn">＋ ESを投稿する</button>
+    </div>
+    <div id="board-list"></div>
+  </div>
+</div>
+
+<!-- ES添削掲示板 投稿モーダル -->
+<div class="board-modal-overlay" id="board-modal">
+  <div class="board-modal-box">
+    <div class="board-modal-header">
+      <span class="board-modal-title">ESを投稿する</span>
+      <button id="board-modal-close" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">&#10005;</button>
+    </div>
+    <div class="board-modal-body">
+      <div>
+        <label class="board-field-label">タイトル <span style="color:var(--crimson);">*</span></label>
+        <input type="text" id="bm-company" class="board-field-input" placeholder="例：志望動機（総合商社）">
+      </div>
+      <div>
+        <label class="board-field-label">設問 <span style="color:var(--crimson);">*</span></label>
+        <input type="text" id="bm-question" class="board-field-input" placeholder="例：学生時代に最も力を入れたことを400字以内で">
+      </div>
+      <div>
+        <label class="board-field-label">ESの内容 <span style="color:var(--crimson);">*</span></label>
+        <textarea id="bm-text" class="board-field-textarea" placeholder="ここにESの内容を貼り付けてください..."></textarea>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text-muted);line-height:1.7;background:rgba(10,26,62,0.04);padding:0.7rem 0.9rem;">
+        投稿は全会員に公開されます。個人を特定できる情報は含めないようにしてください。
+      </div>
+      <div style="font-size:0.78rem;color:var(--crimson);min-height:1em;" id="bm-error"></div>
+      <button id="bm-submit" class="board-submit-btn">投稿する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== ES添削掲示板 =====
+var BOARD_POSTS_KEY = 'keio_navi_board_posts_v1';
+
+function escJsString(value) {
+  return String(value == null ? '' : value)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n')
+    .replace(/</g, '\\x3C');
+}
+
+function readLocalPosts() { try { return JSON.parse(localStorage.getItem(BOARD_POSTS_KEY) || '[]'); } catch(e) { return []; } }
+function writeLocalPosts(arr) { localStorage.setItem(BOARD_POSTS_KEY, JSON.stringify(arr)); }
+
+async function loadBoardPosts() {
+  var countEl = document.getElementById('board-count');
+  var listEl = document.getElementById('board-list');
+  var posts = readLocalPosts();
+  try {
+    var data = await callApi('readBoardPosts');
+    if (data && Array.isArray(data.posts)) {
+      posts = data.posts;
+      writeLocalPosts(posts);
+    }
+  } catch(e) { /* GAS未設定時はlocalを使う */ }
+  renderBoardPosts(posts);
+  if (countEl) countEl.textContent = posts.length ? posts.length + '件の投稿' : '投稿はまだありません';
+}
+
+function renderBoardPosts(posts) {
+  var listEl = document.getElementById('board-list');
+  var currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
+  if (!posts.length) {
+    listEl.innerHTML = '<div class="empty-msg">まだ投稿がありません。最初のESを共有してみよう！</div>';
+    return;
+  }
+  listEl.innerHTML = posts.map(function(p) {
+    var postId = String(p.id || '');
+    var postIdAttr = escAttr(postId);
+    var postIdJs = escJsString(postId);
+    var comments = (p.comments || []).map(function(c) {
+      return '<div class="board-comment"><span class="board-comment-user">' + escHtml(c.username || '匿名') + '</span>' + escHtml(c.commentText || c.text || '') + '</div>';
+    }).join('');
+    return '<div class="board-card">'
+      + '<div class="board-card-head">'
+      + '<span class="board-card-company">' + escHtml(p.company || '') + '</span>'
+      + '<span class="board-card-user">' + escHtml(p.username || '匿名') + ' \xb7 ' + escHtml(p.createdAt ? new Date(p.createdAt).toLocaleDateString('ja-JP') : '') + '</span>'
+      + '</div>'
+      + '<div class="board-card-q">' + escHtml(p.question || '') + '</div>'
+      + '<div class="board-card-text">' + escHtml(p.esText || p.text || '') + '</div>'
+      + '<div class="board-comments">'
+      + '<div id="comments-' + postIdAttr + '">' + comments + '</div>'
+      + '<div class="board-comment-row">'
+      + '<input class="board-comment-input" id="ci-' + postIdAttr + '" placeholder="フィードバックを書く...">'
+      + '<button class="board-comment-submit" onclick="submitBoardComment(\'' + postIdJs + '\')">送信</button>'
+      + '</div></div></div>';
+  }).join('');
+}
+
+async function submitBoardComment(postId) {
+  var input = document.getElementById('ci-' + postId);
+  var text = input.value.trim();
+  if (!text) return;
+  var currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
+  var username = currentUser ? currentUser.username : '匿名';
+  var posts = readLocalPosts();
+  var post = posts.find(function(p) { return p.id === postId; });
+  if (post) {
+    if (!post.comments) post.comments = [];
+    var comment = { id: Date.now().toString(), postId: postId, username: username, commentText: text, createdAt: new Date().toISOString() };
+    post.comments.push(comment);
+    writeLocalPosts(posts);
+  }
+  try {
+    await callApi('addBoardComment', { postId: postId, commentText: text });
+  } catch(e) {}
+  input.value = '';
+  renderBoardPosts(readLocalPosts());
+}
+
+function initBoardModal() {
+  document.getElementById('board-post-btn').addEventListener('click', function() {
+    document.getElementById('bm-error').textContent = '';
+    document.getElementById('bm-company').value = '';
+    document.getElementById('bm-question').value = '';
+    document.getElementById('bm-text').value = '';
+    document.getElementById('board-modal').classList.add('open');
+  });
+  document.getElementById('board-modal-close').addEventListener('click', function() {
+    document.getElementById('board-modal').classList.remove('open');
+  });
+  document.getElementById('board-modal').addEventListener('click', function(e) {
+    if (e.target === document.getElementById('board-modal'))
+      document.getElementById('board-modal').classList.remove('open');
+  });
+  document.getElementById('bm-submit').addEventListener('click', async function() {
+    var company = document.getElementById('bm-company').value.trim();
+    var question = document.getElementById('bm-question').value.trim();
+    var esText = document.getElementById('bm-text').value.trim();
+    if (!company || !question || !esText) {
+      document.getElementById('bm-error').textContent = 'すべての項目を入力してください。'; return;
+    }
+    var currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
+    var post = {
+      id: Date.now().toString(),
+      company: company, question: question, esText: esText,
+      username: currentUser ? currentUser.username : '匿名',
+      createdAt: new Date().toISOString(),
+      comments: [],
+    };
+    var posts = readLocalPosts();
+    posts.unshift(post);
+    writeLocalPosts(posts);
+    try {
+      await callApi('writeBoardPost', { company: post.company, question: post.question, esText: post.esText, username: post.username, createdAt: post.createdAt, id: post.id });
+    } catch(e) {}
+    document.getElementById('board-modal').classList.remove('open');
+    renderBoardPosts(readLocalPosts());
+    var countEl = document.getElementById('board-count');
+    if (countEl) countEl.textContent = readLocalPosts().length + '件の投稿';
+  });
+}
+
+// Initialize ES board
+(function() {
+  var checkReadyBoard = setInterval(function() {
+    if (typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken && KeioNaviAuth.getSessionToken()) {
+      clearInterval(checkReadyBoard);
+      initBoardModal();
+      loadBoardPosts();
+    }
+  }, 200);
+  setTimeout(function() { clearInterval(checkReadyBoard); }, 10000);
+})();
+</script>
+
+<!-- ===== 内定体験記 ===== -->
+<style>
+.exp-filter-tabs { display:flex; gap:0.4rem; margin-bottom:1rem; flex-wrap:wrap; }
+.exp-filter-tab { padding:0.4rem 0.9rem; border:1px solid rgba(10,26,62,0.15); background:white; font-size:0.75rem; cursor:pointer; font-family:'Noto Sans JP',sans-serif; color:var(--text-muted); transition:all 0.2s; font-weight:500; }
+.exp-filter-tab:hover { border-color:var(--gold); color:var(--navy); }
+.exp-filter-tab.active { background:var(--navy); color:white; border-color:var(--navy); font-weight:700; }
+.exp-post-btn { display:inline-flex; align-items:center; gap:0.3rem; padding:0.5rem 1.2rem; background:var(--crimson); color:white; border:none; font-size:0.8rem; cursor:pointer; font-weight:700; font-family:'Noto Sans JP',sans-serif; letter-spacing:0.03em; transition:opacity 0.2s; margin-bottom:1rem; }
+.exp-post-btn:hover { opacity:0.85; }
+.exp-card { border:1px solid rgba(10,26,62,0.1); border-left:4px solid var(--gold); padding:1rem 1.2rem; margin-bottom:0.8rem; background:white; cursor:pointer; transition:border-color 0.2s; }
+.exp-card:hover { border-color:var(--gold); }
+.exp-card-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; gap:0.5rem; flex-wrap:wrap; }
+.exp-industry-badge { font-size:0.68rem; padding:0.15rem 0.6rem; font-weight:700; display:inline-block; border-radius:2px; }
+.exp-industry-badge[data-ind="メーカー"] { background:rgba(192,0,26,0.08); color:var(--crimson); }
+.exp-industry-badge[data-ind="商社"] { background:rgba(10,26,62,0.08); color:var(--navy); }
+.exp-industry-badge[data-ind="金融"] { background:rgba(201,168,76,0.18); color:#7a5f10; }
+.exp-industry-badge[data-ind="IT"] { background:rgba(30,144,255,0.1); color:#1565c0; }
+.exp-industry-badge[data-ind="コンサル"] { background:rgba(76,175,80,0.1); color:#2e7d32; }
+.exp-industry-badge[data-ind="その他"] { background:rgba(107,107,126,0.1); color:var(--text-muted); }
+.exp-stats { font-size:0.75rem; color:var(--navy); font-weight:700; }
+.exp-stats span { color:var(--crimson); }
+.exp-meta-row { display:flex; gap:1rem; margin-bottom:0.6rem; flex-wrap:wrap; }
+.exp-meta-item { font-size:0.72rem; color:var(--text-muted); }
+.exp-meta-item strong { color:var(--navy); font-weight:600; }
+.exp-key-label { font-size:0.7rem; font-weight:700; color:var(--gold); margin-bottom:0.2rem; letter-spacing:0.05em; }
+.exp-key-text { font-size:0.8rem; color:var(--text); line-height:1.7; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.exp-expanded { display:none; margin-top:0.8rem; border-top:1px solid rgba(10,26,62,0.06); padding-top:0.8rem; }
+.exp-expanded.open { display:block; }
+.exp-full-key { font-size:0.8rem; color:var(--text); line-height:1.8; margin-bottom:0.8rem; white-space:pre-wrap; }
+.exp-advice-label { font-size:0.7rem; font-weight:700; color:var(--navy); margin-bottom:0.2rem; margin-top:0.6rem; }
+.exp-advice-text { font-size:0.8rem; color:var(--text); line-height:1.8; white-space:pre-wrap; }
+.exp-tools-row { display:flex; gap:0.3rem; flex-wrap:wrap; margin-top:0.6rem; }
+.exp-tool-tag { font-size:0.65rem; padding:0.1rem 0.5rem; background:rgba(10,26,62,0.05); color:var(--navy); border:1px solid rgba(10,26,62,0.1); font-weight:500; }
+.exp-card-footer { display:flex; align-items:center; justify-content:space-between; margin-top:0.6rem; }
+.exp-card-author { font-size:0.7rem; color:var(--text-muted); }
+.exp-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center; padding:1rem; }
+.exp-modal-overlay.open { display:flex; }
+.exp-modal-box { background:white; max-width:540px; width:100%; max-height:85vh; overflow-y:auto; }
+.exp-modal-header { background:var(--navy); padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; }
+.exp-modal-title { color:white; font-family:'Noto Serif JP',serif; font-size:0.95rem; font-weight:700; }
+.exp-modal-close { background:none; border:none; color:rgba(255,255,255,0.6); font-size:1.2rem; cursor:pointer; }
+.exp-modal-body { padding:1.5rem; }
+.exp-modal-body label { display:block; font-size:0.78rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem; margin-top:0.8rem; }
+.exp-modal-body label:first-child { margin-top:0; }
+.exp-modal-body input[type="number"], .exp-modal-body select, .exp-modal-body textarea { width:100%; padding:0.5rem 0.8rem; border:1px solid rgba(10,26,62,0.15); font-size:0.82rem; font-family:'Noto Sans JP',sans-serif; }
+.exp-modal-body textarea { min-height:100px; resize:vertical; }
+.exp-modal-body input[type="number"] { -moz-appearance:textfield; }
+.exp-modal-body input[type="number"]::-webkit-inner-spin-button { -webkit-appearance:none; }
+.exp-cb-group { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.3rem; }
+.exp-cb-group label { display:flex; align-items:center; gap:0.3rem; font-weight:500 !important; color:var(--text) !important; cursor:pointer; font-size:0.78rem; margin-top:0 !important; }
+.exp-cb-group input[type="checkbox"] { width:15px; height:15px; accent-color:var(--navy); }
+.exp-anon-label { display:flex !important; align-items:center; gap:0.5rem; font-weight:500 !important; color:var(--text) !important; cursor:pointer; }
+.exp-anon-label input[type="checkbox"] { width:16px; height:16px; accent-color:var(--navy); }
+.exp-modal-submit { margin-top:1.2rem; width:100%; padding:0.6rem; background:var(--crimson); color:white; border:none; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Noto Sans JP',sans-serif; letter-spacing:0.05em; transition:opacity 0.2s; }
+.exp-modal-submit:hover { opacity:0.85; }
+</style>
+
+<div class="section" style="margin:0 0 1.5rem;">
+  <div class="section-header">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+    </div>
+    <div>
+      <div class="section-label">EXPERIENCE STORIES</div>
+      <div class="section-title">内定体験記</div>
+    </div>
+  </div>
+  <div class="section-body">
+    <button class="exp-post-btn" onclick="document.getElementById('exp-post-modal').classList.add('open')">＋ 体験記を投稿</button>
+    <div class="exp-filter-tabs">
+      <button class="exp-filter-tab active" data-filter="すべて" onclick="filterExp(this)">すべて</button>
+      <button class="exp-filter-tab" data-filter="メーカー" onclick="filterExp(this)">メーカー</button>
+      <button class="exp-filter-tab" data-filter="商社" onclick="filterExp(this)">商社</button>
+      <button class="exp-filter-tab" data-filter="金融" onclick="filterExp(this)">金融</button>
+      <button class="exp-filter-tab" data-filter="IT" onclick="filterExp(this)">IT</button>
+      <button class="exp-filter-tab" data-filter="コンサル" onclick="filterExp(this)">コンサル</button>
+      <button class="exp-filter-tab" data-filter="その他" onclick="filterExp(this)">その他</button>
+    </div>
+    <div id="exp-feed">
+      <div class="empty-msg">読み込み中...</div>
+    </div>
+  </div>
+</div>
+
+<!-- 体験記投稿モーダル -->
+<div class="exp-modal-overlay" id="exp-post-modal">
+  <div class="exp-modal-box">
+    <div class="exp-modal-header">
+      <span class="exp-modal-title">内定体験記を投稿する</span>
+      <button class="exp-modal-close" onclick="document.getElementById('exp-post-modal').classList.remove('open')">&times;</button>
+    </div>
+    <div class="exp-modal-body">
+      <label>業界</label>
+      <select id="exp-new-industry">
+        <option value="">選択してください</option>
+        <option value="メーカー">メーカー</option>
+        <option value="商社">商社</option>
+        <option value="金融">金融</option>
+        <option value="IT">IT</option>
+        <option value="コンサル">コンサル</option>
+        <option value="その他">その他</option>
+      </select>
+      <label>受けた企業数</label>
+      <input type="number" id="exp-new-companycount" min="0" max="999" placeholder="例: 15">
+      <label>就活開始時期</label>
+      <select id="exp-new-startmonth">
+        <option value="">選択してください</option>
+        <option value="大学2年冬">大学2年冬</option>
+        <option value="3年春">3年春</option>
+        <option value="3年夏">3年夏</option>
+        <option value="3年秋">3年秋</option>
+        <option value="3年冬">3年冬</option>
+        <option value="4年春">4年春</option>
+      </select>
+      <label>内定数</label>
+      <input type="number" id="exp-new-result" min="0" max="999" placeholder="例: 3">
+      <label>就活期間</label>
+      <select id="exp-new-duration">
+        <option value="">選択してください</option>
+        <option value="3ヶ月未満">3ヶ月未満</option>
+        <option value="3-6ヶ月">3-6ヶ月</option>
+        <option value="6-9ヶ月">6-9ヶ月</option>
+        <option value="9-12ヶ月">9-12ヶ月</option>
+        <option value="1年以上">1年以上</option>
+      </select>
+      <label>最も大事だったこと <span style="color:var(--crimson);">*</span></label>
+      <textarea id="exp-new-keylearning" placeholder="就活を振り返って、最も重要だと感じたことを教えてください..."></textarea>
+      <label>後輩へのアドバイス <span style="color:var(--crimson);">*</span></label>
+      <textarea id="exp-new-advice" placeholder="これから就活を始める後輩へ伝えたいことを書いてください..."></textarea>
+      <label>使った機能（複数選択可）</label>
+      <div class="exp-cb-group" id="exp-new-tools">
+        <label><input type="checkbox" value="ガクチカ"> ガクチカ</label>
+        <label><input type="checkbox" value="ES添削"> ES添削</label>
+        <label><input type="checkbox" value="面接対策"> 面接対策</label>
+        <label><input type="checkbox" value="模擬面接"> 模擬面接</label>
+        <label><input type="checkbox" value="自己分析"> 自己分析</label>
+        <label><input type="checkbox" value="用語集"> 用語集</label>
+        <label><input type="checkbox" value="コミュニティ"> コミュニティ</label>
+      </div>
+      <label class="exp-anon-label">
+        <input type="checkbox" id="exp-new-anon">
+        匿名で投稿する
+      </label>
+      <button class="exp-modal-submit" onclick="submitExperience()">投稿する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 内定体験記 =====
+var expAllStories = [];
+var expCurrentFilter = 'すべて';
+
+async function loadExperiences() {
+  var el = document.getElementById('exp-feed');
+  try {
+    var data = await callApi('readExperiences');
+    expAllStories = data.experiences || [];
+    renderExperiences();
+  } catch (e) {
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+  }
+}
+
+function filterExp(btn) {
+  document.querySelectorAll('.exp-filter-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+  expCurrentFilter = btn.getAttribute('data-filter');
+  renderExperiences();
+}
+
+function expTimeAgo(iso) {
+  if (!iso) return '';
+  var diff = Date.now() - new Date(iso).getTime();
+  var mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'たった今';
+  if (mins < 60) return mins + '分前';
+  var hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + '時間前';
+  var days = Math.floor(hrs / 24);
+  if (days < 30) return days + '日前';
+  return new Date(iso).toLocaleDateString('ja-JP');
+}
+
+function renderExperiences() {
+  var el = document.getElementById('exp-feed');
+  var filtered = expCurrentFilter === 'すべて' ? expAllStories : expAllStories.filter(function(s) { return s.industry === expCurrentFilter; });
+  if (!filtered.length) {
+    el.innerHTML = '\x3cdiv class="empty-msg">まだ体験記がありません。あなたの経験を共有してみましょう。\x3c/div>';
+    return;
+  }
+  el.innerHTML = filtered.map(function(s) {
+    var toolTags = (s.tools || []).map(function(t) {
+      return '\x3cspan class="exp-tool-tag">' + escHtml(t) + '\x3c/span>';
+    }).join('');
+    return '\x3cdiv class="exp-card" onclick="toggleExpExpand(this)">'
+      + '\x3cdiv class="exp-card-top">'
+      + '\x3cdiv>\x3cspan class="exp-industry-badge" data-ind="' + escHtml(s.industry) + '">' + escHtml(s.industry) + '\x3c/span>\x3c/div>'
+      + '\x3cdiv class="exp-stats">' + s.companyCount + '社受験 → \x3cspan>内定' + s.result + '社\x3c/span>\x3c/div>'
+      + '\x3c/div>'
+      + '\x3cdiv class="exp-meta-row">'
+      + '\x3cspan class="exp-meta-item">\x3cstrong>開始:\x3c/strong> ' + escHtml(s.startMonth) + '\x3c/span>'
+      + '\x3cspan class="exp-meta-item">\x3cstrong>期間:\x3c/strong> ' + escHtml(s.duration) + '\x3c/span>'
+      + '\x3c/div>'
+      + '\x3cdiv class="exp-key-label">最も大事だったこと\x3c/div>'
+      + '\x3cdiv class="exp-key-text">' + escHtml(s.keyLearning) + '\x3c/div>'
+      + '\x3cdiv class="exp-expanded">'
+      + '\x3cdiv class="exp-full-key">' + escHtml(s.keyLearning) + '\x3c/div>'
+      + '\x3cdiv class="exp-advice-label">後輩へのアドバイス\x3c/div>'
+      + '\x3cdiv class="exp-advice-text">' + escHtml(s.advice) + '\x3c/div>'
+      + (toolTags ? '\x3cdiv class="exp-tools-row">' + toolTags + '\x3c/div>' : '')
+      + '\x3c/div>'
+      + '\x3cdiv class="exp-card-footer">'
+      + '\x3cspan class="exp-card-author">' + escHtml(s.displayName) + ' | ' + expTimeAgo(s.createdAt) + '\x3c/span>'
+      + '\x3c/div>'
+      + '\x3c/div>';
+  }).join('');
+}
+
+function toggleExpExpand(card) {
+  var exp = card.querySelector('.exp-expanded');
+  var preview = card.querySelector('.exp-key-text');
+  if (exp.classList.contains('open')) {
+    exp.classList.remove('open');
+    preview.style.display = '';
+  } else {
+    exp.classList.add('open');
+    preview.style.display = 'none';
+  }
+}
+
+async function submitExperience() {
+  var industry = document.getElementById('exp-new-industry').value;
+  var companyCount = document.getElementById('exp-new-companycount').value;
+  var startMonth = document.getElementById('exp-new-startmonth').value;
+  var result = document.getElementById('exp-new-result').value;
+  var duration = document.getElementById('exp-new-duration').value;
+  var keyLearning = document.getElementById('exp-new-keylearning').value.trim();
+  var advice = document.getElementById('exp-new-advice').value.trim();
+  var anonymous = document.getElementById('exp-new-anon').checked;
+
+  var tools = [];
+  document.querySelectorAll('#exp-new-tools input[type="checkbox"]:checked').forEach(function(cb) {
+    tools.push(cb.value);
+  });
+
+  if (!industry) { showFlash('業界を選択してください。', 'error'); return; }
+  if (!startMonth) { showFlash('就活開始時期を選択してください。', 'error'); return; }
+  if (!duration) { showFlash('就活期間を選択してください。', 'error'); return; }
+  if (!keyLearning) { showFlash('最も大事だったことを入力してください。', 'error'); return; }
+  if (!advice) { showFlash('後輩へのアドバイスを入力してください。', 'error'); return; }
+
+  try {
+    await callApi('postExperience', {
+      industry: industry,
+      companyCount: parseInt(companyCount, 10) || 0,
+      startMonth: startMonth,
+      result: parseInt(result, 10) || 0,
+      duration: duration,
+      keyLearning: keyLearning,
+      advice: advice,
+      tools: tools,
+      anonymous: anonymous
+    });
+    document.getElementById('exp-new-industry').value = '';
+    document.getElementById('exp-new-companycount').value = '';
+    document.getElementById('exp-new-startmonth').value = '';
+    document.getElementById('exp-new-result').value = '';
+    document.getElementById('exp-new-duration').value = '';
+    document.getElementById('exp-new-keylearning').value = '';
+    document.getElementById('exp-new-advice').value = '';
+    document.getElementById('exp-new-anon').checked = false;
+    document.querySelectorAll('#exp-new-tools input[type="checkbox"]').forEach(function(cb) { cb.checked = false; });
+    document.getElementById('exp-post-modal').classList.remove('open');
+    showFlash('体験記を投稿しました。', 'success');
+    loadExperiences();
+  } catch (e) { showFlash(e.message, 'error'); }
+}
+
+document.getElementById('exp-post-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('exp-post-modal'))
+    document.getElementById('exp-post-modal').classList.remove('open');
+});
+
+// Load experiences on init
+(function() {
+  var checkReady2 = setInterval(function() {
+    if (typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken && KeioNaviAuth.getSessionToken()) {
+      clearInterval(checkReady2);
+      loadExperiences();
+    }
+  }, 200);
+  setTimeout(function() { clearInterval(checkReady2); }, 10000);
+})();
+</script>
+
+
+<style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
+<nav class="bottom-tab-bar">
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>ホーム</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="community.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
+</nav>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
 </html>

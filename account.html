@@ -2,7 +2,20 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>アカウント | 慶應就活ナビ</title>
 <meta name="description" content="慶應就活ナビの個人アカウント作成・ログイン・プロフィール管理ページです。">
 
@@ -627,11 +640,15 @@
   }
 </style>
 <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "YOUR_PROJECT_ID");
+    (function(projectId){
+        if (!projectId) return;
+        window.clarity = window.clarity || function(){ (window.clarity.q = window.clarity.q || []).push(arguments); };
+        var script = document.createElement("script");
+        script.async = 1;
+        script.src = "https://www.clarity.ms/tag/" + projectId;
+        var firstScript = document.getElementsByTagName("script")[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+    })("");
 </script>
 </head>
 <body>
@@ -932,6 +949,14 @@
             <span class="field-help" id="profile-line-qr-status">変更する場合だけ再アップロードしてください。</span>
           </label>
 
+          <label class="field-group">
+            <span class="field-label">LINE通知</span>
+            <div style="display:flex;align-items:center;gap:0.8rem;">
+              <input type="checkbox" name="lineNotify" style="width:18px;height:18px;">
+              <span class="field-help">LINE Notifyで締切リマインダーや新着通知を受け取る（準備中）</span>
+            </div>
+          </label>
+
           <button class="submit-btn" type="submit">プロフィールを保存する</button>
         </form>
       </div>
@@ -962,6 +987,67 @@
           </div>
           <button class="subtle-btn" type="submit">パスワードを更新する</button>
         </form>
+      </div>
+
+      <div class="settings-block" id="weekly-report-block">
+        <h3 class="settings-title">週次レポート</h3>
+        <p class="settings-sub">毎週月曜日に、あなたの就活アクティビティをまとめたレポートをメールで受け取れます。</p>
+        <div style="display:flex; align-items:center; gap:0.8rem; margin-top:0.8rem;">
+          <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer;">
+            <input type="checkbox" id="weekly-report-toggle" style="width:18px; height:18px; accent-color:var(--gold);">
+            <span style="font-size:0.85rem; font-weight:500;">週次レポートを受け取る</span>
+          </label>
+        </div>
+        <div id="weekly-report-options" style="display:none; margin-top:1rem;">
+          <label class="field-group" style="margin-bottom:0.8rem;">
+            <span class="field-label">送信先メールアドレス</span>
+            <input class="field-input" type="email" id="weekly-report-email" placeholder="example@keio.jp">
+          </label>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button type="button" class="subtle-btn" id="weekly-report-save-btn" style="font-size:0.78rem; border-color:rgba(201,168,76,0.4); color:var(--navy);">設定を保存</button>
+            <button type="button" class="subtle-btn" id="weekly-report-preview-btn" style="font-size:0.78rem;">プレビュー</button>
+          </div>
+          <div id="weekly-report-status" style="font-size:0.72rem; color:var(--text-muted); margin-top:0.5rem;"></div>
+        </div>
+        <div id="weekly-report-preview-area" style="display:none; margin-top:1rem; background:var(--gray); padding:1rem; font-size:0.75rem; line-height:1.8; white-space:pre-wrap; font-family:'Noto Sans JP', monospace; color:var(--text); max-height:300px; overflow-y:auto; border-left:3px solid var(--gold);"></div>
+      </div>
+
+      <div class="settings-block" id="notification-settings-block">
+        <h3 class="settings-title">プッシュ通知</h3>
+        <p class="settings-sub">ブラウザ通知で締切リマインドや新着情報をお届けします。</p>
+        <div id="notification-unsupported" style="display:none; font-size:0.78rem; color:var(--text-muted); padding:0.6rem 0;">
+          お使いのブラウザは通知に対応していません。
+        </div>
+        <div id="notification-denied" style="display:none; font-size:0.78rem; color:var(--crimson); padding:0.6rem 0;">
+          通知がブラウザ側でブロックされています。ブラウザの設定から通知を許可してください。
+        </div>
+        <div id="notification-controls">
+          <div style="display:flex; align-items:center; gap:0.8rem; margin-top:0.8rem;">
+            <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer;">
+              <input type="checkbox" id="notification-toggle" style="width:18px; height:18px; accent-color:var(--gold);">
+              <span style="font-size:0.85rem; font-weight:500;">通知を受け取る</span>
+            </label>
+          </div>
+          <div id="notification-options" style="display:none; margin-top:1rem; padding-left:0.4rem;">
+            <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; margin-bottom:0.6rem;">
+              <input type="checkbox" id="notif-deadline" style="width:16px; height:16px; accent-color:var(--gold);" checked>
+              <span style="font-size:0.82rem;">締切リマインド (3日前・当日)</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; margin-bottom:0.6rem;">
+              <input type="checkbox" id="notif-experience" style="width:16px; height:16px; accent-color:var(--gold);" checked>
+              <span style="font-size:0.82rem;">新着体験記</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer; margin-bottom:0.8rem;">
+              <input type="checkbox" id="notif-board-reply" style="width:16px; height:16px; accent-color:var(--gold);" checked>
+              <span style="font-size:0.82rem;">掲示板の返信</span>
+            </label>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+              <button type="button" class="subtle-btn" id="notification-save-btn" style="font-size:0.78rem; border-color:rgba(201,168,76,0.4); color:var(--navy);">設定を保存</button>
+              <button type="button" class="subtle-btn" id="notification-test-btn" style="font-size:0.78rem;">通知テスト</button>
+            </div>
+            <div id="notification-status" style="font-size:0.72rem; color:var(--text-muted); margin-top:0.5rem;"></div>
+          </div>
+        </div>
       </div>
 
       <div class="logout-wrap">
@@ -1542,7 +1628,7 @@
 
   function copyReferralLink() {
     const code = document.getElementById('referral-code').textContent;
-    const link = location.origin + location.pathname + '?mode=signup&ref=' + encodeURIComponent(code);
+    const link = location.origin + location.pathname + '?ref=' + encodeURIComponent(code) + '&utm_source=referral&utm_medium=member&utm_campaign=invite&mode=signup';
     navigator.clipboard.writeText(link).then(() => showFlash('招待リンクをコピーしました。', 'success'));
   }
   window.copyReferralCode = copyReferralCode;
@@ -1564,6 +1650,204 @@
   if (!KeioNaviAuth.getCurrentUser() && returnTo) {
     showFlash('ログインまたは登録が完了すると、元のページへ戻ります。', 'info');
   }
+
+  // ── 週次レポート設定 ──────────────────────────────
+  const weeklyToggle     = document.getElementById('weekly-report-toggle');
+  const weeklyOptions    = document.getElementById('weekly-report-options');
+  const weeklyEmailInput = document.getElementById('weekly-report-email');
+  const weeklySaveBtn    = document.getElementById('weekly-report-save-btn');
+  const weeklyPreviewBtn = document.getElementById('weekly-report-preview-btn');
+  const weeklyStatus     = document.getElementById('weekly-report-status');
+  const weeklyPreviewArea = document.getElementById('weekly-report-preview-area');
+
+  weeklyToggle.addEventListener('change', () => {
+    weeklyOptions.style.display = weeklyToggle.checked ? 'block' : 'none';
+    if (!weeklyToggle.checked) {
+      weeklyPreviewArea.style.display = 'none';
+    }
+  });
+
+  // 初期化時に設定を読み込む
+  async function loadWeeklyReportPref() {
+    const token = KeioNaviAuth.getSessionToken();
+    if (!token) return;
+    try {
+      const data = await KeioNaviAuth.postToGas({
+        action: 'authGetWeeklyReportPreview',
+        sessionToken: token
+      });
+      if (data.pref) {
+        weeklyToggle.checked = data.pref.enabled;
+        weeklyEmailInput.value = data.pref.email || '';
+        weeklyOptions.style.display = data.pref.enabled ? 'block' : 'none';
+      }
+    } catch (e) {
+      // サイレントに失敗
+    }
+  }
+
+  weeklySaveBtn.addEventListener('click', async () => {
+    const token = KeioNaviAuth.getSessionToken();
+    if (!token) { showFlash('ログインが必要です。', 'error'); return; }
+
+    const enabled = weeklyToggle.checked;
+    const email   = weeklyEmailInput.value.trim();
+
+    if (enabled && !email) {
+      weeklyStatus.textContent = 'メールアドレスを入力してください。';
+      weeklyStatus.style.color = 'var(--crimson)';
+      return;
+    }
+
+    weeklySaveBtn.disabled = true;
+    weeklySaveBtn.textContent = '保存中...';
+    try {
+      await KeioNaviAuth.postToGas({
+        action: 'authSetWeeklyReportPref',
+        sessionToken: token,
+        enabled: enabled,
+        email: email
+      });
+      weeklyStatus.textContent = enabled ? '週次レポートの配信を設定しました。' : '週次レポートの配信を停止しました。';
+      weeklyStatus.style.color = 'var(--success)';
+    } catch (e) {
+      weeklyStatus.textContent = e.message || '保存に失敗しました。';
+      weeklyStatus.style.color = 'var(--crimson)';
+    }
+    weeklySaveBtn.disabled = false;
+    weeklySaveBtn.textContent = '設定を保存';
+  });
+
+  weeklyPreviewBtn.addEventListener('click', async () => {
+    const token = KeioNaviAuth.getSessionToken();
+    if (!token) { showFlash('ログインが必要です。', 'error'); return; }
+
+    weeklyPreviewBtn.disabled = true;
+    weeklyPreviewBtn.textContent = '読込中...';
+    weeklyPreviewArea.style.display = 'none';
+    try {
+      const data = await KeioNaviAuth.postToGas({
+        action: 'authGetWeeklyReportPreview',
+        sessionToken: token
+      });
+      weeklyPreviewArea.textContent = data.preview || '(プレビューを取得できませんでした)';
+      weeklyPreviewArea.style.display = 'block';
+    } catch (e) {
+      weeklyPreviewArea.textContent = 'プレビューの取得に失敗しました: ' + (e.message || '');
+      weeklyPreviewArea.style.display = 'block';
+    }
+    weeklyPreviewBtn.disabled = false;
+    weeklyPreviewBtn.textContent = 'プレビュー';
+  });
+
+  if (KeioNaviAuth.getCurrentUser()) {
+    loadWeeklyReportPref();
+  }
+
+  // ── 通知設定 ──────────────────────────────────────
+  (function initNotificationSettings() {
+    var notifToggle      = document.getElementById('notification-toggle');
+    var notifOptions     = document.getElementById('notification-options');
+    var notifDeadline    = document.getElementById('notif-deadline');
+    var notifExperience  = document.getElementById('notif-experience');
+    var notifBoardReply  = document.getElementById('notif-board-reply');
+    var notifSaveBtn     = document.getElementById('notification-save-btn');
+    var notifTestBtn     = document.getElementById('notification-test-btn');
+    var notifStatus      = document.getElementById('notification-status');
+    var notifUnsupported = document.getElementById('notification-unsupported');
+    var notifDenied      = document.getElementById('notification-denied');
+    var notifControls    = document.getElementById('notification-controls');
+
+    if (!notifToggle) return;
+
+    var status = KeioNaviAuth.getNotificationStatus();
+    if (status === 'unsupported') {
+      notifUnsupported.style.display = 'block';
+      notifControls.style.display = 'none';
+      return;
+    }
+
+    // 保存済み設定を読み込む
+    var prefs = KeioNaviAuth.getNotificationPrefs();
+    notifToggle.checked = prefs.enabled && status === 'granted';
+    notifDeadline.checked = prefs.deadlineReminder !== false;
+    notifExperience.checked = prefs.newExperience !== false;
+    notifBoardReply.checked = prefs.boardReply !== false;
+    notifOptions.style.display = notifToggle.checked ? 'block' : 'none';
+
+    if (status === 'denied') {
+      notifDenied.style.display = 'block';
+    }
+
+    notifToggle.addEventListener('change', async function () {
+      if (notifToggle.checked) {
+        var result = await KeioNaviAuth.requestNotificationPermission();
+        if (!result.ok) {
+          notifToggle.checked = false;
+          notifOptions.style.display = 'none';
+          if (KeioNaviAuth.getNotificationStatus() === 'denied') {
+            notifDenied.style.display = 'block';
+          }
+          return;
+        }
+        notifDenied.style.display = 'none';
+        notifOptions.style.display = 'block';
+      } else {
+        notifOptions.style.display = 'none';
+      }
+      // 即座に保存
+      var currentPrefs = KeioNaviAuth.getNotificationPrefs();
+      currentPrefs.enabled = notifToggle.checked;
+      KeioNaviAuth.saveNotificationPrefs(currentPrefs);
+    });
+
+    notifSaveBtn.addEventListener('click', function () {
+      var newPrefs = {
+        enabled: notifToggle.checked,
+        deadlineReminder: notifDeadline.checked,
+        newExperience: notifExperience.checked,
+        boardReply: notifBoardReply.checked,
+      };
+      KeioNaviAuth.saveNotificationPrefs(newPrefs);
+      notifStatus.textContent = '通知設定を保存しました。';
+      notifStatus.style.color = 'var(--success)';
+      setTimeout(function () { notifStatus.textContent = ''; }, 3000);
+    });
+
+    notifTestBtn.addEventListener('click', function () {
+      if (KeioNaviAuth.getNotificationStatus() !== 'granted') {
+        notifStatus.textContent = '通知が許可されていません。';
+        notifStatus.style.color = 'var(--crimson)';
+        return;
+      }
+      try {
+        new Notification('就活ナビ テスト通知', {
+          body: 'これはテスト通知です。通知が正しく設定されています。',
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%230a1a3e"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="%23c9a84c" font-family="serif">就</text></svg>',
+          tag: 'keio-navi-test',
+        });
+        notifStatus.textContent = 'テスト通知を送信しました。';
+        notifStatus.style.color = 'var(--success)';
+      } catch (e) {
+        // SW経由で送信
+        if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+          navigator.serviceWorker.ready.then(function (reg) {
+            reg.showNotification('就活ナビ テスト通知', {
+              body: 'これはテスト通知です。通知が正しく設定されています。',
+              icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%230a1a3e"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="%23c9a84c" font-family="serif">就</text></svg>',
+              tag: 'keio-navi-test',
+            });
+            notifStatus.textContent = 'テスト通知を送信しました。';
+            notifStatus.style.color = 'var(--success)';
+          }).catch(function () {
+            notifStatus.textContent = '通知の送信に失敗しました。';
+            notifStatus.style.color = 'var(--crimson)';
+          });
+        }
+      }
+      setTimeout(function () { notifStatus.textContent = ''; }, 3000);
+    });
+  })();
 </script>
-</body>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
 </html>

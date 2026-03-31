@@ -2,7 +2,20 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ES・ガクチカを書く ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -228,39 +241,19 @@
   .pr-copy-btn { padding: 0.6rem 1.5rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; letter-spacing: 0.08em; transition: background 0.2s; }
   .pr-copy-btn:hover { background: var(--crimson); }
 
-  /* ===== ES BOARD ===== */
-  .board-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
-  .board-post-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; letter-spacing: 0.06em; transition: background 0.2s; }
-  .board-post-btn:hover { background: var(--crimson); }
-  .board-card { background: white; border: 1px solid rgba(10,26,62,0.1); border-top: 3px solid var(--navy); padding: 1.2rem 1.5rem; margin-bottom: 1rem; }
-  .board-card-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
-  .board-card-company { font-family: 'Noto Serif JP',serif; font-size: 0.9rem; font-weight: 700; color: var(--navy); }
-  .board-card-user { font-size: 0.65rem; color: var(--text-muted); }
-  .board-card-q { font-size: 0.75rem; font-weight: 700; color: var(--crimson); background: rgba(192,0,26,0.06); padding: 0.3rem 0.6rem; display: inline-block; margin-bottom: 0.5rem; }
-  .board-card-text { font-size: 0.82rem; line-height: 1.85; color: var(--text); margin-bottom: 0.8rem; white-space: pre-wrap; }
-  .board-comments { border-top: 1px solid rgba(10,26,62,0.07); padding-top: 0.7rem; }
-  .board-comment { font-size: 0.78rem; line-height: 1.7; padding: 0.35rem 0; border-bottom: 1px solid rgba(10,26,62,0.04); }
-  .board-comment-user { font-weight: 700; color: var(--navy); margin-right: 0.3rem; }
-  .board-comment-row { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
-  .board-comment-input { flex: 1; padding: 0.45rem 0.6rem; border: 1px solid rgba(10,26,62,0.15); font-family: 'Noto Sans JP',sans-serif; font-size: 0.78rem; outline: none; }
-  .board-comment-input:focus { border-color: var(--navy); }
-  .board-comment-submit { padding: 0.45rem 0.9rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.72rem; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
-  .board-comment-submit:hover { background: var(--crimson); }
-  .board-modal-overlay { display: none; position: fixed; inset: 0; z-index: 250; background: rgba(0,0,0,0.55); align-items: flex-start; justify-content: center; padding: 2rem 1rem; overflow-y: auto; }
-  .board-modal-overlay.open { display: flex; }
-  .board-modal-box { background: white; width: min(560px, 100%); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-  .board-modal-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
-  .board-modal-title { font-family: 'Noto Serif JP',serif; font-size: 0.95rem; color: white; font-weight: 700; }
-  .board-modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-  .board-field-label { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem; }
-  .board-field-input, .board-field-textarea { width: 100%; padding: 0.7rem; border: 1px solid rgba(10,26,62,0.2); font-family: 'Noto Sans JP',sans-serif; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
-  .board-field-input:focus, .board-field-textarea:focus { border-color: var(--navy); }
-  .board-field-textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
-  .board-submit-btn { width: 100%; padding: 0.85rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; letter-spacing: 0.06em; transition: background 0.2s; }
-  .board-submit-btn:hover { background: var(--crimson); }
-
   /* ===== AI TOOLS ===== */
-  .ai-tool-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 2px solid rgba(10,26,62,0.1); }
+  .ai-tool-tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 1.5rem; border-bottom: 2px solid rgba(10,26,62,0.1); }
+  .mb-gk-picker-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+  .mb-gk-picker { background: white; width: 90%; max-width: 500px; max-height: 70vh; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; }
+  .mb-gk-picker-title { padding: 1rem 1.2rem; font-weight: 700; font-size: 0.95rem; color: var(--navy); border-bottom: 1px solid rgba(10,26,62,0.1); }
+  .mb-gk-picker-list { flex: 1; overflow-y: auto; padding: 0.5rem 0; }
+  .mb-gk-picker-item { padding: 0.7rem 1.2rem; cursor: pointer; font-size: 0.85rem; border-bottom: 1px solid rgba(10,26,62,0.06); transition: background 0.15s; }
+  .mb-gk-picker-item:hover { background: var(--cream); }
+  .mb-gk-picker-item .gk-title { font-weight: 600; color: var(--navy); }
+  .mb-gk-picker-item .gk-cat { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .mb-gk-picker-empty { padding: 2rem 1.2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+  .mb-gk-picker-actions { padding: 0.8rem 1.2rem; border-top: 1px solid rgba(10,26,62,0.1); text-align: right; }
+  .mb-gk-picker-actions button { padding: 0.4rem 1rem; background: none; border: 1px solid rgba(10,26,62,0.2); font-family: 'Noto Sans JP',sans-serif; font-size: 0.8rem; cursor: pointer; }
   .ai-tab-btn { padding: 0.6rem 1.2rem; background: none; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.82rem; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
   .ai-tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 700; }
   .ai-tab-btn.coming-soon { cursor: default; opacity: 0.5; position: relative; }
@@ -417,6 +410,167 @@
   .es-chat-send-btn { padding: 0.72rem 1.2rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; align-self: flex-end; transition: background 0.2s; }
   .es-chat-send-btn:hover:not(:disabled) { background: var(--crimson); }
   .es-chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ===== ES Before/After比較 ===== */
+  .es-compare { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem; }
+  .es-compare-col { padding:1rem; font-size:0.82rem; line-height:1.8; }
+  .es-compare-col.before { background:rgba(192,0,26,0.05); border-left:3px solid rgba(192,0,26,0.3); }
+  .es-compare-col.after { background:rgba(10,110,69,0.05); border-left:3px solid rgba(10,110,69,0.3); }
+  .es-compare-label { font-size:0.68rem; font-weight:700; margin-bottom:0.5rem; }
+  @media(max-width:600px) { .es-compare { grid-template-columns:1fr; } }
+
+  /* ===== AI添削ルーブリック ===== */
+  .rubric-wrap { margin-bottom:1.2rem; padding:1rem; background:white; border:1px solid rgba(10,26,62,0.1); }
+  .rubric-overall { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; padding-bottom:0.8rem; border-bottom:1px solid rgba(10,26,62,0.08); }
+  .rubric-overall-score { font-size:2.2rem; font-weight:800; line-height:1; min-width:3rem; text-align:center; }
+  .rubric-overall-label { font-size:0.72rem; color:var(--text-muted); }
+  .rubric-overall-level { font-size:0.85rem; font-weight:700; margin-top:0.15rem; }
+  .rubric-cards { display:flex; gap:0.5rem; flex-wrap:wrap; }
+  .rubric-card { flex:1 1 0; min-width:90px; padding:0.6rem 0.5rem; background:var(--gray); border-top:3px solid transparent; text-align:center; }
+  .rubric-card-name { font-size:0.68rem; font-weight:700; color:var(--text-muted); margin-bottom:0.3rem; }
+  .rubric-card-score { font-size:1.1rem; font-weight:800; margin-bottom:0.3rem; }
+  .rubric-bar { height:4px; background:rgba(10,26,62,0.08); overflow:hidden; }
+  .rubric-bar-fill { height:100%; transition:width 0.6s ease; }
+  @media(max-width:600px) { .rubric-cards { gap:0.3rem; } .rubric-card { min-width:70px; padding:0.5rem 0.3rem; } .rubric-card-score { font-size:0.95rem; } }
+
+  /* ===== 通過ESギャラリー ===== */
+  .passed-es-card { background:white; border:1px solid rgba(10,26,62,0.1); border-top:3px solid var(--gold); padding:1.2rem 1.5rem; margin-bottom:1rem; }
+  .passed-es-meta { font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem; }
+  .passed-es-question { font-size:0.75rem; font-weight:700; color:var(--crimson); background:rgba(192,0,26,0.06); padding:0.3rem 0.6rem; display:inline-block; margin-bottom:0.5rem; }
+  .passed-es-text { font-size:0.82rem; line-height:1.85; white-space:pre-wrap; color:var(--text); }
+  .passed-es-result { display:inline-block; font-size:0.68rem; font-weight:700; color:var(--gold); background:rgba(201,168,76,0.1); padding:0.2rem 0.6rem; margin-top:0.5rem; border:1px solid rgba(201,168,76,0.3); }
+
+  /* ===== 自己分析ワークブック ===== */
+  .sa-workbook { background: white; border: 1px solid rgba(10,26,62,0.08); overflow: hidden; }
+  .sa-steps { display: flex; border-bottom: 1px solid rgba(10,26,62,0.08); overflow-x: auto; }
+  .sa-step-btn {
+    flex: 1; min-width: 0; padding: 0.7rem 0.5rem; background: none; border: none;
+    border-bottom: 3px solid transparent; font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem; font-weight: 600; color: var(--text-muted); cursor: pointer;
+    transition: all 0.2s; text-align: center; white-space: nowrap;
+  }
+  .sa-step-btn.active { color: var(--navy); border-bottom-color: var(--crimson); }
+  .sa-step-btn .sa-step-num {
+    display: block; font-size: 0.6rem; letter-spacing: 0.1em;
+    color: var(--gold); margin-bottom: 0.15rem;
+  }
+  .sa-step-btn.done .sa-step-num { color: #00703c; }
+  .sa-panel { display: none; padding: 1.5rem; }
+  .sa-panel.active { display: block; }
+  .sa-field-label {
+    font-size: 0.78rem; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem;
+  }
+  .sa-field-desc {
+    font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.6rem; line-height: 1.6;
+  }
+  .sa-textarea {
+    width: 100%; min-height: 80px; padding: 0.7rem; border: 1px solid rgba(10,26,62,0.15);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; line-height: 1.7;
+    color: var(--text); outline: none; resize: vertical; background: var(--cream);
+    transition: border-color 0.2s;
+  }
+  .sa-textarea:focus { border-color: var(--navy); }
+  .sa-chip-grid {
+    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem;
+  }
+  .sa-chip {
+    padding: 0.4rem 0.8rem; border: 1px solid rgba(10,26,62,0.15);
+    background: white; font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.75rem; cursor: pointer; transition: all 0.2s; color: var(--text);
+  }
+  .sa-chip.selected { background: var(--navy); color: white; border-color: var(--navy); }
+  .sa-field-group { margin-bottom: 1.5rem; }
+  .sa-next-btn {
+    padding: 0.6rem 1.5rem; background: var(--navy); color: white; border: none;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .sa-next-btn:hover { background: var(--crimson); }
+  .sa-summary-card {
+    padding: 1rem; border: 1px solid rgba(10,26,62,0.08);
+    background: var(--cream); margin-bottom: 0.8rem;
+  }
+  .sa-summary-label { font-size: 0.68rem; color: var(--gold); font-weight: 700; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .sa-summary-text { font-size: 0.82rem; color: var(--text); line-height: 1.7; white-space: pre-wrap; }
+  .sa-saved-msg { font-size: 0.68rem; color: #00703c; margin-top: 0.3rem; opacity: 0; transition: opacity 0.3s; }
+  .sa-saved-msg.show { opacity: 1; }
+
+  /* AI自己分析パートナー */
+  .sa-ai-btn {
+    display: flex; align-items: center; gap: 0.5rem; justify-content: center;
+    width: 100%; padding: 0.75rem 1.5rem; margin-top: 1.2rem;
+    background: var(--crimson); color: white; border: none;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+  }
+  .sa-ai-btn:hover { background: #a30018; }
+  .sa-ai-btn:active { transform: scale(0.98); }
+  .sa-ai-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .sa-ai-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .sa-ai-result {
+    margin-top: 1.2rem; padding: 1.2rem; border-left: 4px solid var(--navy);
+    background: var(--cream); font-size: 0.82rem; line-height: 1.8;
+    color: var(--text); white-space: pre-wrap; display: none;
+  }
+  .sa-ai-result.visible { display: block; }
+  .sa-ai-chat { margin-top: 1rem; display: none; }
+  .sa-ai-chat.visible { display: block; }
+  .sa-ai-chat-messages {
+    max-height: 320px; overflow-y: auto; margin-bottom: 0.8rem;
+    display: flex; flex-direction: column; gap: 0.6rem;
+  }
+  .sa-ai-msg {
+    padding: 0.7rem 1rem; font-size: 0.8rem; line-height: 1.7;
+    white-space: pre-wrap; max-width: 88%;
+  }
+  .sa-ai-msg.user {
+    align-self: flex-end; background: var(--navy); color: white;
+    border-radius: 12px 12px 2px 12px;
+  }
+  .sa-ai-msg.ai {
+    align-self: flex-start; background: var(--cream); color: var(--text);
+    border-left: 3px solid var(--gold); border-radius: 2px 12px 12px 12px;
+  }
+  .sa-ai-chat-input {
+    display: flex; gap: 0.5rem; align-items: stretch;
+  }
+  .sa-ai-chat-input input {
+    flex: 1; padding: 0.6rem 0.8rem; border: 1px solid rgba(10,26,62,0.2);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem;
+    color: var(--text); outline: none; background: white;
+  }
+  .sa-ai-chat-input input:focus { border-color: var(--navy); }
+  .sa-ai-chat-input button {
+    padding: 0.6rem 1rem; background: var(--navy); color: white; border: none;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; white-space: nowrap; transition: background 0.2s;
+  }
+  .sa-ai-chat-input button:hover { background: var(--crimson); }
+  .sa-ai-chat-input button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .sa-ai-chat-hints {
+    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.6rem;
+  }
+  .sa-ai-hint-btn {
+    padding: 0.3rem 0.7rem; background: white; border: 1px solid rgba(10,26,62,0.15);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.7rem; color: var(--text-muted);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .sa-ai-hint-btn:hover { border-color: var(--navy); color: var(--navy); }
+  @keyframes sa-ai-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  .sa-ai-loading {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.78rem; color: var(--text-muted); padding: 0.8rem 0;
+  }
+  .sa-ai-loading-dots span {
+    display: inline-block; width: 6px; height: 6px;
+    background: var(--navy); border-radius: 50%; margin-right: 3px;
+    animation: sa-ai-pulse 1.2s ease-in-out infinite;
+  }
+  .sa-ai-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .sa-ai-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
 </style>
 </head>
 <body>
@@ -465,6 +619,121 @@
       <div style="width:40px; height:2px; background:var(--gold); margin-top:0.5rem;"></div>
     </div>
 
+    <!-- ===== 自己分析ワークブック ===== -->
+    <div class="m-section" id="self-analysis-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">SELF ANALYSIS</div>
+          <div class="m-section-title">自己分析ワークブック</div>
+        </div>
+      </div>
+      <div class="sa-workbook">
+        <div class="sa-steps">
+          <button class="sa-step-btn active" onclick="saGoStep(0)" id="sa-tab-0"><span class="sa-step-num">STEP 1</span>価値観</button>
+          <button class="sa-step-btn" onclick="saGoStep(1)" id="sa-tab-1"><span class="sa-step-num">STEP 2</span>強み・弱み</button>
+          <button class="sa-step-btn" onclick="saGoStep(2)" id="sa-tab-2"><span class="sa-step-num">STEP 3</span>Will-Can-Must</button>
+          <button class="sa-step-btn" onclick="saGoStep(3)" id="sa-tab-3"><span class="sa-step-num">STEP 4</span>まとめ</button>
+        </div>
+
+        <!-- STEP 1: 価値観 -->
+        <div class="sa-panel active" id="sa-panel-0">
+          <div class="sa-field-group">
+            <div class="sa-field-label">あなたが大切にしている価値観を選んでください（複数可）</div>
+            <div class="sa-field-desc">仕事選びの軸になります。直感で選んでOKです。</div>
+            <div class="sa-chip-grid" id="sa-values-grid"></div>
+          </div>
+          <div class="sa-field-group">
+            <div class="sa-field-label">選んだ価値観の中で、特に大切な理由は？</div>
+            <div class="sa-field-desc">具体的なエピソードがあると、面接で話しやすくなります。</div>
+            <textarea class="sa-textarea" id="sa-values-reason" placeholder="例：大学で○○した経験から、チームで成果を出すことにやりがいを感じるようになった..." oninput="saAutoSave()"></textarea>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <button class="sa-next-btn" onclick="saGoStep(1)">次へ: 強み・弱み →</button>
+            <span class="sa-saved-msg" id="sa-save-msg-0">保存しました</span>
+          </div>
+        </div>
+
+        <!-- STEP 2: 強み・弱み -->
+        <div class="sa-panel" id="sa-panel-1">
+          <div class="sa-field-group">
+            <div class="sa-field-label">あなたの強み（3つ）</div>
+            <div class="sa-field-desc">自分が得意なこと、人から褒められること、自然にできることを書いてください。</div>
+            <textarea class="sa-textarea" id="sa-strengths" placeholder="1. &#10;2. &#10;3. " oninput="saAutoSave()" style="min-height:100px;"></textarea>
+          </div>
+          <div class="sa-field-group">
+            <div class="sa-field-label">あなたの弱み（2つ）と、どう向き合っているか</div>
+            <div class="sa-field-desc">弱みを認識して改善に取り組んでいる姿勢が重要です。</div>
+            <textarea class="sa-textarea" id="sa-weaknesses" placeholder="1. 弱み → 対策:&#10;2. 弱み → 対策:" oninput="saAutoSave()" style="min-height:80px;"></textarea>
+          </div>
+          <div style="margin:0.8rem 0; padding:0.7rem 1rem; background:rgba(201,168,76,0.08); border-radius:8px; border-left:3px solid var(--gold);">
+            <a href="peer-feedback.html" style="color:var(--navy); font-size:0.82rem; font-weight:600; text-decoration:none; display:flex; align-items:center; gap:0.4rem;">
+              <span style="font-size:1rem;">&#x1F465;</span> 友人に聞いてみる（他己分析）→
+            </a>
+            <span style="font-size:0.72rem; color:var(--text-muted); display:block; margin-top:0.2rem;">友人にリンクを送って、あなたの強み・弱みを客観的に教えてもらえます</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <button class="sa-next-btn" onclick="saGoStep(2)">次へ: Will-Can-Must →</button>
+            <span class="sa-saved-msg" id="sa-save-msg-1">保存しました</span>
+          </div>
+        </div>
+
+        <!-- STEP 3: Will-Can-Must -->
+        <div class="sa-panel" id="sa-panel-2">
+          <div class="sa-field-group">
+            <div class="sa-field-label">Will — やりたいこと</div>
+            <div class="sa-field-desc">将来どんな仕事がしたいか、どんな社会人になりたいか。</div>
+            <textarea class="sa-textarea" id="sa-will" placeholder="例：テクノロジーで社会課題を解決する仕事がしたい..." oninput="saAutoSave()"></textarea>
+          </div>
+          <div class="sa-field-group">
+            <div class="sa-field-label">Can — できること</div>
+            <div class="sa-field-desc">今の自分のスキル・経験・実績。ガクチカで示せること。</div>
+            <textarea class="sa-textarea" id="sa-can" placeholder="例：チームリーダーとしてメンバー10人をまとめた経験..." oninput="saAutoSave()"></textarea>
+          </div>
+          <div class="sa-field-group">
+            <div class="sa-field-label">Must — 求められること</div>
+            <div class="sa-field-desc">志望業界・企業が求めている人材像。企業研究から分かること。</div>
+            <textarea class="sa-textarea" id="sa-must" placeholder="例：主体的に動ける人、多様な価値観を尊重できる人..." oninput="saAutoSave()"></textarea>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <button class="sa-next-btn" onclick="saGoStep(3)">まとめを見る →</button>
+            <span class="sa-saved-msg" id="sa-save-msg-2">保存しました</span>
+          </div>
+        </div>
+
+        <!-- STEP 4: まとめ -->
+        <div class="sa-panel" id="sa-panel-3">
+          <div class="sa-field-label" style="margin-bottom:0.8rem;">あなたの自己分析サマリー</div>
+          <div id="sa-summary"></div>
+          <div style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <a href="#gakuchika-section" class="sa-next-btn" style="text-decoration:none;text-align:center;" onclick="document.getElementById('gakuchika-section').scrollIntoView({behavior:'smooth'});return false;">ガクチカを書く →</a>
+            <button class="sa-next-btn" onclick="saGoStep(0)" style="background:transparent;color:var(--navy);border:1px solid rgba(10,26,62,0.2);">編集に戻る</button>
+          </div>
+
+          <!-- AI自己分析パートナー -->
+          <button class="sa-ai-btn" id="sa-ai-btn" onclick="saRequestAnalysis()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93"/><path d="M8.24 9.93A4.001 4.001 0 0 1 12 2"/><path d="M12 18v4"/><path d="M8 22h8"/><circle cx="12" cy="14" r="4"/></svg>
+            AI に分析してもらう
+          </button>
+          <div class="sa-ai-result" id="sa-ai-result"></div>
+          <div class="sa-ai-chat" id="sa-ai-chat">
+            <div class="sa-ai-chat-hints">
+              <button class="sa-ai-hint-btn" onclick="saSendChat('もっと深掘りして')">もっと深掘りして</button>
+              <button class="sa-ai-hint-btn" onclick="saSendChat('ESの志望動機に使える表現は？')">ESの志望動機に使える表現は？</button>
+              <button class="sa-ai-hint-btn" onclick="saSendChat('この強みを面接でどう伝えればいい？')">この強みを面接でどう伝えればいい？</button>
+            </div>
+            <div class="sa-ai-chat-messages" id="sa-ai-chat-messages"></div>
+            <div class="sa-ai-chat-input">
+              <input type="text" id="sa-ai-chat-input" placeholder="質問を入力..." onkeydown="if(event.key==='Enter'&&!event.isComposing)saSendChatFromInput()">
+              <button id="sa-ai-chat-send" onclick="saSendChatFromInput()">送信</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== ガクチカ保管庫 ===== -->
     <div class="m-section" id="gakuchika-section">
       <div class="m-section-header">
@@ -507,23 +776,25 @@
       <div id="es-bank-list"><div class="m-loading">読み込み中...</div></div>
     </div>
 
-    <!-- ES添削掲示板 -->
-    <div class="m-section" id="es-board-section">
+    <!-- ES添削掲示板（コミュニティページに移動） -->
+    <div class="m-section" style="padding:1.2rem 1.5rem;text-align:center;">
+      <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.8;margin-bottom:0.8rem;">ES添削掲示板はコミュニティページに移動しました。</p>
+      <a href="community.html" style="display:inline-block;padding:0.5rem 1.2rem;background:var(--navy);color:white;text-decoration:none;font-size:0.8rem;font-weight:600;letter-spacing:0.05em;transition:background 0.2s;">コミュニティページへ &rarr;</a>
+    </div>
+
+    <!-- 通過ESギャラリー -->
+    <div class="m-section" id="passed-es-gallery-section">
       <div class="m-section-header">
         <div class="m-section-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
         <div>
-          <div class="m-section-label">ES REVIEW</div>
-          <div class="m-section-title">ES添削掲示板</div>
+          <div class="m-section-label">PASSED ES GALLERY</div>
+          <div class="m-section-title">通過ESギャラリー</div>
         </div>
       </div>
-      <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.2rem;">自分のESを投稿してメンバーからフィードバックをもらおう。コメントは匿名で投稿できます。</p>
-      <div class="board-toolbar">
-        <span style="font-size:0.78rem;color:var(--text-muted);" id="board-count">読み込み中...</span>
-        <button class="board-post-btn" id="board-post-btn">＋ ESを投稿する</button>
-      </div>
-      <div id="board-list"></div>
+      <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.2rem;">選考を通過したESを匿名で閲覧できます。成功例から学んで、自分のESをブラッシュアップしよう。</p>
+      <div id="passed-es-list"><div class="m-loading">読み込み中...</div></div>
     </div>
 
     <!-- 自己PR補助ツール（PREP法） -->
@@ -581,6 +852,7 @@
       <!-- タブ切り替え -->
       <div class="ai-tool-tabs">
         <button class="ai-tab-btn active" data-tab="es-review">&#x1f4dd; ES添削</button>
+        <button class="ai-tab-btn" data-tab="motivation-builder">&#x2726; 志望動機ビルダー</button>
         <button class="ai-tab-btn coming-soon" disabled>&#x1f3a4; 面接練習<span class="soon-badge">近日公開</span></button>
         <button class="ai-tab-btn coming-soon" disabled>&#x1f504; ES流用<span class="soon-badge">近日公開</span></button>
       </div>
@@ -610,6 +882,10 @@
         <div class="esr-actions-row">
           <button class="es-bank-add-btn" style="width:auto;flex:1;min-width:130px;margin-bottom:0;" onclick="addEsrQuestion()">＋ 設問を追加</button>
           <button class="es-bank-btn primary" onclick="openLoadFromBankModal()" style="padding:0.45rem 0.9rem;white-space:nowrap;">&#x1f4c2; 保管庫から読み込む</button>
+        </div>
+        <div class="ai-form-group" style="margin-top:0.8rem;">
+          <label class="ai-label" style="display:flex;align-items:center;gap:0.4rem;">添削の方向性・重点指示 <span style="font-size:0.65rem;color:var(--text-muted);font-weight:400;">（任意）</span></label>
+          <textarea class="ai-textarea" id="esr-direction" placeholder="例：&#10;・リーダーシップの部分をもっと強調したい&#10;・結論を先に持ってきたい&#10;・数値的な成果をアピールしたい&#10;・○○業界向けに調整したい" style="min-height:60px;font-size:0.78rem;"></textarea>
         </div>
         <button class="ai-submit-btn" id="esr-submit-btn" onclick="submitEsReview()">
           <span class="btn-text">✨ AIに添削してもらう</span>
@@ -668,6 +944,53 @@
         </button>
         <div class="ai-error-msg" id="rw-error"></div>
         <div class="ai-result-box" id="rw-result"></div>
+      </div>
+
+      <!-- タブ4: 志望動機ビルダー -->
+      <div class="ai-tab-panel" id="ai-tab-motivation-builder">
+        <div class="ai-form-group">
+          <label class="ai-label">志望業界 <span style="color:var(--crimson)">*</span></label>
+          <input type="text" class="ai-input" id="mb-industry" placeholder="例：総合商社、IT、コンサルティング">
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-label">企業/業界の特徴 <span style="color:var(--crimson)">*</span></label>
+          <textarea class="ai-textarea" id="mb-company-feature" placeholder="この業界/企業のどこに惹かれたか" style="min-height:90px;" oninput="updateCharCount('mb-company-feature','mb-cf-char')"></textarea>
+          <div class="ai-char-count" id="mb-cf-char">0 字</div>
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-label">自分の経験 <span style="color:var(--crimson)">*</span></label>
+          <textarea class="ai-textarea" id="mb-experience" placeholder="関連するガクチカやエピソード" style="min-height:110px;" oninput="updateCharCount('mb-experience','mb-exp-char')"></textarea>
+          <div class="ai-char-count" id="mb-exp-char">0 字</div>
+          <button class="es-bank-btn primary" onclick="loadGkForMotivation()" style="margin-top:0.4rem;padding:0.4rem 0.9rem;">&#x1f4c2; ガクチカから選ぶ</button>
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-label">将来やりたいこと</label>
+          <textarea class="ai-textarea" id="mb-future-goal" placeholder="入社後にやりたいこと、なりたい姿" style="min-height:80px;" oninput="updateCharCount('mb-future-goal','mb-fg-char')"></textarea>
+          <div class="ai-char-count" id="mb-fg-char">0 字</div>
+        </div>
+        <div class="ai-form-group">
+          <label class="ai-label">文字数制限</label>
+          <select class="ai-input" id="mb-char-limit" style="padding:0.5rem 0.8rem;">
+            <option value="200">200字</option>
+            <option value="300">300字</option>
+            <option value="400" selected>400字</option>
+            <option value="500">500字</option>
+          </select>
+        </div>
+        <button class="ai-submit-btn" id="mb-submit-btn" onclick="submitMotivationBuilder()">
+          <span class="btn-text">&#x2726; 志望動機を生成</span>
+        </button>
+        <div class="ai-error-msg" id="mb-error"></div>
+        <div class="ai-result-box" id="mb-result"></div>
+        <div id="mb-actions" style="display:none;margin-top:1rem;">
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.5rem;" id="mb-result-charcount"></div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button class="es-bank-btn primary" onclick="copyMotivationResult()">&#x1f4cb; コピー</button>
+            <button class="es-bank-btn primary" onclick="saveMotivationToEsBank()">&#x1f4be; ESバンクに保存</button>
+            <button class="es-bank-btn" onclick="submitMotivationBuilder()">&#x1f504; もう一度生成</button>
+            <button class="es-bank-btn" onclick="refineMotivation()">&#x2728; ブラッシュアップを依頼</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -756,7 +1079,32 @@
     </div>
     <div class="es-view-actions">
       <button class="es-view-copy-btn" onclick="openGkGenModalWithEntry(currentGkViewId)">このガクチカでES生成</button>
+      <button class="es-view-copy-btn" onclick="openGkDeepDive(currentGkViewId)" style="background:var(--crimson);border-color:var(--crimson);">✦ 深掘りする</button>
       <button class="es-view-edit-btn" id="gk-view-edit-btn">編集する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ガクチカ深掘りモーダル -->
+<div class="es-view-overlay" id="gk-dd-modal">
+  <div class="es-view-modal" style="max-width:680px;max-height:90vh;overflow-y:auto;">
+    <div class="es-view-modal-header">
+      <div>
+        <div style="font-size:0.6rem;letter-spacing:0.12em;color:var(--gold);font-weight:700;">DEEP DIVE</div>
+        <div class="es-view-company" id="gk-dd-title"></div>
+      </div>
+      <button class="es-view-close" onclick="closeGkDeepDive()">✕</button>
+    </div>
+    <div style="padding:0 1.2rem 1rem;">
+      <div id="gk-dd-summary" style="font-size:0.75rem;color:var(--text-muted);padding:0.6rem 0.8rem;background:var(--cream);border-left:3px solid var(--gold);margin-bottom:1rem;line-height:1.6;"></div>
+      <div id="gk-dd-questions"></div>
+      <div id="gk-dd-loading" style="display:none;text-align:center;padding:2rem;color:var(--text-muted);font-size:0.82rem;">
+        <span style="display:inline-block;animation:pulse 1.2s infinite;">質問を生成中...</span>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem;">
+        <button id="gk-dd-generate-btn" onclick="gkDdGenerate()" style="padding:0.6rem 1.2rem;background:var(--crimson);color:white;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">✦ 深掘り質問を生成</button>
+        <button id="gk-dd-more-btn" onclick="gkDdGenerate()" style="display:none;padding:0.6rem 1.2rem;background:var(--navy);color:white;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">✦ さらに深掘り</button>
+      </div>
     </div>
   </div>
 </div>
@@ -885,33 +1233,52 @@
   </div>
 </div>
 
-<!-- ES添削掲示板 投稿モーダル -->
-<div class="board-modal-overlay" id="board-modal">
-  <div class="board-modal-box">
-    <div class="board-modal-header">
-      <span class="board-modal-title">ESを投稿する</span>
-      <button id="board-modal-close" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">✕</button>
+<!-- 選考体験記 -->
+<div class="m-section" id="sel-exp-section" style="display:none;">
+  <div class="m-section-header">
+    <div class="m-section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
     </div>
-    <div class="board-modal-body">
-      <div>
-        <label class="board-field-label">タイトル <span style="color:var(--crimson);">*</span></label>
-        <input type="text" id="bm-company" class="board-field-input" placeholder="例：志望動機（総合商社）">
-      </div>
-      <div>
-        <label class="board-field-label">設問 <span style="color:var(--crimson);">*</span></label>
-        <input type="text" id="bm-question" class="board-field-input" placeholder="例：学生時代に最も力を入れたことを400字以内で">
-      </div>
-      <div>
-        <label class="board-field-label">ESの内容 <span style="color:var(--crimson);">*</span></label>
-        <textarea id="bm-text" class="board-field-textarea" placeholder="ここにESの内容を貼り付けてください..."></textarea>
-      </div>
-      <div style="font-size:0.75rem;color:var(--text-muted);line-height:1.7;background:rgba(10,26,62,0.04);padding:0.7rem 0.9rem;">
-        投稿は全会員に公開されます。個人を特定できる情報は含めないようにしてください。
-      </div>
-      <div style="font-size:0.78rem;color:var(--crimson);min-height:1em;" id="bm-error"></div>
-      <button id="bm-submit" class="board-submit-btn">投稿する</button>
+    <div>
+      <div class="m-section-label">SELECTION EXPERIENCE</div>
+      <div class="m-section-title">選考体験記</div>
     </div>
   </div>
+  <div style="background:white;border-radius:12px;padding:1.2rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:1.5rem;">
+    <div style="font-size:0.82rem;font-weight:700;color:var(--navy);margin-bottom:0.8rem;">体験記を投稿する</div>
+    <form id="sel-exp-form" style="display:grid;gap:0.7rem;">
+      <label style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">選考段階
+        <select id="sel-exp-stage" required style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:8px;font-size:0.82rem;margin-top:0.3rem;">
+          <option value="">選択してください</option>
+          <option value="ES">ES</option>
+          <option value="1次面接">1次面接</option>
+          <option value="2次面接">2次面接</option>
+          <option value="最終面接">最終面接</option>
+          <option value="GD">GD</option>
+          <option value="インターン">インターン</option>
+        </select>
+      </label>
+      <label style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">質問内容
+        <textarea id="sel-exp-questions" rows="3" placeholder="どんな質問をされましたか？" style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:8px;font-size:0.82rem;margin-top:0.3rem;resize:vertical;"></textarea>
+      </label>
+      <label style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">雰囲気
+        <textarea id="sel-exp-atmosphere" rows="2" placeholder="選考の雰囲気はどうでしたか？" style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:8px;font-size:0.82rem;margin-top:0.3rem;resize:vertical;"></textarea>
+      </label>
+      <label style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">アドバイス
+        <textarea id="sel-exp-tips" rows="2" placeholder="後輩へのアドバイスがあれば" style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:8px;font-size:0.82rem;margin-top:0.3rem;resize:vertical;"></textarea>
+      </label>
+      <label style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">結果
+        <select id="sel-exp-result" required style="width:100%;padding:0.5rem;border:1px solid #ddd;border-radius:8px;font-size:0.82rem;margin-top:0.3rem;">
+          <option value="">選択してください</option>
+          <option value="通過">通過</option>
+          <option value="不合格">不合格</option>
+          <option value="結果待ち">結果待ち</option>
+        </select>
+      </label>
+      <button type="submit" style="padding:0.6rem;background:var(--navy);color:white;border:none;border-radius:8px;font-size:0.82rem;font-weight:700;cursor:pointer;">投稿する</button>
+    </form>
+  </div>
+  <div id="sel-exp-feed" style="display:grid;gap:0.8rem;"></div>
 </div>
 
 <!-- スクロールトップボタン -->
@@ -919,12 +1286,23 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
   const GAS_URL = GAS_PROXY_URL;
 
   function logout() {
     KeioNaviAuth.logout();
     location.reload();
+  }
+
+  function escHtml(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function escAttr(s) { return escHtml(s).replace(/'/g, '&#39;'); }
+  function escJsString(value) {
+    return String(value == null ? '' : value)
+      .replace(/\\/g, '\\\\')
+      .replace(/'/g, "\\'")
+      .replace(/\r/g, '\\r')
+      .replace(/\n/g, '\\n')
+      .replace(/</g, '\\x3C');
   }
 
   function toggleMobileMenuM() {
@@ -1142,128 +1520,6 @@
     updatePRPreview();
   }
 
-  // ===== ES添削掲示板 =====
-  const BOARD_POSTS_KEY = 'keio_navi_board_posts_v1';
-
-  function readLocalPosts() { try { return JSON.parse(localStorage.getItem(BOARD_POSTS_KEY) || '[]'); } catch { return []; } }
-  function writeLocalPosts(arr) { localStorage.setItem(BOARD_POSTS_KEY, JSON.stringify(arr)); }
-
-  async function loadBoardPosts() {
-    var countEl = document.getElementById('board-count');
-    var listEl = document.getElementById('board-list');
-    var posts = readLocalPosts();
-    try {
-      var res = await fetch(GAS_PROXY_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'readBoardPosts', sessionToken: KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '' }),
-      });
-      var data = await res.json();
-      if (data.status === 'ok' && Array.isArray(data.posts)) {
-        posts = data.posts;
-        writeLocalPosts(posts);
-      }
-    } catch(e) { /* GAS未設定時はlocalを使う */ }
-    renderBoardPosts(posts);
-    if (countEl) countEl.textContent = posts.length ? posts.length + '件の投稿' : '投稿はまだありません';
-  }
-
-  function renderBoardPosts(posts) {
-    var listEl = document.getElementById('board-list');
-    var currentUser = KeioNaviAuth.getCurrentUser();
-    if (!posts.length) {
-      listEl.innerHTML = '<div class="m-empty">まだ投稿がありません。最初のESを共有してみよう！</div>';
-      return;
-    }
-    listEl.innerHTML = posts.map(function(p) {
-      var comments = (p.comments || []).map(function(c) {
-        return '<div class="board-comment"><span class="board-comment-user">' + (c.username || '匿名') + '</span>' + (c.commentText || c.text || '').replace(/\x3c/g, '\x26lt;') + '</div>';
-      }).join('');
-      return '<div class="board-card">'
-        + '<div class="board-card-head">'
-        + '<span class="board-card-company">' + (p.company || '').replace(/\x3c/g, '\x26lt;') + '</span>'
-        + '<span class="board-card-user">' + (p.username || '匿名') + ' \xb7 ' + (p.createdAt ? new Date(p.createdAt).toLocaleDateString('ja-JP') : '') + '</span>'
-        + '</div>'
-        + '<div class="board-card-q">' + (p.question || '').replace(/\x3c/g, '\x26lt;') + '</div>'
-        + '<div class="board-card-text">' + (p.esText || p.text || '').replace(/\x3c/g, '\x26lt;') + '</div>'
-        + '<div class="board-comments">'
-        + '<div id="comments-' + p.id + '">' + comments + '</div>'
-        + '<div class="board-comment-row">'
-        + '<input class="board-comment-input" id="ci-' + p.id + '" placeholder="フィードバックを書く...">'
-        + '<button class="board-comment-submit" onclick="submitComment(\'' + p.id + '\')">送信</button>'
-        + '</div></div></div>';
-    }).join('');
-  }
-
-  async function submitComment(postId) {
-    var input = document.getElementById('ci-' + postId);
-    var text = input.value.trim();
-    if (!text) return;
-    var currentUser = KeioNaviAuth.getCurrentUser();
-    var username = currentUser ? currentUser.username : '匿名';
-    var posts = readLocalPosts();
-    var post = posts.find(function(p) { return p.id === postId; });
-    if (post) {
-      if (!post.comments) post.comments = [];
-      var comment = { id: Date.now().toString(), postId: postId, username: username, commentText: text, createdAt: new Date().toISOString() };
-      post.comments.push(comment);
-      writeLocalPosts(posts);
-    }
-    try {
-      await fetch(GAS_PROXY_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'addBoardComment', postId: postId, commentText: text, sessionToken: KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '' }),
-      });
-    } catch(e) {}
-    input.value = '';
-    renderBoardPosts(readLocalPosts());
-  }
-
-  function initBoardModal() {
-    document.getElementById('board-post-btn').addEventListener('click', function() {
-      document.getElementById('bm-error').textContent = '';
-      document.getElementById('bm-company').value = '';
-      document.getElementById('bm-question').value = '';
-      document.getElementById('bm-text').value = '';
-      document.getElementById('board-modal').classList.add('open');
-    });
-    document.getElementById('board-modal-close').addEventListener('click', function() {
-      document.getElementById('board-modal').classList.remove('open');
-    });
-    document.getElementById('board-modal').addEventListener('click', function(e) {
-      if (e.target === document.getElementById('board-modal'))
-        document.getElementById('board-modal').classList.remove('open');
-    });
-    document.getElementById('bm-submit').addEventListener('click', async function() {
-      var company = document.getElementById('bm-company').value.trim();
-      var question = document.getElementById('bm-question').value.trim();
-      var esText = document.getElementById('bm-text').value.trim();
-      if (!company || !question || !esText) {
-        document.getElementById('bm-error').textContent = 'すべての項目を入力してください。'; return;
-      }
-      var currentUser = KeioNaviAuth.getCurrentUser();
-      var post = {
-        id: Date.now().toString(),
-        company: company, question: question, esText: esText,
-        username: currentUser ? currentUser.username : '匿名',
-        createdAt: new Date().toISOString(),
-        comments: [],
-      };
-      var posts = readLocalPosts();
-      posts.unshift(post);
-      writeLocalPosts(posts);
-      try {
-        await fetch(GAS_PROXY_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'writeBoardPost', company: post.company, question: post.question, esText: post.esText, username: post.username, createdAt: post.createdAt, id: post.id, sessionToken: KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '' }),
-        });
-      } catch(e) {}
-      document.getElementById('board-modal').classList.remove('open');
-      renderBoardPosts(readLocalPosts());
-      var countEl = document.getElementById('board-count');
-      if (countEl) countEl.textContent = readLocalPosts().length + '件の投稿';
-    });
-  }
-
   // ===== PDF出力 =====
   function exportEsToPdf() {
     if (!esBankEntries.length) { alert('ESが保存されていません。'); return; }
@@ -1305,7 +1561,7 @@
         }
       });
     });
-    html += '</body></html>';
+    html += '\x3c/body>\x3c/html>';
     var w = window.open('', '_blank');
     w.document.write(html);
     w.document.close();
@@ -1349,7 +1605,7 @@
         html += '<div class="label">本文</div><div class="content">' + entry.fullText.replace(/\x3c/g, '\x26lt;') + '</div>';
       }
     });
-    html += '</body></html>';
+    html += '\x3c/body>\x3c/html>';
     var w = window.open('', '_blank');
     w.document.write(html);
     w.document.close();
@@ -1581,6 +1837,163 @@
     currentGkViewId = null;
   }
 
+  // ===== ガクチカ深掘り =====
+  var GK_DD_KEY = 'keio_navi_gk_deepdive_v1';
+  var _gkDdCurrentId = null;
+  var _gkDdLoading = false;
+
+  function gkDdLoad() { try { return JSON.parse(localStorage.getItem(GK_DD_KEY) || '{}'); } catch(e) { return {}; } }
+  function gkDdSave(data) { localStorage.setItem(GK_DD_KEY, JSON.stringify(data)); }
+
+  function openGkDeepDive(id) {
+    var g = gakuchikaEntries.find(function(e) { return e.id === id; });
+    if (!g) return;
+    _gkDdCurrentId = id;
+    closeGkViewModal();
+    document.getElementById('gk-dd-title').textContent = g.title || '（タイトルなし）';
+    var summary = [];
+    if (g.situation) summary.push('S: ' + g.situation);
+    if (g.task) summary.push('T: ' + g.task);
+    if (g.action) summary.push('A: ' + g.action);
+    if (g.result) summary.push('R: ' + g.result);
+    document.getElementById('gk-dd-summary').textContent = summary.join(' → ');
+    gkDdRender();
+    document.getElementById('gk-dd-modal').classList.add('open');
+  }
+
+  function closeGkDeepDive() {
+    document.getElementById('gk-dd-modal').classList.remove('open');
+    _gkDdCurrentId = null;
+  }
+
+  function gkDdRender() {
+    var allData = gkDdLoad();
+    var qa = (allData[_gkDdCurrentId] || {}).questions || [];
+    var el = document.getElementById('gk-dd-questions');
+    var genBtn = document.getElementById('gk-dd-generate-btn');
+    var moreBtn = document.getElementById('gk-dd-more-btn');
+
+    if (!qa.length) {
+      el.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:0.82rem;">「深掘り質問を生成」を押すと、AIがこのガクチカに対する質問を生成します。</div>';
+      genBtn.style.display = '';
+      moreBtn.style.display = 'none';
+      return;
+    }
+    genBtn.style.display = 'none';
+    moreBtn.style.display = '';
+
+    el.innerHTML = qa.map(function(item, idx) {
+      var answerHtml = item.answer
+        ? '<div style="font-size:0.82rem;color:var(--text);padding:0.6rem 0.8rem;background:rgba(10,26,62,0.02);border:1px solid rgba(10,26,62,0.08);line-height:1.7;white-space:pre-wrap;margin-top:0.4rem;">' + item.answer.replace(/</g,'&lt;') + '</div>'
+        : '';
+      var feedbackHtml = item.feedback
+        ? '<div style="font-size:0.78rem;color:var(--text);padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);line-height:1.7;white-space:pre-wrap;margin-top:0.4rem;">' + item.feedback.replace(/</g,'&lt;') + '</div>'
+        : '';
+      return '<div style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(10,26,62,0.06);">'
+        + '<div style="display:flex;align-items:flex-start;gap:0.5rem;">'
+        + '<span style="background:var(--crimson);color:white;font-size:0.6rem;font-weight:700;padding:0.15rem 0.45rem;flex-shrink:0;margin-top:0.1rem;">Q' + (idx+1) + '</span>'
+        + '<div style="font-size:0.85rem;font-weight:600;color:var(--navy);line-height:1.5;">' + item.question.replace(/</g,'&lt;') + '</div>'
+        + '</div>'
+        + answerHtml
+        + '<textarea class="sa-textarea" id="gk-dd-ans-' + idx + '" placeholder="ここに回答を書く..." oninput="gkDdSaveAnswer(' + idx + ')" style="margin-top:0.4rem;min-height:70px;">' + (item.answer || '').replace(/</g,'&lt;') + '</textarea>'
+        + '<div style="display:flex;gap:0.3rem;margin-top:0.3rem;">'
+        + '<button onclick="gkDdReviewAnswer(' + idx + ')" style="font-size:0.68rem;padding:0.25rem 0.7rem;background:rgba(10,26,62,0.04);border:1px solid rgba(10,26,62,0.12);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;color:var(--navy);transition:all 0.2s;">✦ AI添削</button>'
+        + '<span id="gk-dd-fb-status-' + idx + '" style="font-size:0.65rem;color:var(--text-muted);line-height:2;"></span>'
+        + '</div>'
+        + feedbackHtml
+        + '</div>';
+    }).join('');
+  }
+
+  function gkDdSaveAnswer(idx) {
+    var val = document.getElementById('gk-dd-ans-' + idx).value;
+    var allData = gkDdLoad();
+    if (!allData[_gkDdCurrentId]) return;
+    allData[_gkDdCurrentId].questions[idx].answer = val;
+    gkDdSave(allData);
+  }
+
+  async function gkDdGenerate() {
+    if (_gkDdLoading) return;
+    var g = gakuchikaEntries.find(function(e) { return e.id === _gkDdCurrentId; });
+    if (!g) return;
+    _gkDdLoading = true;
+    document.getElementById('gk-dd-loading').style.display = '';
+
+    try {
+      var allData = gkDdLoad();
+      var existing = (allData[_gkDdCurrentId] || {}).questions || [];
+      var existingQs = existing.map(function(q) { return q.question; }).join('\n');
+
+      var res = await callClaudeApi('deepDiveGakuchika', {
+        title: g.title,
+        star: { situation: g.situation, task: g.task, action: g.action, result: g.result, appeal: g.appeal },
+        existingQuestions: existingQs
+      });
+
+      // AIの回答から質問を抽出
+      var lines = (res || '').split('\n');
+      var newQs = [];
+      lines.forEach(function(line) {
+        var trimmed = line.replace(/^\s*[\d]+[\.\)）]\s*/, '').replace(/^[\-\*]\s*/, '').replace(/^❓\s*/, '').replace(/^「/, '').replace(/」$/, '').trim();
+        if (trimmed.length > 10 && trimmed.endsWith('？') || trimmed.endsWith('?') || trimmed.includes('？') || trimmed.includes('?')) {
+          // 質問っぽい行を抽出
+          var q = trimmed.replace(/^[\s\S]*?(?=「)/, '').replace(/^「/, '').replace(/」[\s\S]*$/, '');
+          if (q.length < 10) q = trimmed;
+          newQs.push({ question: q, answer: '', feedback: '' });
+        }
+      });
+
+      // もし質問が少なければ全行スキャンしてフォールバック
+      if (newQs.length < 3) {
+        newQs = [];
+        lines.forEach(function(line) {
+          var t = line.trim();
+          if (t.length > 5 && (t.includes('？') || t.includes('?'))) {
+            var clean = t.replace(/^\s*[\d]+[\.\)）\-\*]\s*/, '').replace(/^❓\s*/, '').trim();
+            if (clean.length > 5) newQs.push({ question: clean, answer: '', feedback: '' });
+          }
+        });
+      }
+
+      if (!allData[_gkDdCurrentId]) allData[_gkDdCurrentId] = { questions: [] };
+      allData[_gkDdCurrentId].questions = allData[_gkDdCurrentId].questions.concat(newQs);
+      gkDdSave(allData);
+    } catch(e) {
+      alert('生成に失敗しました: ' + e.message);
+    }
+    _gkDdLoading = false;
+    document.getElementById('gk-dd-loading').style.display = 'none';
+    gkDdRender();
+  }
+
+  async function gkDdReviewAnswer(idx) {
+    var allData = gkDdLoad();
+    var entry = allData[_gkDdCurrentId];
+    if (!entry || !entry.questions[idx]) return;
+    var q = entry.questions[idx];
+    var answer = document.getElementById('gk-dd-ans-' + idx).value.trim();
+    if (!answer) { alert('回答を入力してください。'); return; }
+    q.answer = answer;
+
+    var statusEl = document.getElementById('gk-dd-fb-status-' + idx);
+    statusEl.textContent = '添削中...';
+
+    try {
+      var g = gakuchikaEntries.find(function(e) { return e.id === _gkDdCurrentId; });
+      var res = await callClaudeApi('deepDiveChatGk', {
+        context: 'ガクチカ: ' + (g ? g.title : '') + '\n質問: ' + q.question + '\n回答: ' + answer,
+        question: 'この回答を面接官の視点で添削してください。良い点・改善点・修正案を具体的に示してください。'
+      });
+      q.feedback = res || '';
+      gkDdSave(allData);
+      statusEl.textContent = '';
+      gkDdRender();
+    } catch(e) {
+      statusEl.textContent = '添削に失敗しました';
+    }
+  }
+
   function openGakuchikaModal(id) {
     gkEditId = id || null;
     var g = id ? gakuchikaEntries.find(function(e) { return e.id === id; }) : null;
@@ -1593,6 +2006,7 @@
     document.getElementById('gk-modal-action').value               = g ? g.action    : '';
     document.getElementById('gk-modal-result').value               = g ? g.result    : '';
     document.getElementById('gk-modal-appeal').value               = g ? g.appeal    : '';
+    document.getElementById('gk-modal-period').value               = g ? (g.period || '') : '';
     document.getElementById('gk-modal-error').textContent          = '';
     document.querySelectorAll('.gk-cat-btn').forEach(function(btn) {
       btn.classList.toggle('selected', g && btn.dataset.cat === g.category);
@@ -1622,6 +2036,7 @@
       action:    document.getElementById('gk-modal-action').value.trim(),
       result:    document.getElementById('gk-modal-result').value.trim(),
       appeal:    document.getElementById('gk-modal-appeal').value.trim(),
+      period:    document.getElementById('gk-modal-period').value,
     };
     if (!g.title) { errEl.textContent = 'タイトルを入力してください。'; return; }
     var saveBtn = document.querySelector('#gk-modal .es-modal-save');
@@ -1858,14 +2273,260 @@
     }
   }
 
+  // ── ルーブリックスコア解析・描画 ──
+  function parseRubricScores(aiResponse) {
+    var match = aiResponse.match(/\[SCORES\]([\s\S]*?)\[\/SCORES\]/);
+    if (!match) return null;
+    try {
+      var scores = JSON.parse(match[1]);
+      var keys = ['structure','specificity','logic','expression','persuasion'];
+      for (var i = 0; i < keys.length; i++) {
+        var v = parseInt(scores[keys[i]]);
+        if (isNaN(v) || v < 1 || v > 5) return null;
+        scores[keys[i]] = v;
+      }
+      return scores;
+    } catch(e) { return null; }
+  }
+
+  function stripRubricTag(aiResponse) {
+    return aiResponse.replace(/\[SCORES\][\s\S]*?\[\/SCORES\]\s*/, '').replace(/^\s*\n/, '');
+  }
+
+  function renderRubric(scores) {
+    var DIMS = [
+      { key:'structure',   name:'\u69CB\u6210' },
+      { key:'specificity', name:'\u5177\u4F53\u6027' },
+      { key:'logic',       name:'\u8AD6\u7406\u6027' },
+      { key:'expression',  name:'\u8868\u73FE\u529B' },
+      { key:'persuasion',  name:'\u8AAC\u5F97\u529B' }
+    ];
+    function scoreColor(v) { return v <= 2 ? 'crimson' : v === 3 ? '#d4a017' : '#0a6e45'; }
+    var vals = DIMS.map(function(d) { return scores[d.key]; });
+    var avg = vals.reduce(function(a,b){return a+b;},0) / vals.length;
+    var avgRound = Math.round(avg * 10) / 10;
+    var levelText, levelColor;
+    if (avgRound <= 2.0)      { levelText = '\u8981\u6539\u5584';     levelColor = 'crimson'; }
+    else if (avgRound <= 3.0) { levelText = '\u3082\u3046\u5C11\u3057';   levelColor = '#d4a017'; }
+    else if (avgRound <= 4.0) { levelText = '\u826F\u3044';       levelColor = '#0a1a3e'; }
+    else                      { levelText = '\u7D20\u6674\u3089\u3057\u3044'; levelColor = '#0a6e45'; }
+
+    var html = '\x3cdiv class="rubric-wrap">'
+      + '\x3cdiv class="rubric-overall">'
+      + '\x3cdiv class="rubric-overall-score" style="color:' + levelColor + '">' + avgRound.toFixed(1) + '\x3c/div>'
+      + '\x3cdiv>\x3cdiv class="rubric-overall-label">\u7DCF\u5408\u30B9\u30B3\u30A2\uFF085\u70B9\u6E80\u70B9\uFF09\x3c/div>'
+      + '\x3cdiv class="rubric-overall-level" style="color:' + levelColor + '">' + levelText + '\x3c/div>\x3c/div>'
+      + '\x3c/div>\x3cdiv class="rubric-cards">';
+    for (var i = 0; i < DIMS.length; i++) {
+      var d = DIMS[i]; var v = scores[d.key]; var c = scoreColor(v);
+      html += '\x3cdiv class="rubric-card" style="border-top-color:' + c + '">'
+        + '\x3cdiv class="rubric-card-name">' + d.name + '\x3c/div>'
+        + '\x3cdiv class="rubric-card-score" style="color:' + c + '">' + v + '/5\x3c/div>'
+        + '\x3cdiv class="rubric-bar">\x3cdiv class="rubric-bar-fill" style="width:' + (v * 20) + '%;background:' + c + '">\x3c/div>\x3c/div>'
+        + '\x3c/div>';
+    }
+    html += '\x3c/div>\x3c/div>';
+    var el = document.createElement('div');
+    el.innerHTML = html;
+    return el.firstChild;
+  }
+
   function showAiResult(btnId, resultId, originalLabel, text) {
     var btn = document.getElementById(btnId);
     btn.disabled = false;
     btn.innerHTML = '<span class="btn-text">' + originalLabel + '</span>';
     var result = document.getElementById(resultId);
     result.className = 'ai-result-box visible';
-    result.textContent = text;
+    // ルーブリックスコア抽出
+    var rubricScores = parseRubricScores(text);
+    var feedbackText = rubricScores ? stripRubricTag(text) : text;
+    var corrected = feedbackText.replace(/（(\d+)字）/g, function(match, num) {
+      var idx = feedbackText.indexOf(match);
+      var beforeText = feedbackText.substring(0, idx);
+      var sections = beforeText.split(/##\s/);
+      var lastSection = sections[sections.length - 1] || beforeText;
+      var bodyText = lastSection.replace(/^.*\n/m, '').replace(/\s+/g, '').replace(/[#*\-\[\]（）\(\)「」『』【】]/g, '');
+      var actualCount = bodyText.length;
+      return '（' + actualCount + '字）';
+    });
+    result.textContent = '';
+    // ルーブリック表示（スコアが解析できた場合のみ）
+    if (rubricScores) {
+      result.appendChild(renderRubric(rubricScores));
+    }
+    // フィードバックテキスト表示
+    var feedbackEl = document.createElement('div');
+    feedbackEl.style.whiteSpace = 'pre-wrap';
+    feedbackEl.textContent = corrected;
+    result.appendChild(feedbackEl);
+    // Before/After比較表示
+    lastRevisedText = '';
+    var hasRevised = /改善版|リライト版|修正例|改善後|修正版|書き直し/.test(corrected);
+    if (hasRevised && lastSubmittedEsText) {
+      var revisedMatch = corrected.match(/(?:改善版|リライト版|修正例|改善後|修正版|書き直し)[：:\s]*\n([\s\S]+?)(?=\n\n##|\n\n【|$)/);
+      if (revisedMatch) {
+        lastRevisedText = revisedMatch[1].trim();
+        var compareDiv = document.createElement('div');
+        compareDiv.className = 'es-compare';
+        var beforeCol = document.createElement('div');
+        beforeCol.className = 'es-compare-col before';
+        var beforeLabel = document.createElement('div');
+        beforeLabel.className = 'es-compare-label';
+        beforeLabel.textContent = 'BEFORE（提出版）';
+        var beforeBody = document.createElement('div');
+        beforeBody.textContent = lastSubmittedEsText;
+        beforeCol.appendChild(beforeLabel);
+        beforeCol.appendChild(beforeBody);
+        var afterCol = document.createElement('div');
+        afterCol.className = 'es-compare-col after';
+        var afterLabel = document.createElement('div');
+        afterLabel.className = 'es-compare-label';
+        afterLabel.textContent = 'AFTER（改善版）';
+        var afterBody = document.createElement('div');
+        afterBody.textContent = revisedMatch[1].trim();
+        afterCol.appendChild(afterLabel);
+        afterCol.appendChild(afterBody);
+        compareDiv.appendChild(beforeCol);
+        compareDiv.appendChild(afterCol);
+        result.appendChild(compareDiv);
+      }
+    }
+    // シェアボタンを追加
+    var scoreMatch = corrected.match(/総合評価[：:]?\s*([SABC])/);
+    if (scoreMatch) {
+      var score = scoreMatch[1];
+      var shareDiv = document.createElement('div');
+      shareDiv.style.cssText = 'margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;';
+      shareDiv.innerHTML = '\x3cbutton onclick="shareScore(\'' + score + '\',\'twitter\')" style="padding:0.4rem 0.8rem;background:#1DA1F2;color:white;border:none;font-size:0.72rem;cursor:pointer;font-family:sans-serif;font-weight:700;">X(Twitter)でシェア\x3c/button>'
+        + '\x3cbutton onclick="shareScore(\'' + score + '\',\'line\')" style="padding:0.4rem 0.8rem;background:#06C755;color:white;border:none;font-size:0.72rem;cursor:pointer;font-family:sans-serif;font-weight:700;">LINEでシェア\x3c/button>'
+        + '\x3cbutton onclick="generateIGImage(\'' + score + '\')" style="padding:0.4rem 0.8rem;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:white;border:none;font-size:0.72rem;cursor:pointer;font-family:sans-serif;font-weight:700;">Instagram用画像を生成\x3c/button>';
+      result.appendChild(shareDiv);
+    }
+    // 添削結果保存ボタン
+    var saveDiv = document.createElement('div');
+    saveDiv.style.cssText = 'margin-top:0.8rem;display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;';
+    saveDiv.innerHTML = '<button onclick="saveRevisedEsToBank()" style="padding:0.45rem 1rem;background:var(--navy);color:white;border:none;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">添削結果をESバンクに保存</button>'
+      + '<span id="esr-save-feedback" style="font-size:0.68rem;color:#00703c;"></span>';
+    result.appendChild(saveDiv);
   }
+
+  function saveRevisedEsToBank() {
+    var textToSave = lastRevisedText || '';
+    if (!textToSave) {
+      // 改善版が抽出できなかった場合、AI結果全体から改善版を探す
+      var resultEl = document.getElementById('esr-result');
+      if (resultEl) textToSave = resultEl.textContent || '';
+    }
+    if (!textToSave) { alert('保存するテキストがありません。'); return; }
+
+    var company = document.getElementById('esr-company').value.trim() || '';
+    var blocks = document.querySelectorAll('.esr-question-block');
+    var question = '';
+    if (blocks.length) {
+      question = blocks[0].querySelector('.esr-q-input').value.trim();
+    }
+
+    // ESバンクに追加
+    var ES_BANK_KEY = 'keio_navi_es_bank_v1';
+    var bank;
+    try { bank = JSON.parse(localStorage.getItem(ES_BANK_KEY) || '[]'); } catch(e) { bank = []; }
+    bank.unshift({
+      id: Date.now().toString(),
+      company: company || '（AI添削版）',
+      industry: '',
+      question: question,
+      esText: textToSave,
+      result: '',
+      memo: 'AI添削後に保存',
+      createdAt: new Date().toISOString()
+    });
+    localStorage.setItem(ES_BANK_KEY, JSON.stringify(bank));
+
+    // サーバー同期も試みる
+    if (typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken()) {
+      KeioNaviAuth.postToGas({ action: 'writeES', sessionToken: KeioNaviAuth.getSessionToken(), entry: bank[0] }).catch(function(){});
+    }
+
+    var fb = document.getElementById('esr-save-feedback');
+    if (fb) { fb.textContent = '保存しました'; setTimeout(function() { fb.textContent = ''; }, 3000); }
+  }
+
+  function shareScore(score, platform) {
+    var text = 'ESをAIに添削してもらったら「' + score + '評価」でした！ #就活ナビ #ES添削';
+    if (platform === 'twitter') {
+      window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
+    } else if (platform === 'line') {
+      window.open('https://social-plugins.line.me/lineit/share?url=&text=' + encodeURIComponent(text), '_blank');
+    }
+  }
+
+  function generateIGImage(score) {
+    var beforeText = lastSubmittedEsText || '';
+    var afterText = lastRevisedText || '';
+    var canvas = document.createElement('canvas');
+    canvas.width = 1080; canvas.height = 1080;
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#0a1a3e';
+    ctx.fillRect(0, 0, 1080, 1080);
+    ctx.fillStyle = '#c9a84c';
+    ctx.fillRect(0, 0, 1080, 6);
+    ctx.fillStyle = '#c9a84c';
+    ctx.font = 'bold 36px sans-serif';
+    ctx.fillText('ES添削 AI Result', 60, 80);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 120px sans-serif';
+    ctx.fillText(score || 'A', 460, 240);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '28px sans-serif';
+    ctx.fillText('総合評価', 450, 280);
+    ctx.fillStyle = 'rgba(192,0,26,0.3)';
+    ctx.fillRect(40, 320, 490, 360);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = 'bold 22px sans-serif';
+    ctx.fillText('Before', 60, 360);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '18px sans-serif';
+    var beforeLines = wrapTextCanvas(ctx, (beforeText).substring(0, 200), 430);
+    beforeLines.forEach(function(line, i) { if(i<12) ctx.fillText(line, 60, 395 + i*26); });
+    ctx.fillStyle = 'rgba(10,110,69,0.3)';
+    ctx.fillRect(550, 320, 490, 360);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = 'bold 22px sans-serif';
+    ctx.fillText('After', 570, 360);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '18px sans-serif';
+    var afterLines = wrapTextCanvas(ctx, (afterText).substring(0, 200), 430);
+    afterLines.forEach(function(line, i) { if(i<12) ctx.fillText(line, 570, 395 + i*26); });
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '20px sans-serif';
+    ctx.fillText('#就活ナビ #ES添削 #AI就活', 60, 750);
+    ctx.fillStyle = '#c9a84c';
+    ctx.font = 'bold 24px sans-serif';
+    ctx.fillText('就活ナビ', 60, 1040);
+    canvas.toBlob(function(blob) {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'es-review-' + (score||'result') + '.png';
+      a.click(); URL.revokeObjectURL(url);
+    });
+  }
+
+  function wrapTextCanvas(ctx, text, maxWidth) {
+    var lines = []; var line = '';
+    for (var i = 0; i < text.length; i++) {
+      line += text[i];
+      if (ctx.measureText(line).width > maxWidth || text[i] === '\n') {
+        lines.push(line.replace('\n','')); line = '';
+      }
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  var lastRevisedText = '';
+
+  // ── ES原文保存（Before/After比較用） ──
+  var lastSubmittedEsText = '';
 
   // ── ESチャット ──
   var esrChatHistory = [];
@@ -1954,15 +2615,22 @@
     });
     if (!entries.length) { errEl.textContent = 'ES内容を入力してください。'; return; }
 
+    var direction = (document.getElementById('esr-direction') || {}).value || '';
+    direction = direction.trim();
+
+    // Before/After比較用に原文を保存
+    lastSubmittedEsText = entries.map(function(e) { return e.esText; }).join('\n\n');
+
     setAiLoading('esr-submit-btn', 'esr-result', 'esr-error', true);
     try {
       var result;
       if (entries.length === 1) {
-        result = await callClaudeApi('esReview', { company: company, question: entries[0].question, esText: entries[0].esText });
+        result = await callClaudeApi('esReview', { company: company, question: entries[0].question, esText: entries[0].esText, direction: direction });
       } else {
-        result = await callClaudeApi('esMultiReview', { company: company, entries: entries });
+        result = await callClaudeApi('esMultiReview', { company: company, entries: entries, direction: direction });
       }
       showAiResult('esr-submit-btn', 'esr-result', '\u2728 AIに添削してもらう', result);
+      if (typeof gtag === 'function') { gtag('event', 'ai_es_review'); }
       document.getElementById('esr-chat-area').style.display = 'none';
       document.getElementById('esr-chat-messages').innerHTML = '';
       initEsrChat(company, entries, result);
@@ -2019,14 +2687,286 @@
     }
   }
 
+  // ===== 志望動機ビルダー =====
+  var lastMotivationResult = '';
+
+  async function submitMotivationBuilder() {
+    var errEl = document.getElementById('mb-error');
+    errEl.textContent = '';
+    var industry       = document.getElementById('mb-industry').value.trim();
+    var companyFeature = document.getElementById('mb-company-feature').value.trim();
+    var experience     = document.getElementById('mb-experience').value.trim();
+    var futureGoal     = document.getElementById('mb-future-goal').value.trim();
+    var charLimit      = document.getElementById('mb-char-limit').value;
+
+    if (!industry && !companyFeature) { errEl.textContent = '志望業界または企業の特徴を入力してください。'; return; }
+    if (!experience) { errEl.textContent = '自分の経験を入力してください。'; return; }
+
+    setAiLoading('mb-submit-btn', 'mb-result', 'mb-error', true);
+    document.getElementById('mb-actions').style.display = 'none';
+    try {
+      var result = await callClaudeApi('buildMotivation', {
+        industry: industry,
+        companyFeature: companyFeature,
+        experience: experience,
+        futureGoal: futureGoal,
+        charLimit: parseInt(charLimit),
+      });
+      lastMotivationResult = result;
+      showAiResult('mb-submit-btn', 'mb-result', '\u2726 志望動機を生成', result);
+      // 文字数カウント表示
+      var motivationMatch = result.match(/志望動機[（(][\s\S]*?[)）][：:\s]*\n([\s\S]+?)(?=\n\n(?:\d\.|##|💡|✅)|$)/);
+      var bodyText = motivationMatch ? motivationMatch[1].trim() : result;
+      document.getElementById('mb-result-charcount').textContent = '生成結果: ' + bodyText.length + ' 字';
+      document.getElementById('mb-actions').style.display = 'block';
+      if (typeof gtag === 'function') { gtag('event', 'ai_motivation_builder'); }
+    } catch (err) {
+      errEl.textContent = err.message;
+      document.getElementById('mb-result').className = 'ai-result-box';
+      var btn = document.getElementById('mb-submit-btn');
+      btn.disabled = false;
+      btn.innerHTML = '<span class="btn-text">\u2726 志望動機を生成</span>';
+    }
+  }
+
+  function loadGkForMotivation() {
+    if (!gakuchikaEntries || !gakuchikaEntries.length) {
+      alert('ガクチカが保存されていません。先にガクチカを登録してください。');
+      return;
+    }
+    var overlay = document.createElement('div');
+    overlay.className = 'mb-gk-picker-overlay';
+    overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+    var picker = document.createElement('div');
+    picker.className = 'mb-gk-picker';
+    picker.innerHTML = '<div class="mb-gk-picker-title">ガクチカを選んで挿入</div>';
+    var list = document.createElement('div');
+    list.className = 'mb-gk-picker-list';
+    gakuchikaEntries.forEach(function(g) {
+      var item = document.createElement('div');
+      item.className = 'mb-gk-picker-item';
+      item.innerHTML = '<div class="gk-title">' + (g.title || '無題') + '</div>'
+        + '<div class="gk-cat">' + (g.category || '') + (g.period ? ' / ' + g.period : '') + '</div>';
+      item.onclick = function() {
+        var parts = [];
+        if (g.situation) parts.push('【状況】' + g.situation);
+        if (g.task)      parts.push('【課題】' + g.task);
+        if (g.action)    parts.push('【行動】' + g.action);
+        if (g.result)    parts.push('【結果】' + g.result);
+        if (g.appeal)    parts.push('【アピール】' + g.appeal);
+        if (!parts.length && g.fullText) parts.push(g.fullText);
+        var textarea = document.getElementById('mb-experience');
+        var current = textarea.value.trim();
+        textarea.value = current ? current + '\n\n' + parts.join('\n') : parts.join('\n');
+        updateCharCount('mb-experience', 'mb-exp-char');
+        overlay.remove();
+      };
+      list.appendChild(item);
+    });
+    picker.appendChild(list);
+    var actions = document.createElement('div');
+    actions.className = 'mb-gk-picker-actions';
+    actions.innerHTML = '<button onclick="this.closest(\'.mb-gk-picker-overlay\').remove()">閉じる</button>';
+    picker.appendChild(actions);
+    overlay.appendChild(picker);
+    document.body.appendChild(overlay);
+  }
+
+  function copyMotivationResult() {
+    var text = lastMotivationResult || document.getElementById('mb-result').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btns = document.querySelectorAll('#mb-actions .es-bank-btn');
+      var copyBtn = btns[0];
+      var orig = copyBtn.innerHTML;
+      copyBtn.innerHTML = '\u2705 コピーしました！';
+      setTimeout(function() { copyBtn.innerHTML = orig; }, 1500);
+    });
+  }
+
+  async function saveMotivationToEsBank() {
+    var industry  = document.getElementById('mb-industry').value.trim();
+    var esText    = lastMotivationResult || '';
+    if (!esText) { alert('生成結果がありません。'); return; }
+    try {
+      await callAuthApi('writeES', {
+        es: {
+          id: '',
+          company: industry || '（志望動機ビルダー）',
+          industry: industry,
+          question: '志望動機',
+          esText: esText,
+          result: '',
+          memo: '志望動機ビルダーで生成',
+        }
+      });
+      alert('ESバンクに保存しました。');
+      await loadEsBank();
+    } catch(e) {
+      alert('保存に失敗しました: ' + e.message);
+    }
+  }
+
+  async function refineMotivation() {
+    var text = lastMotivationResult;
+    if (!text) { alert('ブラッシュアップする志望動機がありません。先に生成してください。'); return; }
+    var charLimit = document.getElementById('mb-char-limit').value;
+    var errEl = document.getElementById('mb-error');
+    errEl.textContent = '';
+    setAiLoading('mb-submit-btn', 'mb-result', 'mb-error', true);
+    document.getElementById('mb-actions').style.display = 'none';
+    try {
+      var result = await callClaudeApi('refineMotivation', {
+        motivationText: text,
+        charLimit: parseInt(charLimit),
+      });
+      lastMotivationResult = result;
+      showAiResult('mb-submit-btn', 'mb-result', '\u2726 志望動機を生成', result);
+      document.getElementById('mb-result-charcount').textContent = '改善結果: ' + result.length + ' 字';
+      document.getElementById('mb-actions').style.display = 'block';
+    } catch (err) {
+      errEl.textContent = err.message;
+      document.getElementById('mb-result').className = 'ai-result-box';
+      var btn = document.getElementById('mb-submit-btn');
+      btn.disabled = false;
+      btn.innerHTML = '<span class="btn-text">\u2726 志望動機を生成</span>';
+    }
+  }
+
+  // ===== 通過ESギャラリー =====
+  async function loadPassedES() {
+    var listEl = document.getElementById('passed-es-list');
+    try {
+      var user = KeioNaviAuth.getCurrentUser();
+      if (!user) return;
+      var sessionToken = KeioNaviAuth.getSessionToken();
+      if (!sessionToken) return;
+      var res = await fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'readPassedES', sessionToken: sessionToken })
+      });
+      var data = await res.json();
+      if (data.status !== 'ok' || !data.entries || !data.entries.length) {
+        listEl.innerHTML = '\x3cdiv class="m-empty">通過ESはまだ登録されていません。ES保管庫で結果を「通過」にすると、ここに匿名で共有されます。\x3c/div>';
+        return;
+      }
+      listEl.innerHTML = '';
+      data.entries.forEach(function(e) {
+        var card = document.createElement('div');
+        card.className = 'passed-es-card';
+        var meta = document.createElement('div');
+        meta.className = 'passed-es-meta';
+        meta.textContent = (e.company || '企業名不明') + ' / ' + (e.industry || '') + ' / 匿名';
+        card.appendChild(meta);
+        if (e.question) {
+          var q = document.createElement('div');
+          q.className = 'passed-es-question';
+          q.textContent = e.question;
+          card.appendChild(q);
+        }
+        var txt = document.createElement('div');
+        txt.className = 'passed-es-text';
+        txt.textContent = e.esText || '';
+        card.appendChild(txt);
+        if (e.result) {
+          var res = document.createElement('span');
+          res.className = 'passed-es-result';
+          res.textContent = e.result;
+          card.appendChild(res);
+        }
+        listEl.appendChild(card);
+      });
+    } catch(err) {
+      listEl.innerHTML = '\x3cdiv class="m-empty">通過ESの読み込みに失敗しました。\x3c/div>';
+    }
+  }
+
   // ===== loadAll =====
   async function loadAll() {
     initPRTool();
-    initBoardModal();
-    loadBoardPosts();
     loadEsBank();
     loadGakuchika();
     initAiTools();
+    loadPassedES();
+    initSelExpSection();
+  }
+
+  // ===== 選考体験記 =====
+  function initSelExpSection() {
+    var section = document.getElementById('sel-exp-section');
+    if (section) section.style.display = '';
+    loadSelectionExperiences();
+    var form = document.getElementById('sel-exp-form');
+    if (form) {
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var user = KeioNaviAuth.getCurrentUser();
+        if (!user) { alert('ログインが必要です。'); return; }
+        var sessionToken = KeioNaviAuth.getSessionToken();
+        if (!sessionToken) { alert('ログインが必要です。'); return; }
+        var stage = document.getElementById('sel-exp-stage').value;
+        var questions = document.getElementById('sel-exp-questions').value;
+        var atmosphere = document.getElementById('sel-exp-atmosphere').value;
+        var tips = document.getElementById('sel-exp-tips').value;
+        var result = document.getElementById('sel-exp-result').value;
+        if (!stage || !result) { alert('選考段階と結果を選択してください。'); return; }
+        try {
+          var res = await fetch(GAS_PROXY_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'writeSelectionExperience', sessionToken: sessionToken, stage: stage, questions: questions, atmosphere: atmosphere, tips: tips, result: result })
+          });
+          var data = await res.json();
+          if (data.status === 'ok') {
+            form.reset();
+            loadSelectionExperiences();
+          } else { alert(data.message || '投稿に失敗しました。'); }
+        } catch(err) { alert('エラーが発生しました。'); }
+      });
+    }
+  }
+
+  async function loadSelectionExperiences() {
+    var feed = document.getElementById('sel-exp-feed');
+    if (!feed) return;
+    try {
+      var sessionToken = KeioNaviAuth.getSessionToken();
+      if (!sessionToken) throw new Error('ログインが必要です。');
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'readSelectionExperiences', sessionToken: sessionToken })
+      });
+      var data = await res.json();
+      if (data.status === 'ok' && data.entries && data.entries.length > 0) {
+        feed.innerHTML = data.entries.map(function(e) {
+          var resultColor = e.result === '通過' ? '#0a6e45' : e.result === '不合格' ? '#c0001a' : '#c9a84c';
+          var d = e.createdAt ? new Date(e.createdAt) : null;
+          var dateStr = d ? (d.getMonth()+1) + '/' + d.getDate() : '';
+          var safeDisplayName = escHtml(e.displayName || '匿名');
+          var safeDate = escHtml(dateStr);
+          var safeStage = escHtml(e.stage || '');
+          var safeResult = escHtml(e.result || '');
+          var safeQuestions = escHtml(e.questions || '');
+          var safeAtmosphere = escHtml(e.atmosphere || '');
+          var safeTips = escHtml(e.tips || '');
+          return '\x3cdiv style="background:white;border-radius:10px;padding:1rem;box-shadow:0 1px 6px rgba(0,0,0,0.05);">'
+            + '\x3cdiv style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">'
+            + '\x3cspan style="font-size:0.75rem;font-weight:700;color:var(--navy);">' + safeDisplayName + '\x3c/span>'
+            + '\x3cspan style="font-size:0.68rem;color:var(--text-muted);">' + safeDate + '\x3c/span>'
+            + '\x3c/div>'
+            + '\x3cdiv style="display:flex;gap:0.4rem;margin-bottom:0.5rem;">'
+            + '\x3cspan style="font-size:0.7rem;padding:0.15rem 0.5rem;background:var(--navy);color:white;border-radius:4px;">' + safeStage + '\x3c/span>'
+            + '\x3cspan style="font-size:0.7rem;padding:0.15rem 0.5rem;background:' + resultColor + ';color:white;border-radius:4px;">' + safeResult + '\x3c/span>'
+            + '\x3c/div>'
+            + (e.questions ? '\x3cdiv style="font-size:0.78rem;color:#333;margin-bottom:0.3rem;"\x3e\x3cstrong\x3e質問:\x3c/strong\x3e ' + safeQuestions + '\x3c/div\x3e' : '')
+            + (e.atmosphere ? '\x3cdiv style="font-size:0.78rem;color:#333;margin-bottom:0.3rem;"\x3e\x3cstrong\x3e雰囲気:\x3c/strong\x3e ' + safeAtmosphere + '\x3c/div\x3e' : '')
+            + (e.tips ? '\x3cdiv style="font-size:0.78rem;color:#333;"\x3e\x3cstrong\x3eアドバイス:\x3c/strong\x3e ' + safeTips + '\x3c/div\x3e' : '')
+            + '\x3c/div\x3e';
+        }).join('');
+      } else {
+        feed.innerHTML = '\x3cdiv style="text-align:center;color:var(--text-muted);font-size:0.8rem;padding:2rem;">まだ体験記がありません。最初の投稿をしてみましょう！\x3c/div\x3e';
+      }
+    } catch(err) {
+      feed.innerHTML = '\x3cdiv style="text-align:center;color:var(--text-muted);font-size:0.8rem;padding:1rem;">読み込みに失敗しました。\x3c/div\x3e';
+    }
   }
 
   // ===== スクロールトップ =====
@@ -2045,14 +2985,267 @@
       document.getElementById('password-screen').style.display = 'flex';
     }
   })();
+
+  // ===== 自己分析ワークブック =====
+  var SA_KEY = 'keio_navi_self_analysis_v1';
+  var SA_VALUES_OPTIONS = [
+    '成長','挑戦','安定','自由','貢献','チームワーク',
+    '創造性','リーダーシップ','専門性','多様性',
+    '国際性','誠実さ','効率','独立','影響力','バランス'
+  ];
+
+  function saInit() {
+    // 価値観チップを生成
+    var grid = document.getElementById('sa-values-grid');
+    if (!grid) return;
+    var saved = saLoad();
+    var selectedVals = saved.values || [];
+    grid.innerHTML = SA_VALUES_OPTIONS.map(function(v) {
+      var cls = selectedVals.indexOf(v) !== -1 ? 'sa-chip selected' : 'sa-chip';
+      return '<button class="' + cls + '" onclick="saToggleValue(this,\'' + v + '\')">' + v + '</button>';
+    }).join('');
+
+    // フィールドを復元
+    if (saved.valuesReason) document.getElementById('sa-values-reason').value = saved.valuesReason;
+    if (saved.strengths) document.getElementById('sa-strengths').value = saved.strengths;
+    if (saved.weaknesses) document.getElementById('sa-weaknesses').value = saved.weaknesses;
+    if (saved.will) document.getElementById('sa-will').value = saved.will;
+    if (saved.can) document.getElementById('sa-can').value = saved.can;
+    if (saved.must) document.getElementById('sa-must').value = saved.must;
+
+    saUpdateStepDone();
+  }
+
+  function saLoad() {
+    try { return JSON.parse(localStorage.getItem(SA_KEY) || '{}'); } catch(e) { return {}; }
+  }
+
+  function saSave(data) {
+    var current = saLoad();
+    Object.keys(data).forEach(function(k) { current[k] = data[k]; });
+    localStorage.setItem(SA_KEY, JSON.stringify(current));
+  }
+
+  function saToggleValue(btn, val) {
+    btn.classList.toggle('selected');
+    var selected = [];
+    document.querySelectorAll('#sa-values-grid .sa-chip.selected').forEach(function(c) {
+      selected.push(c.textContent);
+    });
+    saSave({ values: selected });
+    saShowSaved(0);
+    saUpdateStepDone();
+  }
+
+  var _saAutoSaveTimer = null;
+  function saAutoSave() {
+    clearTimeout(_saAutoSaveTimer);
+    _saAutoSaveTimer = setTimeout(function() {
+      var data = {
+        valuesReason: document.getElementById('sa-values-reason').value,
+        strengths: document.getElementById('sa-strengths').value,
+        weaknesses: document.getElementById('sa-weaknesses').value,
+        will: document.getElementById('sa-will').value,
+        can: document.getElementById('sa-can').value,
+        must: document.getElementById('sa-must').value,
+      };
+      saSave(data);
+      // 現在のパネルに保存メッセージ表示
+      var activePanel = document.querySelector('.sa-panel.active');
+      if (activePanel) {
+        var idx = activePanel.id.replace('sa-panel-','');
+        saShowSaved(idx);
+      }
+      saUpdateStepDone();
+    }, 500);
+  }
+
+  function saShowSaved(idx) {
+    var msg = document.getElementById('sa-save-msg-' + idx);
+    if (!msg) return;
+    msg.classList.add('show');
+    setTimeout(function() { msg.classList.remove('show'); }, 2000);
+  }
+
+  function saGoStep(step) {
+    for (var i = 0; i < 4; i++) {
+      document.getElementById('sa-panel-' + i).classList.toggle('active', i === step);
+      document.getElementById('sa-tab-' + i).classList.toggle('active', i === step);
+    }
+    if (step === 3) saRenderSummary();
+  }
+
+  function saUpdateStepDone() {
+    var d = saLoad();
+    var steps = [
+      (d.values && d.values.length > 0),
+      (d.strengths && d.strengths.trim()),
+      (d.will && d.will.trim()),
+      true
+    ];
+    for (var i = 0; i < 3; i++) {
+      var btn = document.getElementById('sa-tab-' + i);
+      if (steps[i]) btn.classList.add('done');
+      else btn.classList.remove('done');
+    }
+  }
+
+  function saRenderSummary() {
+    var d = saLoad();
+    var el = document.getElementById('sa-summary');
+    var cards = [];
+
+    if (d.values && d.values.length) {
+      cards.push({ label: 'VALUES', title: '価値観', text: d.values.join('、') + (d.valuesReason ? '\n\n' + d.valuesReason : '') });
+    }
+    if (d.strengths) {
+      cards.push({ label: 'STRENGTHS', title: '強み', text: d.strengths });
+    }
+    if (d.weaknesses) {
+      cards.push({ label: 'WEAKNESSES', title: '弱み・改善', text: d.weaknesses });
+    }
+    if (d.will || d.can || d.must) {
+      var wcm = '';
+      if (d.will) wcm += 'Will: ' + d.will;
+      if (d.can) wcm += (wcm ? '\n' : '') + 'Can: ' + d.can;
+      if (d.must) wcm += (wcm ? '\n' : '') + 'Must: ' + d.must;
+      cards.push({ label: 'WILL-CAN-MUST', title: 'フレームワーク', text: wcm });
+    }
+
+    if (!cards.length) {
+      el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.82rem;">まだ入力がありません。STEP 1から始めてみましょう。</div>';
+      return;
+    }
+
+    el.innerHTML = cards.map(function(c) {
+      return '<div class="sa-summary-card">'
+        + '<div class="sa-summary-label">' + c.label + '</div>'
+        + '<div style="font-size:0.88rem;font-weight:700;color:var(--navy);margin-bottom:0.3rem;">' + c.title + '</div>'
+        + '<div class="sa-summary-text">' + c.text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ===== AI自己分析パートナー =====
+  var _saAiContext = '';
+  var _saAiLoading = false;
+
+  function saRenderAiMsg(role, text) {
+    var container = document.getElementById('sa-ai-chat-messages');
+    var div = document.createElement('div');
+    div.className = 'sa-ai-msg ' + (role === 'user' ? 'user' : 'ai');
+    div.textContent = text;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function saShowAiLoading(targetEl) {
+    var loader = document.createElement('div');
+    loader.className = 'sa-ai-loading';
+    loader.id = 'sa-ai-loader';
+    loader.innerHTML = '<div class="sa-ai-loading-dots"><span></span><span></span><span></span></div> 分析中...';
+    targetEl.appendChild(loader);
+    if (targetEl.scrollTop !== undefined) targetEl.scrollTop = targetEl.scrollHeight;
+  }
+
+  function saHideAiLoading() {
+    var loader = document.getElementById('sa-ai-loader');
+    if (loader) loader.remove();
+  }
+
+  async function saRequestAnalysis() {
+    if (_saAiLoading) return;
+    var d = saLoad();
+    if ((!d.values || !d.values.length) && !d.strengths && !d.will) {
+      alert('分析するデータがありません。STEP 1〜3を入力してください。');
+      return;
+    }
+
+    _saAiLoading = true;
+    var btn = document.getElementById('sa-ai-btn');
+    var resultEl = document.getElementById('sa-ai-result');
+    var chatEl = document.getElementById('sa-ai-chat');
+    btn.disabled = true;
+    btn.textContent = '分析中...';
+    resultEl.classList.remove('visible');
+    resultEl.innerHTML = '';
+    chatEl.classList.remove('visible');
+    document.getElementById('sa-ai-chat-messages').innerHTML = '';
+    saShowAiLoading(resultEl);
+    resultEl.classList.add('visible');
+
+    try {
+      var result = await callClaudeApi('analyzeSelfProfile', {
+        values: (d.values || []).join('、'),
+        valuesReason: d.valuesReason || '',
+        strengths: d.strengths || '',
+        weaknesses: d.weaknesses || '',
+        will: d.will || '',
+        can: d.can || '',
+        must: d.must || '',
+      });
+      saHideAiLoading();
+      resultEl.textContent = result;
+      _saAiContext = result;
+      chatEl.classList.add('visible');
+    } catch (e) {
+      saHideAiLoading();
+      resultEl.textContent = 'エラーが発生しました: ' + e.message;
+      resultEl.classList.add('visible');
+    } finally {
+      _saAiLoading = false;
+      btn.disabled = false;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93"/><path d="M8.24 9.93A4.001 4.001 0 0 1 12 2"/><path d="M12 18v4"/><path d="M8 22h8"/><circle cx="12" cy="14" r="4"/></svg> AI に分析してもらう';
+    }
+  }
+
+  function saSendChatFromInput() {
+    var input = document.getElementById('sa-ai-chat-input');
+    var q = input.value.trim();
+    if (!q) return;
+    input.value = '';
+    saSendChat(q);
+  }
+
+  async function saSendChat(question) {
+    if (_saAiLoading || !_saAiContext) return;
+    _saAiLoading = true;
+    var sendBtn = document.getElementById('sa-ai-chat-send');
+    sendBtn.disabled = true;
+
+    saRenderAiMsg('user', question);
+    var msgContainer = document.getElementById('sa-ai-chat-messages');
+    saShowAiLoading(msgContainer);
+
+    try {
+      var result = await callClaudeApi('selfAnalysisChat', {
+        context: _saAiContext,
+        question: question,
+      });
+      saHideAiLoading();
+      saRenderAiMsg('ai', result);
+      _saAiContext += '\n\n--- 追加の質問: ' + question + ' ---\n' + result;
+    } catch (e) {
+      saHideAiLoading();
+      saRenderAiMsg('ai', 'エラーが発生しました: ' + e.message);
+    } finally {
+      _saAiLoading = false;
+      sendBtn.disabled = false;
+    }
+  }
+
+  // 初期化
+  (function() {
+    if (document.getElementById('sa-values-grid')) saInit();
+  })();
 </script>
 <style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
 <nav class="bottom-tab-bar">
-  <a href="account.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>マイページ</span></a>
-  <a href="writing.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>ES</span></a>
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>ホーム</span></a>
+  <a href="writing.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
   <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
-  <a href="resources.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>資料</span></a>
-  <a href="glossary.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>用語集</span></a>
+  <a href="community.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
 </nav>
-</body>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
 </html>

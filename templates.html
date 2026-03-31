@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>就活メールテンプレート ｜ 慶應就活ナビ</title>
+<meta name="description" content="就活で使えるメール・メッセージテンプレート集。OB訪問依頼、面接お礼、内定承諾・辞退など、コピペですぐ使えるテンプレートを掲載。">
+
+<!-- OGP -->
+<meta property="og:title" content="就活メールテンプレート | 慶應就活ナビ">
+<meta property="og:description" content="就活で使えるメール・メッセージテンプレート集。コピペですぐ使えるテンプレートを掲載。">
+<meta property="og:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+<meta property="og:url" content="https://naotama1123.github.io/keio-syukatu-navi/templates.html">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.8rem 5vw; background: rgba(10,26,62,0.97);
+    backdrop-filter: blur(10px); border-bottom: 1px solid rgba(201,168,76,0.18);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--gold-light); text-decoration: none; letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .nav-link { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.75rem; padding: 0.4rem 0.8rem; border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s; }
+  .nav-link:hover { color: var(--gold-light); border-color: rgba(201,168,76,0.35); }
+  .nav-link.active { color: var(--gold-light); border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.08); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 5.5rem 1.2rem 4rem; }
+
+  .page-header { margin-bottom: 2rem; text-align: center; }
+  .page-label { font-size: 0.7rem; letter-spacing: 0.15em; color: var(--gold); font-weight: 700; text-transform: uppercase; }
+  .page-title { font-family: 'Noto Serif JP', serif; font-size: 1.6rem; font-weight: 700; color: var(--navy); margin-top: 0.3rem; }
+  .page-desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.6rem; line-height: 1.7; }
+
+  .search-bar {
+    display: flex; gap: 0.5rem; margin-bottom: 1.5rem; position: sticky; top: 3.5rem; z-index: 50;
+    background: var(--cream); padding: 0.8rem 0;
+  }
+  .search-input {
+    flex: 1; padding: 0.7rem 1rem; border: 1.5px solid rgba(10,26,62,0.15); font-size: 0.88rem;
+    font-family: 'Noto Sans JP', sans-serif; background: white; transition: border-color 0.2s;
+  }
+  .search-input:focus { outline: none; border-color: var(--gold); }
+  .search-count { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+  .category-tabs {
+    display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+  }
+  .cat-tab {
+    padding: 0.35rem 0.8rem; font-size: 0.75rem; border: 1px solid rgba(10,26,62,0.15);
+    background: white; color: var(--text-muted); cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+    transition: all 0.2s; font-weight: 500;
+  }
+  .cat-tab:hover { border-color: var(--navy); color: var(--navy); }
+  .cat-tab.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+  .glossary-group { margin-bottom: 2rem; }
+  .group-title {
+    font-family: 'Noto Serif JP', serif; font-size: 1.05rem; font-weight: 700; color: var(--navy);
+    border-left: 4px solid var(--gold); padding-left: 0.8rem; margin-bottom: 1rem;
+  }
+
+  .term-card {
+    background: var(--white); border: 1px solid rgba(10,26,62,0.08); margin-bottom: 0.6rem;
+    transition: border-color 0.2s;
+  }
+  .term-card:hover { border-color: rgba(201,168,76,0.4); }
+  .term-header {
+    padding: 0.9rem 1.2rem; cursor: pointer; display: flex; align-items: center;
+    justify-content: space-between; gap: 0.8rem;
+  }
+  .term-name { font-weight: 700; font-size: 0.9rem; color: var(--navy); }
+  .term-cat-badge {
+    font-size: 0.62rem; padding: 0.15rem 0.5rem; border: 1px solid rgba(10,26,62,0.12);
+    color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; white-space: nowrap;
+  }
+  .term-arrow { font-size: 0.8rem; color: rgba(10,26,62,0.3); transition: transform 0.2s; flex-shrink: 0; }
+  .term-card.open .term-arrow { transform: rotate(90deg); }
+  .term-body {
+    display: none; padding: 0 1.2rem 1rem; font-size: 0.84rem; line-height: 1.9; color: var(--text);
+  }
+  .term-card.open .term-body { display: block; }
+
+  .template-text {
+    background: var(--gray); padding: 1rem; margin: 0.8rem 0; font-size: 0.82rem;
+    line-height: 1.9; white-space: pre-wrap; word-break: break-all; border-left: 3px solid var(--gold);
+    position: relative;
+  }
+  .template-text .placeholder {
+    color: var(--crimson); font-weight: 700;
+  }
+
+  .copy-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.4rem 1rem; font-size: 0.75rem; font-family: 'Noto Sans JP', sans-serif;
+    background: var(--navy); color: white; border: none; cursor: pointer;
+    transition: background 0.2s; font-weight: 500; margin-top: 0.4rem;
+  }
+  .copy-btn:hover { background: var(--gold); color: var(--navy); }
+  .copy-btn.copied { background: #2e7d32; }
+
+  .tips {
+    margin-top: 0.8rem; padding: 0.7rem 0.9rem; background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2); font-size: 0.78rem; color: var(--text-muted); line-height: 1.7;
+  }
+  .tips-label { font-weight: 700; color: var(--navy); font-size: 0.72rem; margin-bottom: 0.3rem; }
+
+  .no-results { text-align: center; padding: 3rem 1rem; font-size: 0.88rem; color: var(--text-muted); }
+
+  footer {
+    text-align: center; padding: 2rem 1rem; font-size: 0.72rem; color: var(--text-muted);
+    border-top: 1px solid rgba(10,26,62,0.08); margin-top: 2rem;
+  }
+
+  .term-card { position: relative; }
+  .share-btn {
+    position: absolute; top: 0.65rem; right: 3.2rem; width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 1px solid rgba(10,26,62,0.1); cursor: pointer;
+    color: var(--text-muted); transition: all 0.2s; z-index: 2; border-radius: 2px;
+  }
+  .share-btn:hover { border-color: var(--gold); color: var(--navy); background: rgba(201,168,76,0.06); }
+  .share-btn svg { width: 14px; height: 14px; }
+  .share-dropdown {
+    display: none; position: absolute; top: 2.6rem; right: 3.2rem; z-index: 60;
+    background: var(--white); border: 1px solid rgba(10,26,62,0.1);
+    box-shadow: 0 4px 16px rgba(10,26,62,0.10); min-width: 170px;
+  }
+  .share-dropdown.open { display: block; }
+  .share-option {
+    display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.9rem;
+    font-size: 0.78rem; color: var(--text); cursor: pointer; transition: background 0.15s;
+    border: none; background: none; width: 100%; font-family: 'Noto Sans JP', sans-serif; text-align: left;
+  }
+  .share-option:hover { background: var(--gray); }
+  .share-option svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .share-option.copied-feedback { color: #2e7d32; font-weight: 500; }
+
+  @media (max-width: 600px) {
+    main { padding: 5rem 0.8rem 3rem; }
+    .search-bar { top: 3.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Keio Navi</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">トップ</a>
+    <a href="members.html" class="nav-link">会員ページ</a>
+    <a href="glossary.html" class="nav-link">用語集</a>
+    <a href="templates.html" class="nav-link active">テンプレート</a>
+    <a href="account.html" class="nav-link">マイページ</a>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div class="page-label">EMAIL TEMPLATES</div>
+    <div class="page-title">就活メールテンプレート集</div>
+    <div class="page-desc">就活で必要なメール・メッセージのテンプレートをカテゴリ別にまとめました。<br>[企業名] などのプレースホルダーを書き換えてご利用ください。</div>
+  </div>
+
+  <div class="search-bar">
+    <input class="search-input" type="text" id="search" placeholder="テンプレートを検索..." oninput="filterTemplates()">
+  </div>
+
+  <div class="category-tabs" id="category-tabs"></div>
+  <div class="search-count" id="search-count"></div>
+  <div id="templates-content"></div>
+</main>
+
+<footer>慶應就活ナビ &copy; 2026</footer>
+
+<script>
+var TEMPLATES = [
+  // ── OB訪問 ──
+  {
+    title: 'OB訪問依頼メール（初回）',
+    category: 'OB訪問',
+    template: '件名：OB訪問のお願い（[大学名] [自分の名前]）\n\n[担当者名] 様\n\n突然のご連絡失礼いたします。\n[大学名] [学部名] [学年] の [自分の名前] と申します。\n\n現在就職活動を行っており、[企業名] 様の [事業内容・職種] に大変興味を持っております。\nつきましては、ぜひ [担当者名] 様にお話を伺えればと思い、ご連絡いたしました。\n\nお忙しいところ大変恐縮ですが、30分〜1時間程度お時間をいただくことは可能でしょうか。\n対面・オンラインいずれでも、[担当者名] 様のご都合に合わせます。\n\n以下、候補日程をお送りいたします。\n・[候補日1] [時間帯]\n・[候補日2] [時間帯]\n・[候補日3] [時間帯]\n\n上記以外でも調整可能ですので、お気軽にお申し付けください。\n\nお忙しい中恐れ入りますが、ご検討いただけますと幸いです。\n何卒よろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '件名に大学名と氏名を入れると開封率が上がります。候補日は3つ以上提示し、相手の負担を減らしましょう。連絡先は必ず署名に記載してください。'
+  },
+  {
+    title: 'OB訪問依頼メール（紹介経由）',
+    category: 'OB訪問',
+    template: '件名：[紹介者名] 様よりご紹介いただきました（[大学名] [自分の名前]）\n\n[担当者名] 様\n\nはじめまして。[大学名] [学部名] [学年] の [自分の名前] と申します。\n[紹介者名] 様よりご紹介いただき、ご連絡いたしました。\n\n現在就職活動中で、[企業名] 様の [事業内容・職種] に強い関心を持っております。\n[紹介者名] 様から [担当者名] 様のお話を伺い、ぜひ直接お話を聞かせていただきたくご連絡しました。\n\nお忙しいところ大変恐縮ですが、30分程度お時間をいただけないでしょうか。\n\n以下、候補日程をお送りいたします。\n・[候補日1] [時間帯]\n・[候補日2] [時間帯]\n・[候補日3] [時間帯]\n\nご都合のよい日時をお知らせいただければ幸いです。\n何卒よろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '紹介者の名前を件名と冒頭に明記しましょう。紹介経由の場合は返信率が高いため、丁寧かつ簡潔に。事前に紹介者の許可を取ることを忘れずに。'
+  },
+  {
+    title: 'OB訪問後のお礼メール',
+    category: 'OB訪問',
+    template: '件名：本日のOB訪問のお礼（[大学名] [自分の名前]）\n\n[担当者名] 様\n\nお世話になっております。\n本日OB訪問のお時間をいただきました、[大学名] の [自分の名前] です。\n\nお忙しい中、貴重なお時間をいただき誠にありがとうございました。\n\n特に [印象に残った話題・アドバイス] のお話が大変勉強になりました。\n[具体的にどう活かすか・感想] と考えております。\n\n本日のお話を通じて、[企業名] 様で働くことへの志望がより一層強まりました。\n今後も引き続きご指導いただけますと幸いです。\n\n改めまして、本日は誠にありがとうございました。\n今後ともどうぞよろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: 'お礼メールは当日中（遅くとも翌日午前中）に送りましょう。具体的なエピソードに触れることで、定型文ではない印象を与えられます。'
+  },
+  {
+    title: 'OB訪問の日程調整メール',
+    category: 'OB訪問',
+    template: '件名：OB訪問の日程についてのご相談（[大学名] [自分の名前]）\n\n[担当者名] 様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\nOB訪問のお時間をいただけるとのこと、誠にありがとうございます。\nつきましては、以下の日程で伺えればと存じます。\n\n・[候補日1] [時間帯]\n・[候補日2] [時間帯]\n・[候補日3] [時間帯]\n\n場所は [担当者名] 様のご都合のよい場所で構いません。\nオンライン（Zoom等）でも対応可能です。\n\nご都合の悪い場合は、別の日程をご提示いただければ調整いたします。\nお忙しいところ恐れ入りますが、ご確認のほどよろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '候補日は平日の日中（10:00〜18:00）を基本に。相手が社会人であることを考慮し、ランチタイムや就業後を含めると調整しやすくなります。'
+  },
+
+  // ── 面接 ──
+  {
+    title: '面接後のお礼メール',
+    category: '面接',
+    template: '件名：本日の面接のお礼（[大学名] [自分の名前]）\n\n[企業名]\n[担当者名] 様\n\nお世話になっております。\n本日面接のお時間をいただきました、[大学名] の [自分の名前] です。\n\nお忙しい中、貴重なお時間を頂戴し誠にありがとうございました。\n\n面接を通じて、[企業名] 様の [事業・社風・理念など] について\nより深く理解することができ、志望度がさらに高まりました。\n\n特に [面接中の具体的な話題] に関するお話が印象的で、\n[自分の考え・感想] と感じております。\n\nぜひ [企業名] 様の一員として貢献できればと考えております。\n引き続き、何卒よろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '面接お礼メールは必須ではありませんが、志望度の高い企業には送ると好印象です。当日中に簡潔に送りましょう。選考結果の催促にならないよう注意。'
+  },
+  {
+    title: '面接日程変更の依頼メール',
+    category: '面接',
+    template: '件名：面接日程変更のお願い（[大学名] [自分の名前]）\n\n[企業名]\n採用ご担当者様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\n[日付] [時間] に予定しておりました面接につきまして、\n[理由：大学の試験・体調不良・家庭の事情 など] のため、\n誠に恐れ入りますが、日程の変更をお願いできないでしょうか。\n\nご迷惑をおかけし大変申し訳ございません。\n以下の日程であれば参加可能です。\n\n・[候補日1] [時間帯]\n・[候補日2] [時間帯]\n・[候補日3] [時間帯]\n\n上記以外でも調整可能ですので、何卒ご検討いただけますと幸いです。\nお手数をおかけいたしますが、よろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '日程変更はできる限り早く連絡しましょう（前日・当日は電話が望ましい）。「他社の選考と重なった」とは書かず、やむを得ない事情として伝えるのが無難です。'
+  },
+  {
+    title: '面接辞退メール',
+    category: '面接',
+    template: '件名：選考辞退のご連絡（[大学名] [自分の名前]）\n\n[企業名]\n採用ご担当者様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\nこの度、[日付] に予定しておりました面接につきまして、\n諸般の事情により選考を辞退させていただきたく、ご連絡いたしました。\n\n選考のお時間を割いていただいたにもかかわらず、\nこのようなご連絡となり誠に申し訳ございません。\n\n末筆ながら、貴社の益々のご発展をお祈り申し上げます。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '辞退理由を詳しく説明する必要はありません。「諸般の事情」で十分です。辞退は早めに連絡するのがマナー。面接前日・当日の場合は電話で連絡しましょう。'
+  },
+
+  // ── 内定 ──
+  {
+    title: '内定承諾メール',
+    category: '内定',
+    template: '件名：内定承諾のご連絡（[大学名] [自分の名前]）\n\n[企業名]\n[担当者名] 様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\nこの度は内定のご連絡をいただき、誠にありがとうございます。\n謹んで内定をお受けいたします。\n\n選考を通じて、[企業名] 様の [事業内容・社風・理念] に\n深く共感し、ぜひ貴社で働きたいという思いを強くいたしました。\n\n入社後は一日でも早く戦力となれるよう、精一杯努力してまいります。\n今後ともご指導のほど、何卒よろしくお願いいたします。\n\n今後の手続き等につきまして、ご指示いただければ対応いたします。\n引き続きよろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '内定承諾は電話で伝えた後、メールでも正式に送ると丁寧です。入社への意欲を示しつつ、今後の手続きについて確認しましょう。'
+  },
+  {
+    title: '内定辞退メール',
+    category: '内定',
+    template: '件名：内定辞退のご連絡（[大学名] [自分の名前]）\n\n[企業名]\n[担当者名] 様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\nこの度は内定のご連絡をいただき、誠にありがとうございました。\n大変身勝手なお願いで恐縮ですが、熟考の結果、\n内定を辞退させていただきたくご連絡いたしました。\n\n選考を通じて [企業名] 様の魅力を十分に感じておりましたが、\n自身の適性やキャリアプランを改めて考えた結果、\n別の道に進むことを決断いたしました。\n\n貴重なお時間をいただいたにもかかわらず、\nこのようなご連絡となり大変申し訳ございません。\n\n末筆ながら、貴社の益々のご発展を心よりお祈り申し上げます。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '内定辞退はまず電話で伝えるのがマナーです。メールはその後の正式連絡として送りましょう。辞退先企業名を書く必要はありません。感謝と謝意を忘れずに。'
+  },
+  {
+    title: '内定保留の依頼メール',
+    category: '内定',
+    template: '件名：内定承諾期限の延長のお願い（[大学名] [自分の名前]）\n\n[企業名]\n[担当者名] 様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\nこの度は内定のご連絡をいただき、誠にありがとうございます。\n[企業名] 様で働くことに大変魅力を感じております。\n\n大変恐縮ではございますが、悔いのない就職活動にしたいと考えており、\n[期限の希望日] までお返事をお待ちいただくことは可能でしょうか。\n\n自分自身の進路をしっかりと考えた上で、\n誠意を持ってご回答させていただきたいと考えております。\n\nご無理なお願いで申し訳ございませんが、\nご検討いただけますと幸いです。\n何卒よろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '保留の依頼は正直に、しかし他社名は出さないのが基本です。希望期限は1〜2週間程度が現実的。電話で直接お願いした後にメールでフォローすると丁寧です。'
+  },
+
+  // ── 説明会・イベント ──
+  {
+    title: '説明会参加後のお礼メール',
+    category: '説明会・イベント',
+    template: '件名：会社説明会のお礼（[大学名] [自分の名前]）\n\n[企業名]\n採用ご担当者様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\n本日は会社説明会にてお時間をいただき、誠にありがとうございました。\n\n[企業名] 様の [事業内容・理念・取り組み] について\n詳しくお話を伺うことができ、大変勉強になりました。\n\n特に [印象に残った内容] が印象的で、\n[企業名] 様で働くことへの関心がより一層高まりました。\n\n今後の選考にもぜひ参加させていただければと考えております。\n引き続き、何卒よろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '説明会のお礼メールは必須ではありませんが、少人数の説明会や座談会後には送ると印象に残ります。具体的な内容に触れると定型文感がなくなります。'
+  },
+  {
+    title: '説明会キャンセルメール',
+    category: '説明会・イベント',
+    template: '件名：会社説明会キャンセルのご連絡（[大学名] [自分の名前]）\n\n[企業名]\n採用ご担当者様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\n[日付] に予約しておりました会社説明会につきまして、\n[理由] のため、誠に恐れ入りますが\n参加をキャンセルさせていただきたくご連絡いたしました。\n\n直前のご連絡となり、大変申し訳ございません。\n次回開催の際にはぜひ参加させていただければと存じます。\n\nお手数をおかけいたしますが、何卒よろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: 'キャンセルはマイページから手続きできる場合が多いですが、メールでも連絡すると丁寧です。無断欠席は今後の選考に影響する場合があるので必ず連絡しましょう。'
+  },
+
+  // ── その他 ──
+  {
+    title: 'エントリー後の確認メール',
+    category: 'その他',
+    template: '件名：エントリーのご確認（[大学名] [自分の名前]）\n\n[企業名]\n採用ご担当者様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\n[日付] に貴社の [職種名・コース名] にエントリーいたしました。\n\nエントリー後の選考スケジュールや\n必要書類等について確認させていただきたく、ご連絡いたしました。\n\n今後の流れについてご教示いただけますと幸いです。\nお忙しいところ恐れ入りますが、何卒よろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: 'エントリー後に自動返信メールが届いていない場合に送ると安心です。ただし、応募直後に催促するのではなく、数日待ってから確認しましょう。'
+  },
+  {
+    title: '質問・問い合わせメール',
+    category: 'その他',
+    template: '件名：選考に関するご質問（[大学名] [自分の名前]）\n\n[企業名]\n採用ご担当者様\n\nお世話になっております。\n[大学名] [学部名] の [自分の名前] です。\n\n貴社の採用選考について、[質問の概要] に関してお伺いしたく\nご連絡いたしました。\n\n[具体的な質問内容]\n\nお忙しいところ大変恐縮ですが、\nご回答いただけますと幸いです。\n\n何卒よろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: '質問は簡潔に1〜2点に絞りましょう。企業HPや採用ページで調べればわかる内容は聞かないように。件名で質問の趣旨がわかると担当者が対応しやすくなります。'
+  },
+  {
+    title: 'インターン応募メール',
+    category: 'その他',
+    template: '件名：インターンシップ参加の応募（[大学名] [自分の名前]）\n\n[企業名]\n採用ご担当者様\n\nお世話になっております。\n[大学名] [学部名] [学年] の [自分の名前] と申します。\n\n貴社の [インターンシップ名・プログラム名] に\n大変興味を持ち、応募させていただきたくご連絡いたしました。\n\n[企業名] 様の [事業内容・分野] に関心があり、\n実際の業務を体験させていただくことで\nより深い理解を得たいと考えております。\n\n以下、簡単に自己紹介をさせていただきます。\n\n【大学・学部】[大学名] [学部名] [学年]\n【研究・ゼミ】[研究テーマ・ゼミ内容]\n【志望理由】[簡潔な志望理由]\n\n必要書類等ございましたら、ご指示いただければ速やかに提出いたします。\nお忙しいところ恐れ入りますが、ご検討のほどよろしくお願いいたします。\n\n──────────────────\n[大学名] [学部名] [学年]\n[自分の名前]\nTEL：[電話番号]\nE-mail：[メールアドレス]\n──────────────────',
+    tips: 'メールでの応募を受け付けていない企業も多いため、応募方法を事前に確認しましょう。Webフォームがある場合はそちらを使い、メールは補足程度にとどめます。'
+  }
+];
+
+var activeCategory = '';
+
+function renderCategoryTabs() {
+  var categories = [];
+  TEMPLATES.forEach(function(t) {
+    if (categories.indexOf(t.category) === -1) categories.push(t.category);
+  });
+  var el = document.getElementById('category-tabs');
+  el.innerHTML = '<button class="cat-tab ' + (!activeCategory ? 'active' : '') + '" onclick="setCategory(\'\')">すべて</button>' +
+    categories.map(function(c) {
+      return '<button class="cat-tab ' + (activeCategory === c ? 'active' : '') + '" onclick="setCategory(\'' + c + '\')">' + c + '</button>';
+    }).join('');
+}
+
+function setCategory(cat) {
+  activeCategory = cat;
+  renderCategoryTabs();
+  filterTemplates();
+}
+
+function filterTemplates() {
+  var query = document.getElementById('search').value.trim().toLowerCase();
+  var filtered = TEMPLATES.filter(function(t) {
+    if (activeCategory && t.category !== activeCategory) return false;
+    if (!query) return true;
+    return t.title.toLowerCase().indexOf(query) !== -1
+      || t.category.toLowerCase().indexOf(query) !== -1
+      || t.template.toLowerCase().indexOf(query) !== -1
+      || t.tips.toLowerCase().indexOf(query) !== -1;
+  });
+
+  document.getElementById('search-count').textContent = filtered.length + '件のテンプレート';
+  renderTemplates(filtered);
+}
+
+function escapeHtml(str) {
+  return str.replace(/\x3c/g, '&lt;').replace(/>/g, '&gt;').replace(/&(?!lt;|gt;|amp;|quot;)/g, '&amp;');
+}
+
+function highlightPlaceholders(str) {
+  var escaped = escapeHtml(str);
+  return escaped.replace(/\[([^\]]+)\]/g, '<span class="placeholder">[$1]</span>');
+}
+
+function renderTemplates(templates) {
+  var el = document.getElementById('templates-content');
+  if (!templates.length) {
+    el.innerHTML = '<div class="no-results">該当するテンプレートが見つかりませんでした。</div>';
+    return;
+  }
+
+  var groups = {};
+  templates.forEach(function(t) {
+    if (!groups[t.category]) groups[t.category] = [];
+    groups[t.category].push(t);
+  });
+
+  var idx = 0;
+  el.innerHTML = Object.keys(groups).map(function(cat) {
+    var items = groups[cat].map(function(t) {
+      var currentIdx = idx++;
+      var shareText = '就活メールテンプレート: ' + t.title + ' #就活';
+      var escapedShareText = shareText.replace(/'/g, "\\'");
+      var escapedCopyTitle = t.title.replace(/'/g, "\\'");
+      return '<div class="term-card" id="template-' + currentIdx + '">' +
+        '<button class="share-btn" onclick="event.stopPropagation();toggleShareDropdown(this)" title="シェア">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+        '</button>' +
+        '<div class="share-dropdown">' +
+          '<button class="share-option" onclick="event.stopPropagation();shareToX(\'' + escapedShareText + '\')">' +
+            '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' +
+            ' X (Twitter)' +
+          '</button>' +
+          '<button class="share-option" onclick="event.stopPropagation();shareToLine(\'' + escapedShareText + '\')">' +
+            '<svg viewBox="0 0 24 24" fill="#06C755"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>' +
+            ' LINE' +
+          '</button>' +
+          '<button class="share-option" onclick="event.stopPropagation();copyTemplateToClipboard(' + currentIdx + ', this)">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+            ' コピー' +
+          '</button>' +
+        '</div>' +
+        '<div class="term-header" onclick="this.parentElement.classList.toggle(\'open\')">' +
+          '<div><span class="term-name">' + escapeHtml(t.title) + '</span></div>' +
+          '<div style="display:flex;align-items:center;gap:0.5rem;">' +
+            '<span class="term-cat-badge">' + escapeHtml(t.category) + '</span>' +
+            '<span class="term-arrow">&#9654;</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="term-body">' +
+          '<div class="template-text">' + highlightPlaceholders(t.template) + '</div>' +
+          '<button class="copy-btn" onclick="copyTemplate(' + currentIdx + ', this, event)">' +
+            '&#128203; コピー' +
+          '</button>' +
+          '<div class="tips"><div class="tips-label">&#128161; 使い方のコツ</div>' + escapeHtml(t.tips) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    return '<div class="glossary-group">' +
+      '<div class="group-title">' + escapeHtml(cat) + '</div>' +
+      items +
+    '</div>';
+  }).join('');
+}
+
+function copyTemplate(idx, btn, event) {
+  event.stopPropagation();
+  var allTemplates = [];
+  var groups = {};
+  TEMPLATES.forEach(function(t) {
+    if (!groups[t.category]) groups[t.category] = [];
+    groups[t.category].push(t);
+  });
+  Object.keys(groups).forEach(function(cat) {
+    groups[cat].forEach(function(t) {
+      allTemplates.push(t);
+    });
+  });
+
+  var filtered = [];
+  var query = document.getElementById('search').value.trim().toLowerCase();
+  TEMPLATES.forEach(function(t) {
+    if (activeCategory && t.category !== activeCategory) return;
+    if (!query) { filtered.push(t); return; }
+    if (t.title.toLowerCase().indexOf(query) !== -1
+      || t.category.toLowerCase().indexOf(query) !== -1
+      || t.template.toLowerCase().indexOf(query) !== -1
+      || t.tips.toLowerCase().indexOf(query) !== -1) {
+      filtered.push(t);
+    }
+  });
+
+  var orderedTemplates = [];
+  var oGroups = {};
+  filtered.forEach(function(t) {
+    if (!oGroups[t.category]) oGroups[t.category] = [];
+    oGroups[t.category].push(t);
+  });
+  Object.keys(oGroups).forEach(function(cat) {
+    oGroups[cat].forEach(function(t) {
+      orderedTemplates.push(t);
+    });
+  });
+
+  if (idx >= 0 && idx < orderedTemplates.length) {
+    var text = orderedTemplates[idx].template;
+    navigator.clipboard.writeText(text).then(function() {
+      btn.innerHTML = '&#10003; コピーしました';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.innerHTML = '&#128203; コピー';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+}
+
+// --- SNS Share Functions ---
+function toggleShareDropdown(btn) {
+  var dropdown = btn.nextElementSibling;
+  var isOpen = dropdown.classList.contains('open');
+  closeAllShareDropdowns();
+  if (!isOpen) dropdown.classList.add('open');
+}
+function closeAllShareDropdowns() {
+  document.querySelectorAll('.share-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.share-btn') && !e.target.closest('.share-dropdown')) {
+    closeAllShareDropdowns();
+  }
+});
+function shareToX(text) {
+  var url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(location.href);
+  window.open(url, '_blank', 'width=550,height=420');
+  closeAllShareDropdowns();
+}
+function shareToLine(text) {
+  var url = 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(location.href) + '&text=' + encodeURIComponent(text);
+  window.open(url, '_blank', 'width=550,height=420');
+  closeAllShareDropdowns();
+}
+function copyToClipboard(text, btn) {
+  navigator.clipboard.writeText(text).then(function() {
+    btn.classList.add('copied-feedback');
+    var origHTML = btn.innerHTML;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> コピーしました';
+    setTimeout(function() {
+      btn.innerHTML = origHTML;
+      btn.classList.remove('copied-feedback');
+    }, 2000);
+  });
+  closeAllShareDropdowns();
+}
+function copyTemplateToClipboard(idx, btn) {
+  var orderedTemplates = getOrderedTemplates();
+  if (idx >= 0 && idx < orderedTemplates.length) {
+    copyToClipboard(orderedTemplates[idx].template, btn);
+  }
+}
+function getOrderedTemplates() {
+  var filtered = [];
+  var query = document.getElementById('search').value.trim().toLowerCase();
+  TEMPLATES.forEach(function(t) {
+    if (activeCategory && t.category !== activeCategory) return;
+    if (!query) { filtered.push(t); return; }
+    if (t.title.toLowerCase().indexOf(query) !== -1
+      || t.category.toLowerCase().indexOf(query) !== -1
+      || t.template.toLowerCase().indexOf(query) !== -1
+      || t.tips.toLowerCase().indexOf(query) !== -1) {
+      filtered.push(t);
+    }
+  });
+  var ordered = [];
+  var oGroups = {};
+  filtered.forEach(function(t) {
+    if (!oGroups[t.category]) oGroups[t.category] = [];
+    oGroups[t.category].push(t);
+  });
+  Object.keys(oGroups).forEach(function(cat) {
+    oGroups[cat].forEach(function(t) { ordered.push(t); });
+  });
+  return ordered;
+}
+
+// 初期表示
+renderCategoryTabs();
+filterTemplates();
+</script>
+<style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
+<nav class="bottom-tab-bar">
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>ホーム</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="community.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
+</nav>
+</body>
+</html>

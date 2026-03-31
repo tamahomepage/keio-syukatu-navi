@@ -1,5 +1,5 @@
 (function () {
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
   const SESSION_TOKEN_KEY = 'keio_navi_session_token_v1';
   const USER_CACHE_KEY = 'keio_navi_current_user_cache_v1';
   const LIKED_CACHE_KEY = 'keio_navi_liked_cache_v1';
@@ -112,6 +112,7 @@
       referralCode: trimText(user.referralCode),
       createdAt: user.createdAt || '',
       updatedAt: user.updatedAt || '',
+      sessionToken: trimText(user.sessionToken) || getSessionToken(),
       name: displayName,
       desiredIndustries: desiredIndustry,
     };
@@ -510,12 +511,201 @@
     });
   }
 
+  // ── アクティビティトラッキング ──────────────────────
+  const activityDebounceMap = {};
+  const ACTIVITY_DEBOUNCE_MS = 30000; // 30秒
+
+  function logActivity(event, page, feature) {
+    if (!event) return;
+
+    // デバウンス: 同一 event+page+feature は30秒に1回まで
+    const debounceKey = [event, page || '', feature || ''].join('|');
+    const now = Date.now();
+    if (activityDebounceMap[debounceKey] && now - activityDebounceMap[debounceKey] < ACTIVITY_DEBOUNCE_MS) {
+      return;
+    }
+    activityDebounceMap[debounceKey] = now;
+
+    // Fire-and-forget: 結果を待たず、エラーも無視
+    const payload = {
+      action: 'logActivity',
+      event: event,
+      page: page || '',
+      feature: feature || '',
+      sessionToken: getSessionToken(),
+      userAgent: navigator.userAgent || '',
+    };
+
+    fetch(GAS_PROXY_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      redirect: 'follow',
+    }).catch(function () {});
+  }
+
+  // ── 通知機能 ──────────────────────────────────────
+  const NOTIFICATION_PREFS_KEY = 'keio_navi_notification_prefs_v1';
+  const NOTIFICATION_SENT_KEY = 'keio_navi_notification_sent_v1';
+
+  function getNotificationStatus() {
+    if (!('Notification' in window)) return 'unsupported';
+    return Notification.permission; // 'granted' | 'denied' | 'default'
+  }
+
+  async function requestNotificationPermission() {
+    if (!('Notification' in window)) {
+      return { ok: false, error: 'このブラウザは通知に対応していません。' };
+    }
+    try {
+      const permission = await Notification.requestPermission();
+      return { ok: permission === 'granted', permission: permission };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  }
+
+  function getNotificationPrefs() {
+    return readJSON(NOTIFICATION_PREFS_KEY, {
+      enabled: false,
+      deadlineReminder: true,
+      newExperience: true,
+      boardReply: true,
+    });
+  }
+
+  function saveNotificationPrefs(prefs) {
+    writeJSON(NOTIFICATION_PREFS_KEY, prefs);
+  }
+
+  function scheduleLocalNotification(title, body, delayMs, tag) {
+    if (!('Notification' in window)) return null;
+    if (Notification.permission !== 'granted') return null;
+
+    const prefs = getNotificationPrefs();
+    if (!prefs.enabled) return null;
+
+    const timerId = setTimeout(function () {
+      try {
+        new Notification(title, {
+          body: body,
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%230a1a3e"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="%23c9a84c" font-family="serif">就</text></svg>',
+          tag: tag || 'keio-navi-local',
+          requireInteraction: false,
+        });
+      } catch (e) {
+        // Service Worker環境でなければ直接Notificationを使う
+        // SW経由の場合はregistration.showNotificationを使う
+        if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+          navigator.serviceWorker.ready.then(function (reg) {
+            reg.showNotification(title, {
+              body: body,
+              icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%230a1a3e"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="%23c9a84c" font-family="serif">就</text></svg>',
+              tag: tag || 'keio-navi-local',
+            });
+          }).catch(function () {});
+        }
+      }
+    }, Math.max(0, delayMs || 0));
+
+    return timerId;
+  }
+
+  function checkDeadlineReminders() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+
+    var prefs = getNotificationPrefs();
+    if (!prefs.enabled || !prefs.deadlineReminder) return;
+
+    // 既に送信済みの通知タグを取得（日付ベースで重複防止）
+    var today = new Date().toISOString().slice(0, 10);
+    var sentMap = readJSON(NOTIFICATION_SENT_KEY, {});
+    // 古い日付のエントリをクリーンアップ
+    Object.keys(sentMap).forEach(function (key) {
+      if (sentMap[key] < today) delete sentMap[key];
+    });
+
+    // 選考管理データ（localStorageに保存されている場合）を確認
+    // members.htmlのinitProgressTrackerが使うキーを参照
+    var progressEntries = [];
+    try {
+      // GAS経由で取得されたデータはmembers.htmlで管理されるが、
+      // ローカルにキャッシュされた選考データも確認する
+      var selectionData = readJSON('keio_navi_selection_cache_v1', []);
+      if (Array.isArray(selectionData)) {
+        selectionData.forEach(function (entry) {
+          if (entry && entry.deadline) {
+            progressEntries.push({
+              company: entry.company || entry.name || '',
+              deadline: entry.deadline,
+              step: entry.step || entry.stage || '',
+            });
+          }
+        });
+      }
+    } catch (e) {}
+
+    // progress tracker のエントリもチェック
+    try {
+      var progressData = readJSON('keio_navi_progress_cache_v1', []);
+      if (Array.isArray(progressData)) {
+        progressData.forEach(function (entry) {
+          if (entry && entry.deadline) {
+            progressEntries.push({
+              company: entry.company || entry.name || '',
+              deadline: entry.deadline,
+              step: entry.step || entry.stage || entry.status || '',
+            });
+          }
+        });
+      }
+    } catch (e) {}
+
+    if (!progressEntries.length) return;
+
+    var now = new Date();
+    var threeDaysLater = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
+
+    progressEntries.forEach(function (entry) {
+      if (!entry.deadline || !entry.company) return;
+      var deadlineDate = new Date(entry.deadline);
+      if (isNaN(deadlineDate.getTime())) return;
+
+      var deadlineDateStr = deadlineDate.toISOString().slice(0, 10);
+      var todayStr = now.toISOString().slice(0, 10);
+      var diffMs = deadlineDate.getTime() - now.getTime();
+      var diffDays = Math.ceil(diffMs / (24 * 60 * 60 * 1000));
+
+      // 当日または3日以内
+      if (diffDays < 0 || diffDays > 3) return;
+
+      var notifTag = 'deadline-' + entry.company + '-' + deadlineDateStr;
+      if (sentMap[notifTag]) return; // 既に通知済み
+
+      var title, body;
+      if (diffDays === 0) {
+        title = '本日締切です！';
+        body = entry.company + (entry.step ? '（' + entry.step + '）' : '') + 'の締切が本日です。忘れずに提出しましょう。';
+      } else {
+        title = '締切まであと' + diffDays + '日';
+        body = entry.company + (entry.step ? '（' + entry.step + '）' : '') + 'の締切が' + deadlineDateStr + 'です。準備を進めましょう。';
+      }
+
+      // 少しずらして表示（重複を避けるため）
+      scheduleLocalNotification(title, body, 2000, notifTag);
+      sentMap[notifTag] = todayStr;
+    });
+
+    writeJSON(NOTIFICATION_SENT_KEY, sentMap);
+  }
+
   window.KeioNaviAuth = {
     createAccount,
     login,
     logout,
     requireAuth,
     getCurrentUser,
+    getUser: getCurrentUser,
     updateCurrentUser,
     changePassword,
     deleteAccount,
@@ -536,5 +726,18 @@
     addLikedCompany,
     formatDate,
     getSessionToken,
+    logActivity,
+    getNotificationStatus,
+    requestNotificationPermission,
+    getNotificationPrefs,
+    saveNotificationPrefs,
+    scheduleLocalNotification,
+    checkDeadlineReminders,
   };
+
+  // ── ページ読み込み時に page_view を自動記録 ─────────
+  try {
+    const pageName = (window.location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '');
+    logActivity('page_view', pageName, '');
+  } catch (e) {}
 })();

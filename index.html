@@ -2,18 +2,35 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>慶應就活ナビ</title>
 <meta name="description" content="就活を、ひとりで戦わない。情報・機会・経験を持ち寄り、互いの可能性を広げる慶應生のための就活支援コミュニティです。">
 
 <!-- Microsoft Clarity（ヒートマップ計測）
      導入手順: https://clarity.microsoft.com でプロジェクト作成 → トラッキングコードを以下に貼る -->
 <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "YOUR_PROJECT_ID");
+    (function(projectId){
+        if (!projectId) return;
+        window.clarity = window.clarity || function(){ (window.clarity.q = window.clarity.q || []).push(arguments); };
+        var script = document.createElement("script");
+        script.async = 1;
+        script.src = "https://www.clarity.ms/tag/" + projectId;
+        var firstScript = document.getElementsByTagName("script")[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+    })("");
 </script>
 
 <!-- OGP -->
@@ -1390,6 +1407,9 @@
     <li><a href="#activities">サイト機能</a></li>
     <li><a href="#events">イベント</a></li>
     <li><a href="#faq">FAQ</a></li>
+    <li><a href="blog.html" style="color:rgba(255,255,255,0.7);">就活コラム</a></li>
+    <li><a href="industry-guide.html" style="color:rgba(255,255,255,0.7);">業界研究ガイド</a></li>
+    <li><a href="quiz.html" style="color:rgba(255,255,255,0.7);">準備度チェック</a></li>
     <li><a href="glossary.html" style="color:rgba(255,255,255,0.7);">用語集</a></li>
     <li id="members-nav-item" style="display:none;"><a href="members.html" style="color:rgba(255,255,255,0.7);">会員ページ</a></li>
     <li><a href="account.html" id="account-nav-link" style="color:rgba(255,255,255,0.7);">ログイン</a></li>
@@ -1407,6 +1427,9 @@
   <a href="#activities" onclick="closeMenu()">サイト機能</a>
   <a href="#events" onclick="closeMenu()">イベント</a>
   <a href="#faq" onclick="closeMenu()">FAQ</a>
+  <a href="blog.html" onclick="closeMenu()">就活コラム</a>
+  <a href="industry-guide.html" onclick="closeMenu()">業界研究ガイド</a>
+  <a href="quiz.html" onclick="closeMenu()">準備度チェック</a>
   <a href="#contact" onclick="closeMenu()">お問い合わせ</a>
   <a href="members.html" id="mobile-members-link" onclick="closeMenu()" style="display:none;">会員ページ</a>
   <a href="account.html" id="mobile-account-link" onclick="closeMenu()">ログイン / 会員登録</a>
@@ -1734,7 +1757,10 @@
           <h4>機能</h4>
           <ul>
             <li><a href="members.html">会員ページ</a></li>
-            <li><a href="members.html">面接対策ノート</a></li>
+            <li><a href="interview-page.html">面接対策ノート</a></li>
+            <li><a href="blog.html">就活コラム</a></li>
+            <li><a href="industry-guide.html">業界研究ガイド</a></li>
+            <li><a href="quiz.html">準備度チェック</a></li>
             <li><a href="account.html">ログイン / 会員登録</a></li>
           </ul>
         </div>
@@ -2016,5 +2042,5 @@
   }, { threshold: 0.5 });
   statNums.forEach(el => counterObserver.observe(el));
 </script>
-</body>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
 </html>

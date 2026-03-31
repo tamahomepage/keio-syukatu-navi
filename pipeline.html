@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>選考管理 ｜ 慶應就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); padding-bottom: 60px; }
+
+  /* ===== NAV ===== */
+  nav.top-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 68px;
+    background: rgba(10,26,62,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold-light); text-decoration: none; }
+  .nav-member-badge {
+    font-size: 0.68rem; background: rgba(201,168,76,0.15); color: var(--gold);
+    padding: 0.2rem 0.7rem; border: 1px solid rgba(201,168,76,0.3); letter-spacing: 0.1em;
+  }
+  .logout-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5);
+    padding: 0.3rem 0.8rem; font-size: 0.72rem; font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.06em;
+  }
+  .logout-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+
+  /* ===== PASSWORD SCREEN ===== */
+  #password-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--navy); padding: 2rem;
+  }
+  .pw-box {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.2);
+    padding: 3rem 2.5rem; max-width: 420px; width: 100%; text-align: center;
+    position: relative;
+  }
+  .pw-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--crimson), var(--gold));
+  }
+  .pw-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .pw-title { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.5rem; }
+  .pw-sub { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; line-height: 1.8; }
+  .pw-btn {
+    display: block; width: 100%; padding: 0.9rem; background: var(--navy);
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold-light);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem;
+    font-weight: 500; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .pw-btn:hover { background: rgba(201,168,76,0.1); }
+  .gate-actions { display: grid; gap: 0.75rem; }
+  .pw-link-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; color: rgba(255,255,255,0.72);
+    text-decoration: none; padding: 0.85rem 1rem;
+    border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s;
+  }
+  .pw-link-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+
+  /* ===== CONTENT ===== */
+  #page-content { display: none; padding-top: 68px; }
+
+  /* ===== HERO ===== */
+  .page-hero {
+    background: var(--navy); padding: 60px 5vw 50px;
+    border-bottom: 1px solid rgba(201,168,76,0.15); position: relative; overflow: hidden;
+  }
+  .page-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 40% 80% at 90% 50%, rgba(192,0,26,0.1) 0%, transparent 70%);
+  }
+  .page-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+  .page-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1px solid rgba(201,168,76,0.4); padding: 0.3rem 0.9rem;
+    font-size: 0.68rem; color: var(--gold); letter-spacing: 0.15em; font-weight: 600;
+    margin-bottom: 1.2rem;
+  }
+  .page-hero h1 { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; color: var(--white); margin-bottom: 0.5rem; }
+  .page-hero p { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+
+  /* ===== MAIN LAYOUT ===== */
+  .page-main { max-width: 1200px; margin: 0 auto; padding: 3rem 5vw 6rem; }
+
+  /* ===== SECTION ===== */
+  .m-section { margin-bottom: 4rem; }
+  .m-section-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(10,26,62,0.1);
+  }
+  .m-section-icon {
+    width: 36px; height: 36px; background: var(--navy);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .m-section-icon svg { width: 16px; height: 16px; }
+  .m-section-title { font-family: 'Noto Serif JP', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
+  .m-section-label { font-size: 0.68rem; color: var(--crimson); letter-spacing: 0.15em; font-weight: 700; }
+  .m-empty { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; background: var(--white); line-height: 2; }
+
+  /* ===== DASHBOARD / BADGE ===== */
+  .dashboard-widget {
+    background: var(--white); border-left: 3px solid var(--gold);
+    padding: 1.2rem 1.5rem; margin-bottom: 2.5rem;
+    display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between;
+  }
+  .dash-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .dash-stat { text-align: center; min-width: 50px; }
+  .dash-stat-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--navy); font-weight: 700; line-height: 1; }
+  .dash-stat-label { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.05em; margin-top: 0.3rem; }
+  .dash-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+  .dash-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.25rem 0.7rem; background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.35); font-size: 0.67rem;
+    color: #7a5f10; font-weight: 700; letter-spacing: 0.04em;
+  }
+  .dash-badge-empty { font-size: 0.72rem; color: var(--text-muted); }
+  @media (max-width: 600px) { .dashboard-widget { gap: 1rem; } .dash-stats { gap: 1.2rem; } }
+
+  /* ===== PROGRESS TRACKER ===== */
+  .progress-toolbar { display: flex; gap: 0.5rem; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; }
+  .progress-add-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.55rem 1.1rem; background: var(--navy); color: white;
+    border: none; font-family: 'Noto Sans JP', sans-serif; font-size: 0.78rem;
+    font-weight: 600; cursor: pointer; letter-spacing: 0.06em; transition: background 0.2s; white-space: nowrap;
+  }
+  .progress-add-btn:hover { background: var(--crimson); }
+  .progress-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
+  .progress-row { background: var(--white); padding: 1rem 1.5rem; transition: background 0.2s; }
+  .progress-row:hover { background: #faf7f2; }
+  .progress-row-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.6rem; }
+  .progress-company { font-weight: 700; font-size: 0.9rem; color: var(--navy); font-family: 'Noto Serif JP', serif; }
+  .progress-industry { font-size: 0.68rem; color: var(--text-muted); }
+  .progress-del-btn { background: none; border: none; color: rgba(10,26,62,0.25); cursor: pointer; font-size: 0.75rem; padding: 0 0.3rem; transition: color 0.2s; }
+  .progress-del-btn:hover { color: var(--crimson); }
+  .progress-stages { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+  .stage-chip {
+    font-size: 0.65rem; padding: 0.2rem 0.6rem; cursor: pointer;
+    border: 1px solid transparent; transition: all 0.15s; user-select: none;
+  }
+  .stage-chip.done { background: var(--navy); color: white; border-color: var(--navy); }
+  .stage-chip.current { background: var(--crimson); color: white; border-color: var(--crimson); }
+  .stage-chip.pending { background: rgba(10,26,62,0.05); color: var(--text-muted); border-color: rgba(10,26,62,0.12); }
+  .progress-note-input {
+    margin-top: 0.6rem; width: 100%; padding: 0.45rem 0.8rem;
+    border: 1px solid rgba(10,26,62,0.15); background: var(--cream);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.78rem; color: var(--text); outline: none;
+  }
+
+  /* ===== KANBAN VIEW ===== */
+  .view-toggle-btn {
+    font-size: 0.72rem; padding: 0.3rem 0.7rem; background: none;
+    border: 1px solid rgba(10,26,62,0.2); color: var(--text-muted);
+    cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.2s;
+  }
+  .view-toggle-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+  .kanban-board { display: none; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 0.5rem; }
+  .kanban-board.active { display: flex; }
+  .kanban-columns { display: flex; gap: 0.5rem; min-width: min-content; }
+  .kanban-col { width: 180px; min-width: 180px; flex-shrink: 0; }
+  .kanban-col-header {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    padding: 0.5rem 0.6rem; text-align: center; color: white;
+    background: var(--navy); margin-bottom: 0.4rem;
+  }
+  .kanban-col-header.col-result { background: var(--gold); color: var(--navy); }
+  .kanban-col-body {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    min-height: 60px; background: rgba(10,26,62,0.02);
+    border: 1px solid rgba(10,26,62,0.06); padding: 0.4rem;
+  }
+  .kanban-card { background: white; border: 1px solid rgba(10,26,62,0.08); padding: 0.6rem 0.7rem; transition: border-color 0.2s; }
+  .kanban-card:hover { border-color: var(--navy); }
+  .kanban-card-name { font-size: 0.78rem; font-weight: 700; color: var(--navy); margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .kanban-card-meta { font-size: 0.62rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+  .kanban-card-meta .urgent { color: var(--crimson); font-weight: 700; }
+  .kanban-card-actions { display: flex; gap: 0.25rem; }
+  .kanban-move-btn {
+    font-size: 0.65rem; padding: 0.15rem 0.4rem; background: rgba(10,26,62,0.04);
+    border: 1px solid rgba(10,26,62,0.1); cursor: pointer; color: var(--navy);
+    font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s; flex: 1; text-align: center;
+  }
+  .kanban-move-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+  .kanban-card.offer { border-left: 3px solid var(--gold); }
+  .kanban-card.rejected { border-left: 3px solid var(--text-muted); opacity: 0.6; }
+  .kanban-empty { font-size: 0.68rem; color: var(--text-muted); text-align: center; padding: 1rem 0.5rem; font-style: italic; }
+  .kanban-memo-btn {
+    font-size: 0.6rem; padding: 0.1rem 0.3rem; background: rgba(10,26,62,0.04);
+    border: 1px solid rgba(10,26,62,0.1); cursor: pointer; color: var(--navy);
+    font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s;
+  }
+  .kanban-memo-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+  .kanban-note-dot { display: inline-block; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; margin-left: 0.3rem; vertical-align: middle; }
+  @media(max-width:600px) { .kanban-col { width: 160px; min-width: 160px; } }
+
+  /* ===== RESEARCH NOTE MODAL ===== */
+  .rn-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 260;
+    background: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+  }
+  .rn-modal-overlay.open { display: flex; }
+  .rn-modal-box { background: white; width: min(480px, 92vw); max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+  .rn-modal-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .rn-modal-title { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; color: white; font-weight: 700; }
+  .rn-modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .rn-field-label { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem; font-weight: 600; }
+  .rn-textarea {
+    width: 100%; min-height: 70px; padding: 0.6rem 0.8rem;
+    border: 1px solid rgba(10,26,62,0.15); background: var(--cream);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; color: var(--text);
+    outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s;
+  }
+  .rn-textarea:focus { border-color: var(--gold); }
+  .rn-saved-msg { font-size: 0.7rem; color: var(--gold); text-align: right; min-height: 1em; transition: opacity 0.3s; }
+  .rn-note-btn {
+    background: none; border: 1px solid rgba(10,26,62,0.15); color: var(--navy);
+    cursor: pointer; font-size: 0.7rem; padding: 0.2rem 0.5rem; transition: all 0.2s;
+    font-family: 'Noto Sans JP', sans-serif; display: inline-flex; align-items: center; gap: 0.2rem;
+  }
+  .rn-note-btn:hover { border-color: var(--navy); background: rgba(10,26,62,0.04); }
+  .rn-note-indicator { color: var(--gold); font-size: 0.55rem; margin-left: 0.15rem; }
+
+  /* ===== PROGRESS ANALYTICS ===== */
+  .progress-analytics {
+    background: var(--white); border: 1px solid rgba(10,26,62,0.08);
+    padding: 1.2rem 1.5rem; margin-bottom: 1.5rem;
+  }
+  .pa-title { font-family: 'Noto Serif JP', serif; font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.4rem; }
+  .pa-empty { font-size: 0.78rem; color: var(--text-muted); text-align: center; padding: 1rem 0; }
+  .pa-funnel { margin-bottom: 1rem; }
+  .pa-funnel-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem; }
+  .pa-funnel-label { font-size: 0.68rem; color: var(--text-muted); width: 56px; text-align: right; flex-shrink: 0; }
+  .pa-funnel-bar-wrap { flex: 1; height: 18px; background: rgba(10,26,62,0.04); position: relative; overflow: hidden; }
+  .pa-funnel-bar { height: 100%; min-width: 2px; transition: width 0.4s ease; }
+  .pa-funnel-val { font-size: 0.62rem; font-weight: 700; color: var(--text); width: 56px; flex-shrink: 0; }
+  .pa-cards { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .pa-card { flex: 1; min-width: 90px; background: rgba(10,26,62,0.03); border: 1px solid rgba(10,26,62,0.08); padding: 0.7rem 0.8rem; text-align: center; }
+  .pa-card-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--navy); line-height: 1; }
+  .pa-card-label { font-size: 0.62rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .pa-industry { margin-top: 0.3rem; }
+  .pa-industry-title { font-size: 0.72rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+  .pa-ind-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+  .pa-ind-label { font-size: 0.65rem; color: var(--text-muted); width: 80px; text-align: right; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pa-ind-bar-wrap { flex: 1; height: 14px; background: rgba(10,26,62,0.04); }
+  .pa-ind-bar { height: 100%; background: var(--navy); min-width: 2px; transition: width 0.4s ease; }
+  .pa-ind-val { font-size: 0.6rem; color: var(--text); width: 30px; flex-shrink: 0; }
+
+  /* ===== PROGRESS MODAL ===== */
+  .progress-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 250;
+    background: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+  }
+  .progress-modal-overlay.open { display: flex; }
+  .progress-modal-box { background: white; width: min(420px, 90vw); max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+  .progress-modal-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .progress-modal-title { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; color: white; font-weight: 700; }
+  .progress-modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+
+  /* ===== DEADLINE CALENDAR ===== */
+  .calendar-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+  .calendar-nav-btn {
+    background: none; border: 1px solid rgba(10,26,62,0.2); color: var(--navy);
+    width: 30px; height: 30px; cursor: pointer; font-size: 0.85rem; transition: all 0.15s;
+  }
+  .calendar-nav-btn:hover { background: var(--navy); color: white; }
+  .calendar-month-label { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700; color: var(--navy); min-width: 100px; }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: rgba(10,26,62,0.08); }
+  .calendar-dow { background: var(--navy); color: rgba(255,255,255,0.7); font-size: 0.62rem; text-align: center; padding: 0.4rem 0; font-weight: 700; letter-spacing: 0.08em; }
+  .calendar-cell { background: var(--white); min-height: 52px; padding: 0.3rem; position: relative; }
+  .calendar-cell.other-month { background: rgba(10,26,62,0.02); }
+  .calendar-cell.today { outline: 2px solid var(--gold); outline-offset: -2px; }
+  .calendar-cell-num { font-size: 0.68rem; color: rgba(10,26,62,0.4); font-weight: 700; }
+  .calendar-cell.today .calendar-cell-num { color: var(--crimson); font-weight: 900; }
+  .calendar-deadline { font-size: 0.58rem; color: white; background: var(--crimson); padding: 0.1rem 0.3rem; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+  .calendar-deadline.liked { background: var(--gold); color: var(--navy); }
+  @media (max-width: 600px) { .calendar-cell { min-height: 40px; } }
+
+  /* ===== BOTTOM TAB ===== */
+  .bottom-tab-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    display: flex; background: var(--navy); border-top: 1px solid rgba(201,168,76,0.2);
+    padding: 0; height: 56px;
+  }
+  .bottom-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.6rem; gap: 2px;
+    transition: color 0.2s; padding: 4px 0;
+  }
+  .bottom-tab svg { width: 20px; height: 20px; }
+  .bottom-tab:hover, .bottom-tab.active { color: var(--gold-light); }
+  .bottom-tab.active { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a>
+  <span class="nav-member-badge" id="member-badge" style="display:none;font-size:0.72rem;color:var(--gold-light);"></span>
+  <button class="logout-btn" id="logout-btn" style="display:none;" onclick="logout()">ログアウト</button>
+</nav>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+  <div class="pw-box">
+    <div class="pw-icon">&#128274;</div>
+    <h2 class="pw-title">会員専用ページ</h2>
+    <p class="pw-sub">このページは慶應就活ナビのメンバー限定です。<br>個人アカウントでログインすると閲覧できます。</p>
+    <div class="gate-actions">
+      <a class="pw-btn" href="account.html?mode=login&amp;returnTo=pipeline.html">ログインして入る &rarr;</a>
+      <a class="pw-link-btn" href="account.html?mode=signup&amp;returnTo=pipeline.html">新しくアカウントを作る</a>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE CONTENT -->
+<div id="page-content">
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-badge">PIPELINE</div>
+      <h1>選考管理</h1>
+      <p>選考の進捗をトラッキング。カレンダーで締切を管理。</p>
+    </div>
+  </div>
+
+  <div class="page-main">
+
+    <!-- 就活進捗トラッカー -->
+    <div class="m-section" id="progress-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">MY PROGRESS</div>
+          <div class="m-section-title">就活進捗トラッカー</div>
+        </div>
+      </div>
+      <div class="dashboard-widget" id="progress-dashboard">
+        <div class="dash-stats">
+          <div class="dash-stat"><div class="dash-stat-num" id="dash-total">0</div><div class="dash-stat-label">総応募</div></div>
+          <div class="dash-stat"><div class="dash-stat-num" id="dash-active">0</div><div class="dash-stat-label">選考中</div></div>
+          <div class="dash-stat"><div class="dash-stat-num" id="dash-offer">0</div><div class="dash-stat-label">内定</div></div>
+        </div>
+        <div class="dash-badges" id="dash-badges"><span class="dash-badge-empty">企業を追加するとバッジが表示されます</span></div>
+      </div>
+      <div id="progress-analytics"></div>
+      <div class="progress-toolbar">
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <span style="font-size:0.78rem; color:var(--text-muted);" id="progress-sync-status">受けている企業を管理する</span>
+          <div style="display:flex;gap:2px;margin-left:0.5rem;">
+            <button class="view-toggle-btn active" id="view-list-btn" onclick="setProgressView('list')">リスト</button>
+            <button class="view-toggle-btn" id="view-kanban-btn" onclick="setProgressView('kanban')">カンバン</button>
+          </div>
+        </div>
+        <button class="progress-add-btn" id="progress-add-btn">&#65291; 企業を追加</button>
+      </div>
+      <div class="progress-list" id="progress-list"><div class="m-empty">まだ登録されていません。「＋ 企業を追加」から登録してください。</div></div>
+      <div class="kanban-board" id="kanban-board"></div>
+    </div>
+
+    <!-- 締切カレンダー -->
+    <div class="m-section" id="calendar-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">DEADLINE CALENDAR</div>
+          <div class="m-section-title">締切カレンダー</div>
+        </div>
+      </div>
+      <div class="calendar-header">
+        <button class="calendar-nav-btn" id="cal-prev">&#8249;</button>
+        <span class="calendar-month-label" id="cal-month-label"></span>
+        <button class="calendar-nav-btn" id="cal-next">&#8250;</button>
+        <span style="font-size:0.72rem; color:var(--text-muted); margin-left:auto; display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:10px; height:10px; background:var(--navy); display:inline-block;"></span>自分の締切</span>
+        </span>
+      </div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 進捗トラッカー 追加モーダル -->
+<div class="progress-modal-overlay" id="progress-modal">
+  <div class="progress-modal-box">
+    <div class="progress-modal-header">
+      <span class="progress-modal-title">企業を追加</span>
+      <button id="progress-modal-close" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">&#10005;</button>
+    </div>
+    <div class="progress-modal-body">
+      <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">企業名 <span style="color:var(--crimson);">*</span></label>
+        <input type="text" id="pm-company" style="width:100%;padding:0.7rem;border:1px solid rgba(10,26,62,0.2);font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;outline:none;" placeholder="例：三菱商事">
+      </div>
+      <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">業界</label>
+        <select id="pm-industry" style="width:100%;padding:0.7rem;border:1px solid rgba(10,26,62,0.2);font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;outline:none;background:white;">
+          <option value="">-- 選択してください --</option>
+          <option>メーカー</option><option>商社</option><option>小売</option><option>金融</option>
+          <option>サービス・インフラ</option><option>ソフトウェア</option><option>広告・出版・マスコミ</option>
+          <option>官公庁・公社・団体</option><option>コンサル</option><option>その他</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">締切日（任意）</label>
+        <input type="date" id="pm-deadline" style="width:100%;padding:0.7rem;border:1px solid rgba(10,26,62,0.2);font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;outline:none;">
+      </div>
+      <div style="font-size:0.78rem;color:var(--crimson);min-height:1.2em;" id="pm-error"></div>
+      <button id="pm-submit" style="width:100%;padding:0.85rem;background:var(--navy);color:white;border:none;font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;letter-spacing:0.06em;transition:background 0.2s;">追加する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 企業研究ノートモーダル -->
+<div class="rn-modal-overlay" id="research-note-modal">
+  <div class="rn-modal-box">
+    <div class="rn-modal-header">
+      <span class="rn-modal-title" id="rn-company-name">企業研究ノート</span>
+      <button id="rn-modal-close" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">&#10005;</button>
+    </div>
+    <div class="rn-modal-body">
+      <div><label class="rn-field-label">事業内容</label><textarea class="rn-textarea" id="rn-business" placeholder="主な事業内容、売上構成、事業セグメントなど..."></textarea></div>
+      <div><label class="rn-field-label">強み・特徴</label><textarea class="rn-textarea" id="rn-strengths" placeholder="競合と比べた強み、独自性、業界でのポジションなど..."></textarea></div>
+      <div><label class="rn-field-label">志望理由メモ</label><textarea class="rn-textarea" id="rn-motivation" placeholder="なぜこの企業なの��、自分の経験との接点など..."></textarea></div>
+      <div><label class="rn-field-label">懸念点</label><textarea class="rn-textarea" id="rn-concerns" placeholder="気になるポイント、確認すべきことなど..."></textarea></div>
+      <div class="rn-saved-msg" id="rn-saved-msg"></div>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_URL = GAS_PROXY_URL;
+
+  async function callAuthApi(action, extraPayload) {
+    const sessionToken = KeioNaviAuth.getSessionToken();
+    if (!sessionToken) throw new Error('ログインが必要です。');
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify(Object.assign({ action, sessionToken }, extraPayload || {})),
+      redirect: 'follow',
+    });
+    const data = await res.json().catch(() => null);
+    if (!data || data.status !== 'ok') throw new Error((data && data.message) || 'エラーが発生しました。');
+    return data;
+  }
+
+  function logout() { KeioNaviAuth.logout(); location.reload(); }
+
+  // ===== 就活進捗トラッカー =====
+  const PROGRESS_KEY = 'keio_navi_progress_v1';
+  const PROGRESS_STAGES = ['未応募', 'ES提出', '一次面接', '二次面接', '最終面接'];
+  let progressSyncLoaded = false;
+
+  function readProgress() {
+    try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]'); } catch { return []; }
+  }
+  function writeProgressLocal(list) {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(list));
+  }
+
+  async function syncProgressFromServer() {
+    if (!KeioNaviAuth.getSessionToken()) return;
+    try {
+      const statusEl = document.getElementById('progress-sync-status');
+      if (statusEl) statusEl.textContent = 'サーバーと同期中...';
+      const result = await KeioNaviAuth.readMyProgress();
+      if (result.ok && result.entries) {
+        writeProgressLocal(result.entries);
+        progressSyncLoaded = true;
+        if (statusEl) statusEl.textContent = 'サーバーに同期済み';
+        renderProgressList();
+      }
+    } catch (e) {
+      const statusEl = document.getElementById('progress-sync-status');
+      if (statusEl) statusEl.textContent = 'ローカル保存（同期失敗）';
+    }
+  }
+
+  async function syncProgressToServer(entry) {
+    if (!KeioNaviAuth.getSessionToken()) return;
+    try { await KeioNaviAuth.writeProgress(entry); } catch (e) { console.warn('progress sync failed', e); }
+  }
+
+  async function deleteProgressFromServer(id) {
+    if (!KeioNaviAuth.getSessionToken()) return;
+    try { await KeioNaviAuth.deleteProgress(id); } catch (e) { console.warn('progress delete sync failed', e); }
+  }
+
+  function calcContribScore() {
+    return 0; // simplified for pipeline page
+  }
+
+  function renderProgressDashboard(list) {
+    document.getElementById('dash-total').textContent = list.length;
+    document.getElementById('dash-active').textContent = list.filter(e => e.status === 'active').length;
+    document.getElementById('dash-offer').textContent = list.filter(e => e.status === 'offer').length;
+    const badgesEl = document.getElementById('dash-badges');
+    const score = calcContribScore();
+    const badges = [];
+    if (score >= 1) badges.push('貢献 ' + score + 'pt');
+    if (list.filter(e => e.status === 'offer').length >= 1) badges.push('内定獲得');
+    if (list.length >= 10) badges.push('10社エントリー');
+    else if (list.length >= 5) badges.push('5社エントリー');
+    if (list.some(e => e.status === 'active' && PROGRESS_STAGES.indexOf(e.stage) >= 4)) badges.push('最終��接到達');
+    else if (list.some(e => e.status === 'active' && PROGRESS_STAGES.indexOf(e.stage) >= 2)) badges.push('面接突破');
+    badgesEl.innerHTML = badges.length
+      ? badges.map(b => '<span class="dash-badge">' + b + '</span>').join('')
+      : '<span class="dash-badge-empty">企業を追加するとバッジが表示されます</span>';
+  }
+
+  function renderProgressList() {
+    const list = readProgress();
+    const el = document.getElementById('progress-list');
+    renderProgressDashboard(list);
+    renderProgressAnalytics();
+    if (!list.length) {
+      el.innerHTML = '<div class="m-empty">まだ登録されていません。「＋ 企業を追加」から登録してください。</div>';
+      return;
+    }
+    const sorted = [...list].sort((a, b) => {
+      if (a.status !== 'active' && b.status === 'active') return 1;
+      if (a.status === 'active' && b.status !== 'active') return -1;
+      const da = a.deadline ? new Date(a.deadline) : new Date('9999-12-31');
+      const db = b.deadline ? new Date(b.deadline) : new Date('9999-12-31');
+      return da - db;
+    });
+    el.innerHTML = sorted.map(entry => {
+      const stageIdx = Math.max(0, PROGRESS_STAGES.indexOf(entry.stage));
+      const isTerminal = entry.status === 'offer' || entry.status === 'rejected';
+      const stageChips = PROGRESS_STAGES.map((s, i) => {
+        let cls = isTerminal ? (i <= stageIdx ? 'done' : 'pending') : (i < stageIdx ? 'done' : i === stageIdx ? 'current' : 'pending');
+        return '<span class="stage-chip ' + cls + '" onclick="setProgressStage(\'' + entry.id + '\',' + i + ')">' + s + '</span>';
+      }).join('');
+      const deadlineStr = entry.deadline
+        ? '<span style="font-size:0.68rem;color:var(--text-muted);">締切: ' + entry.deadline.replace(/-/g,'/') + '</span>' : '';
+      const terminalBtns = isTerminal
+        ? '<button onclick="setProgressStatus(\'' + entry.id + '\',\'active\')" style="font-size:0.68rem;padding:0.2rem 0.5rem;border:1px solid rgba(10,26,62,0.2);background:none;cursor:pointer;color:var(--text-muted);">継続中に戻す</button>'
+        : '<button onclick="setProgressStatus(\'' + entry.id + '\',\'offer\')" style="font-size:0.68rem;padding:0.2rem 0.5rem;border:1px solid var(--gold);background:none;cursor:pointer;color:#7a5f10;margin-right:0.3rem;">内定</button><button onclick="setProgressStatus(\'' + entry.id + '\',\'rejected\')" style="font-size:0.68rem;padding:0.2rem 0.5rem;border:1px solid rgba(10,26,62,0.2);background:none;cursor:pointer;color:var(--text-muted);">落選</button>';
+      const statusBadge = entry.status === 'offer'
+        ? '<span style="font-size:0.65rem;background:rgba(201,168,76,0.15);color:#7a5f10;border:1px solid rgba(201,168,76,0.4);padding:0.15rem 0.5rem;font-weight:700;margin-left:0.4rem;">内定</span>'
+        : entry.status === 'rejected'
+        ? '<span style="font-size:0.65rem;background:rgba(10,26,62,0.06);color:var(--text-muted);padding:0.15rem 0.5rem;font-weight:700;margin-left:0.4rem;">落選</span>' : '';
+      return '<div class="progress-row">'
+        + '<div class="progress-row-top">'
+        + '<div><span class="progress-company">' + entry.company + '</span>' + (entry.industry ? '<span class="progress-industry" style="margin-left:0.5rem;">' + entry.industry + '</span>' : '') + statusBadge + '</div>'
+        + '<div style="display:flex;align-items:center;gap:0.4rem;"><button class="rn-note-btn" onclick="openResearchNote(\'' + entry.id + '\')">研究ノート' + (hasResearchNote(entry.id) ? '<span class="rn-note-indicator">●</span>' : '') + '</button><button class="progress-del-btn" onclick="deleteProgress(\'' + entry.id + '\')">削除</button></div>'
+        + '</div>'
+        + '<div class="progress-stages">' + stageChips + '</div>'
+        + '<div style="margin-top:0.5rem;display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;">' + deadlineStr + terminalBtns + '</div>'
+        + '<input class="progress-note-input" type="text" value="' + (entry.memo||'').replace(/"/g,'&quot;') + '" placeholder="メモ..." oninput="saveProgressMemo(\'' + entry.id + '\',this.value)">'
+        + '</div>';
+    }).join('');
+  }
+
+  function setProgressStage(id, stageIdx) {
+    const list = readProgress();
+    const entry = list.find(e => e.id === id);
+    if (!entry) return;
+    entry.stage = PROGRESS_STAGES[stageIdx];
+    entry.status = 'active';
+    writeProgressLocal(list);
+    renderProgressList();
+    renderCalendar();
+    syncProgressToServer(entry);
+  }
+
+  function setProgressStatus(id, status) {
+    const list = readProgress();
+    const entry = list.find(e => e.id === id);
+    if (!entry) return;
+    entry.status = status;
+    writeProgressLocal(list);
+    renderProgressList();
+    syncProgressToServer(entry);
+  }
+
+  function deleteProgress(id) {
+    writeProgressLocal(readProgress().filter(e => e.id !== id));
+    renderProgressList();
+    renderCalendar();
+    deleteProgressFromServer(id);
+  }
+
+  let memoSyncTimer = {};
+  function saveProgressMemo(id, val) {
+    const list = readProgress();
+    const entry = list.find(e => e.id === id);
+    if (entry) {
+      entry.memo = val;
+      writeProgressLocal(list);
+      clearTimeout(memoSyncTimer[id]);
+      memoSyncTimer[id] = setTimeout(() => syncProgressToServer(entry), 1000);
+    }
+  }
+
+  // ===== 企業研究ノート =====
+  const RESEARCH_NOTES_KEY = 'keio_navi_research_notes_v1';
+  let _currentResearchNoteId = null;
+  let _rnSaveTimer = null;
+
+  function readResearchNotes() {
+    try { return JSON.parse(localStorage.getItem(RESEARCH_NOTES_KEY) || '{}'); } catch { return {}; }
+  }
+  function writeResearchNotes(obj) { localStorage.setItem(RESEARCH_NOTES_KEY, JSON.stringify(obj)); }
+  function hasResearchNote(id) {
+    const notes = readResearchNotes();
+    if (!notes[id]) return false;
+    return !!(notes[id].business || notes[id].strengths || notes[id].motivation || notes[id].concerns);
+  }
+  function openResearchNote(id) {
+    _currentResearchNoteId = id;
+    const list = readProgress();
+    const entry = list.find(e => e.id === id);
+    const modal = document.getElementById('research-note-modal');
+    document.getElementById('rn-company-name').textContent = entry ? entry.company + ' - 研究ノート' : '企業研究ノート';
+    const notes = readResearchNotes();
+    const data = notes[id] || {};
+    document.getElementById('rn-business').value = data.business || '';
+    document.getElementById('rn-strengths').value = data.strengths || '';
+    document.getElementById('rn-motivation').value = data.motivation || '';
+    document.getElementById('rn-concerns').value = data.concerns || '';
+    document.getElementById('rn-saved-msg').textContent = '';
+    modal.classList.add('open');
+  }
+  function saveResearchNote(id) {
+    const notes = readResearchNotes();
+    notes[id] = {
+      business: document.getElementById('rn-business').value,
+      strengths: document.getElementById('rn-strengths').value,
+      motivation: document.getElementById('rn-motivation').value,
+      concerns: document.getElementById('rn-concerns').value,
+      updatedAt: new Date().toISOString()
+    };
+    writeResearchNotes(notes);
+    const msgEl = document.getElementById('rn-saved-msg');
+    msgEl.textContent = '保存しました';
+    setTimeout(() => { if (msgEl.textContent === '保存しました') msgEl.textContent = ''; }, 1500);
+  }
+  function initResearchNoteModal() {
+    const modal = document.getElementById('research-note-modal');
+    document.getElementById('rn-modal-close').addEventListener('click', () => { modal.classList.remove('open'); renderProgressList(); });
+    modal.addEventListener('click', e => { if (e.target === modal) { modal.classList.remove('open'); renderProgressList(); } });
+    ['rn-business', 'rn-strengths', 'rn-motivation', 'rn-concerns'].forEach(fieldId => {
+      document.getElementById(fieldId).addEventListener('input', () => {
+        clearTimeout(_rnSaveTimer);
+        _rnSaveTimer = setTimeout(() => { if (_currentResearchNoteId) saveResearchNote(_currentResearchNoteId); }, 400);
+      });
+    });
+  }
+
+  // ===== 選考分析ダッシュボード =====
+  function renderProgressAnalytics() {
+    const container = document.getElementById('progress-analytics');
+    if (!container) return;
+    const list = readProgress();
+    if (list.length < 3) {
+      container.innerHTML = '<div class="progress-analytics"><div class="pa-empty">3社以上登録すると分析が表示されます</div></div>';
+      return;
+    }
+    const total = list.length;
+    const funnelStages = [
+      { label: '応募', count: total },
+      { label: 'ES通過', count: list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 1 || e.status === 'offer').length },
+      { label: '一次通過', count: list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 2 || e.status === 'offer').length },
+      { label: '二次通過', count: list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 3 || e.status === 'offer').length },
+      { label: '最終', count: list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 4 || e.status === 'offer').length },
+      { label: '内定', count: list.filter(e => e.status === 'offer').length }
+    ];
+    const maxCount = Math.max(1, funnelStages[0].count);
+    const funnelColors = ['#0a1a3e', '#1a2f5a', '#3a4f7a', '#7a6f3a', '#a8903c', '#c9a84c'];
+    let funnelHTML = '<div class="pa-funnel">';
+    funnelStages.forEach((s, i) => {
+      const pct = total > 0 ? Math.round((s.count / total) * 100) : 0;
+      const barWidth = maxCount > 0 ? Math.max(2, (s.count / maxCount) * 100) : 2;
+      funnelHTML += '<div class="pa-funnel-row"><span class="pa-funnel-label">' + s.label + '</span><div class="pa-funnel-bar-wrap"><div class="pa-funnel-bar" style="width:' + barWidth + '%;background:' + funnelColors[i] + ';"></div></div><span class="pa-funnel-val">' + s.count + '社 (' + pct + '%)</span></div>';
+    });
+    funnelHTML += '</div>';
+    const pastES = list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 1 || e.status === 'offer').length;
+    const docPassRate = total > 0 ? Math.round((pastES / total) * 100) : 0;
+    const atInterview = list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 1).length;
+    const pastInterview = list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 2 || e.status === 'offer').length;
+    const interviewPassRate = atInterview > 0 ? Math.round((pastInterview / atInterview) * 100) : 0;
+    const offers = list.filter(e => e.status === 'offer').length;
+    const offerRate = total > 0 ? Math.round((offers / total) * 100) : 0;
+    let cardsHTML = '<div class="pa-cards"><div class="pa-card"><div class="pa-card-num">' + docPassRate + '%</div><div class="pa-card-label">書類通過率</div></div><div class="pa-card"><div class="pa-card-num">' + interviewPassRate + '%</div><div class="pa-card-label">面接通過率</div></div><div class="pa-card"><div class="pa-card-num">' + offerRate + '%</div><div class="pa-card-label">内定率</div></div></div>';
+    let industryHTML = '';
+    const industries = {};
+    list.forEach(e => { if (e.industry) { industries[e.industry] = (industries[e.industry] || 0) + 1; } });
+    const indEntries = Object.entries(industries).sort((a, b) => b[1] - a[1]);
+    if (indEntries.length > 0) {
+      const maxInd = indEntries[0][1];
+      industryHTML = '<div class="pa-industry"><div class="pa-industry-title">業界別応募数</div>';
+      indEntries.forEach(([name, count]) => {
+        const w = Math.max(4, (count / maxInd) * 100);
+        industryHTML += '<div class="pa-ind-row"><span class="pa-ind-label">' + name + '</span><div class="pa-ind-bar-wrap"><div class="pa-ind-bar" style="width:' + w + '%;"></div></div><span class="pa-ind-val">' + count + '社</span></div>';
+      });
+      industryHTML += '</div>';
+    }
+    container.innerHTML = '<div class="progress-analytics"><div class="pa-title">選考分析ダッシュボード</div>' + funnelHTML + cardsHTML + industryHTML + '</div>';
+  }
+
+  function initProgressTracker() {
+    renderProgressList();
+    syncProgressFromServer();
+    initResearchNoteModal();
+    document.getElementById('progress-add-btn').addEventListener('click', () => {
+      document.getElementById('pm-error').textContent = '';
+      document.getElementById('pm-company').value = '';
+      document.getElementById('pm-industry').value = '';
+      document.getElementById('pm-deadline').value = '';
+      document.getElementById('progress-modal').classList.add('open');
+    });
+    document.getElementById('progress-modal-close').addEventListener('click', () => { document.getElementById('progress-modal').classList.remove('open'); });
+    document.getElementById('progress-modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('progress-modal')) document.getElementById('progress-modal').classList.remove('open');
+    });
+    document.getElementById('pm-submit').addEventListener('click', async () => {
+      const company = document.getElementById('pm-company').value.trim();
+      if (!company) { document.getElementById('pm-error').textContent = '企業名を入力してください。'; return; }
+      const newEntry = {
+        id: Date.now().toString(), company,
+        industry: document.getElementById('pm-industry').value,
+        deadline: document.getElementById('pm-deadline').value,
+        stage: PROGRESS_STAGES[0], status: 'active', memo: '',
+      };
+      const list = readProgress();
+      list.unshift(newEntry);
+      writeProgressLocal(list);
+      document.getElementById('progress-modal').classList.remove('open');
+      renderProgressList();
+      renderCalendar();
+      if (KeioNaviAuth.getSessionToken()) {
+        const result = await KeioNaviAuth.writeProgress(newEntry);
+        if (result.ok && result.id) {
+          const updated = readProgress();
+          const found = updated.find(e => e.id === newEntry.id);
+          if (found) { found.id = result.id; writeProgressLocal(updated); renderProgressList(); }
+        }
+      }
+    });
+  }
+
+  // ===== カンバンビュー =====
+  var _progressView = 'list';
+
+  function setProgressView(view) {
+    _progressView = view;
+    document.getElementById('view-list-btn').classList.toggle('active', view === 'list');
+    document.getElementById('view-kanban-btn').classList.toggle('active', view === 'kanban');
+    document.getElementById('progress-list').style.display = view === 'list' ? '' : 'none';
+    var kb = document.getElementById('kanban-board');
+    kb.classList.toggle('active', view === 'kanban');
+    if (view === 'kanban') renderKanban();
+  }
+
+  function renderKanban() {
+    var list = readProgress();
+    var el = document.getElementById('kanban-board');
+    var columns = PROGRESS_STAGES.map(function(s) { return { label: s, entries: [] }; });
+    columns.push({ label: '結果', entries: [], isResult: true });
+    list.forEach(function(entry) {
+      if (entry.status === 'offer' || entry.status === 'rejected') { columns[columns.length - 1].entries.push(entry); }
+      else { var idx = Math.max(0, PROGRESS_STAGES.indexOf(entry.stage)); columns[idx].entries.push(entry); }
+    });
+    var now = new Date();
+    var html = '<div class="kanban-columns">';
+    columns.forEach(function(col, colIdx) {
+      var headerCls = col.isResult ? 'kanban-col-header col-result' : 'kanban-col-header';
+      html += '<div class="kanban-col"><div class="' + headerCls + '">' + col.label + ' <span style="opacity:0.7;">(' + col.entries.length + ')</span></div><div class="kanban-col-body">';
+      if (!col.entries.length) { html += '<div class="kanban-empty">なし</div>'; }
+      else {
+        col.entries.forEach(function(entry) {
+          var cardCls = 'kanban-card';
+          if (entry.status === 'offer') cardCls += ' offer';
+          if (entry.status === 'rejected') cardCls += ' rejected';
+          var deadlineMeta = '';
+          if (entry.deadline) {
+            var dl = new Date(entry.deadline);
+            var days = Math.ceil((dl - now) / 86400000);
+            if (days >= 0 && days <= 3) { deadlineMeta = '<span class="urgent">' + dl.toLocaleDateString('ja-JP') + ' (あと' + days + '日)</span>'; }
+            else { deadlineMeta = dl.toLocaleDateString('ja-JP'); }
+          }
+          html += '<div class="' + cardCls + '"><div class="kanban-card-name">' + entry.company + (hasResearchNote(entry.id) ? '<span class="kanban-note-dot"></span>' : '') + '</div>';
+          if (deadlineMeta || entry.industry) {
+            html += '<div class="kanban-card-meta">';
+            if (entry.industry) html += entry.industry;
+            if (entry.industry && deadlineMeta) html += ' / ';
+            if (deadlineMeta) html += deadlineMeta;
+            html += '</div>';
+          }
+          if (entry.memo) html += '<div style="font-size:0.62rem;color:var(--text-muted);margin-bottom:0.3rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + entry.memo + '</div>';
+          html += '<div class="kanban-card-actions"><button class="kanban-memo-btn" onclick="openResearchNote(\'' + entry.id + '\')">メモ</button>';
+          if (col.isResult) { html += '<button class="kanban-move-btn" onclick="setProgressStatus(\'' + entry.id + '\',\'active\')">選考中に戻す</button>'; }
+          else {
+            var stageIdx = Math.max(0, PROGRESS_STAGES.indexOf(entry.stage));
+            if (stageIdx > 0) html += '<button class="kanban-move-btn" onclick="kanbanMove(\'' + entry.id + '\',' + (stageIdx - 1) + ')">&#9664;</button>';
+            if (stageIdx < PROGRESS_STAGES.length - 1) html += '<button class="kanban-move-btn" onclick="kanbanMove(\'' + entry.id + '\',' + (stageIdx + 1) + ')">&#9654;</button>';
+            html += '<button class="kanban-move-btn" onclick="setProgressStatus(\'' + entry.id + '\',\'offer\')" style="color:#7a5f10;border-color:rgba(201,168,76,0.4);">内定</button>';
+          }
+          html += '</div></div>';
+        });
+      }
+      html += '</div></div>';
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  function kanbanMove(id, stageIdx) { setProgressStage(id, stageIdx); }
+
+  // Hook: after renderProgressList, also re-render kanban if active
+  (function() {
+    var origRenderList = renderProgressList;
+    renderProgressList = function() {
+      origRenderList();
+      if (_progressView === 'kanban') renderKanban();
+    };
+  })();
+
+  // ===== 締切カレンダー =====
+  let calendarYear, calendarMonth;
+
+  function initCalendar() {
+    const now = new Date();
+    calendarYear = now.getFullYear();
+    calendarMonth = now.getMonth();
+    renderCalendar();
+    document.getElementById('cal-prev').addEventListener('click', () => {
+      calendarMonth--;
+      if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+      renderCalendar();
+    });
+    document.getElementById('cal-next').addEventListener('click', () => {
+      calendarMonth++;
+      if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+      renderCalendar();
+    });
+  }
+
+  function renderCalendar() {
+    if (calendarYear === undefined) return;
+    const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    document.getElementById('cal-month-label').textContent = calendarYear + '年 ' + monthNames[calendarMonth];
+    const today = new Date();
+    const todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+    const events = {};
+    const addEvent = (ds, name, type) => { if (!events[ds]) events[ds] = []; events[ds].push({ name, type }); };
+    // 進捗トラッカーから締切
+    readProgress().forEach(entry => {
+      if (entry.deadline) addEvent(entry.deadline, entry.company, 'mine');
+    });
+    // グリッド描画
+    const firstDay = new Date(calendarYear, calendarMonth, 1);
+    const lastDay = new Date(calendarYear, calendarMonth + 1, 0);
+    const startDow = firstDay.getDay();
+    const dows = ['日','月','火','水','木','金','土'];
+    let html = dows.map(d => '<div class="calendar-dow">' + d + '</div>').join('');
+    for (let i = 0; i < startDow; i++) html += '<div class="calendar-cell other-month"></div>';
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      const ds = calendarYear + '-' + String(calendarMonth+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+      const isToday = ds === todayStr;
+      const dayEvents = events[ds] || [];
+      const evHtml = dayEvents.slice(0, 3).map(ev => {
+        const mineStyle = ev.type === 'mine' ? ' style="background:var(--navy);"' : '';
+        return '<div class="calendar-deadline"' + mineStyle + ' title="' + ev.name + '">' + ev.name + '</div>';
+      }).join('');
+      const moreHtml = dayEvents.length > 3 ? '<div style="font-size:0.55rem;color:var(--text-muted);padding:0.1rem 0.2rem;">+' + (dayEvents.length-3) + '件</div>' : '';
+      html += '<div class="calendar-cell' + (isToday ? ' today' : '') + '"><div class="calendar-cell-num">' + day + '</div>' + evHtml + moreHtml + '</div>';
+    }
+    const total = startDow + lastDay.getDate();
+    const remaining = total % 7 === 0 ? 0 : 7 - (total % 7);
+    for (let i = 0; i < remaining; i++) html += '<div class="calendar-cell other-month"></div>';
+    document.getElementById('calendar-grid').innerHTML = html;
+  }
+
+  // ===== AUTH GATE + INIT =====
+  function showPage(user) {
+    document.getElementById('password-screen').style.display = 'none';
+    document.getElementById('page-content').style.display = 'block';
+    document.getElementById('member-badge').style.display = 'inline-block';
+    document.getElementById('logout-btn').style.display = 'inline-block';
+    document.getElementById('member-badge').textContent = (user?.username || '会員') + ' さん';
+    initProgressTracker();
+    initCalendar();
+  }
+
+  const currentMember = KeioNaviAuth.getCurrentUser();
+  if (currentMember) { showPage(currentMember); }
+</script>
+
+<!-- 固定下部タブバー -->
+<nav class="bottom-tab-bar">
+  <a href="account.html" class="bottom-tab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>マイページ</span>
+  </a>
+  <a href="members.html" class="bottom-tab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <span>ホーム</span>
+  </a>
+  <a href="writing.html" class="bottom-tab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    <span>ES</span>
+  </a>
+  <a href="interview-page.html" class="bottom-tab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>面接</span>
+  </a>
+  <a href="resources.html" class="bottom-tab active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+    <span>もっと</span>
+  </a>
+</nav>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script>
+</body>
+</html>

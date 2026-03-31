@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a1a3e">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>他己分析 ｜ 就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --navy-light: #142254;
+    --crimson: #c0001a;
+    --crimson-light: #e8001f;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vw;
+    height: 68px;
+    background: rgba(10, 26, 62, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+  .nav-back {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--gold-light); }
+
+  /* ===== MAIN CONTAINER ===== */
+  .pf-container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 100px 5vw 4rem;
+  }
+
+  .pf-hero {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .pf-hero h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.8rem;
+    color: var(--navy);
+    margin-bottom: 0.6rem;
+  }
+  .pf-hero p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ===== SEND MODE ===== */
+  .pf-section {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid rgba(10,26,62,0.07);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .pf-section h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.15rem;
+    color: var(--navy);
+    margin-bottom: 1rem;
+  }
+  .pf-section p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .pf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    background: var(--crimson);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .pf-btn:hover { background: var(--crimson-light); }
+  .pf-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+  .pf-btn-secondary {
+    background: var(--navy);
+  }
+  .pf-btn-secondary:hover { background: var(--navy-light); }
+
+  .pf-link-box {
+    display: none;
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+    background: var(--gray);
+    border-radius: 8px;
+    border: 1px solid rgba(10,26,62,0.08);
+  }
+  .pf-link-box.visible { display: block; }
+
+  .pf-link-url {
+    font-size: 0.78rem;
+    color: var(--text);
+    word-break: break-all;
+    background: var(--white);
+    padding: 0.6rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid rgba(10,26,62,0.1);
+    margin-bottom: 0.8rem;
+    font-family: monospace;
+  }
+
+  .pf-share-btns {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .pf-share-btn {
+    padding: 0.5rem 1.2rem;
+    border: 1px solid rgba(10,26,62,0.12);
+    border-radius: 100px;
+    background: var(--white);
+    color: var(--text);
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pf-share-btn:hover { border-color: var(--gold); color: var(--navy); }
+  .pf-share-btn.copied {
+    background: var(--navy);
+    color: var(--gold-light);
+    border-color: var(--navy);
+  }
+
+  /* ===== RESULTS LIST ===== */
+  .pf-results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .pf-results-count {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .pf-result-card {
+    background: var(--gray);
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: 0.8rem;
+    border: 1px solid rgba(10,26,62,0.05);
+  }
+  .pf-result-card h4 {
+    font-size: 0.82rem;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  .pf-result-card p {
+    font-size: 0.82rem;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 0.3rem;
+  }
+  .pf-result-date {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align: right;
+    margin-top: 0.5rem;
+  }
+
+  /* ===== RESPONSE MODE ===== */
+  .pf-question-group {
+    margin-bottom: 1.8rem;
+  }
+  .pf-question-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+  .pf-question-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--navy);
+    color: var(--gold-light);
+    border-radius: 50%;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+  }
+  .pf-question-hint {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .pf-textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(10,26,62,0.12);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.7;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+    background: var(--white);
+  }
+  .pf-textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  /* ===== THANK YOU ===== */
+  .pf-thankyou {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+  .pf-thankyou.visible { display: block; }
+  .pf-thankyou-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  .pf-thankyou h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.4rem;
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+  }
+  .pf-thankyou p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ===== LOADING ===== */
+  .pf-loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* ===== LOGIN PROMPT ===== */
+  .pf-login-prompt {
+    text-align: center;
+    padding: 2rem;
+  }
+  .pf-login-prompt a {
+    color: var(--crimson);
+    font-weight: 600;
+  }
+
+  /* ===== NOT FOUND ===== */
+  .pf-not-found {
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+  .pf-not-found h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.3rem;
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+  }
+
+  @media (max-width: 768px) {
+    .pf-hero h1 { font-size: 1.4rem; }
+    .pf-section { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">就活ナビ</a>
+  <a href="index.html" class="nav-back">トップへ戻る</a>
+</nav>
+
+<!-- MAIN -->
+<div class="pf-container">
+
+  <!-- Loading state -->
+  <div id="pf-loading" class="pf-loading">読み込み中...</div>
+
+  <!-- ===== SEND MODE (logged-in user) ===== -->
+  <div id="pf-send-mode" style="display:none;">
+    <div class="pf-hero">
+      <h1>他己分析</h1>
+      <p>友人や先輩にあなたの印象を聞いてみましょう。<br>自分では気づかない強みや特徴が見つかります。</p>
+    </div>
+
+    <div class="pf-section">
+      <h2>リンクを作成して友人に送る</h2>
+      <p>下のボタンでリンクを作成し、友人にシェアしてください。友人はログイン不要で回答できます。</p>
+      <button class="pf-btn" id="pf-create-btn" onclick="createFeedbackRequest()">他己分析リンクを作成</button>
+
+      <div class="pf-link-box" id="pf-link-box">
+        <div class="pf-link-url" id="pf-link-url"></div>
+        <div class="pf-share-btns">
+          <button class="pf-share-btn" id="pf-copy-btn" onclick="copyLink()">リンクをコピー</button>
+          <button class="pf-share-btn" onclick="shareToLine()">LINEで送る</button>
+          <button class="pf-share-btn" onclick="shareToX()">Xでシェア</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pf-section">
+      <div class="pf-results-header">
+        <h2>受け取ったフィードバック</h2>
+        <span class="pf-results-count" id="pf-results-count"></span>
+      </div>
+      <div id="pf-results-list">
+        <p style="color:var(--text-muted); font-size:0.82rem;">まだフィードバックはありません。リンクを友人に送って他己分析をお願いしましょう。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESPONSE MODE (friend answering) ===== -->
+  <div id="pf-response-mode" style="display:none;">
+    <div class="pf-hero">
+      <h1 id="pf-response-title">他己分析に協力する</h1>
+      <p>以下の質問に回答してください。あなたの回答は本人だけが見ることができます。ログインは不要です。</p>
+    </div>
+
+    <div class="pf-section" id="pf-response-form">
+      <div class="pf-question-group">
+        <div class="pf-question-label"><span class="pf-question-num">1</span>この人の「強み」だと思うことは？</div>
+        <div class="pf-question-hint">性格、能力、行動パターンなど自由に書いてください。</div>
+        <textarea class="pf-textarea" id="pf-q1" placeholder="例：いつも周りを見ていて、困っている人に自然に声をかけられるところ"></textarea>
+      </div>
+
+      <div class="pf-question-group">
+        <div class="pf-question-label"><span class="pf-question-num">2</span>この人の「改善できそうなところ」は？</div>
+        <div class="pf-question-hint">率直な意見が本人の成長につながります。</div>
+        <textarea class="pf-textarea" id="pf-q2" placeholder="例：自分の意見をもう少し積極的に言えると、もっとリーダーシップが発揮できそう"></textarea>
+      </div>
+
+      <div class="pf-question-group">
+        <div class="pf-question-label"><span class="pf-question-num">3</span>この人が活躍できそうな仕事・業界は？</div>
+        <div class="pf-question-hint">具体的な業界名や職種でも、イメージでもOKです。</div>
+        <textarea class="pf-textarea" id="pf-q3" placeholder="例：人と関わる仕事が向いていそう。コンサルや人材系のイメージ"></textarea>
+      </div>
+
+      <div class="pf-question-group">
+        <div class="pf-question-label"><span class="pf-question-num">4</span>この人を一言で表すと？</div>
+        <div class="pf-question-hint">キーワードでも短い文でもOKです。</div>
+        <textarea class="pf-textarea" id="pf-q4" placeholder="例：「安心感のある人」「静かだけど芯がある」" style="min-height:60px;"></textarea>
+      </div>
+
+      <div class="pf-question-group">
+        <div class="pf-question-label"><span class="pf-question-num">5</span>その他、伝えたいこと（任意）</div>
+        <textarea class="pf-textarea" id="pf-q5" placeholder="自由にどうぞ" style="min-height:60px;"></textarea>
+      </div>
+
+      <div style="text-align:center; margin-top:1rem;">
+        <button class="pf-btn" id="pf-submit-btn" onclick="submitFeedback()">回答を送信する</button>
+        <p id="pf-submit-error" style="color:var(--crimson); font-size:0.8rem; margin-top:0.8rem; display:none;"></p>
+      </div>
+    </div>
+
+    <!-- Thank you after submission -->
+    <div class="pf-thankyou" id="pf-thankyou">
+      <div class="pf-thankyou-icon">&#10003;</div>
+      <h2>回答ありがとうございました！</h2>
+      <p>あなたの回答は本人に届けられます。<br>就活を頑張る友人の力になれたはずです。</p>
+    </div>
+  </div>
+
+  <!-- ===== NOT FOUND ===== -->
+  <div id="pf-not-found" style="display:none;">
+    <div class="pf-not-found">
+      <h2>リンクが見つかりませんでした</h2>
+      <p style="color:var(--text-muted); font-size:0.85rem;">このリンクは無効か、期限切れの可能性があります。</p>
+    </div>
+  </div>
+
+  <!-- ===== LOGIN PROMPT ===== -->
+  <div id="pf-login-prompt" style="display:none;">
+    <div class="pf-hero">
+      <h1>他己分析</h1>
+      <p>友人にあなたの印象を聞いて、自己分析に活かしましょう。</p>
+    </div>
+    <div class="pf-login-prompt">
+      <p>この機能を使うには<a href="account.html">ログイン</a>が必要です。</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="auth.js"></script>
+<script>
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+
+  let currentToken = null;
+  let generatedLink = '';
+
+  // ===== INITIALIZATION =====
+  (async function init() {
+    var params = new URLSearchParams(window.location.search);
+    var token = params.get('token');
+
+    if (token) {
+      // RESPONSE MODE - friend answering
+      document.getElementById('pf-loading').style.display = 'none';
+      currentToken = token;
+      await loadResponseMode(token);
+    } else {
+      // SEND MODE - check if logged in
+      var session = getSession();
+      if (session && session.sessionToken) {
+        document.getElementById('pf-loading').style.display = 'none';
+        document.getElementById('pf-send-mode').style.display = '';
+        await loadResults(session.sessionToken);
+      } else {
+        document.getElementById('pf-loading').style.display = 'none';
+        document.getElementById('pf-login-prompt').style.display = '';
+      }
+    }
+  })();
+
+  function getSession() {
+    try {
+      var s = localStorage.getItem('keio_navi_session');
+      return s ? JSON.parse(s) : null;
+    } catch(e) { return null; }
+  }
+
+  // ===== RESPONSE MODE =====
+  async function loadResponseMode(token) {
+    document.getElementById('pf-response-mode').style.display = '';
+    // We set a generic title; the GAS will validate the token on submit
+    // For privacy, we don't expose displayName until they submit
+    try {
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'getPeerFeedbackInfo', token: token })
+      });
+      var data = await res.json();
+      if (data.status === 'ok' && data.displayName) {
+        document.getElementById('pf-response-title').textContent = data.displayName + 'さんの他己分析に協力する';
+      } else if (data.status === 'error') {
+        document.getElementById('pf-response-mode').style.display = 'none';
+        document.getElementById('pf-not-found').style.display = '';
+      }
+    } catch(e) {
+      // Keep showing the form even if info fetch fails
+    }
+  }
+
+  async function submitFeedback() {
+    var q1 = document.getElementById('pf-q1').value.trim();
+    var q2 = document.getElementById('pf-q2').value.trim();
+    var q3 = document.getElementById('pf-q3').value.trim();
+    var q4 = document.getElementById('pf-q4').value.trim();
+    var q5 = document.getElementById('pf-q5').value.trim();
+
+    if (!q1 && !q2 && !q3 && !q4) {
+      var errEl = document.getElementById('pf-submit-error');
+      errEl.textContent = '少なくとも1つの質問に回答してください。';
+      errEl.style.display = '';
+      return;
+    }
+
+    var btn = document.getElementById('pf-submit-btn');
+    btn.disabled = true;
+    btn.textContent = '送信中...';
+    document.getElementById('pf-submit-error').style.display = 'none';
+
+    try {
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'submitPeerFeedback',
+          token: currentToken,
+          responses: {
+            strengths: q1,
+            improvements: q2,
+            suitableWork: q3,
+            oneWord: q4,
+            freeComment: q5,
+            submittedAt: new Date().toISOString()
+          }
+        })
+      });
+      var data = await res.json();
+      if (data.status === 'ok') {
+        document.getElementById('pf-response-form').style.display = 'none';
+        document.getElementById('pf-thankyou').classList.add('visible');
+      } else {
+        throw new Error(data.message || '送信に失敗しました');
+      }
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = '回答を送信する';
+      var errEl = document.getElementById('pf-submit-error');
+      errEl.textContent = e.message || '送信に失敗しました。もう一度お試しください。';
+      errEl.style.display = '';
+    }
+  }
+
+  // ===== SEND MODE =====
+  async function createFeedbackRequest() {
+    var session = getSession();
+    if (!session) { alert('ログインが必要です。'); return; }
+
+    var btn = document.getElementById('pf-create-btn');
+    btn.disabled = true;
+    btn.textContent = '作成中...';
+
+    try {
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'createPeerFeedbackRequest',
+          sessionToken: session.sessionToken
+        })
+      });
+      var data = await res.json();
+      if (data.status === 'ok' && data.token) {
+        generatedLink = window.location.origin + window.location.pathname + '?token=' + data.token;
+        document.getElementById('pf-link-url').textContent = generatedLink;
+        document.getElementById('pf-link-box').classList.add('visible');
+        btn.textContent = '新しいリンクを作成';
+        btn.disabled = false;
+      } else {
+        throw new Error(data.message || 'リンクの作成に失敗しました');
+      }
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = '他己分析リンクを作成';
+      alert(e.message || 'リンクの作成に失敗しました。');
+    }
+  }
+
+  function copyLink() {
+    if (!generatedLink) return;
+    navigator.clipboard.writeText(generatedLink).then(function() {
+      var btn = document.getElementById('pf-copy-btn');
+      btn.classList.add('copied');
+      btn.textContent = 'コピーしました';
+      setTimeout(function() {
+        btn.classList.remove('copied');
+        btn.textContent = 'リンクをコピー';
+      }, 2000);
+    });
+  }
+
+  function shareToLine() {
+    if (!generatedLink) return;
+    var text = '他己分析に協力してほしいです！以下のリンクから回答してもらえると嬉しいです。';
+    window.open('https://line.me/R/share?text=' + encodeURIComponent(text + '\n' + generatedLink), '_blank');
+  }
+
+  function shareToX() {
+    if (!generatedLink) return;
+    var text = '友人の就活を応援！他己分析に回答してみてください。';
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(generatedLink), '_blank');
+  }
+
+  // ===== LOAD RESULTS =====
+  async function loadResults(sessionToken) {
+    try {
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'getPeerFeedbackResults',
+          sessionToken: sessionToken
+        })
+      });
+      var data = await res.json();
+      if (data.status === 'ok' && data.feedbacks && data.feedbacks.length > 0) {
+        renderResults(data.feedbacks);
+      }
+    } catch(e) {
+      // Silently fail, show default empty state
+    }
+  }
+
+  function renderResults(feedbacks) {
+    var container = document.getElementById('pf-results-list');
+    document.getElementById('pf-results-count').textContent = feedbacks.length + '件の回答';
+
+    var html = '';
+    feedbacks.forEach(function(fb, idx) {
+      html += '<div class="pf-result-card">';
+      html += '<h4>回答 #' + (idx + 1) + '</h4>';
+      if (fb.strengths) html += '<p><strong>強み:</strong> ' + escapeHtml(fb.strengths) + '</p>';
+      if (fb.improvements) html += '<p><strong>改善点:</strong> ' + escapeHtml(fb.improvements) + '</p>';
+      if (fb.suitableWork) html += '<p><strong>向いている仕事:</strong> ' + escapeHtml(fb.suitableWork) + '</p>';
+      if (fb.oneWord) html += '<p><strong>一言:</strong> ' + escapeHtml(fb.oneWord) + '</p>';
+      if (fb.freeComment) html += '<p><strong>その他:</strong> ' + escapeHtml(fb.freeComment) + '</p>';
+      if (fb.submittedAt) html += '<div class="pf-result-date">' + new Date(fb.submittedAt).toLocaleDateString('ja-JP') + '</div>';
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+</script>
+
+</body>
+</html>

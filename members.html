@@ -2,7 +2,20 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>会員ページ ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -273,6 +286,144 @@
   }
   .modal-memo:focus { border-color: var(--navy); }
   .modal-memo-saved { font-size: 0.65rem; color: #00703c; margin-top: 0.3rem; height: 1em; }
+
+  /* ===== HOME DASHBOARD ===== */
+  .home-dashboard {
+    margin-bottom: 2rem;
+  }
+  .home-dash-header {
+    margin-bottom: 1rem;
+  }
+  .home-dash-label {
+    font-size: 0.65rem; letter-spacing: 0.18em; color: var(--gold);
+    font-weight: 700; text-transform: uppercase;
+  }
+  .home-dash-title {
+    font-family: 'Noto Serif JP', serif; font-size: 1.2rem;
+    font-weight: 700; color: var(--navy); margin-top: 0.2rem;
+  }
+  .home-dash-divider {
+    width: 40px; height: 2px; background: var(--gold); margin-top: 0.5rem;
+  }
+  .action-cards {
+    display: flex; flex-direction: column; gap: 1px;
+    background: rgba(10,26,62,0.06); margin-bottom: 1.5rem;
+  }
+  .action-card {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.2rem; background: var(--white);
+    text-decoration: none; color: var(--text); transition: background 0.2s;
+  }
+  .action-card:hover { background: #f8f5f0; }
+  .action-icon {
+    width: 40px; height: 40px; display: flex; align-items: center;
+    justify-content: center; font-size: 1.2rem; flex-shrink: 0;
+    background: rgba(10,26,62,0.04); border: 1px solid rgba(10,26,62,0.08);
+  }
+  .action-urgent .action-icon { background: rgba(192,0,26,0.08); border-color: rgba(192,0,26,0.2); }
+  .action-high .action-icon { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.25); }
+  .action-body { flex: 1; min-width: 0; }
+  .action-title { font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+  .action-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem; }
+  .action-arrow { color: var(--text-muted); font-size: 0.9rem; flex-shrink: 0; }
+  .action-empty {
+    padding: 1.5rem; background: var(--white); text-align: center;
+    font-size: 0.82rem; color: var(--text-muted);
+    border: 1px solid rgba(10,26,62,0.06);
+  }
+
+  .progress-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+  }
+  @media(max-width:500px) { .progress-grid { grid-template-columns: 1fr; } }
+  .progress-item {
+    padding: 1rem 1.2rem; background: var(--white);
+    border: 1px solid rgba(10,26,62,0.06);
+  }
+  .progress-item-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 0.5rem;
+  }
+  .progress-item-label { font-size: 0.78rem; font-weight: 600; color: var(--navy); }
+  .progress-item-count { font-size: 0.75rem; color: var(--text-muted); }
+  .progress-bar-bg {
+    width: 100%; height: 6px; background: rgba(10,26,62,0.06);
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: var(--navy); transition: width 0.6s ease;
+  }
+  .progress-bar-fill.gold { background: var(--gold); }
+
+  /* ===== ROADMAP ===== */
+  .roadmap {
+    margin-top: 2rem; position: relative;
+  }
+  .roadmap-track {
+    position: relative; padding-left: 28px;
+  }
+  .roadmap-track::before {
+    content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: rgba(10,26,62,0.1);
+  }
+  .roadmap-phase {
+    position: relative; padding-bottom: 1.2rem;
+  }
+  .roadmap-phase:last-child { padding-bottom: 0; }
+  .roadmap-dot {
+    position: absolute; left: -28px; top: 2px;
+    width: 18px; height: 18px; border: 2px solid rgba(10,26,62,0.15);
+    background: white; display: flex; align-items: center; justify-content: center;
+  }
+  .roadmap-dot.current {
+    border-color: var(--crimson); background: var(--crimson);
+  }
+  .roadmap-dot.current::after {
+    content: ''; width: 6px; height: 6px; background: white;
+  }
+  .roadmap-dot.done {
+    border-color: var(--navy); background: var(--navy);
+  }
+  .roadmap-dot.done::after {
+    content: '\2713'; color: white; font-size: 0.6rem; font-weight: 700;
+  }
+  .roadmap-title {
+    font-size: 0.88rem; font-weight: 700; color: var(--navy);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .roadmap-title .roadmap-now {
+    font-size: 0.6rem; padding: 0.1rem 0.45rem;
+    background: var(--crimson); color: white; font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .roadmap-period {
+    font-size: 0.68rem; color: var(--text-muted); margin-top: 0.15rem;
+  }
+  .roadmap-tasks {
+    margin-top: 0.4rem; display: flex; flex-wrap: wrap; gap: 0.35rem;
+  }
+  .roadmap-task-chip {
+    font-size: 0.72rem; padding: 0.25rem 0.7rem;
+    background: rgba(10,26,62,0.03); border: 1px solid rgba(10,26,62,0.08);
+    color: var(--text-muted); text-decoration: none; transition: all 0.2s;
+  }
+  .roadmap-task-chip:hover {
+    background: var(--navy); color: white; border-color: var(--navy);
+  }
+  .roadmap-phase.current .roadmap-task-chip {
+    background: rgba(192,0,26,0.04); border-color: rgba(192,0,26,0.15);
+    color: var(--navy);
+  }
+  .roadmap-phase.current .roadmap-task-chip:hover {
+    background: var(--crimson); color: white; border-color: var(--crimson);
+  }
+  .roadmap-toggle {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.75rem; color: var(--text-muted); background: none;
+    border: none; cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+    padding: 0.3rem 0; margin-top: 0.5rem; transition: color 0.2s;
+  }
+  .roadmap-toggle:hover { color: var(--navy); }
 
   /* ===== EVENTS PRIORITY ===== */
   .priority-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
@@ -808,6 +959,151 @@
     border: 1px solid rgba(10,26,62,0.15); background: var(--cream);
     font-family: 'Noto Sans JP', sans-serif; font-size: 0.78rem; color: var(--text); outline: none;
   }
+
+  /* ===== KANBAN VIEW ===== */
+  .view-toggle-btn {
+    font-size: 0.72rem; padding: 0.3rem 0.7rem; background: none;
+    border: 1px solid rgba(10,26,62,0.2); color: var(--text-muted);
+    cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.2s;
+  }
+  .view-toggle-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+  .kanban-board {
+    display: none; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+  .kanban-board.active { display: flex; }
+  .kanban-columns {
+    display: flex; gap: 0.5rem; min-width: min-content;
+  }
+  .kanban-col {
+    width: 180px; min-width: 180px; flex-shrink: 0;
+  }
+  .kanban-col-header {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    padding: 0.5rem 0.6rem; text-align: center; color: white;
+    background: var(--navy); margin-bottom: 0.4rem;
+  }
+  .kanban-col-header.col-result { background: var(--gold); color: var(--navy); }
+  .kanban-col-body {
+    display: flex; flex-direction: column; gap: 0.4rem;
+    min-height: 60px; background: rgba(10,26,62,0.02);
+    border: 1px solid rgba(10,26,62,0.06); padding: 0.4rem;
+  }
+  .kanban-card {
+    background: white; border: 1px solid rgba(10,26,62,0.08);
+    padding: 0.6rem 0.7rem; transition: border-color 0.2s;
+  }
+  .kanban-card:hover { border-color: var(--navy); }
+  .kanban-card-name {
+    font-size: 0.78rem; font-weight: 700; color: var(--navy);
+    margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .kanban-card-meta {
+    font-size: 0.62rem; color: var(--text-muted); margin-bottom: 0.3rem;
+  }
+  .kanban-card-meta .urgent { color: var(--crimson); font-weight: 700; }
+  .kanban-card-actions {
+    display: flex; gap: 0.25rem;
+  }
+  .kanban-move-btn {
+    font-size: 0.65rem; padding: 0.15rem 0.4rem; background: rgba(10,26,62,0.04);
+    border: 1px solid rgba(10,26,62,0.1); cursor: pointer; color: var(--navy);
+    font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s; flex: 1; text-align: center;
+  }
+  .kanban-move-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+  .kanban-card.offer { border-left: 3px solid var(--gold); }
+  .kanban-card.rejected { border-left: 3px solid var(--text-muted); opacity: 0.6; }
+  .kanban-empty {
+    font-size: 0.68rem; color: var(--text-muted); text-align: center;
+    padding: 1rem 0.5rem; font-style: italic;
+  }
+  @media(max-width:600px) {
+    .kanban-col { width: 160px; min-width: 160px; }
+  }
+
+  /* ===== RESEARCH NOTE MODAL ===== */
+  .rn-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 260;
+    background: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+  }
+  .rn-modal-overlay.open { display: flex; }
+  .rn-modal-box {
+    background: white; width: min(480px, 92vw); max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .rn-modal-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .rn-modal-title { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; color: white; font-weight: 700; }
+  .rn-modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .rn-field-label { font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem; font-weight: 600; }
+  .rn-textarea {
+    width: 100%; min-height: 70px; padding: 0.6rem 0.8rem;
+    border: 1px solid rgba(10,26,62,0.15); background: var(--cream);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; color: var(--text);
+    outline: none; resize: vertical; line-height: 1.6; transition: border-color 0.2s;
+  }
+  .rn-textarea:focus { border-color: var(--gold); }
+  .rn-saved-msg { font-size: 0.7rem; color: var(--gold); text-align: right; min-height: 1em; transition: opacity 0.3s; }
+  .rn-note-btn {
+    background: none; border: 1px solid rgba(10,26,62,0.15); color: var(--navy);
+    cursor: pointer; font-size: 0.7rem; padding: 0.2rem 0.5rem; transition: all 0.2s;
+    font-family: 'Noto Sans JP', sans-serif; display: inline-flex; align-items: center; gap: 0.2rem;
+  }
+  .rn-note-btn:hover { border-color: var(--navy); background: rgba(10,26,62,0.04); }
+  .rn-note-indicator { color: var(--gold); font-size: 0.55rem; margin-left: 0.15rem; }
+  .kanban-memo-btn {
+    font-size: 0.6rem; padding: 0.1rem 0.3rem; background: rgba(10,26,62,0.04);
+    border: 1px solid rgba(10,26,62,0.1); cursor: pointer; color: var(--navy);
+    font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s;
+  }
+  .kanban-memo-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+  .kanban-note-dot { display: inline-block; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; margin-left: 0.3rem; vertical-align: middle; }
+
+  /* ===== PROGRESS ANALYTICS ===== */
+  .progress-analytics {
+    background: var(--white); border: 1px solid rgba(10,26,62,0.08);
+    padding: 1.2rem 1.5rem; margin-bottom: 1.5rem;
+  }
+  .pa-title {
+    font-family: 'Noto Serif JP', serif; font-size: 0.85rem; font-weight: 700;
+    color: var(--navy); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.4rem;
+  }
+  .pa-empty {
+    font-size: 0.78rem; color: var(--text-muted); text-align: center; padding: 1rem 0;
+  }
+  .pa-funnel { margin-bottom: 1rem; }
+  .pa-funnel-row {
+    display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem;
+  }
+  .pa-funnel-label {
+    font-size: 0.68rem; color: var(--text-muted); width: 56px; text-align: right; flex-shrink: 0;
+  }
+  .pa-funnel-bar-wrap {
+    flex: 1; height: 18px; background: rgba(10,26,62,0.04); position: relative; overflow: hidden;
+  }
+  .pa-funnel-bar {
+    height: 100%; min-width: 2px; transition: width 0.4s ease;
+  }
+  .pa-funnel-val {
+    font-size: 0.62rem; font-weight: 700; color: var(--text); width: 56px; flex-shrink: 0;
+  }
+  .pa-cards { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .pa-card {
+    flex: 1; min-width: 90px; background: rgba(10,26,62,0.03); border: 1px solid rgba(10,26,62,0.08);
+    padding: 0.7rem 0.8rem; text-align: center;
+  }
+  .pa-card-num {
+    font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700;
+    color: var(--navy); line-height: 1;
+  }
+  .pa-card-label { font-size: 0.62rem; color: var(--text-muted); margin-top: 0.25rem; }
+  .pa-industry { margin-top: 0.3rem; }
+  .pa-industry-title { font-size: 0.72rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+  .pa-ind-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+  .pa-ind-label { font-size: 0.65rem; color: var(--text-muted); width: 80px; text-align: right; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pa-ind-bar-wrap { flex: 1; height: 14px; background: rgba(10,26,62,0.04); }
+  .pa-ind-bar { height: 100%; background: var(--navy); min-width: 2px; transition: width 0.4s ease; }
+  .pa-ind-val { font-size: 0.6rem; color: var(--text); width: 30px; flex-shrink: 0; }
+
   .progress-modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 250;
     background: rgba(0,0,0,0.5); align-items: center; justify-content: center;
@@ -1297,13 +1593,188 @@
   .es-chat-send-btn { padding: 0.72rem 1.2rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; align-self: flex-end; transition: background 0.2s; }
   .es-chat-send-btn:hover:not(:disabled) { background: var(--crimson); }
   .es-chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ===== OFFER TOOLS SECTION ===== */
+  #offer-tools-section { display: none; }
+  #offer-tools-section.visible { display: block; }
+  .offer-no-data { text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.88rem; line-height: 1.8; }
+  .offer-compare-grid { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.06); margin-bottom: 1.5rem; }
+  .offer-compare-row { display: grid; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; background: white; }
+  .offer-compare-row.header { background: var(--navy); padding: 0.6rem 1rem; }
+  .offer-compare-row.header span { font-size: 0.7rem; color: rgba(255,255,255,0.65); letter-spacing: 0.06em; font-weight: 600; }
+  .offer-axis-label { font-size: 0.82rem; font-weight: 600; color: var(--navy); min-width: 140px; }
+  .offer-range-group { display: flex; align-items: center; gap: 0.5rem; }
+  .offer-range-group input[type="range"] { width: 100px; accent-color: var(--navy); }
+  .offer-range-val { font-size: 0.75rem; font-weight: 700; color: var(--navy); min-width: 18px; text-align: center; }
+  .offer-company-tag { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 1px solid; }
+  .radar-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin: 1.5rem 0; }
+  .radar-legend { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+  .radar-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text); }
+  .radar-legend-dot { width: 12px; height: 12px; border-radius: 0; }
+  .offer-recommend { margin-top: 1rem; padding: 1rem 1.2rem; background: rgba(201,168,76,0.08); border-left: 3px solid var(--gold); font-size: 0.82rem; line-height: 1.8; color: var(--text); }
+  .offer-recommend strong { color: var(--navy); }
+  .offer-sub-header { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700; color: var(--navy); margin: 2rem 0 1rem; padding-top: 1.5rem; border-top: 1px solid rgba(10,26,62,0.08); }
+  .card-editor { padding: 1rem; background: white; border: 1px solid rgba(10,26,62,0.08); margin-bottom: 1rem; }
+  .card-editor label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--navy); margin-bottom: 0.3rem; margin-top: 0.8rem; }
+  .card-editor label:first-child { margin-top: 0; }
+  .card-editor input, .card-editor select { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid rgba(10,26,62,0.15); font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; outline: none; }
+  .card-editor input:focus { border-color: var(--navy); }
+  .card-editor .card-auto-field { padding: 0.55rem 0.8rem; background: var(--gray); border: 1px solid rgba(10,26,62,0.08); font-size: 0.82rem; color: var(--text-muted); }
+  .card-preview-wrap { display: flex; justify-content: center; margin: 1rem 0; }
+  .card-preview-wrap canvas { max-width: 100%; height: auto; border: 1px solid rgba(10,26,62,0.1); }
+  .card-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.8rem; }
+  .card-actions button, .card-actions a {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.6rem 1.2rem; font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem;
+    font-weight: 600; cursor: pointer; text-decoration: none; border: 1px solid; transition: all 0.2s;
+  }
+  .card-dl-btn { background: var(--navy); color: white; border-color: var(--navy); }
+  .card-dl-btn:hover { background: var(--crimson); border-color: var(--crimson); }
+  .card-share-x { background: #000; color: white; border-color: #000; }
+  .card-share-x:hover { opacity: 0.85; }
+  .card-share-line { background: #06c755; color: white; border-color: #06c755; }
+  .card-share-line:hover { opacity: 0.85; }
+  .offer-tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 2px solid rgba(10,26,62,0.08); }
+  .offer-tab-btn { padding: 0.6rem 1.2rem; font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; transition: all 0.2s; }
+  .offer-tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
+  .offer-tab-btn:hover { color: var(--navy); }
+  .offer-tab-panel { display: none; }
+  .offer-tab-panel.active { display: block; }
+
+  /* ===== GD FEEDBACK ===== */
+  .gd-fb-stats-bar {
+    display: flex; gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap;
+  }
+  .gd-fb-stat {
+    flex: 1; min-width: 90px; background: white; border: 1px solid rgba(10,26,62,0.08);
+    padding: 0.8rem; text-align: center;
+  }
+  .gd-fb-stat-num {
+    font-family: 'Noto Serif JP', serif; font-size: 1.3rem; font-weight: 700; color: var(--navy);
+  }
+  .gd-fb-stat-label {
+    font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem;
+  }
+  .gd-fb-list { display: flex; flex-direction: column; gap: 1rem; }
+  .gd-fb-card {
+    background: white; border: 1px solid rgba(10,26,62,0.08);
+    border-left: 3px solid var(--gold); padding: 1rem 1.2rem;
+    transition: box-shadow 0.2s;
+  }
+  .gd-fb-card:hover { box-shadow: 0 2px 12px rgba(10,26,62,0.08); }
+  .gd-fb-card-header {
+    display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.6rem;
+  }
+  .gd-fb-date {
+    font-size: 0.75rem; color: var(--text-muted); font-weight: 600;
+  }
+  .gd-fb-theme {
+    font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700;
+    color: var(--navy); margin-bottom: 0.5rem;
+  }
+  .gd-fb-role-badge {
+    display: inline-block; padding: 0.15rem 0.6rem; font-size: 0.7rem;
+    font-weight: 700; border-radius: 2px; letter-spacing: 0.04em;
+  }
+  .gd-fb-role-司会 { background: var(--crimson); color: white; }
+  .gd-fb-role-書記 { background: var(--navy); color: white; }
+  .gd-fb-role-タイムキーパー { background: var(--gold); color: var(--text); }
+  .gd-fb-role-発表者 { background: #0057c2; color: white; }
+  .gd-fb-role-メンバー { background: rgba(107,107,126,0.12); color: var(--text-muted); }
+  .gd-fb-content {
+    font-size: 0.82rem; color: var(--text); line-height: 1.7; margin-bottom: 0.3rem;
+  }
+  .gd-fb-content-label {
+    font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 0.5rem; margin-bottom: 0.15rem;
+  }
+  .gd-fb-rating {
+    color: var(--gold); font-size: 0.95rem; letter-spacing: 0.1em; margin-top: 0.4rem;
+  }
+  .gd-fb-card-actions {
+    display: flex; gap: 0.5rem; margin-top: 0.7rem; justify-content: flex-end;
+  }
+  .gd-fb-card-actions button {
+    background: none; border: 1px solid rgba(10,26,62,0.15); padding: 0.3rem 0.7rem;
+    font-size: 0.72rem; font-family: 'Noto Sans JP', sans-serif; color: var(--text-muted);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .gd-fb-card-actions button:hover { border-color: var(--navy); color: var(--navy); }
+  .gd-fb-card-actions button.gd-fb-del:hover { border-color: var(--crimson); color: var(--crimson); }
+  .gd-fb-add-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.55rem 1.2rem; background: transparent;
+    border: 1px solid rgba(10,26,62,0.2); color: var(--navy);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.78rem;
+    font-weight: 600; cursor: pointer; letter-spacing: 0.05em;
+    transition: all 0.25s; margin-bottom: 1rem;
+  }
+  .gd-fb-add-btn:hover { background: var(--navy); color: white; }
+  .gd-fb-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 250;
+    background: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+  }
+  .gd-fb-modal-overlay.open { display: flex; }
+  .gd-fb-modal-box {
+    background: white; width: min(460px, 92vw); max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .gd-fb-modal-header {
+    background: var(--navy); padding: 1rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .gd-fb-modal-title {
+    font-family: 'Noto Serif JP', serif; font-size: 0.95rem; color: white; font-weight: 700;
+  }
+  .gd-fb-modal-body {
+    padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem;
+  }
+  .gd-fb-modal-body label {
+    font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem;
+  }
+  .gd-fb-modal-body input[type="text"],
+  .gd-fb-modal-body input[type="date"],
+  .gd-fb-modal-body select,
+  .gd-fb-modal-body textarea {
+    width: 100%; padding: 0.7rem; border: 1px solid rgba(10,26,62,0.2);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; outline: none;
+    box-sizing: border-box;
+  }
+  .gd-fb-modal-body textarea { min-height: 70px; resize: vertical; line-height: 1.6; }
+  .gd-fb-stars-input {
+    display: flex; gap: 0.3rem; cursor: pointer;
+  }
+  .gd-fb-stars-input span {
+    font-size: 1.4rem; color: #ccc; transition: color 0.15s; user-select: none;
+  }
+  .gd-fb-stars-input span.filled { color: var(--gold); }
+  .gd-fb-stars-input span:hover { color: var(--gold); }
+  .gd-fb-modal-actions {
+    display: flex; gap: 0.8rem; margin-top: 0.5rem;
+  }
+  .gd-fb-modal-actions button {
+    flex: 1; padding: 0.8rem; font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none;
+    transition: opacity 0.2s; letter-spacing: 0.04em;
+  }
+  .gd-fb-save-btn { background: var(--navy); color: white; }
+  .gd-fb-save-btn:hover { opacity: 0.9; }
+  .gd-fb-cancel-btn { background: rgba(10,26,62,0.06); color: var(--text-muted); }
+  .gd-fb-cancel-btn:hover { opacity: 0.8; }
+  .gd-fb-empty {
+    text-align: center; padding: 2rem 1rem; color: var(--text-muted);
+    font-size: 0.85rem; line-height: 1.8;
+  }
 </style>
 <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "YOUR_PROJECT_ID");
+    (function(projectId){
+        if (!projectId) return;
+        window.clarity = window.clarity || function(){ (window.clarity.q = window.clarity.q || []).push(arguments); };
+        var script = document.createElement("script");
+        script.async = 1;
+        script.src = "https://www.clarity.ms/tag/" + projectId;
+        var firstScript = document.getElementsByTagName("script")[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+    })("");
 </script>
 </head>
 <body>
@@ -1369,41 +1840,66 @@
 
   <div class="members-main">
 
-    <!-- オンボーディング -->
-    <div class="onboarding-section" id="onboarding-section">
-      <div class="onboarding-label">FIRST STEPS</div>
-      <div class="onboarding-title">入会したらまずやること</div>
-      <div class="onboarding-steps">
-        <div class="onboarding-step">
-          <div class="onboarding-step-num">01</div>
-          <div>
-            <div class="onboarding-step-title">LINEコミュニティに参加する</div>
-            <div class="onboarding-step-desc">選考情報・仲間との交流はLINEが中心です。まだの人は申請フォームから参加してください。</div>
-            <a class="onboarding-step-link" href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" target="_blank" rel="noopener">LINE参加申請 →</a>
+    <!-- オンボーディングウィザード -->
+    <div id="onboarding-wizard" style="display:none; background:white; border:1px solid rgba(10,26,62,0.08); margin-bottom:1.5rem; overflow:hidden;">
+      <div style="background:var(--navy); padding:1.2rem 1.5rem; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div style="font-size:0.65rem; letter-spacing:0.12em; color:var(--gold-light); font-weight:700;">WELCOME</div>
+          <div style="font-family:'Noto Serif JP',serif; font-size:1rem; color:white; font-weight:700; margin-top:0.2rem;">あなたに合わせて就活ナビをセットアップ</div>
+        </div>
+        <button onclick="dismissWizard()" style="background:none; border:none; color:rgba(255,255,255,0.4); font-size:1.1rem; cursor:pointer; padding:0.3rem;">✕</button>
+      </div>
+      <div style="padding:1.5rem;">
+        <div style="display:flex; gap:0.5rem; margin-bottom:1.2rem;">
+          <div class="wiz-step-dot" id="wiz-dot-0" style="width:32px; height:4px; background:var(--gold); transition:background 0.3s;"></div>
+          <div class="wiz-step-dot" id="wiz-dot-1" style="width:32px; height:4px; background:rgba(10,26,62,0.1); transition:background 0.3s;"></div>
+          <div class="wiz-step-dot" id="wiz-dot-2" style="width:32px; height:4px; background:rgba(10,26,62,0.1); transition:background 0.3s;"></div>
+        </div>
+
+        <!-- STEP 1: フェーズ選択 -->
+        <div id="wiz-panel-0">
+          <div style="font-size:0.72rem; color:var(--gold); font-weight:700; letter-spacing:0.1em;">STEP 1 / 3</div>
+          <div style="font-family:'Noto Serif JP',serif; font-size:1.1rem; font-weight:700; color:var(--navy); margin:0.5rem 0;">今の就活フェーズは？</div>
+          <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.8; margin-bottom:1rem;">選択したフェーズに合わせて、ページの表示順やおすすめアクションが変わります。</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;" id="wiz-stage-btns">
+            <button onclick="wizSelectStage(this,'自己分析中')" class="wiz-stage-btn" style="padding:0.8rem; background:white; border:2px solid rgba(10,26,62,0.15); font-family:'Noto Sans JP',sans-serif; font-size:0.82rem; font-weight:600; color:var(--navy); cursor:pointer; transition:all 0.2s; text-align:left;">
+              <div style="font-size:1.1rem; margin-bottom:0.3rem;">🔍</div>自己分析中
+              <div style="font-size:0.68rem; color:var(--text-muted); font-weight:400; margin-top:0.15rem;">強み・ガクチカ整理</div>
+            </button>
+            <button onclick="wizSelectStage(this,'ES準備中')" class="wiz-stage-btn" style="padding:0.8rem; background:white; border:2px solid rgba(10,26,62,0.15); font-family:'Noto Sans JP',sans-serif; font-size:0.82rem; font-weight:600; color:var(--navy); cursor:pointer; transition:all 0.2s; text-align:left;">
+              <div style="font-size:1.1rem; margin-bottom:0.3rem;">📝</div>ES準備中
+              <div style="font-size:0.68rem; color:var(--text-muted); font-weight:400; margin-top:0.15rem;">ES作成・添削</div>
+            </button>
+            <button onclick="wizSelectStage(this,'面接対策中')" class="wiz-stage-btn" style="padding:0.8rem; background:white; border:2px solid rgba(10,26,62,0.15); font-family:'Noto Sans JP',sans-serif; font-size:0.82rem; font-weight:600; color:var(--navy); cursor:pointer; transition:all 0.2s; text-align:left;">
+              <div style="font-size:1.1rem; margin-bottom:0.3rem;">🎤</div>面接対策中
+              <div style="font-size:0.68rem; color:var(--text-muted); font-weight:400; margin-top:0.15rem;">面接練習・対策</div>
+            </button>
+            <button onclick="wizSelectStage(this,'内定待ち')" class="wiz-stage-btn" style="padding:0.8rem; background:white; border:2px solid rgba(10,26,62,0.15); font-family:'Noto Sans JP',sans-serif; font-size:0.82rem; font-weight:600; color:var(--navy); cursor:pointer; transition:all 0.2s; text-align:left;">
+              <div style="font-size:1.1rem; margin-bottom:0.3rem;">🎯</div>内定待ち
+              <div style="font-size:0.68rem; color:var(--text-muted); font-weight:400; margin-top:0.15rem;">選考結果待ち</div>
+            </button>
           </div>
         </div>
-        <div class="onboarding-step">
-          <div class="onboarding-step-num">02</div>
-          <div>
-            <div class="onboarding-step-title">ES・面接対策を始める</div>
-            <div class="onboarding-step-desc">ES添削AIや面接対策ノートが使えます。まずは自分のガクチカを整理してみましょう。</div>
-            <a class="onboarding-step-link" href="writing.html">ES保管庫へ →</a>
+
+        <!-- STEP 2: おすすめ機能（動的に生成） -->
+        <div id="wiz-panel-1" style="display:none;">
+          <div style="font-size:0.72rem; color:var(--gold); font-weight:700; letter-spacing:0.1em;">STEP 2 / 3</div>
+          <div style="font-family:'Noto Serif JP',serif; font-size:1.1rem; font-weight:700; color:var(--navy); margin:0.5rem 0;" id="wiz-rec-title">あなたへのおすすめ</div>
+          <div id="wiz-rec-list" style="margin-bottom:1rem;"></div>
+          <div style="display:flex; gap:0.5rem;">
+            <button onclick="nextWizStep(2)" style="padding:0.6rem 1.2rem; background:var(--navy); color:white; border:none; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Noto Sans JP',sans-serif;">次へ →</button>
+            <button onclick="nextWizStep(0)" style="padding:0.6rem 1.2rem; background:none; border:1px solid rgba(10,26,62,0.2); color:var(--text-muted); font-size:0.82rem; cursor:pointer; font-family:'Noto Sans JP',sans-serif;">戻る</button>
           </div>
         </div>
-        <div class="onboarding-step">
-          <div class="onboarding-step-num">03</div>
-          <div>
-            <div class="onboarding-step-title">選考情報を共有する</div>
-            <div class="onboarding-step-desc">選考体験やノウハウを共有してください。みんなの情報がコミュニティの力になります。</div>
-            <a class="onboarding-step-link" id="onboarding-form-link" href="#" target="_blank" rel="noopener">投稿フォームへ →</a>
-          </div>
-        </div>
-        <div class="onboarding-step">
-          <div class="onboarding-step-num">04</div>
-          <div>
-            <div class="onboarding-step-title">過去問を共有する</div>
-            <div class="onboarding-step-desc">持っている講義の過去問を登録してください。学部・科目別に検索できます。</div>
-            <a class="onboarding-step-link" href="writing.html">ES保管庫へ →</a>
+
+        <!-- STEP 3: 最初のアクション -->
+        <div id="wiz-panel-2" style="display:none;">
+          <div style="font-size:0.72rem; color:var(--gold); font-weight:700; letter-spacing:0.1em;">STEP 3 / 3</div>
+          <div style="font-family:'Noto Serif JP',serif; font-size:1.1rem; font-weight:700; color:var(--navy); margin:0.5rem 0;">準備完了！最初の一歩を踏み出そう</div>
+          <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.8; margin-bottom:1rem;" id="wiz-cta-desc">ページがあなたのフェーズに合わせてカスタマイズされました。さっそく始めましょう。</p>
+          <div style="display:flex; gap:0.5rem;">
+            <a id="wiz-cta-link" href="writing.html" style="padding:0.6rem 1.2rem; background:var(--crimson); color:white; text-decoration:none; font-size:0.82rem; font-weight:700;" id="wiz-cta-btn">ガクチカを書く →</a>
+            <button onclick="completeWizard()" style="padding:0.6rem 1.2rem; background:var(--navy); color:white; border:none; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Noto Sans JP',sans-serif;">ダッシュボードへ</button>
           </div>
         </div>
       </div>
@@ -1419,61 +1915,81 @@
     </div>
 
 
+    <!-- ホームダッシュボード -->
+    <div class="home-dashboard" id="home-dashboard">
+      <div class="home-dash-header">
+        <div class="home-dash-label">TODAY'S ACTIONS</div>
+        <div class="home-dash-title">今日やること</div>
+        <div class="home-dash-divider"></div>
+      </div>
+      <div id="action-cards" class="action-cards">
+        <div class="action-empty">データを読み込み中...</div>
+      </div>
+
+      <div class="home-dash-header" style="margin-top:1.5rem;">
+        <div class="home-dash-label">YOUR PROGRESS</div>
+        <div class="home-dash-title">あなたの進捗</div>
+        <div class="home-dash-divider"></div>
+      </div>
+      <div id="progress-overview"></div>
+
+      <div class="home-dash-header" style="margin-top:2rem;">
+        <div class="home-dash-label">ROADMAP</div>
+        <div class="home-dash-title">就活ロードマップ</div>
+        <div class="home-dash-divider"></div>
+      </div>
+      <div class="roadmap" id="roadmap"></div>
+    </div>
+
     <div style="margin:2.5rem 0 1.5rem; padding:0 0.5rem;">
       <div style="font-size:0.65rem; letter-spacing:0.18em; color:var(--gold); font-weight:700; text-transform:uppercase;">DASHBOARD</div>
       <div style="font-family:'Noto Serif JP',serif; font-size:1.2rem; font-weight:700; color:var(--navy); margin-top:0.2rem;">ダッシュボード</div>
       <div style="width:40px; height:2px; background:var(--gold); margin-top:0.5rem;"></div>
     </div>
 
-    <!-- 就活進捗トラッカー -->
-    <div class="m-section" id="progress-section">
+    <!-- 今月のポイント -->
+    <div id="monthly-advice-card" style="margin-bottom:1.5rem;background:linear-gradient(135deg,#0a1a3e 0%,#142254 100%);border-radius:14px;padding:1.2rem 1.4rem;box-shadow:0 4px 16px rgba(10,26,62,0.25);"></div>
+
+    <!-- 選考管理・内定サポートへのリンク（pipeline.html / offer-tools.html に移動済み） -->
+    <div style="display:none" id="progress-section"></div>
+    <div style="display:none" id="calendar-section"></div>
+    <div style="display:none" id="offer-tools-section"></div>
+    <!-- REMOVED progress/calendar/offer section HTML -->
+    <!-- ダッシュボードウィジェット -->
+    <div class="m-section" id="stats-section">
       <div class="m-section-header">
         <div class="m-section-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
         </div>
         <div>
-          <div class="m-section-label">MY PROGRESS</div>
-          <div class="m-section-title">就活進捗トラッカー</div>
+          <div class="m-section-title">今日のやること</div>
+          <div class="m-section-sub">あなたの就活ダッシュボード</div>
         </div>
       </div>
-      <div class="dashboard-widget" id="progress-dashboard">
-        <div class="dash-stats">
-          <div class="dash-stat"><div class="dash-stat-num" id="dash-total">0</div><div class="dash-stat-label">総応募</div></div>
-          <div class="dash-stat"><div class="dash-stat-num" id="dash-active">0</div><div class="dash-stat-label">選考中</div></div>
-          <div class="dash-stat"><div class="dash-stat-num" id="dash-offer">0</div><div class="dash-stat-label">内定</div></div>
-        </div>
-        <div class="dash-badges" id="dash-badges"><span class="dash-badge-empty">選考を追加するとバッジが表示されます</span></div>
-      </div>
-      <div class="progress-toolbar">
-        <span style="font-size:0.78rem; color:var(--text-muted);" id="progress-sync-status">選考状況を管理する</span>
-        <button class="progress-add-btn" id="progress-add-btn">＋ 選考を追加</button>
-      </div>
-      <div class="progress-list" id="progress-list"><div class="m-empty">まだ登録されていません。「＋ 選考を追加」から登録してください。</div></div>
+      <div id="stats-content" style="padding:0.5rem;">Loading...</div>
     </div>
 
-    <!-- 締切カレンダー -->
-    <div class="m-section" id="calendar-section">
+    <!-- #今日の就活 タイムライン -->
+    <div class="m-section" id="timeline-section">
       <div class="m-section-header">
         <div class="m-section-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
         <div>
-          <div class="m-section-label">DEADLINE CALENDAR</div>
-          <div class="m-section-title">締切カレンダー</div>
+          <div class="m-section-title">#今日の就活</div>
+          <div class="m-section-sub">メンバーのタイムライン</div>
         </div>
       </div>
-      <div class="calendar-header">
-        <button class="calendar-nav-btn" id="cal-prev">‹</button>
-        <span class="calendar-month-label" id="cal-month-label"></span>
-        <button class="calendar-nav-btn" id="cal-next">›</button>
-        <span style="font-size:0.72rem; color:var(--text-muted); margin-left:auto; display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-          <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:10px; height:10px; background:var(--crimson); display:inline-block;"></span>選考情報</span>
-          <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:10px; height:10px; background:var(--gold); display:inline-block;"></span>気になり</span>
-          <span style="display:inline-flex; align-items:center; gap:4px;"><span style="width:10px; height:10px; background:var(--navy); display:inline-block;"></span>自分の締切</span>
-        </span>
+      <div style="padding:0.5rem;">
+        <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+          <input type="text" id="tl-input" maxlength="140" placeholder="#今日の就活 を投稿..." style="flex:1;padding:0.6rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;">
+          <button onclick="postTimeline()" style="padding:0.6rem 1rem;background:var(--navy);color:white;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;">投稿</button>
+        </div>
+        <div id="tl-feed">Loading...</div>
       </div>
-      <div class="calendar-grid" id="calendar-grid"></div>
     </div>
+
+    <!-- GD練習会フィードバック（interview-page.html に移動済み） -->
 
     <div style="margin:2.5rem 0 1.5rem; padding:0 0.5rem;">
       <div style="font-size:0.65rem; letter-spacing:0.18em; color:var(--gold); font-weight:700; text-transform:uppercase;">QUICK ACCESS</div>
@@ -1496,11 +2012,96 @@
         <div style="font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-top:0.3rem;">リソース</div>
         <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.6;">先行案内・限定資料・輪読会</div>
       </a>
+      <a href="industry-guide.html" style="text-decoration:none; background:white; border:1px solid rgba(10,26,62,0.08); padding:1.5rem; transition:border-color 0.2s;">
+        <div style="font-size:0.65rem; letter-spacing:0.12em; color:var(--crimson); font-weight:700;">INDUSTRY</div>
+        <div style="font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-top:0.3rem;">業界研究ガイド</div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.6;">主要10業界の特徴と選考対策</div>
+      </a>
+      <a href="blog.html" style="text-decoration:none; background:white; border:1px solid rgba(10,26,62,0.08); padding:1.5rem; transition:border-color 0.2s;">
+        <div style="font-size:0.65rem; letter-spacing:0.12em; color:var(--crimson); font-weight:700;">COLUMN</div>
+        <div style="font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-top:0.3rem;">就活コラム</div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.6;">就活に役立つ知識とヒント</div>
+      </a>
+      <a href="quiz.html" style="text-decoration:none; background:white; border:1px solid rgba(10,26,62,0.08); padding:1.5rem; transition:border-color 0.2s;">
+        <div style="font-size:0.65rem; letter-spacing:0.12em; color:var(--crimson); font-weight:700;">QUIZ</div>
+        <div style="font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-top:0.3rem;">準備度チェック</div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.6;">1分で就活準備度を診断</div>
+      </a>
+      <a href="pipeline.html" style="text-decoration:none; background:white; border:1px solid rgba(10,26,62,0.08); padding:1.5rem; transition:border-color 0.2s;">
+        <div style="font-size:0.65rem; letter-spacing:0.12em; color:var(--crimson); font-weight:700;">PIPELINE</div>
+        <div style="font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-top:0.3rem;">選考管理</div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.6;">選考進捗トラッカー・カレンダー</div>
+      </a>
+      <a href="offer-tools.html" style="text-decoration:none; background:white; border:1px solid rgba(10,26,62,0.08); padding:1.5rem; transition:border-color 0.2s;">
+        <div style="font-size:0.65rem; letter-spacing:0.12em; color:var(--crimson); font-weight:700;">OFFER</div>
+        <div style="font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-top:0.3rem;">内定サポート</div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.6;">内定比較・報告カード作成</div>
+      </a>
+      <a href="game-developer.html" style="text-decoration:none; background:white; border:1px solid rgba(10,26,62,0.08); padding:1.5rem; transition:border-color 0.2s;">
+        <div style="font-size:0.65rem; letter-spacing:0.12em; color:var(--crimson); font-weight:700;">GAME</div>
+        <div style="font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-top:0.3rem;">業界体験ゲーム</div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.6;">不動産デベロッパーの仕事をゲームで体験</div>
+      </a>
     </div>
 
   </div>
 </div>
 
+
+<!-- モーダルは各専用ページに移動済み -->
+<!--
+<div class="gd-fb-modal-overlay-REMOVED" id="gd-fb-modal-REMOVED">
+  <div class="gd-fb-modal-box">
+    <div class="gd-fb-modal-header">
+      <span class="gd-fb-modal-title" id="gd-fb-modal-title">GDフィードバックを記録</span>
+      <button onclick="closeGdFbModal()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">&#10005;</button>
+    </div>
+    <div class="gd-fb-modal-body">
+      <input type="hidden" id="gd-fb-edit-id" value="">
+      <div>
+        <label>日付</label>
+        <input type="date" id="gd-fb-date">
+      </div>
+      <div>
+        <label>テーマ（お題）<span style="color:var(--crimson);"> *</span></label>
+        <input type="text" id="gd-fb-theme-input" placeholder="例：AIの普及は社会にとってプラスか">
+      </div>
+      <div>
+        <label>役割</label>
+        <select id="gd-fb-role-input">
+          <option value="メンバー">メンバー</option>
+          <option value="司会">司会</option>
+          <option value="書記">書記</option>
+          <option value="タイムキーパー">タイムキーパー</option>
+          <option value="発表者">発表者</option>
+        </select>
+      </div>
+      <div>
+        <label>他者からのフィードバック</label>
+        <textarea id="gd-fb-others" placeholder="他の参加者やオブザーバーからもらったフィードバック..."></textarea>
+      </div>
+      <div>
+        <label>自分の振り返り</label>
+        <textarea id="gd-fb-self" placeholder="自分で感じた良かった点・改善点..."></textarea>
+      </div>
+      <div>
+        <label>自己評価</label>
+        <div class="gd-fb-stars-input" id="gd-fb-stars">
+          <span onclick="setGdFbRating(1)">&#9734;</span>
+          <span onclick="setGdFbRating(2)">&#9734;</span>
+          <span onclick="setGdFbRating(3)">&#9734;</span>
+          <span onclick="setGdFbRating(4)">&#9734;</span>
+          <span onclick="setGdFbRating(5)">&#9734;</span>
+        </div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--crimson);min-height:1.2em;" id="gd-fb-error"></div>
+      <div class="gd-fb-modal-actions">
+        <button class="gd-fb-cancel-btn" onclick="closeGdFbModal()">キャンセル</button>
+        <button class="gd-fb-save-btn" onclick="saveGdFbEntry()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- 進捗トラッカー 追加モーダル -->
 <div class="progress-modal-overlay" id="progress-modal">
@@ -1533,6 +2134,36 @@
   </div>
 </div>
 
+<!-- 企業研究ノートモーダル -->
+<div class="rn-modal-overlay" id="research-note-modal">
+  <div class="rn-modal-box">
+    <div class="rn-modal-header">
+      <span class="rn-modal-title" id="rn-company-name">企業研究ノート</span>
+      <button id="rn-modal-close" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">✕</button>
+    </div>
+    <div class="rn-modal-body">
+      <div>
+        <label class="rn-field-label">事業内容</label>
+        <textarea class="rn-textarea" id="rn-business" placeholder="主な事業内容、売上構成、事業セグメントなど..."></textarea>
+      </div>
+      <div>
+        <label class="rn-field-label">強み・特徴</label>
+        <textarea class="rn-textarea" id="rn-strengths" placeholder="競合と比べた強み、独自性、業界でのポジションなど..."></textarea>
+      </div>
+      <div>
+        <label class="rn-field-label">志望理由メモ</label>
+        <textarea class="rn-textarea" id="rn-motivation" placeholder="なぜこの企業なのか、自分の経験との接点など..."></textarea>
+      </div>
+      <div>
+        <label class="rn-field-label">懸念点</label>
+        <textarea class="rn-textarea" id="rn-concerns" placeholder="気になるポイント、確認すべきことなど..."></textarea>
+      </div>
+      <div class="rn-saved-msg" id="rn-saved-msg"></div>
+    </div>
+  </div>
+</div>
+-->
+
 <!-- recruit-fetch-modal removed for public version -->
 
 <!-- スクロールトップボタン -->
@@ -1554,18 +2185,47 @@
   const STAGE_SECTIONS = {
     '自己分析中':  ['jibunshi-section','gakuchika-section','company-notes','interview-checklist-section','self-pr-section','selection-section'],
     'ES準備中':    ['jibunshi-section','gakuchika-section','es-bank-section','ai-tools-section','selection-section','self-pr-section','es-board-section'],
-    '面接対策中':  ['interview-prep-section','gakuchika-section','es-bank-section','ai-tools-section','interview-checklist-section','selection-section','progress-section'],
-    '内定待ち':    ['es-bank-section','progress-section','calendar-section','selection-section','interview-checklist-section'],
+    '面接対策中':  ['interview-prep-section','gakuchika-section','es-bank-section','ai-tools-section','interview-checklist-section','selection-section'],
+    '内定待ち':    ['es-bank-section','selection-section','interview-checklist-section'],
   };
   const NOTICE_CSV     = ''; // ← お知らせスプシのCSV URLを貼る（列: 日付・タイトル・内容・タグ）
   const SELECTION_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSeg0-r0YzP_1sdSjvI98lNWrlwYfCsChk67fGlq3uwrQvuuFA/viewform?usp=publish-editor';
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
   const LENDING_FORM  = 'https://docs.google.com/forms/d/e/1FAIpQLScmV_ubANH5RNIHD_wEH3yakHbs5YqdegrPysSfpFo4veAg4Q/viewform'; // 列: タイトル, 著者, 状態(貸出可/貸出中), 現在の保有者
   let hasLoadedMembersContent = false;
 
   function logout() {
     KeioNaviAuth.logout();
     location.reload();
+  }
+
+  function escHtml(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function escAttr(s) { return escHtml(s).replace(/'/g, '&#39;'); }
+  function escJsString(value) {
+    return String(value == null ? '' : value)
+      .replace(/\\/g, '\\\\')
+      .replace(/'/g, "\\'")
+      .replace(/\r/g, '\\r')
+      .replace(/\n/g, '\\n')
+      .replace(/</g, '\\x3C');
+  }
+  function safeHttpUrl(value) {
+    var raw = String(value || '').trim();
+    if (!raw) return '';
+    try {
+      var url = new URL(raw, window.location.href);
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+      return url.href;
+    } catch (e) {
+      return '';
+    }
+  }
+  function renderUrlList(value) {
+    return String(value || '').split(/[|;]/).map(function(item) {
+      return safeHttpUrl(item);
+    }).filter(Boolean).map(function(url) {
+      return '<a href="' + escAttr(url) + '" target="_blank" rel="noopener noreferrer" class="modal-url" style="display:block;margin-bottom:0.3rem;">' + escHtml(url) + '</a>';
+    }).join('');
   }
 
   function toggleMobileMenuM() {
@@ -1584,6 +2244,112 @@
     }
   }
 
+  // ===== オンボーディングウィザード =====
+  const WIZARD_KEY = 'keio_navi_wizard_done_v1';
+  var _wizSelectedStage = '';
+
+  var WIZ_STAGE_DATA = {
+    '自己分析中': {
+      recs: [
+        { icon: '✍', title: 'ガクチカを書く', desc: 'STAR法でエピソードを整理。ES・面接の土台になります', link: 'writing.html' },
+        { icon: '📖', title: '就活用語を学ぶ', desc: '知らない用語があると損をします��まず基本を押さえよう', link: 'glossary.html' },
+        { icon: '👥', title: '仲間とつながる', desc: '同じ志望の仲間を見��けてモチベーションを維持', link: 'community.html' }
+      ],
+      cta: { text: 'ガクチカを書く →', link: 'writing.html', desc: 'まずはガクチカを1つ書いてみましょう。AIが構成をチ��ックしてくれます。' }
+    },
+    'ES準備中': {
+      recs: [
+        { icon: '📝', title: 'ESを書いてAI添削', desc: 'ESを書いてAIに添削してもらおう。何度でも無料です', link: 'writing.html' },
+        { icon: '✍', title: 'ガクチカバンクを整理', desc: 'エピソードをストックしておくと使い回し��楽に', link: 'writing.html' },
+        { icon: '📋', title: '選考を管理する', desc: '締切を登録して見逃しを防止', link: '#progress-section' }
+      ],
+      cta: { text: 'ES添削ツールへ →', link: 'writing.html', desc: 'ESを書いてAIに添削してもらいましょう。構成・具体性・表現力の観点でフィードバックがもらえます。' }
+    },
+    '面接対策中': {
+      recs: [
+        { icon: '🎤', title: '面接対策ノート', desc: '質問ごとに回答を準備。AIが深掘り��問を生成', link: 'interview-page.html' },
+        { icon: '🤖', title: 'AI模擬面接', desc: '音声認識でリアルな面接練習。即座にフィードバック', link: 'interview-page.html' },
+        { icon: '📋', title: '面接チェックリスト', desc: '当日の準備漏れを防ぐ14項目のチェックリスト', link: '#interview-checklist-section' }
+      ],
+      cta: { text: '面接対策を始める →', link: 'interview-page.html', desc: '面接でよく聞かれる質問への回答を準備しましょう。AIがあなたの回答を添削してくれます。' }
+    },
+    '内定待ち': {
+      recs: [
+        { icon: '📊', title: '選考状況を管理', desc: '企業ごとの進捗をまとめて管理', link: '#progress-section' },
+        { icon: '📅', title: '締切カレンダー', desc: 'スケジュールを可���化して漏れをなくす', link: '#calendar-section' },
+        { icon: '👥', title: '体験を共有する', desc: '後輩のためにES掲示板に投稿しよう', link: 'writing.html' }
+      ],
+      cta: { text: '選考管理へ →', link: '#progress-section', desc: '選考状況を登録して、すべてを一元管理しましょう。' }
+    }
+  };
+
+  function initWizard() {
+    if (localStorage.getItem(WIZARD_KEY)) {
+      document.getElementById('onboarding-wizard').style.display = 'none';
+      return;
+    }
+    document.getElementById('onboarding-wizard').style.display = 'block';
+  }
+
+  function nextWizStep(step) {
+    for (var i = 0; i < 3; i++) {
+      document.getElementById('wiz-panel-' + i).style.display = i === step ? 'block' : 'none';
+      document.getElementById('wiz-dot-' + i).style.background = i <= step ? 'var(--gold)' : 'rgba(10,26,62,0.1)';
+    }
+  }
+
+  function wizSelectStage(btn, stage) {
+    _wizSelectedStage = stage;
+    // ボタンのハイライト
+    document.querySelectorAll('.wiz-stage-btn').forEach(function(b) {
+      b.style.borderColor = 'rgba(10,26,62,0.15)';
+      b.style.background = 'white';
+    });
+    btn.style.borderColor = 'var(--navy)';
+    btn.style.background = 'rgba(10,26,62,0.04)';
+
+    // ステージを保存してページを再構成
+    localStorage.setItem(STAGE_KEY, stage);
+    if (typeof setStage === 'function') setStage(stage);
+
+    // Step 2 のおすすめ��生成
+    var data = WIZ_STAGE_DATA[stage];
+    if (data) {
+      document.getElementById('wiz-rec-title').textContent = '「' + stage + '」のあなたへ';
+      document.getElementById('wiz-rec-list').innerHTML = data.recs.map(function(r) {
+        return '<div style="display:flex;align-items:flex-start;gap:0.8rem;padding:0.7rem 0;border-bottom:1px solid rgba(10,26,62,0.06);">'
+          + '<div style="font-size:1.1rem;flex-shrink:0;margin-top:0.1rem;">' + r.icon + '</div>'
+          + '<div><div style="font-size:0.85rem;font-weight:700;color:var(--navy);">' + r.title + '</div>'
+          + '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.1rem;">' + r.desc + '</div></div></div>';
+      }).join('');
+
+      // Step 3 のCTAをセット
+      document.getElementById('wiz-cta-desc').textContent = data.cta.desc;
+      var ctaLink = document.getElementById('wiz-cta-link');
+      ctaLink.textContent = data.cta.text;
+      ctaLink.href = data.cta.link;
+      if (data.cta.link.charAt(0) === '#') {
+        ctaLink.onclick = function() { completeWizard(); var t = document.getElementById(data.cta.link.slice(1)); if (t) t.scrollIntoView({behavior:'smooth'}); return false; };
+      } else {
+        ctaLink.onclick = function() { completeWizard(); };
+      }
+    }
+
+    // 自動で次のステップへ
+    setTimeout(function() { nextWizStep(1); }, 300);
+  }
+
+  function completeWizard() {
+    localStorage.setItem(WIZARD_KEY, '1');
+    document.getElementById('onboarding-wizard').style.display = 'none';
+    // ダッシュボードを再描画（フェーズ選択の反映）
+    renderHomeDashboard(_dashStats);
+  }
+
+  function dismissWizard() {
+    completeWizard();
+  }
+
   function showMembers(user) {
     document.getElementById('password-screen').style.display = 'none';
     document.getElementById('members-content').style.display = 'block';
@@ -1594,6 +2360,7 @@
     document.getElementById('members-hero-copy').textContent = industryMsg + (user?.username || 'あなた') + ' さん向けに、選考情報・限定イベント・資料・輪読会をまとめています。';
     if (!hasLoadedMembersContent) {
       hasLoadedMembersContent = true;
+      initWizard();
       loadAll();
     }
   }
@@ -2235,9 +3002,9 @@
       return (name && name.includes(q)) || (industry && industry.includes(q)) || (alias && alias.includes(q));
     });
     if (!results.length) {
-      const escapedQ = q.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+      const escapedQ = escHtml(q);
       grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem;">
-        <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.2rem;">「${q}」の企業ノートはまだ登録されていません。</div>
+        <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.2rem;">「${escapedQ}」の企業ノートはまだ登録されていません。</div>
         ${GAS_PROXY_URL
           ? `<button id="search-generate-btn"
               style="padding:0.7rem 1.8rem; background:var(--navy); color:white; border:none;
@@ -2255,11 +3022,11 @@
       return;
     }
     grid.innerHTML = results.map(r => {
-      const preview = [r[2], r[3], r[4]].filter(Boolean).join(' ／ ');
-      const escapedName = (r[0]||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+      const preview = escHtml([r[2], r[3], r[4]].filter(Boolean).join(' ／ '));
+      const escapedName = escAttr(r[0] || '');
       return `<div class="company-note-card" data-open-modal="${escapedName}">
-        <div class="company-note-card-name">${r[0]||'–'}</div>
-        ${r[1] ? `<div class="company-note-card-industry">${r[1]}</div>` : ''}
+        <div class="company-note-card-name">${escHtml(r[0] || '–')}</div>
+        ${r[1] ? `<div class="company-note-card-industry">${escHtml(r[1])}</div>` : ''}
         ${preview ? `<div class="company-note-card-preview">${preview}</div>` : ''}
         <div class="company-note-card-arrow">ノートを見る →</div>
       </div>`;
@@ -2274,6 +3041,7 @@
     document.getElementById('modal-company-name').textContent = companyName || '–';
     document.getElementById('modal-industry').textContent = note ? (note[1] || '') : '';
     const body = document.getElementById('modal-body');
+    const memoValue = escHtml(getMemo(companyName));
     if (!note) {
       body.innerHTML = `<div style="text-align:center; padding:2.5rem 1rem;">
         <div class="modal-no-data" style="margin-bottom:1.2rem;">この企業の分析ノートはまだ登録されていません。</div>
@@ -2289,7 +3057,7 @@
       </div>
       <div class="modal-field">
         <div class="modal-field-label">MY MEMO（自分用メモ）</div>
-        <textarea class="modal-memo" id="modal-memo-area" placeholder="自分用のメモを書く（このデバイスに保存されます）...">${getMemo(companyName)}</textarea>
+        <textarea class="modal-memo" id="modal-memo-area" placeholder="自分用のメモを書く（このデバイスに保存されます）...">${memoValue}</textarea>
         <div class="modal-memo-saved" id="memo-saved-msg"></div>
       </div>`;
       if (GAS_PROXY_URL) {
@@ -2306,18 +3074,16 @@
       ];
       const memoHtml = `<div class="modal-field">
         <div class="modal-field-label">MY MEMO（自分用メモ）</div>
-        <textarea class="modal-memo" id="modal-memo-area" placeholder="自分用のメモを書く（このデバイスに保存されます）...">${getMemo(companyName)}</textarea>
+        <textarea class="modal-memo" id="modal-memo-area" placeholder="自分用のメモを書く（このデバイスに保存されます）...">${memoValue}</textarea>
         <div class="modal-memo-saved" id="memo-saved-msg"></div>
       </div>`;
       body.innerHTML = fields.map(f => {
         if (!f.value) return '';
         const val = f.isUrl
-          ? f.value.split(/[|;]/).map(u => u.trim()).filter(Boolean)
-              .map(u => `<a href="${u}" target="_blank" class="modal-url" style="display:block;margin-bottom:0.3rem;">${u}</a>`)
-              .join('')
-          : `<div class="modal-field-content">${f.value}</div>`;
+          ? renderUrlList(f.value)
+          : `<div class="modal-field-content">${escHtml(f.value)}</div>`;
         return `<div class="modal-field">
-          <div class="modal-field-label">${f.label}</div>
+          <div class="modal-field-label">${escHtml(f.label)}</div>
           ${val}
         </div>`;
       }).filter(Boolean).join('') + memoHtml || '<div class="modal-no-data">内容がまだ入力されていません。</div>' + memoHtml;
@@ -2344,10 +3110,11 @@
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 90000);
+      const sessionToken = KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
       const res = await fetch(GAS_PROXY_URL, {
         method: 'POST',
         redirect: 'follow',
-        body: JSON.stringify({ action: 'generate', companyName: searchWord }),
+        body: JSON.stringify({ action: 'generate', companyName: searchWord, sessionToken }),
         signal: controller.signal,
       });
       clearTimeout(timeout);
@@ -2358,9 +3125,10 @@
 
       // 企業が見つからない場合
       if (data.status !== 'ok' && data.message === 'NOT_FOUND') {
+        const safeSearchWord = escHtml(searchWord);
         body.innerHTML = `<div style="text-align:center; padding:3rem;">
           <div style="font-size:1.5rem; margin-bottom:1rem;">🔍</div>
-          <div style="font-size:0.92rem; font-weight:700; color:var(--navy); margin-bottom:0.6rem;">「${searchWord}」は見つかりませんでした</div>
+          <div style="font-size:0.92rem; font-weight:700; color:var(--navy); margin-bottom:0.6rem;">「${safeSearchWord}」は見つかりませんでした</div>
           <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.8;">企業名を正式名称や別の表記で試してみてください。<br>それでも見つからない場合はスプシに直接入力してください。</div>
         </div>`;
         document.getElementById('modal-industry').textContent = '';
@@ -2393,10 +3161,9 @@
       body.innerHTML = fields.map(f => {
         if (!f.value) return '';
         const val = f.isUrl
-          ? f.value.split(/[|;]/).map(u => u.trim()).filter(Boolean)
-              .map(u => `<a href="${u}" target="_blank" class="modal-url" style="display:block;margin-bottom:0.3rem;">${u}</a>`).join('')
-          : `<div class="modal-field-content">${f.value}</div>`;
-        return `<div class="modal-field"><div class="modal-field-label">${f.label}</div>${val}</div>`;
+          ? renderUrlList(f.value)
+          : `<div class="modal-field-content">${escHtml(f.value)}</div>`;
+        return `<div class="modal-field"><div class="modal-field-label">${escHtml(f.label)}</div>${val}</div>`;
       }).filter(Boolean).join('') +
       `<div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid rgba(10,26,62,0.1); text-align:center;">
         <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:0.8rem;">※ このノートはまだスプシに保存されていません</div>
@@ -2423,10 +3190,11 @@
     try {
       btn = btn || event.target;
       btn.textContent = '保存中...'; btn.disabled = true;
+      const sessionToken = KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
       const res = await fetch(GAS_PROXY_URL, {
         method: 'POST',
         redirect: 'follow',
-        body: JSON.stringify({ action: 'save', searchWord, note: { ...note, officialName } }),
+        body: JSON.stringify({ action: 'save', searchWord, note: { ...note, officialName }, sessionToken }),
         headers: { 'Content-Type': 'application/json' },
       });
       const resultText = await res.text();
@@ -2500,15 +3268,15 @@
       <div class="quiz-hints">
         ${hints.map(h => `
           <div class="quiz-hint">
-            <div class="quiz-hint-label">${h.label}</div>
-            <div class="quiz-hint-text">${h.value}</div>
+            <div class="quiz-hint-label">${escHtml(h.label)}</div>
+            <div class="quiz-hint-text">${escHtml(h.value)}</div>
           </div>`).join('')}
       </div>
       <div class="quiz-choices">
         ${choices.map(r => {
-          const en = (r[0]||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
-          const ec = (correct[0]||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
-          return `<button class="quiz-choice" data-chosen="${en}" data-correct="${ec}">${r[0]}</button>`;
+          const en = escAttr(r[0] || '');
+          const ec = escAttr(correct[0] || '');
+          return `<button class="quiz-choice" data-chosen="${en}" data-correct="${ec}">${escHtml(r[0] || '')}</button>`;
         }).join('')}
       </div>
       <div id="quiz-result"></div>
@@ -2582,10 +3350,10 @@
         const tagLabel = tag.includes('重要') ? '重要' : tag.includes('イベント') ? 'イベント' : 'お知らせ';
         return `<div class="notice-item ${tagClass}">
           <span class="notice-tag ${tagClass}">${tagLabel}</span>
-          <span class="notice-date">${r[0]}</span>
+          <span class="notice-date">${escHtml(r[0])}</span>
           <div class="notice-body">
-            <div class="notice-title">${r[1]}</div>
-            ${r[2] ? `<div class="notice-content">${r[2]}</div>` : ''}
+            <div class="notice-title">${escHtml(r[1])}</div>
+            ${r[2] ? `<div class="notice-content">${escHtml(r[2])}</div>` : ''}
           </div>
         </div>`;
       }).join('');
@@ -2634,9 +3402,10 @@
     document.getElementById('rf-result').style.display = 'none';
 
     try {
+      const sessionToken = KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
       const res = await fetch(GAS_PROXY_URL, {
         method: 'POST',
-        body: JSON.stringify({ action: 'fetchRecruitInfo', companyName: company, url: url })
+        body: JSON.stringify({ action: 'fetchRecruitInfo', companyName: company, url: url, sessionToken })
       });
       const data = await res.json();
 
@@ -2655,13 +3424,13 @@
       const preview = document.getElementById('rf-preview');
       preview.innerHTML = `
         <div style="display:grid;gap:0.5rem;">
-          <div><strong>企業名:</strong> ${info.company || '-'}</div>
-          <div><strong>締切:</strong> ${info.deadline || '不明'}</div>
-          <div><strong>種別:</strong> ${info.type || '不明'}</div>
-          <div><strong>選考フロー:</strong> ${info.flow || '不明'}</div>
-          <div><strong>応募条件:</strong> ${info.requirements || '不明'}</div>
-          <div><strong>業界:</strong> ${info.industry || '不明'}</div>
-          ${info.notes ? '<div><strong>備考:</strong> ' + info.notes + '</div>' : ''}
+          <div><strong>企業名:</strong> ${escHtml(info.company || '-')}</div>
+          <div><strong>締切:</strong> ${escHtml(info.deadline || '不明')}</div>
+          <div><strong>種別:</strong> ${escHtml(info.type || '不明')}</div>
+          <div><strong>選考フロー:</strong> ${escHtml(info.flow || '不明')}</div>
+          <div><strong>応募条件:</strong> ${escHtml(info.requirements || '不明')}</div>
+          <div><strong>業界:</strong> ${escHtml(info.industry || '不明')}</div>
+          ${info.notes ? '<div><strong>備考:</strong> ' + escHtml(info.notes) + '</div>' : ''}
         </div>`;
       document.getElementById('rf-source').textContent = '出典: ' + (data.sourceUrl || '企業公式HP');
       document.getElementById('rf-result').style.display = 'block';
@@ -2681,9 +3450,10 @@
     btn.textContent = '保存中...';
 
     try {
+      const sessionToken = KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
       const res = await fetch(GAS_PROXY_URL, {
         method: 'POST',
-        body: JSON.stringify({ action: 'saveRecruitInfo', recruitInfo: lastRecruitInfo })
+        body: JSON.stringify({ action: 'saveRecruitInfo', recruitInfo: lastRecruitInfo, sessionToken })
       });
       const data = await res.json();
 
@@ -2713,12 +3483,349 @@
     scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
   }, { passive: true });
 
+  // ===== ダッシュボード統計 =====
+
+  async function loadMyStats() {
+    try {
+      var data = await callAuthApi('getMyStats');
+      renderStats(data);
+      renderHomeDashboard(data);
+    } catch(e) {
+      console.warn('stats load failed', e);
+      renderHomeDashboard(null);
+    }
+  }
+
+  function renderStats(data) {
+    var el = document.getElementById('stats-content');
+    var s = data.stats;
+    var level = data.points < 50 ? '就活ビギナー' : data.points < 150 ? '就活チャレンジャー' : data.points < 300 ? '就活ファイター' : '就活マスター';
+
+    el.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:0.8rem;margin-bottom:1rem;">'
+      + statCard('ES', s.esCount) + statCard('ガクチカ', s.gkCount) + statCard('掲示板', s.boardCount)
+      + statCard('面接Q', s.ipCount) + statCard('自己PR', s.prCount) + statCard('投稿', s.timelineCount)
+      + '</div>'
+      + '<div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.8rem;">'
+      + '<div style="font-size:1.2rem;font-weight:700;color:var(--navy);">' + data.points + ' pt</div>'
+      + '<div style="font-size:0.78rem;color:var(--gold);font-weight:700;">' + level + '</div>'
+      + '</div>'
+      + (data.badges.length ? '<div style="display:flex;flex-wrap:wrap;gap:0.4rem;">' + data.badges.map(function(b){ return '<span style="font-size:0.68rem;padding:0.2rem 0.6rem;background:rgba(201,168,76,0.12);color:#7a5f10;border:1px solid rgba(201,168,76,0.3);font-weight:600;">' + b + '</span>'; }).join('') + '</div>' : '');
+  }
+
+  function statCard(label, count) {
+    return '<div style="text-align:center;padding:0.8rem;background:white;border:1px solid rgba(10,26,62,0.06);">'
+      + '<div style="font-size:1.1rem;font-weight:700;color:var(--navy);">' + count + '</div>'
+      + '<div style="font-size:0.65rem;color:var(--text-muted);">' + label + '</div></div>';
+  }
+
+  // ===== ホームダッシュボード =====
+
+  var _dashStats = null;
+
+  function renderHomeDashboard(stats) {
+    if (stats) _dashStats = stats;
+    renderActionCards();
+    renderProgressOverview();
+    renderRoadmap();
+  }
+
+  function renderActionCards() {
+    var progress = readProgress();
+    var ipDb;
+    try { ipDb = JSON.parse(localStorage.getItem(IP_STORAGE_KEY) || '{"companies":[],"questions":[]}'); } catch(e) { ipDb = {companies:[],questions:[]}; }
+    var checklist = readChecklist();
+    var stage = localStorage.getItem(STAGE_KEY) || '';
+    var s = _dashStats ? _dashStats.stats : null;
+    var gkCount = s ? s.gkCount : 0;
+    var esCount = s ? s.esCount : 0;
+    var ipCount = s ? s.ipCount : 0;
+
+    var actions = [];
+    var now = new Date();
+
+    // 締切アラート（最優先）
+    progress.forEach(function(p) {
+      if (!p.deadline || p.status === 'offer' || p.status === 'rejected') return;
+      var dl = new Date(p.deadline);
+      var days = Math.ceil((dl - now) / 86400000);
+      if (days >= 0 && days <= 7) {
+        var label = days === 0 ? '今日' : 'あと' + days + '日';
+        actions.push({
+          icon: '⏰', title: p.company + ' の締切が' + label,
+          desc: dl.toLocaleDateString('ja-JP') + ' まで',
+          link: '#progress-section', priority: days <= 3 ? 'urgent' : 'high', sort: days
+        });
+      }
+    });
+    actions.sort(function(a, b) { return a.sort - b.sort; });
+
+    // ステップバイステップ推奨
+    if (gkCount === 0) {
+      actions.push({ icon: '✍', title: 'ガクチカを書こう', desc: 'STAR法でエピソードを整理。ESや面接の土台になります', link: 'writing.html', priority: 'high' });
+    } else if (esCount === 0) {
+      actions.push({ icon: '📝', title: 'ESを作成しよう', desc: 'ガクチカをもとにESを書いてAIに添削してもらおう', link: 'writing.html', priority: 'high' });
+    } else if (ipCount === 0 && (ipDb.companies || []).length === 0) {
+      actions.push({ icon: '🎤', title: '面接対策を始めよう', desc: 'よく聞かれる質問への回答を準備しましょう', link: 'interview-page.html', priority: 'medium' });
+    } else if (progress.length === 0) {
+      actions.push({ icon: '📋', title: '選考を追加しよう', desc: '選考状況を管理して締切を見逃さない', link: '#progress-section', priority: 'medium' });
+    }
+
+    // チェックリスト未完了
+    if (checklist.length > 0 && checklist.length < 14) {
+      actions.push({ icon: '✅', title: '面接チェックリスト 未完了あり', desc: checklist.length + '/14 完了', link: '#interview-checklist-section', priority: 'low' });
+    }
+
+    // データ未取得時
+    if (!_dashStats && actions.length === 0) {
+      actions.push({ icon: '📊', title: 'データを読み込み中...', desc: 'しばらくお待ちください', link: '#', priority: 'low' });
+    }
+
+    // 全部できてる場合
+    if (_dashStats && actions.length === 0) {
+      actions.push({ icon: '🎯', title: 'いい調子です！', desc: '新しい選考を追加するか、面接練習を続けよう', link: 'interview-page.html', priority: 'low' });
+    }
+
+    var el = document.getElementById('action-cards');
+    el.innerHTML = actions.slice(0, 3).map(function(a) {
+      var isHash = a.link.charAt(0) === '#';
+      var onclick = isHash ? ' onclick="var t=document.getElementById(\'' + a.link.slice(1) + '\');if(t)t.scrollIntoView({behavior:\'smooth\'});return false;"' : '';
+      return '<a href="' + a.link + '" class="action-card action-' + a.priority + '"' + onclick + '>'
+        + '<div class="action-icon">' + a.icon + '</div>'
+        + '<div class="action-body">'
+        + '<div class="action-title">' + a.title + '</div>'
+        + '<div class="action-desc">' + a.desc + '</div>'
+        + '</div>'
+        + '<div class="action-arrow">\u2192</div>'
+        + '</a>';
+    }).join('');
+  }
+
+  function renderProgressOverview() {
+    var progress = readProgress();
+    var ipDb;
+    try { ipDb = JSON.parse(localStorage.getItem(IP_STORAGE_KEY) || '{"companies":[],"questions":[]}'); } catch(e) { ipDb = {companies:[],questions:[]}; }
+    var checklist = readChecklist();
+    var s = _dashStats ? _dashStats.stats : null;
+
+    var answeredQ = 0, totalQ = 0;
+    (ipDb.companies || []).forEach(function(c) {
+      (c.questions || []).forEach(function(q) { totalQ++; if (q.answer && q.answer.trim()) answeredQ++; });
+    });
+
+    var items = [
+      { label: 'ガクチカ', count: s ? s.gkCount : 0, target: 3, unit: '個' },
+      { label: 'ES保存', count: s ? s.esCount : 0, target: 5, unit: '本' },
+      { label: '面接Q&A', count: answeredQ, target: Math.max(totalQ, 10), unit: '問' },
+      { label: '選考管理', count: progress.length, target: 5, unit: '社' }
+    ];
+
+    var el = document.getElementById('progress-overview');
+    el.innerHTML = '<div class="progress-grid">' + items.map(function(item) {
+      var pct = item.target > 0 ? Math.min(100, Math.round((item.count / item.target) * 100)) : 0;
+      var barClass = pct >= 100 ? 'progress-bar-fill gold' : 'progress-bar-fill';
+      return '<div class="progress-item">'
+        + '<div class="progress-item-header">'
+        + '<span class="progress-item-label">' + item.label + '</span>'
+        + '<span class="progress-item-count">' + item.count + ' ' + item.unit + '</span>'
+        + '</div>'
+        + '<div class="progress-bar-bg"><div class="' + barClass + '" style="width:' + pct + '%"></div></div>'
+        + '</div>';
+    }).join('') + '</div>';
+  }
+
+  // ===== ロードマップ =====
+
+  var ROADMAP_PHASES = [
+    {
+      id: 'self-analysis', title: '自己分析', period: '3年 4月〜6月',
+      months: [3,4,5], stage: '自己分析中',
+      tasks: [
+        { label: 'ガクチカ整理', link: 'writing.html' },
+        { label: '強み・弱み分析', link: 'writing.html' },
+        { label: '用語を学ぶ', link: 'glossary.html' }
+      ]
+    },
+    {
+      id: 'summer-intern', title: 'サマーインターンES', period: '3年 6月〜7月',
+      months: [5,6], stage: 'ES準備中',
+      tasks: [
+        { label: 'ES作成・添削', link: 'writing.html' },
+        { label: 'ガクチカ深掘り', link: 'writing.html' },
+        { label: '業界研究', link: 'glossary.html' }
+      ]
+    },
+    {
+      id: 'summer-interview', title: 'サマーインターン面接', period: '3年 7月〜8月',
+      months: [6,7], stage: '面接対策中',
+      tasks: [
+        { label: '面接対策', link: 'interview-page.html' },
+        { label: 'AI模擬面接', link: 'interview-page.html' },
+        { label: 'チェックリスト', link: '#interview-checklist-section' }
+      ]
+    },
+    {
+      id: 'autumn-prep', title: '秋冬準備・OB訪問', period: '3年 9月〜11月',
+      months: [8,9,10], stage: 'ES準備中',
+      tasks: [
+        { label: 'OB訪問', link: 'interview-page.html' },
+        { label: 'ES改善', link: 'writing.html' },
+        { label: '選考管理', link: '#progress-section' }
+      ]
+    },
+    {
+      id: 'early-selection', title: '早期選考・冬インターン', period: '3年 12月〜2月',
+      months: [11,0,1], stage: '面接対策中',
+      tasks: [
+        { label: '面接練習', link: 'interview-page.html' },
+        { label: 'ES使い回し', link: 'writing.html' },
+        { label: '選考管理', link: '#progress-section' }
+      ]
+    },
+    {
+      id: 'main-selection', title: '本選考', period: '4年 3月〜6月',
+      months: [2,3,4,5], stage: '面接対策中',
+      tasks: [
+        { label: '面接本番対策', link: 'interview-page.html' },
+        { label: 'ES最終版', link: 'writing.html' },
+        { label: '締切カレンダー', link: '#calendar-section' }
+      ]
+    },
+    {
+      id: 'offer', title: '内定・意思決定', period: '4年 6月〜',
+      months: [], stage: '内定待ち',
+      tasks: [
+        { label: '選考結果管理', link: '#progress-section' },
+        { label: '体験記を共有', link: 'writing.html' }
+      ]
+    }
+  ];
+
+  function renderRoadmap() {
+    var el = document.getElementById('roadmap');
+    if (!el) return;
+
+    var now = new Date();
+    var currentMonth = now.getMonth();
+    var userStage = localStorage.getItem(STAGE_KEY) || '';
+
+    // 現在フェーズを判定（ユーザー設定 or 月ベース）
+    var currentIdx = -1;
+    if (userStage) {
+      for (var i = ROADMAP_PHASES.length - 1; i >= 0; i--) {
+        if (ROADMAP_PHASES[i].stage === userStage) { currentIdx = i; break; }
+      }
+    }
+    if (currentIdx < 0) {
+      for (var i = 0; i < ROADMAP_PHASES.length; i++) {
+        if (ROADMAP_PHASES[i].months.indexOf(currentMonth) !== -1) { currentIdx = i; break; }
+      }
+    }
+    if (currentIdx < 0) currentIdx = 0;
+
+    var html = '<div class="roadmap-track">';
+    ROADMAP_PHASES.forEach(function(phase, idx) {
+      var isCurrent = idx === currentIdx;
+      var isDone = idx < currentIdx;
+      var phaseClass = isCurrent ? 'roadmap-phase current' : 'roadmap-phase';
+      var dotClass = isCurrent ? 'roadmap-dot current' : isDone ? 'roadmap-dot done' : 'roadmap-dot';
+
+      html += '<div class="' + phaseClass + '">';
+      html += '<div class="' + dotClass + '"></div>';
+      html += '<div class="roadmap-title">' + phase.title;
+      if (isCurrent) html += ' <span class="roadmap-now">NOW</span>';
+      html += '</div>';
+      html += '<div class="roadmap-period">' + phase.period + '</div>';
+      html += '<div class="roadmap-tasks">';
+      phase.tasks.forEach(function(t) {
+        var isHash = t.link.charAt(0) === '#';
+        var onclick = isHash ? ' onclick="var e=document.getElementById(\'' + t.link.slice(1) + '\');if(e)e.scrollIntoView({behavior:\'smooth\'});return false;"' : '';
+        html += '<a href="' + t.link + '" class="roadmap-task-chip"' + onclick + '>' + t.label + '</a>';
+      });
+      html += '</div></div>';
+    });
+    html += '</div>';
+
+    el.innerHTML = html;
+  }
+
+  // ===== タイムライン =====
+
+  async function loadTimeline() {
+    try {
+      var data = await callAuthApi('readTimeline');
+      renderTimeline(data.entries || []);
+    } catch(e) { document.getElementById('tl-feed').textContent = '読み込みに失敗しました。'; }
+  }
+
+  function renderTimeline(entries) {
+    var el = document.getElementById('tl-feed');
+    if (!entries.length) { el.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:0.82rem;">まだ投稿がありません。最初の一言を投稿してみよう！</div>'; return; }
+    el.innerHTML = entries.map(function(e) {
+      var date = new Date(e.createdAt);
+      var timeStr = date.toLocaleDateString('ja-JP') + ' ' + date.toLocaleTimeString('ja-JP', {hour:'2-digit',minute:'2-digit'});
+      return '<div style="padding:0.8rem;border-bottom:1px solid rgba(10,26,62,0.06);">'
+        + '<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">'
+        + '<span style="font-weight:700;font-size:0.82rem;color:var(--navy);">' + escHtml(e.displayName || '匿名') + '</span>'
+        + '<span style="font-size:0.68rem;color:var(--text-muted);">' + escHtml(timeStr) + '</span></div>'
+        + '<div style="font-size:0.85rem;line-height:1.7;">' + escHtml(e.text || '') + '</div></div>';
+    }).join('');
+  }
+
+  async function postTimeline() {
+    var input = document.getElementById('tl-input');
+    var text = input.value.trim();
+    if (!text) return;
+    try {
+      await callAuthApi('writeTimeline', { text: text });
+      if (typeof gtag === 'function') { gtag('event', 'timeline_post'); }
+      input.value = '';
+      loadTimeline();
+    } catch(e) { alert(e.message); }
+  }
+
   async function loadAll() {
-    initProgressTracker();
+    renderMonthlyAdvice();
+    renderHomeDashboard(null);
     // お知らせと企業ノートを並列取得（企業ノートは選考表示のfindNoteで必要）
     await Promise.all([loadNotice(), loadCompanyNotes()]);
     await loadSelection();
-    initCalendar();
+    loadMyStats();
+    loadTimeline();
+
+    // 締切リマインド通知（通知が有効な場合のみ）
+    try {
+      if (typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.checkDeadlineReminders) {
+        KeioNaviAuth.checkDeadlineReminders();
+      }
+    } catch (e) { /* 通知エラーはサイレントに無視 */ }
+  }
+
+  function renderMonthlyAdvice() {
+    var month = new Date().getMonth();
+    var advice = [
+      {m:'1月',text:'早期選考ラッシュ。選考体験記を共有して仲間を助けよう。',link:'writing.html',btn:'体験記を書く'},
+      {m:'2月',text:'本選考準備の追い込み。AI面接練習を繰り返して本番力を磨こう。',link:'interview-page.html',btn:'面接練習へ'},
+      {m:'3月',text:'本選考解禁！選考情報をリアルタイムで共有しよう。',link:'writing.html',btn:'体験記を共有'},
+      {m:'4月',text:'新歓の季節！友達を誘って一緒に就活を始めよう。',link:'account.html',btn:'友達を招待'},
+      {m:'5月',text:'自己分析を深めよう。ガクチカをSTAR法で整理してみて。',link:'writing.html',btn:'ガクチカを書く'},
+      {m:'6月',text:'サマーインターンのES提出ラッシュ！AI添削を活用しよう。',link:'writing.html',btn:'ES添削へ'},
+      {m:'7月',text:'面接対策の本番。AI模擬面接で練習しよう。',link:'interview-page.html',btn:'面接練習へ'},
+      {m:'8月',text:'インターン参加中。体験記を書いてコミュニティに貢献しよう。',link:'writing.html',btn:'体験記を書く'},
+      {m:'9月',text:'秋インターン選考スタート。ES保管庫を活用しよう。',link:'writing.html',btn:'ES保管庫へ'},
+      {m:'10月',text:'業界研究を深めよう。OB訪問を積極的に。',link:'interview-page.html',btn:'OB訪問準備'},
+      {m:'11月',text:'冬インターン・早期選考。面接チェックリストで準備を確認。',link:'interview-page.html',btn:'チェックリストへ'},
+      {m:'12月',text:'本選考準備開始。面接練習を繰り返して自信をつけよう。',link:'interview-page.html',btn:'面接練習へ'}
+    ];
+    var a = advice[month];
+    var card = document.getElementById('monthly-advice-card');
+    if (!card || !a) return;
+    card.innerHTML = '\x3cdiv style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem;">'
+      + '\x3cspan style="font-size:1.5rem;">📅\x3c/span>'
+      + '\x3cdiv>\x3cdiv style="font-size:0.65rem;letter-spacing:0.15em;color:#c9a84c;font-weight:700;">MONTHLY POINT\x3c/div>'
+      + '\x3cdiv style="font-size:1rem;font-weight:700;color:white;font-family:\'Noto Serif JP\',serif;">' + a.m + 'のポイント\x3c/div>\x3c/div>'
+      + '\x3c/div>'
+      + '\x3cdiv style="font-size:0.82rem;color:rgba(255,255,255,0.85);line-height:1.6;margin-bottom:0.8rem;">' + a.text + '\x3c/div>'
+      + '\x3ca href="' + a.link + '" style="display:inline-block;padding:0.45rem 1.2rem;background:#c9a84c;color:#0a1a3e;border-radius:8px;font-size:0.78rem;font-weight:700;text-decoration:none;">' + a.btn + '\x3c/a>';
   }
 
   // ===== ステージセレクター =====
@@ -2916,21 +4023,24 @@
       return;
     }
     listEl.innerHTML = posts.map(p => {
+      const postId = String(p.id || '');
+      const postIdAttr = escAttr(postId);
+      const postIdJs = escJsString(postId);
       const comments = (p.comments || []).map(c =>
-        `<div class="board-comment"><span class="board-comment-user">${c.username||'匿名'}</span>${(c.commentText||c.text||'').replace(/\x3c/g,'\x26lt;')}</div>`
+        `<div class="board-comment"><span class="board-comment-user">${escHtml(c.username || '匿名')}</span>${escHtml(c.commentText || c.text || '')}</div>`
       ).join('');
       return `<div class="board-card">
         <div class="board-card-head">
-          <span class="board-card-company">${(p.company||'').replace(/\x3c/g,'\x26lt;')}</span>
-          <span class="board-card-user">${p.username||'匿名'} · ${p.createdAt ? new Date(p.createdAt).toLocaleDateString('ja-JP') : ''}</span>
+          <span class="board-card-company">${escHtml(p.company || '')}</span>
+          <span class="board-card-user">${escHtml(p.username || '匿名')} · ${escHtml(p.createdAt ? new Date(p.createdAt).toLocaleDateString('ja-JP') : '')}</span>
         </div>
-        <div class="board-card-q">${(p.question||'').replace(/\x3c/g,'\x26lt;')}</div>
-        <div class="board-card-text">${(p.esText||p.text||'').replace(/\x3c/g,'\x26lt;')}</div>
+        <div class="board-card-q">${escHtml(p.question || '')}</div>
+        <div class="board-card-text">${escHtml(p.esText || p.text || '')}</div>
         <div class="board-comments">
-          <div id="comments-${p.id}">${comments}</div>
+          <div id="comments-${postIdAttr}">${comments}</div>
           <div class="board-comment-row">
-            <input class="board-comment-input" id="ci-${p.id}" placeholder="フィードバックを書く...">
-            <button class="board-comment-submit" onclick="submitComment('${p.id}')">送信</button>
+            <input class="board-comment-input" id="ci-${postIdAttr}" placeholder="フィードバックを書く...">
+            <button class="board-comment-submit" onclick="submitComment('${postIdJs}')">送信</button>
           </div>
         </div>
       </div>`;
@@ -3079,6 +4189,7 @@
     const list = readProgress();
     const el = document.getElementById('progress-list');
     renderProgressDashboard(list);
+    renderProgressAnalytics();
     if (!list.length) {
       el.innerHTML = '<div class="m-empty">まだ登録されていません。「＋ 選考を追加」から登録してください。</div>';
       return;
@@ -3109,7 +4220,7 @@
       return `<div class="progress-row">
         <div class="progress-row-top">
           <div><span class="progress-company">${entry.company}</span>${entry.industry ? `<span class="progress-industry" style="margin-left:0.5rem;">${entry.industry}</span>` : ''}${statusBadge}</div>
-          <button class="progress-del-btn" onclick="deleteProgress('${entry.id}')">削除</button>
+          <div style="display:flex;align-items:center;gap:0.4rem;"><button class="rn-note-btn" onclick="openResearchNote('${entry.id}')">研究ノート${hasResearchNote(entry.id) ? '<span class="rn-note-indicator">●</span>' : ''}</button><button class="progress-del-btn" onclick="deleteProgress('${entry.id}')">削除</button></div>
         </div>
         <div class="progress-stages">${stageChips}</div>
         <div style="margin-top:0.5rem;display:flex;align-items:center;gap:0.8rem;flex-wrap:wrap;">${deadlineStr}${terminalBtns}</div>
@@ -3159,9 +4270,160 @@
     }
   }
 
+  // ===== 企業研究ノート (Feature B: #15) =====
+  const RESEARCH_NOTES_KEY = 'keio_navi_research_notes_v1';
+  let _currentResearchNoteId = null;
+  let _rnSaveTimer = null;
+
+  function readResearchNotes() {
+    try { return JSON.parse(localStorage.getItem(RESEARCH_NOTES_KEY) || '{}'); } catch { return {}; }
+  }
+  function writeResearchNotes(obj) {
+    localStorage.setItem(RESEARCH_NOTES_KEY, JSON.stringify(obj));
+  }
+  function hasResearchNote(id) {
+    const notes = readResearchNotes();
+    if (!notes[id]) return false;
+    return !!(notes[id].business || notes[id].strengths || notes[id].motivation || notes[id].concerns);
+  }
+  function openResearchNote(id) {
+    _currentResearchNoteId = id;
+    const list = readProgress();
+    const entry = list.find(e => e.id === id);
+    const modal = document.getElementById('research-note-modal');
+    document.getElementById('rn-company-name').textContent = entry ? entry.company + ' - 研究ノート' : '企業研究ノート';
+    const notes = readResearchNotes();
+    const data = notes[id] || {};
+    document.getElementById('rn-business').value = data.business || '';
+    document.getElementById('rn-strengths').value = data.strengths || '';
+    document.getElementById('rn-motivation').value = data.motivation || '';
+    document.getElementById('rn-concerns').value = data.concerns || '';
+    document.getElementById('rn-saved-msg').textContent = '';
+    modal.classList.add('open');
+  }
+  function saveResearchNote(id) {
+    const notes = readResearchNotes();
+    notes[id] = {
+      business: document.getElementById('rn-business').value,
+      strengths: document.getElementById('rn-strengths').value,
+      motivation: document.getElementById('rn-motivation').value,
+      concerns: document.getElementById('rn-concerns').value,
+      updatedAt: new Date().toISOString()
+    };
+    writeResearchNotes(notes);
+    const msgEl = document.getElementById('rn-saved-msg');
+    msgEl.textContent = '保存しました';
+    setTimeout(() => { if (msgEl.textContent === '保存しました') msgEl.textContent = ''; }, 1500);
+  }
+  function initResearchNoteModal() {
+    const modal = document.getElementById('research-note-modal');
+    document.getElementById('rn-modal-close').addEventListener('click', () => {
+      modal.classList.remove('open');
+      renderProgressList();
+    });
+    modal.addEventListener('click', e => {
+      if (e.target === modal) { modal.classList.remove('open'); renderProgressList(); }
+    });
+    ['rn-business', 'rn-strengths', 'rn-motivation', 'rn-concerns'].forEach(fieldId => {
+      document.getElementById(fieldId).addEventListener('input', () => {
+        clearTimeout(_rnSaveTimer);
+        _rnSaveTimer = setTimeout(() => {
+          if (_currentResearchNoteId) saveResearchNote(_currentResearchNoteId);
+        }, 400);
+      });
+    });
+  }
+
+  // ===== 選考分析ダッシュボード (Feature A: #21) =====
+  function renderProgressAnalytics() {
+    const container = document.getElementById('progress-analytics');
+    if (!container) return;
+    const list = readProgress();
+
+    if (list.length < 3) {
+      container.innerHTML = '<div class="progress-analytics"><div class="pa-empty">3社以上登録すると分析が表示されます</div></div>';
+      return;
+    }
+
+    const total = list.length;
+    const activeAndOffer = list.filter(e => e.status === 'active' || e.status === 'offer');
+
+    // Funnel: count entries that have REACHED at least each stage
+    const funnelStages = [
+      { label: '応募', count: total },
+      { label: 'ES通過', count: list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 1 || e.status === 'offer').length },
+      { label: '一次通過', count: list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 2 || e.status === 'offer').length },
+      { label: '二次通過', count: list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 3 || e.status === 'offer').length },
+      { label: '最終', count: list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 4 || e.status === 'offer').length },
+      { label: '内定', count: list.filter(e => e.status === 'offer').length }
+    ];
+    const maxCount = Math.max(1, funnelStages[0].count);
+
+    // Color gradient from navy to gold
+    const funnelColors = ['#0a1a3e', '#1a2f5a', '#3a4f7a', '#7a6f3a', '#a8903c', '#c9a84c'];
+
+    let funnelHTML = '<div class="pa-funnel">';
+    funnelStages.forEach((s, i) => {
+      const pct = total > 0 ? Math.round((s.count / total) * 100) : 0;
+      const barWidth = maxCount > 0 ? Math.max(2, (s.count / maxCount) * 100) : 2;
+      funnelHTML += `<div class="pa-funnel-row">
+        <span class="pa-funnel-label">${s.label}</span>
+        <div class="pa-funnel-bar-wrap"><div class="pa-funnel-bar" style="width:${barWidth}%;background:${funnelColors[i]};"></div></div>
+        <span class="pa-funnel-val">${s.count}社 (${pct}%)</span>
+      </div>`;
+    });
+    funnelHTML += '</div>';
+
+    // Pass rate cards
+    const pastES = list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 1 || e.status === 'offer').length;
+    const docPassRate = total > 0 ? Math.round((pastES / total) * 100) : 0;
+
+    const atInterview = list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 1).length;
+    const pastInterview = list.filter(e => PROGRESS_STAGES.indexOf(e.stage) >= 2 || e.status === 'offer').length;
+    const interviewPassRate = atInterview > 0 ? Math.round((pastInterview / atInterview) * 100) : 0;
+
+    const offers = list.filter(e => e.status === 'offer').length;
+    const offerRate = total > 0 ? Math.round((offers / total) * 100) : 0;
+
+    let cardsHTML = `<div class="pa-cards">
+      <div class="pa-card"><div class="pa-card-num">${docPassRate}%</div><div class="pa-card-label">書類通過率</div></div>
+      <div class="pa-card"><div class="pa-card-num">${interviewPassRate}%</div><div class="pa-card-label">面接通過率</div></div>
+      <div class="pa-card"><div class="pa-card-num">${offerRate}%</div><div class="pa-card-label">内定率</div></div>
+    </div>`;
+
+    // Industry breakdown
+    let industryHTML = '';
+    const industries = {};
+    list.forEach(e => {
+      if (e.industry) {
+        industries[e.industry] = (industries[e.industry] || 0) + 1;
+      }
+    });
+    const indEntries = Object.entries(industries).sort((a, b) => b[1] - a[1]);
+    if (indEntries.length > 0) {
+      const maxInd = indEntries[0][1];
+      industryHTML = '<div class="pa-industry"><div class="pa-industry-title">業界別応募数</div>';
+      indEntries.forEach(([name, count]) => {
+        const w = Math.max(4, (count / maxInd) * 100);
+        industryHTML += `<div class="pa-ind-row">
+          <span class="pa-ind-label">${name}</span>
+          <div class="pa-ind-bar-wrap"><div class="pa-ind-bar" style="width:${w}%;"></div></div>
+          <span class="pa-ind-val">${count}社</span>
+        </div>`;
+      });
+      industryHTML += '</div>';
+    }
+
+    container.innerHTML = `<div class="progress-analytics">
+      <div class="pa-title">選考分析ダッシュボード</div>
+      ${funnelHTML}${cardsHTML}${industryHTML}
+    </div>`;
+  }
+
   function initProgressTracker() {
     renderProgressList();
     syncProgressFromServer();
+    initResearchNoteModal();
     document.getElementById('progress-add-btn').addEventListener('click', () => {
       document.getElementById('pm-error').textContent = '';
       document.getElementById('pm-company').value = '';
@@ -3204,6 +4466,536 @@
         }
       }
     });
+  }
+
+  // ===== カンバンビュー =====
+  var _progressView = 'list';
+
+  function setProgressView(view) {
+    _progressView = view;
+    document.getElementById('view-list-btn').classList.toggle('active', view === 'list');
+    document.getElementById('view-kanban-btn').classList.toggle('active', view === 'kanban');
+    document.getElementById('progress-list').style.display = view === 'list' ? '' : 'none';
+    var kb = document.getElementById('kanban-board');
+    kb.classList.toggle('active', view === 'kanban');
+    if (view === 'kanban') renderKanban();
+  }
+
+  function renderKanban() {
+    var list = readProgress();
+    var el = document.getElementById('kanban-board');
+
+    // カラム定義：通常ステージ＋結果
+    var columns = PROGRESS_STAGES.map(function(s) { return { label: s, entries: [] }; });
+    columns.push({ label: '結果', entries: [], isResult: true });
+
+    list.forEach(function(entry) {
+      if (entry.status === 'offer' || entry.status === 'rejected') {
+        columns[columns.length - 1].entries.push(entry);
+      } else {
+        var idx = Math.max(0, PROGRESS_STAGES.indexOf(entry.stage));
+        columns[idx].entries.push(entry);
+      }
+    });
+
+    var now = new Date();
+    var html = '<div class="kanban-columns">';
+    columns.forEach(function(col, colIdx) {
+      var headerCls = col.isResult ? 'kanban-col-header col-result' : 'kanban-col-header';
+      html += '<div class="kanban-col">';
+      html += '<div class="' + headerCls + '">' + col.label + ' <span style="opacity:0.7;">(' + col.entries.length + ')</span></div>';
+      html += '<div class="kanban-col-body">';
+
+      if (!col.entries.length) {
+        html += '<div class="kanban-empty">なし</div>';
+      } else {
+        col.entries.forEach(function(entry) {
+          var cardCls = 'kanban-card';
+          if (entry.status === 'offer') cardCls += ' offer';
+          if (entry.status === 'rejected') cardCls += ' rejected';
+
+          // 締切表示
+          var deadlineMeta = '';
+          if (entry.deadline) {
+            var dl = new Date(entry.deadline);
+            var days = Math.ceil((dl - now) / 86400000);
+            if (days >= 0 && days <= 3) {
+              deadlineMeta = '<span class="urgent">' + dl.toLocaleDateString('ja-JP') + ' (あと' + days + '日)</span>';
+            } else {
+              deadlineMeta = dl.toLocaleDateString('ja-JP');
+            }
+          }
+
+          html += '<div class="' + cardCls + '">';
+          html += '<div class="kanban-card-name">' + entry.company + (hasResearchNote(entry.id) ? '<span class="kanban-note-dot"></span>' : '') + '</div>';
+          if (deadlineMeta || entry.industry) {
+            html += '<div class="kanban-card-meta">';
+            if (entry.industry) html += entry.industry;
+            if (entry.industry && deadlineMeta) html += ' / ';
+            if (deadlineMeta) html += deadlineMeta;
+            html += '</div>';
+          }
+          if (entry.memo) {
+            html += '<div style="font-size:0.62rem;color:var(--text-muted);margin-bottom:0.3rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + entry.memo + '</div>';
+          }
+
+          // ステージ移動ボタン + メモ
+          html += '<div class="kanban-card-actions">';
+          html += '<button class="kanban-memo-btn" onclick="openResearchNote(\'' + entry.id + '\')">メモ</button>';
+          if (col.isResult) {
+            html += '<button class="kanban-move-btn" onclick="setProgressStatus(\'' + entry.id + '\',\'active\')">選考中に戻す</button>';
+          } else {
+            var stageIdx = Math.max(0, PROGRESS_STAGES.indexOf(entry.stage));
+            if (stageIdx > 0) {
+              html += '<button class="kanban-move-btn" onclick="kanbanMove(\'' + entry.id + '\',' + (stageIdx - 1) + ')">\u25C0</button>';
+            }
+            if (stageIdx < PROGRESS_STAGES.length - 1) {
+              html += '<button class="kanban-move-btn" onclick="kanbanMove(\'' + entry.id + '\',' + (stageIdx + 1) + ')">\u25B6</button>';
+            }
+            html += '<button class="kanban-move-btn" onclick="setProgressStatus(\'' + entry.id + '\',\'offer\')" style="color:#7a5f10;border-color:rgba(201,168,76,0.4);">内定</button>';
+          }
+          html += '</div></div>';
+        });
+      }
+      html += '</div></div>';
+    });
+    html += '</div>';
+
+    el.innerHTML = html;
+  }
+
+  function kanbanMove(id, stageIdx) {
+    setProgressStage(id, stageIdx);
+  }
+
+  // リスト系操作のあとにカンバン再描画をフック
+  (function() {
+    var origRenderList = renderProgressList;
+    renderProgressList = function() {
+      origRenderList();
+      if (_progressView === 'kanban') renderKanban();
+      renderOfferTools();
+    };
+  })();
+
+  // ===== 内定サポートツール =====
+  const OFFER_COMPARE_KEY = 'keio_navi_offer_compare_v1';
+  const OFFER_AXES = [
+    { key: 'salary',  label: '給与・待遇' },
+    { key: 'growth',  label: '成長環境' },
+    { key: 'balance', label: 'ワークライフバランス' },
+    { key: 'purpose', label: 'やりがい' },
+    { key: 'culture', label: '企業文化・雰囲気' }
+  ];
+  const OFFER_COLORS = [
+    { bg: 'rgba(10,26,62,0.18)',  border: '#0a1a3e', label: 'var(--navy)' },
+    { bg: 'rgba(192,0,26,0.18)',  border: '#c0001a', label: 'var(--crimson)' },
+    { bg: 'rgba(201,168,76,0.18)',border: '#c9a84c', label: 'var(--gold)' },
+    { bg: 'rgba(0,112,60,0.18)',  border: '#00703c', label: '#00703c' },
+    { bg: 'rgba(123,47,190,0.18)',border: '#7b2fbe', label: '#7b2fbe' }
+  ];
+  const SITE_BRAND = '就活ナビ';
+
+  function readOfferScores() {
+    try { return JSON.parse(localStorage.getItem(OFFER_COMPARE_KEY) || '{}'); } catch { return {}; }
+  }
+  function writeOfferScores(data) {
+    localStorage.setItem(OFFER_COMPARE_KEY, JSON.stringify(data));
+  }
+
+  function getOfferEntries() {
+    return readProgress().filter(e => e.status === 'offer');
+  }
+
+  function switchOfferTab(tab) {
+    document.querySelectorAll('.offer-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.offer-tab-panel').forEach(p => p.classList.remove('active'));
+    const btnIdx = tab === 'compare' ? 0 : 1;
+    document.querySelectorAll('.offer-tab-btn')[btnIdx].classList.add('active');
+    document.getElementById('offer-tab-' + tab).classList.add('active');
+  }
+
+  function renderOfferTools() {
+    const section = document.getElementById('offer-tools-section');
+    const offers = getOfferEntries();
+    if (offers.length === 0) {
+      section.classList.remove('visible');
+      return;
+    }
+    section.classList.add('visible');
+    renderOfferCompare(offers);
+    renderOfferCard(offers);
+  }
+
+  function renderOfferCompare(offers) {
+    const body = document.getElementById('offer-compare-body');
+    if (offers.length < 2) {
+      body.innerHTML = '<div class="offer-no-data">内定が2社以上になると比較できます</div>';
+      return;
+    }
+    const scores = readOfferScores();
+    // Ensure each offer has scores
+    offers.forEach(o => { if (!scores[o.id]) scores[o.id] = { salary:3, growth:3, balance:3, purpose:3, culture:3 }; });
+    writeOfferScores(scores);
+
+    const cols = offers.length + 1;
+    const gridCols = `140px repeat(${offers.length}, 1fr)`;
+
+    let html = '';
+    // Header
+    html += `<div class="offer-compare-grid">`;
+    html += `<div class="offer-compare-row header" style="grid-template-columns:${gridCols};">`;
+    html += `<span>評価軸</span>`;
+    offers.forEach((o, i) => {
+      const c = OFFER_COLORS[i % OFFER_COLORS.length];
+      html += `<span><span class="offer-company-tag" style="border-color:${c.border};color:${c.border};background:${c.bg};">${o.company}</span></span>`;
+    });
+    html += `</div>`;
+
+    // Rows for each axis
+    OFFER_AXES.forEach(axis => {
+      html += `<div class="offer-compare-row" style="grid-template-columns:${gridCols};">`;
+      html += `<span class="offer-axis-label">${axis.label}</span>`;
+      offers.forEach(o => {
+        const val = scores[o.id][axis.key] || 3;
+        html += `<div class="offer-range-group">
+          <input type="range" min="1" max="5" value="${val}" oninput="updateOfferScore('${o.id}','${axis.key}',this.value)">
+          <span class="offer-range-val" id="ov-${o.id}-${axis.key}">${val}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    html += `</div>`;
+
+    // Radar chart
+    html += `<div class="radar-wrap"><canvas id="offer-radar" width="360" height="360"></canvas>`;
+    html += `<div class="radar-legend">`;
+    offers.forEach((o, i) => {
+      const c = OFFER_COLORS[i % OFFER_COLORS.length];
+      html += `<div class="radar-legend-item"><span class="radar-legend-dot" style="background:${c.border};"></span>${o.company}</div>`;
+    });
+    html += `</div></div>`;
+
+    // Recommend
+    html += `<div id="offer-recommend"></div>`;
+
+    body.innerHTML = html;
+    drawRadarChart(offers, scores);
+    renderOfferRecommend(offers, scores);
+  }
+
+  function updateOfferScore(id, axis, val) {
+    const scores = readOfferScores();
+    if (!scores[id]) scores[id] = { salary:3, growth:3, balance:3, purpose:3, culture:3 };
+    scores[id][axis] = parseInt(val);
+    writeOfferScores(scores);
+    const label = document.getElementById('ov-' + id + '-' + axis);
+    if (label) label.textContent = val;
+    const offers = getOfferEntries();
+    drawRadarChart(offers, scores);
+    renderOfferRecommend(offers, scores);
+  }
+
+  function drawRadarChart(offers, scores) {
+    const canvas = document.getElementById('offer-radar');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2;
+    const R = Math.min(cx, cy) - 40;
+    const n = OFFER_AXES.length;
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw pentagon grid
+    for (let level = 1; level <= 5; level++) {
+      const r = (R / 5) * level;
+      ctx.beginPath();
+      for (let i = 0; i < n; i++) {
+        const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+        const x = cx + r * Math.cos(angle);
+        const y = cy + r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(10,26,62,0.12)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      if (level === 5) {
+        ctx.fillStyle = 'rgba(10,26,62,0.02)';
+        ctx.fill();
+      }
+    }
+
+    // Draw axes
+    for (let i = 0; i < n; i++) {
+      const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + R * Math.cos(angle), cy + R * Math.sin(angle));
+      ctx.strokeStyle = 'rgba(10,26,62,0.1)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Labels
+      const labelR = R + 22;
+      const lx = cx + labelR * Math.cos(angle);
+      const ly = cy + labelR * Math.sin(angle);
+      ctx.font = '11px "Noto Sans JP", sans-serif';
+      ctx.fillStyle = '#0a1a3e';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(OFFER_AXES[i].label, lx, ly);
+    }
+
+    // Draw data polygons
+    offers.forEach((o, idx) => {
+      const c = OFFER_COLORS[idx % OFFER_COLORS.length];
+      const s = scores[o.id] || {};
+      ctx.beginPath();
+      OFFER_AXES.forEach((axis, i) => {
+        const val = s[axis.key] || 3;
+        const r = (R / 5) * val;
+        const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+        const x = cx + r * Math.cos(angle);
+        const y = cy + r * Math.sin(angle);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.closePath();
+      ctx.fillStyle = c.bg;
+      ctx.fill();
+      ctx.strokeStyle = c.border;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Draw dots
+      OFFER_AXES.forEach((axis, i) => {
+        const val = s[axis.key] || 3;
+        const r = (R / 5) * val;
+        const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+        const x = cx + r * Math.cos(angle);
+        const y = cy + r * Math.sin(angle);
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = c.border;
+        ctx.fill();
+      });
+    });
+  }
+
+  function renderOfferRecommend(offers, scores) {
+    const el = document.getElementById('offer-recommend');
+    if (!el) return;
+    // Cross-reference with self-analysis
+    let saData = {};
+    try { saData = JSON.parse(localStorage.getItem('keio_navi_self_analysis_v1') || '{}'); } catch {}
+    const saValues = saData.values || [];
+
+    // Mapping self-analysis values to axes weights
+    const valueAxisMap = {
+      '成長': 'growth', '挑戦': 'growth', '専門性': 'growth',
+      '安定': 'salary', '効率': 'salary',
+      'バランス': 'balance', '自由': 'balance', '独立': 'balance',
+      '貢献': 'purpose', '影響力': 'purpose', 'リーダーシップ': 'purpose',
+      'チームワーク': 'culture', '多様性': 'culture', '国際性': 'culture', '創造性': 'culture', '誠実さ': 'culture'
+    };
+
+    // Calculate weighted scores
+    let weights = { salary: 1, growth: 1, balance: 1, purpose: 1, culture: 1 };
+    saValues.forEach(v => {
+      const axis = valueAxisMap[v];
+      if (axis) weights[axis] += 1.5;
+    });
+
+    let bestOffer = null, bestScore = -1;
+    const offerTotals = offers.map(o => {
+      const s = scores[o.id] || {};
+      let total = 0;
+      OFFER_AXES.forEach(axis => {
+        total += (s[axis.key] || 3) * (weights[axis.key] || 1);
+      });
+      if (total > bestScore) { bestScore = total; bestOffer = o; }
+      return { offer: o, total: Math.round(total * 10) / 10 };
+    });
+
+    if (!bestOffer) { el.innerHTML = ''; return; }
+
+    let reason = '';
+    if (saValues.length > 0) {
+      reason = `自己分析で選んだ価値観（${saValues.slice(0, 3).join('・')}${saValues.length > 3 ? ' 他' : ''}）を加味した結果、`;
+    } else {
+      reason = '各評価軸のスコアを総合すると、';
+    }
+
+    el.innerHTML = `<div class="offer-recommend">
+      <strong>おすすめ：${bestOffer.company}</strong><br>
+      ${reason}<strong>${bestOffer.company}</strong>がもっともあなたに合っている可能性があります。
+      ${saValues.length === 0 ? '<br><span style="font-size:0.75rem;color:var(--text-muted);">※ 自己分析ワークブックで価値観を設定すると、より精度の高いおすすめが表示されます。</span>' : ''}
+    </div>`;
+  }
+
+  // ===== 内定報告カード =====
+  function renderOfferCard(offers) {
+    const body = document.getElementById('offer-card-body');
+    if (offers.length === 0) {
+      body.innerHTML = '<div class="offer-no-data">内定を獲得すると報告カードを作成できます。</div>';
+      return;
+    }
+
+    const allEntries = readProgress();
+    const industries = [...new Set(offers.map(o => o.industry).filter(Boolean))];
+    const industryText = industries.length > 0 ? industries.join('、') : '未設定';
+    const totalApplied = allEntries.length;
+
+    // Calculate 就活期間
+    let periodText = '';
+    const dates = allEntries.map(e => e.deadline || e.id).filter(Boolean);
+    if (dates.length > 0) {
+      const timestamps = allEntries.map(e => {
+        if (e.deadline) return new Date(e.deadline).getTime();
+        return parseInt(e.id) || Date.now();
+      }).filter(t => !isNaN(t));
+      if (timestamps.length > 0) {
+        const earliest = new Date(Math.min(...timestamps));
+        const latest = new Date(Math.max(...timestamps));
+        const months = Math.max(1, Math.round((latest - earliest) / (30 * 24 * 60 * 60 * 1000)));
+        periodText = `約${months}ヶ月`;
+      }
+    }
+    if (!periodText) periodText = '---';
+
+    let html = `<div class="card-editor">
+      <label>内定先を選択</label>
+      <select id="card-offer-select" onchange="updateCardPreview()">
+        ${offers.map(o => `<option value="${o.id}">${o.company}</option>`).join('')}
+      </select>
+      <label>内定業界</label>
+      <div class="card-auto-field" id="card-industry">${industryText}</div>
+      <label>就活期間</label>
+      <div class="card-auto-field" id="card-period">${periodText}</div>
+      <label>応募社数</label>
+      <div class="card-auto-field" id="card-applied">${totalApplied}社</div>
+      <label>ひとこと（任意）</label>
+      <input type="text" id="card-message" placeholder="例：諦めなくてよかった！" oninput="updateCardPreview()" maxlength="40">
+    </div>
+    <div class="card-preview-wrap"><canvas id="offer-card-canvas" width="1200" height="630"></canvas></div>
+    <div class="card-actions">
+      <button class="card-dl-btn" onclick="downloadOfferCard()">PNGをダウンロード</button>
+      <a class="card-share-x" id="card-share-x" href="#" target="_blank" rel="noopener">Xでシェア</a>
+      <a class="card-share-line" id="card-share-line" href="#" target="_blank" rel="noopener">LINEでシェア</a>
+    </div>`;
+
+    body.innerHTML = html;
+    updateCardPreview();
+  }
+
+  function updateCardPreview() {
+    const canvas = document.getElementById('offer-card-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = 1200, H = 630;
+
+    const selectEl = document.getElementById('card-offer-select');
+    const offers = getOfferEntries();
+    const selectedOffer = offers.find(o => o.id === (selectEl ? selectEl.value : '')) || offers[0];
+    const companyName = selectedOffer ? selectedOffer.company : '---';
+    const industry = document.getElementById('card-industry')?.textContent || '';
+    const period = document.getElementById('card-period')?.textContent || '';
+    const applied = document.getElementById('card-applied')?.textContent || '';
+    const message = document.getElementById('card-message')?.value || '';
+
+    // Navy gradient background
+    const grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, '#0a1a3e');
+    grad.addColorStop(0.5, '#0f2555');
+    grad.addColorStop(1, '#0a1a3e');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Gold border
+    ctx.strokeStyle = '#c9a84c';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(24, 24, W - 48, H - 48);
+    // Inner border
+    ctx.strokeStyle = 'rgba(201,168,76,0.3)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(36, 36, W - 72, H - 72);
+
+    // Decorative corners
+    const cornerLen = 40;
+    ctx.strokeStyle = '#c9a84c';
+    ctx.lineWidth = 3;
+    // Top-left
+    ctx.beginPath(); ctx.moveTo(24, 64); ctx.lineTo(24, 24); ctx.lineTo(64, 24); ctx.stroke();
+    // Top-right
+    ctx.beginPath(); ctx.moveTo(W-64, 24); ctx.lineTo(W-24, 24); ctx.lineTo(W-24, 64); ctx.stroke();
+    // Bottom-left
+    ctx.beginPath(); ctx.moveTo(24, H-64); ctx.lineTo(24, H-24); ctx.lineTo(64, H-24); ctx.stroke();
+    // Bottom-right
+    ctx.beginPath(); ctx.moveTo(W-64, H-24); ctx.lineTo(W-24, H-24); ctx.lineTo(W-24, H-64); ctx.stroke();
+
+    // Crimson accent line at top
+    ctx.fillStyle = '#c0001a';
+    ctx.fillRect(60, 60, W - 120, 3);
+
+    // Title
+    ctx.font = 'bold 52px "Noto Serif JP", serif';
+    ctx.fillStyle = '#c9a84c';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('内定獲得!', W / 2, 130);
+
+    // Company name
+    ctx.font = 'bold 60px "Noto Serif JP", serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(companyName, W / 2, 220);
+
+    // Divider line
+    ctx.fillStyle = 'rgba(201,168,76,0.4)';
+    ctx.fillRect(W / 2 - 80, 265, 160, 2);
+
+    // Stats
+    ctx.font = '24px "Noto Sans JP", sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    const statsY = 320;
+    const stats = [`業界：${industry}`, `就活期間：${period}`, `応募社数：${applied}`];
+    stats.forEach((s, i) => {
+      ctx.fillText(s, W / 2, statsY + i * 42);
+    });
+
+    // User message
+    if (message) {
+      ctx.font = '28px "Noto Sans JP", sans-serif';
+      ctx.fillStyle = '#c9a84c';
+      ctx.fillText(`"${message}"`, W / 2, 475);
+    }
+
+    // Branding
+    ctx.font = '18px "Noto Sans JP", sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.fillText(SITE_BRAND, W / 2, H - 50);
+
+    // Share URLs
+    const shareText = `${companyName}から内定をいただきました！ #就活 #内定`;
+    const encodedText = encodeURIComponent(shareText);
+    const xUrl = `https://twitter.com/intent/tweet?text=${encodedText}`;
+    const lineUrl = `https://social-plugins.line.me/lineit/share?text=${encodedText}`;
+    const xLink = document.getElementById('card-share-x');
+    const lineLink = document.getElementById('card-share-line');
+    if (xLink) xLink.href = xUrl;
+    if (lineLink) lineLink.href = lineUrl;
+  }
+
+  function downloadOfferCard() {
+    const canvas = document.getElementById('offer-card-canvas');
+    if (!canvas) return;
+    const link = document.createElement('a');
+    link.download = '内定報告カード.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+
+  function initOfferTools() {
+    renderOfferTools();
   }
 
   // ===== 締切カレンダー =====
@@ -3363,21 +5155,24 @@
     if (!e) return;
     document.getElementById('exam-detail-title').textContent = e.subject || '(科目名なし)';
     const body = document.getElementById('exam-detail-body');
+    const examMeta = escHtml([e.faculty, e.period, e.type].filter(Boolean).join(' ／ '));
+    const examMemo = escHtml(e.memo || '');
+    const examLink = safeHttpUrl(e.link);
     body.innerHTML = `
       ${e.faculty || e.period || e.type ? `
         <div class="modal-field">
           <div class="modal-field-label">基本情報</div>
-          <div class="modal-field-content">${[e.faculty, e.period, e.type].filter(Boolean).join(' ／ ')}</div>
+          <div class="modal-field-content">${examMeta}</div>
         </div>` : ''}
       ${e.memo ? `
         <div class="modal-field">
           <div class="modal-field-label">傾向・メモ</div>
-          <div class="modal-field-content">${e.memo.replace(/\x3c/g, '\x26lt;').replace(/>/g, '&gt;')}</div>
+          <div class="modal-field-content">${examMemo}</div>
         </div>` : ''}
-      ${e.link ? `
+      ${examLink ? `
         <div class="modal-field">
           <div class="modal-field-label">資料リンク</div>
-          <div class="modal-field-content"><a href="${e.link}" target="_blank" rel="noopener" class="modal-url">${e.link}</a></div>
+          <div class="modal-field-content"><a href="${escAttr(examLink)}" target="_blank" rel="noopener noreferrer" class="modal-url">${escHtml(examLink)}</a></div>
         </div>` : ''}
     `;
     document.getElementById('exam-detail-overlay').classList.add('open');
@@ -3510,7 +5305,7 @@
         });
       });
     });
-    html += '</body></html>';
+    html += '\x3c/body>\x3c/html>';
     const w = window.open('', '_blank');
     w.document.write(html);
     w.document.close();
@@ -3554,14 +5349,14 @@
         html += `<div class="label">本文</div><div class="content">${entry.fullText.replace(/\x3c/g, '\x26lt;')}</div>`;
       }
     });
-    html += '</body></html>';
+    html += '\x3c/body>\x3c/html>';
     const w = window.open('', '_blank');
     w.document.write(html);
     w.document.close();
   }
 
   // ===== AI就活サポートツール =====
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwxhuxz5-fEim05bnKbT7D0wpZiEFB9c5I-t-t3cGKUfAQEV8t8q-ntT-BHEoG3cvlv8A/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
 
   // ── GAS認証API 共通呼び出し ──────────────────────────────────────────────
   async function callAuthApi(action, extraPayload) {
@@ -4824,9 +6619,306 @@
     }
   }
 
+  // ===== NPS計測 =====
+  function checkNPS() {
+    if (localStorage.getItem('keionavi_nps_done')) return;
+    const user = KeioNaviAuth.getCurrentUser();
+    if (!user || !user.createdAt) return;
+    const regDate = new Date(user.createdAt);
+    const now = new Date();
+    const diffDays = (now - regDate) / (1000 * 60 * 60 * 24);
+    if (diffDays < 7) return;
+    setTimeout(showNPSPopup, 3000);
+  }
+
+  function showNPSPopup() {
+    if (document.getElementById('nps-overlay')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'nps-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:300;background:rgba(10,26,62,0.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:2rem;';
+    const box = document.createElement('div');
+    box.style.cssText = 'background:var(--cream,#faf7f2);max-width:480px;width:100%;padding:2rem;border-top:3px solid #c9a84c;box-shadow:0 20px 60px rgba(0,0,0,0.4);';
+    box.innerHTML = '\x3cdiv style="font-family:\'Noto Serif JP\',serif;font-size:1.05rem;font-weight:700;color:#0a1a3e;margin-bottom:0.5rem;">慶應就活ナビの満足度調査\x3c/div>'
+      + '\x3cp style="font-size:0.8rem;color:#6b6b7e;line-height:1.8;margin-bottom:1.2rem;">慶應就活ナビを友人に薦める可能性はどのくらいですか？（0-10）\x3c/p>'
+      + '\x3cdiv id="nps-scores" style="display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:1rem;">\x3c/div>'
+      + '\x3ctextarea id="nps-comment" placeholder="改善してほしい点やご意見（任意）" style="width:100%;padding:0.6rem;border:1px solid rgba(10,26,62,0.15);font-family:\'Noto Sans JP\',sans-serif;font-size:0.82rem;resize:vertical;min-height:60px;outline:none;margin-bottom:1rem;">\x3c/textarea>'
+      + '\x3cdiv style="display:flex;gap:0.8rem;">'
+      + '\x3cbutton id="nps-submit-btn" onclick="submitNPSScore()" style="padding:0.6rem 1.5rem;background:#0a1a3e;color:white;border:none;font-family:\'Noto Sans JP\',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;">送信\x3c/button>'
+      + '\x3cbutton onclick="closeNPS()" style="padding:0.6rem 1rem;background:none;border:1px solid rgba(10,26,62,0.2);color:#6b6b7e;font-family:\'Noto Sans JP\',sans-serif;font-size:0.78rem;cursor:pointer;">後で\x3c/button>'
+      + '\x3c/div>';
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+    const scoresDiv = document.getElementById('nps-scores');
+    for (let i = 0; i <= 10; i++) {
+      const btn = document.createElement('button');
+      btn.textContent = i;
+      btn.dataset.score = i;
+      btn.style.cssText = 'width:36px;height:36px;border:1px solid rgba(10,26,62,0.2);background:white;font-size:0.8rem;font-weight:700;cursor:pointer;color:#0a1a3e;transition:all 0.2s;';
+      btn.onclick = function() {
+        scoresDiv.querySelectorAll('button').forEach(b => { b.style.background = 'white'; b.style.color = '#0a1a3e'; });
+        btn.style.background = '#0a1a3e';
+        btn.style.color = 'white';
+        scoresDiv.dataset.selected = i;
+      };
+      scoresDiv.appendChild(btn);
+    }
+  }
+
+  async function submitNPSScore() {
+    const scoresDiv = document.getElementById('nps-scores');
+    const selected = scoresDiv.dataset.selected;
+    if (selected === undefined) { alert('スコアを選択してください。'); return; }
+    const comment = document.getElementById('nps-comment').value.trim();
+    const btn = document.getElementById('nps-submit-btn');
+    btn.disabled = true;
+    btn.textContent = '送信中...';
+    try {
+      const user = KeioNaviAuth.getCurrentUser();
+      const sessionToken = KeioNaviAuth.getSessionToken();
+      if (!user || !sessionToken) throw new Error('ログインが必要です。');
+      await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'submitNPS', sessionToken: sessionToken, score: parseInt(selected), comment: comment })
+      });
+      localStorage.setItem('keionavi_nps_done', '1');
+      closeNPS();
+      if (typeof showFlash === 'function') showFlash('ご回答ありがとうございました！', 'success');
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = '送信';
+      alert('送信に失敗しました。');
+    }
+  }
+
+  function closeNPS() {
+    const overlay = document.getElementById('nps-overlay');
+    if (overlay) overlay.remove();
+  }
+  window.submitNPSScore = submitNPSScore;
+  window.closeNPS = closeNPS;
+
+  // ===== GD FEEDBACK =====
+  var _gdFbRating = 0;
+
+  function readGdFeedback() {
+    try {
+      var d = localStorage.getItem('keio_navi_gd_feedback_v1');
+      return d ? JSON.parse(d) : [];
+    } catch(e) { return []; }
+  }
+
+  function writeGdFeedback(list) {
+    localStorage.setItem('keio_navi_gd_feedback_v1', JSON.stringify(list));
+  }
+
+  function calcGdStats(list) {
+    var count = list.length;
+    var avg = 0;
+    var roleCount = {};
+    if (count > 0) {
+      var sum = 0;
+      var rated = 0;
+      list.forEach(function(e) {
+        if (e.rating > 0) { sum += e.rating; rated++; }
+        roleCount[e.role] = (roleCount[e.role] || 0) + 1;
+      });
+      avg = rated > 0 ? (sum / rated) : 0;
+    }
+    var topRole = '-';
+    var topCount = 0;
+    Object.keys(roleCount).forEach(function(r) {
+      if (roleCount[r] > topCount) { topCount = roleCount[r]; topRole = r; }
+    });
+    return { count: count, avg: avg, topRole: topRole };
+  }
+
+  function renderGdStars(n) {
+    var s = '';
+    for (var i = 1; i <= 5; i++) s += (i <= n ? '\u2605' : '\u2606');
+    return s;
+  }
+
+  function renderGdFeedback() {
+    var list = readGdFeedback();
+    var stats = calcGdStats(list);
+    var statsEl = document.getElementById('gd-fb-stats');
+    var listEl = document.getElementById('gd-fb-list');
+    if (!statsEl || !listEl) return;
+
+    statsEl.innerHTML =
+      '<div class="gd-fb-stat"><div class="gd-fb-stat-num">' + stats.count + '</div><div class="gd-fb-stat-label">参加回数</div></div>' +
+      '<div class="gd-fb-stat"><div class="gd-fb-stat-num">' + (stats.avg > 0 ? stats.avg.toFixed(1) : '-') + '</div><div class="gd-fb-stat-label">平均評価</div></div>' +
+      '<div class="gd-fb-stat"><div class="gd-fb-stat-num" style="font-size:1rem;">' + stats.topRole + '</div><div class="gd-fb-stat-label">よく担った役割</div></div>';
+
+    if (list.length === 0) {
+      listEl.innerHTML = '<div class="gd-fb-empty">まだ記録がありません。<br>GD練習会に参加したら「＋ FBを記録」から振り返りを残しましょう。</div>';
+      return;
+    }
+
+    list.sort(function(a, b) { return b.date.localeCompare(a.date); });
+
+    var html = '';
+    list.forEach(function(e) {
+      var d = e.date.replace(/-/g, '/');
+      html += '<div class="gd-fb-card">';
+      html += '<div class="gd-fb-card-header">';
+      html += '<span class="gd-fb-date">' + d + '</span>';
+      html += '<span class="gd-fb-role-badge gd-fb-role-' + e.role + '">' + e.role + '</span>';
+      html += '</div>';
+      html += '<div class="gd-fb-theme">' + (e.theme || '').replace(/</g, '&lt;') + '</div>';
+      if (e.otherFeedback || e.others) {
+        html += '<div class="gd-fb-content-label">他者からのFB</div>';
+        html += '<div class="gd-fb-content">' + (e.otherFeedback || e.others || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</div>';
+      }
+      if (e.selfReflection || e.self) {
+        html += '<div class="gd-fb-content-label">自分の振り返り</div>';
+        html += '<div class="gd-fb-content">' + (e.selfReflection || e.self || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</div>';
+      }
+      if (e.rating > 0) {
+        html += '<div class="gd-fb-rating">' + renderGdStars(e.rating) + '</div>';
+      }
+      html += '<div class="gd-fb-card-actions">';
+      html += '<button onclick="openGdFbModal(\'' + e.id + '\')">編集</button>';
+      html += '<button class="gd-fb-del" onclick="deleteGdFbEntry(\'' + e.id + '\')">削除</button>';
+      html += '</div>';
+      html += '</div>';
+    });
+    listEl.innerHTML = html;
+  }
+
+  function openGdFbModal(id) {
+    var modal = document.getElementById('gd-fb-modal');
+    var titleEl = document.getElementById('gd-fb-modal-title');
+    document.getElementById('gd-fb-error').textContent = '';
+    if (id) {
+      var list = readGdFeedback();
+      var entry = list.find(function(e) { return e.id === id; });
+      if (!entry) return;
+      titleEl.textContent = 'フィードバックを編集';
+      document.getElementById('gd-fb-edit-id').value = id;
+      document.getElementById('gd-fb-date').value = entry.date || '';
+      document.getElementById('gd-fb-theme-input').value = entry.theme || '';
+      document.getElementById('gd-fb-role-input').value = entry.role || 'メンバー';
+      document.getElementById('gd-fb-others').value = entry.otherFeedback || entry.others || '';
+      document.getElementById('gd-fb-self').value = entry.selfReflection || entry.self || '';
+      setGdFbRating(entry.rating || 0);
+    } else {
+      titleEl.textContent = 'GDフィードバックを記録';
+      document.getElementById('gd-fb-edit-id').value = '';
+      var today = new Date();
+      var yyyy = today.getFullYear();
+      var mm = String(today.getMonth() + 1).padStart(2, '0');
+      var dd = String(today.getDate()).padStart(2, '0');
+      document.getElementById('gd-fb-date').value = yyyy + '-' + mm + '-' + dd;
+      document.getElementById('gd-fb-theme-input').value = '';
+      document.getElementById('gd-fb-role-input').value = 'メンバー';
+      document.getElementById('gd-fb-others').value = '';
+      document.getElementById('gd-fb-self').value = '';
+      setGdFbRating(0);
+    }
+    modal.classList.add('open');
+  }
+
+  function closeGdFbModal() {
+    document.getElementById('gd-fb-modal').classList.remove('open');
+  }
+
+  function setGdFbRating(n) {
+    _gdFbRating = n;
+    var stars = document.getElementById('gd-fb-stars');
+    if (!stars) return;
+    var spans = stars.querySelectorAll('span');
+    spans.forEach(function(s, i) {
+      if (i < n) {
+        s.innerHTML = '\u2605';
+        s.classList.add('filled');
+      } else {
+        s.innerHTML = '\u2606';
+        s.classList.remove('filled');
+      }
+    });
+  }
+
+  async function saveGdFbEntry() {
+    var theme = document.getElementById('gd-fb-theme-input').value.trim();
+    if (!theme) {
+      document.getElementById('gd-fb-error').textContent = 'テーマ（お題）を入力してください。';
+      return;
+    }
+    var editId = document.getElementById('gd-fb-edit-id').value;
+    var entry = {
+      id: editId || '',
+      date: document.getElementById('gd-fb-date').value,
+      theme: theme,
+      role: document.getElementById('gd-fb-role-input').value,
+      otherFeedback: document.getElementById('gd-fb-others').value.trim(),
+      selfReflection: document.getElementById('gd-fb-self').value.trim(),
+      rating: _gdFbRating
+    };
+
+    closeGdFbModal();
+
+    // サーバーに保存
+    try {
+      var result = await callAuthApi('writeGdFeedback', { entry: entry });
+      if (result.id) entry.id = result.id;
+    } catch(e) {
+      console.warn('GD FB server save failed', e);
+    }
+
+    // ローカルにも反映
+    var list = readGdFeedback();
+    if (editId) {
+      list = list.map(function(e) { return e.id === editId ? entry : e; });
+    } else {
+      list.push(entry);
+    }
+    writeGdFeedback(list);
+    renderGdFeedback();
+  }
+
+  async function deleteGdFbEntry(id) {
+    if (!confirm('このフィードバック記録を削除しますか？')) return;
+    // サーバーから削除
+    try {
+      await callAuthApi('deleteGdFeedback', { id: id });
+    } catch(e) {
+      console.warn('GD FB server delete failed', e);
+    }
+    var list = readGdFeedback().filter(function(e) { return e.id !== id; });
+    writeGdFeedback(list);
+    renderGdFeedback();
+  }
+
+  async function initGdFeedback() {
+    renderGdFeedback();
+    // サーバーからロード
+    try {
+      var data = await callAuthApi('readGdFeedback');
+      if (data.entries && data.entries.length) {
+        writeGdFeedback(data.entries);
+        renderGdFeedback();
+      }
+    } catch(e) {
+      console.warn('GD FB server load failed, using local', e);
+    }
+    var modal = document.getElementById('gd-fb-modal');
+    if (modal) {
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeGdFbModal();
+      });
+    }
+  }
+
+  window.openGdFbModal = openGdFbModal;
+  window.closeGdFbModal = closeGdFbModal;
+  window.setGdFbRating = setGdFbRating;
+  window.saveGdFbEntry = saveGdFbEntry;
+  window.deleteGdFbEntry = deleteGdFbEntry;
+
   // ===== 初期化（すべての関数・定数定義の後に実行） =====
   const currentMember = KeioNaviAuth.getCurrentUser();
-  if (currentMember) showMembers(currentMember);
+  if (currentMember) { showMembers(currentMember); checkNPS(); }
   else updateAuthGate();
 </script>
 
@@ -4851,26 +6943,11 @@
   body { padding-bottom: 60px; }
 </style>
 <nav class="bottom-tab-bar">
-  <a href="account.html" class="bottom-tab">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span>マイページ</span>
-  </a>
-  <a href="writing.html" class="bottom-tab">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    <span>ES</span>
-  </a>
-  <a href="interview-page.html" class="bottom-tab">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    <span>面接</span>
-  </a>
-  <a href="resources.html" class="bottom-tab">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    <span>資料</span>
-  </a>
-  <a href="glossary.html" class="bottom-tab">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-    <span>用語集</span>
-  </a>
+  <a href="members.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>ホーム</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="community.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
 </nav>
-</body>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
 </html>

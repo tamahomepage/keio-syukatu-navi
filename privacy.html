@@ -2,6 +2,19 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>プライバシーポリシー ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">

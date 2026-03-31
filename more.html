@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>もっと ｜ 慶應就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); padding-bottom: 60px; }
+
+  /* ===== NAV ===== */
+  .top-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 68px;
+    background: rgba(10,26,62,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold-light); text-decoration: none; }
+  .nav-back { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold-light); }
+  .nav-member-badge {
+    font-size: 0.68rem; background: rgba(201,168,76,0.15); color: var(--gold);
+    padding: 0.2rem 0.7rem; border: 1px solid rgba(201,168,76,0.3); letter-spacing: 0.1em;
+  }
+
+  /* ===== PASSWORD SCREEN ===== */
+  #password-screen {
+    min-height: 100vh; display: none; align-items: center; justify-content: center;
+    background: var(--navy); padding: 2rem;
+  }
+  .pw-box {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.2);
+    padding: 3rem 2.5rem; max-width: 420px; width: 100%; text-align: center;
+    position: relative;
+  }
+  .pw-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--crimson), var(--gold));
+  }
+  .pw-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .pw-title { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.5rem; }
+  .pw-sub { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; line-height: 1.8; }
+  .pw-input {
+    width: 100%; padding: 0.85rem 1rem; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15); color: var(--white);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 1rem;
+    text-align: center; letter-spacing: 0.2em; outline: none;
+    transition: border-color 0.2s; margin-bottom: 1rem;
+  }
+  .pw-input:focus { border-color: var(--gold); }
+  .pw-btn {
+    display: block;
+    width: 100%; padding: 0.9rem; background: var(--navy);
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold-light);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem;
+    font-weight: 500; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s;
+  }
+  .pw-btn:hover { background: rgba(201,168,76,0.1); }
+  .pw-error { font-size: 0.78rem; color: var(--crimson); margin-top: 0.8rem; min-height: 1.2em; }
+  .gate-actions { display: grid; gap: 0.75rem; }
+  .pw-link-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; color: rgba(255,255,255,0.72);
+    text-decoration: none; padding: 0.85rem 1rem;
+    border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s;
+  }
+  .pw-link-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+
+  /* ===== CONTENT ===== */
+  #members-content { display: none; padding-top: 68px; }
+
+  /* ===== HERO ===== */
+  .more-hero {
+    background: var(--navy); padding: 48px 5vw 40px;
+    border-bottom: 1px solid rgba(201,168,76,0.15); position: relative; overflow: hidden;
+  }
+  .more-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 40% 80% at 90% 50%, rgba(192,0,26,0.1) 0%, transparent 70%);
+  }
+  .more-hero-inner { max-width: 900px; margin: 0 auto; position: relative; }
+  .more-hero h1 { font-family: 'Noto Serif JP', serif; font-size: 1.6rem; color: var(--white); margin-bottom: 0.4rem; }
+  .more-hero p { font-size: 0.82rem; color: rgba(255,255,255,0.45); }
+
+  /* ===== MENU GRID ===== */
+  .more-main { max-width: 900px; margin: 0 auto; padding: 2rem 5vw 4rem; }
+  .more-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+  @media (max-width: 480px) {
+    .more-grid { grid-template-columns: 1fr; }
+  }
+  .more-card {
+    display: flex; align-items: flex-start; gap: 1rem;
+    background: var(--white); border: 1px solid rgba(10,26,62,0.08);
+    padding: 1.2rem 1.1rem; text-decoration: none; color: var(--text);
+    transition: all 0.2s; position: relative;
+  }
+  .more-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--navy), var(--gold)); opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .more-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(10,26,62,0.08); }
+  .more-card:hover::before { opacity: 1; }
+  .more-card-icon { font-size: 1.6rem; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+  .more-card-text { flex: 1; }
+  .more-card-title { font-family: 'Noto Serif JP', serif; font-size: 0.92rem; font-weight: 700; color: var(--navy); margin-bottom: 0.25rem; }
+  .more-card-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ===== BOTTOM TAB BAR ===== */
+  .bottom-tab-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    display: flex; background: var(--navy); border-top: 1px solid rgba(201,168,76,0.2);
+    padding: 0; height: 56px;
+  }
+  .bottom-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.6rem; gap: 2px;
+    transition: color 0.2s; padding: 4px 0;
+  }
+  .bottom-tab svg { width: 20px; height: 20px; }
+  .bottom-tab:hover, .bottom-tab.active { color: var(--gold-light); }
+  .bottom-tab.active { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+  <div class="pw-box">
+    <div class="pw-box-inner">
+      <div class="pw-icon">🔑</div>
+      <h2 class="pw-title">会員専用ページ</h2>
+      <p class="pw-sub">アクセスにはログインが必要です</p>
+      <div class="gate-actions">
+        <a href="members.html" class="pw-link-btn">ログインページへ</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERS CONTENT -->
+<div id="members-content">
+  <nav class="top-nav">
+    <a href="members.html" class="nav-logo">慶應就活ナビ</a>
+    <span class="nav-member-badge">MEMBER</span>
+  </nav>
+
+  <section class="more-hero">
+    <div class="more-hero-inner">
+      <h1>もっと</h1>
+      <p>便利なツールやリソースをまとめてチェック</p>
+    </div>
+  </section>
+
+  <main class="more-main">
+    <div class="more-grid">
+      <a href="pipeline.html" class="more-card">
+        <span class="more-card-icon">📋</span>
+        <div class="more-card-text">
+          <div class="more-card-title">選考管理</div>
+          <div class="more-card-desc">選考パイプライン・カンバンボードで進捗を一元管理</div>
+        </div>
+      </a>
+      <a href="offer-tools.html" class="more-card">
+        <span class="more-card-icon">🎯</span>
+        <div class="more-card-text">
+          <div class="more-card-title">内定サポート</div>
+          <div class="more-card-desc">内定比較・報告カードで最適な判断をサポート</div>
+        </div>
+      </a>
+      <a href="game-developer.html" class="more-card">
+        <span class="more-card-icon">🎮</span>
+        <div class="more-card-text">
+          <div class="more-card-title">業界体験ゲーム</div>
+          <div class="more-card-desc">不動産デベロッパーの仕事をゲームで体験</div>
+        </div>
+      </a>
+      <a href="glossary.html" class="more-card">
+        <span class="more-card-icon">📖</span>
+        <div class="more-card-text">
+          <div class="more-card-title">用語集</div>
+          <div class="more-card-desc">就活で使われる専門用語をわかりやすく解説</div>
+        </div>
+      </a>
+      <a href="templates.html" class="more-card">
+        <span class="more-card-icon">✉️</span>
+        <div class="more-card-text">
+          <div class="more-card-title">メールテンプレート</div>
+          <div class="more-card-desc">企業への連絡に使えるテンプレート集</div>
+        </div>
+      </a>
+      <a href="resources.html" class="more-card">
+        <span class="more-card-icon">📚</span>
+        <div class="more-card-text">
+          <div class="more-card-title">リソース・資料</div>
+          <div class="more-card-desc">就活に役立つ資料・ガイドをまとめて閲覧</div>
+        </div>
+      </a>
+      <a href="industry-guide.html" class="more-card">
+        <span class="more-card-icon">🏭</span>
+        <div class="more-card-text">
+          <div class="more-card-title">業界研究ガイド</div>
+          <div class="more-card-desc">各業界の特徴・動向を体系的に理解</div>
+        </div>
+      </a>
+      <a href="blog.html" class="more-card">
+        <span class="more-card-icon">📰</span>
+        <div class="more-card-text">
+          <div class="more-card-title">就活コラム</div>
+          <div class="more-card-desc">先輩の体験談やノウハウを読んで学ぶ</div>
+        </div>
+      </a>
+      <a href="quiz.html" class="more-card">
+        <span class="more-card-icon">✅</span>
+        <div class="more-card-text">
+          <div class="more-card-title">準備度チェック</div>
+          <div class="more-card-desc">今の就活準備がどこまで進んでいるか確認</div>
+        </div>
+      </a>
+      <a href="peer-feedback.html" class="more-card">
+        <span class="more-card-icon">👥</span>
+        <div class="more-card-text">
+          <div class="more-card-title">他己分析</div>
+          <div class="more-card-desc">仲間からのフィードバックで自分の強みを発見</div>
+        </div>
+      </a>
+      <a href="account.html" class="more-card">
+        <span class="more-card-icon">⚙️</span>
+        <div class="more-card-text">
+          <div class="more-card-title">アカウント設定</div>
+          <div class="more-card-desc">プロフィールや通知設定を管理</div>
+        </div>
+      </a>
+      <a href="privacy.html" class="more-card">
+        <span class="more-card-icon">📄</span>
+        <div class="more-card-text">
+          <div class="more-card-title">プライバシーポリシー</div>
+          <div class="more-card-desc">個人情報の取り扱いについて</div>
+        </div>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  (function() {
+    var user = (typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getCurrentUser) ? KeioNaviAuth.getCurrentUser() : null;
+    if (user) {
+      document.getElementById('members-content').style.display = 'block';
+      document.getElementById('password-screen').style.display = 'none';
+    } else {
+      document.getElementById('password-screen').style.display = 'flex';
+    }
+  })();
+</script>
+
+<nav class="bottom-tab-bar">
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>ホーム</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="community.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
+</nav>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
+</html>

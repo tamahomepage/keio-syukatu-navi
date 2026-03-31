@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内定サポート ｜ 慶應就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e; --crimson: #c0001a; --gold: #c9a84c; --gold-light: #e8c96c;
+    --cream: #faf7f2; --gray: #f4f1ec; --text: #1a1a2e; --text-muted: #6b6b7e; --white: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); padding-bottom: 60px; }
+
+  nav.top-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 68px;
+    background: rgba(10,26,62,0.96); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold-light); text-decoration: none; }
+  .nav-member-badge { font-size: 0.68rem; background: rgba(201,168,76,0.15); color: var(--gold); padding: 0.2rem 0.7rem; border: 1px solid rgba(201,168,76,0.3); letter-spacing: 0.1em; }
+  .logout-btn { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); padding: 0.3rem 0.8rem; font-size: 0.72rem; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; transition: all 0.2s; letter-spacing: 0.06em; }
+  .logout-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+
+  #password-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--navy); padding: 2rem; }
+  .pw-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.2); padding: 3rem 2.5rem; max-width: 420px; width: 100%; text-align: center; position: relative; }
+  .pw-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--crimson), var(--gold)); }
+  .pw-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .pw-title { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.5rem; }
+  .pw-sub { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; line-height: 1.8; }
+  .pw-btn { display: block; width: 100%; padding: 0.9rem; background: var(--navy); border: 1px solid rgba(201,168,76,0.4); color: var(--gold-light); font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; font-weight: 500; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+  .pw-btn:hover { background: rgba(201,168,76,0.1); }
+  .gate-actions { display: grid; gap: 0.75rem; }
+  .pw-link-btn { display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; color: rgba(255,255,255,0.72); text-decoration: none; padding: 0.85rem 1rem; border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s; }
+  .pw-link-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+
+  #page-content { display: none; padding-top: 68px; }
+  .page-hero { background: var(--navy); padding: 60px 5vw 50px; border-bottom: 1px solid rgba(201,168,76,0.15); position: relative; overflow: hidden; }
+  .page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 40% 80% at 90% 50%, rgba(192,0,26,0.1) 0%, transparent 70%); }
+  .page-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+  .page-badge { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid rgba(201,168,76,0.4); padding: 0.3rem 0.9rem; font-size: 0.68rem; color: var(--gold); letter-spacing: 0.15em; font-weight: 600; margin-bottom: 1.2rem; }
+  .page-hero h1 { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; color: var(--white); margin-bottom: 0.5rem; }
+  .page-hero p { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+  .page-main { max-width: 1200px; margin: 0 auto; padding: 3rem 5vw 6rem; }
+  .m-section { margin-bottom: 4rem; }
+  .m-section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(10,26,62,0.1); }
+  .m-section-icon { width: 36px; height: 36px; background: var(--navy); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .m-section-icon svg { width: 16px; height: 16px; }
+  .m-section-title { font-family: 'Noto Serif JP', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
+  .m-section-label { font-size: 0.68rem; color: var(--crimson); letter-spacing: 0.15em; font-weight: 700; }
+
+  /* ===== OFFER TOOLS ===== */
+  .offer-no-data { text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.88rem; line-height: 1.8; }
+  .offer-compare-grid { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.06); margin-bottom: 1.5rem; }
+  .offer-compare-row { display: grid; align-items: center; gap: 0.8rem; padding: 0.8rem 1rem; background: white; }
+  .offer-compare-row.header { background: var(--navy); padding: 0.6rem 1rem; }
+  .offer-compare-row.header span { font-size: 0.7rem; color: rgba(255,255,255,0.65); letter-spacing: 0.06em; font-weight: 600; }
+  .offer-axis-label { font-size: 0.82rem; font-weight: 600; color: var(--navy); min-width: 140px; }
+  .offer-range-group { display: flex; align-items: center; gap: 0.5rem; }
+  .offer-range-group input[type="range"] { width: 100px; accent-color: var(--navy); }
+  .offer-range-val { font-size: 0.75rem; font-weight: 700; color: var(--navy); min-width: 18px; text-align: center; }
+  .offer-company-tag { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; font-weight: 600; padding: 0.15rem 0.5rem; border: 1px solid; }
+  .radar-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin: 1.5rem 0; }
+  .radar-legend { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+  .radar-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text); }
+  .radar-legend-dot { width: 12px; height: 12px; border-radius: 0; }
+  .offer-recommend { margin-top: 1rem; padding: 1rem 1.2rem; background: rgba(201,168,76,0.08); border-left: 3px solid var(--gold); font-size: 0.82rem; line-height: 1.8; color: var(--text); }
+  .offer-recommend strong { color: var(--navy); }
+  .offer-sub-header { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700; color: var(--navy); margin: 2rem 0 1rem; padding-top: 1.5rem; border-top: 1px solid rgba(10,26,62,0.08); }
+  .card-editor { padding: 1rem; background: white; border: 1px solid rgba(10,26,62,0.08); margin-bottom: 1rem; }
+  .card-editor label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--navy); margin-bottom: 0.3rem; margin-top: 0.8rem; }
+  .card-editor label:first-child { margin-top: 0; }
+  .card-editor input, .card-editor select { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid rgba(10,26,62,0.15); font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; outline: none; }
+  .card-editor input:focus { border-color: var(--navy); }
+  .card-editor .card-auto-field { padding: 0.55rem 0.8rem; background: var(--gray); border: 1px solid rgba(10,26,62,0.08); font-size: 0.82rem; color: var(--text-muted); }
+  .card-preview-wrap { display: flex; justify-content: center; margin: 1rem 0; }
+  .card-preview-wrap canvas { max-width: 100%; height: auto; border: 1px solid rgba(10,26,62,0.1); }
+  .card-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.8rem; }
+  .card-actions button, .card-actions a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.2rem; font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: none; border: 1px solid; transition: all 0.2s; }
+  .card-dl-btn { background: var(--navy); color: white; border-color: var(--navy); }
+  .card-dl-btn:hover { background: var(--crimson); border-color: var(--crimson); }
+  .card-share-x { background: #000; color: white; border-color: #000; }
+  .card-share-x:hover { opacity: 0.85; }
+  .card-share-line { background: #06c755; color: white; border-color: #06c755; }
+  .card-share-line:hover { opacity: 0.85; }
+  .offer-tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 2px solid rgba(10,26,62,0.08); }
+  .offer-tab-btn { padding: 0.6rem 1.2rem; font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; transition: all 0.2s; }
+  .offer-tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
+  .offer-tab-btn:hover { color: var(--navy); }
+  .offer-tab-panel { display: none; }
+  .offer-tab-panel.active { display: block; }
+
+  .bottom-tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; display: flex; background: var(--navy); border-top: 1px solid rgba(201,168,76,0.2); padding: 0; height: 56px; }
+  .bottom-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.6rem; gap: 2px; transition: color 0.2s; padding: 4px 0; }
+  .bottom-tab svg { width: 20px; height: 20px; }
+  .bottom-tab:hover, .bottom-tab.active { color: var(--gold-light); }
+  .bottom-tab.active { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a>
+  <span class="nav-member-badge" id="member-badge" style="display:none;font-size:0.72rem;color:var(--gold-light);"></span>
+  <button class="logout-btn" id="logout-btn" style="display:none;" onclick="logout()">ログアウト</button>
+</nav>
+
+<div id="password-screen">
+  <div class="pw-box">
+    <div class="pw-icon">&#128274;</div>
+    <h2 class="pw-title">会員専用ページ</h2>
+    <p class="pw-sub">このページは慶應就活ナビのメンバー限定です。<br>個人アカウントでログインすると閲覧できます。</p>
+    <div class="gate-actions">
+      <a class="pw-btn" href="account.html?mode=login&amp;returnTo=offer-tools.html">ログインして入る &rarr;</a>
+      <a class="pw-link-btn" href="account.html?mode=signup&amp;returnTo=offer-tools.html">新しくアカウントを作る</a>
+    </div>
+  </div>
+</div>
+
+<div id="page-content">
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-badge">OFFER TOOLS</div>
+      <h1>内定サポート</h1>
+      <p>内定先を比較分析。報告カードを作成してシェアしよう。</p>
+    </div>
+  </div>
+  <div class="page-main">
+    <div class="m-section" id="offer-tools-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">OFFER TOOLS</div>
+          <div class="m-section-title">内定サポート</div>
+        </div>
+      </div>
+      <div id="offer-tools-content">
+        <div class="offer-tabs">
+          <button class="offer-tab-btn active" onclick="switchOfferTab('compare')">内定比較ツール</button>
+          <button class="offer-tab-btn" onclick="switchOfferTab('card')">内定報告カード</button>
+        </div>
+        <div id="offer-tab-compare" class="offer-tab-panel active"><div id="offer-compare-body"></div></div>
+        <div id="offer-tab-card" class="offer-tab-panel"><div id="offer-card-body"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_URL = GAS_PROXY_URL;
+  const PROGRESS_KEY = 'keio_navi_progress_v1';
+  const PROGRESS_STAGES = ['未応募', 'ES提出', '一次面接', '二次面接', '最終面接'];
+  const SITE_BRAND = '就活ナビ';
+
+  async function callAuthApi(action, extraPayload) {
+    const sessionToken = KeioNaviAuth.getSessionToken();
+    if (!sessionToken) throw new Error('ログインが必要です。');
+    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action, sessionToken }, extraPayload || {})), redirect: 'follow' });
+    const data = await res.json().catch(() => null);
+    if (!data || data.status !== 'ok') throw new Error((data && data.message) || 'エラーが発生しました。');
+    return data;
+  }
+
+  function logout() { KeioNaviAuth.logout(); location.reload(); }
+
+  function readProgress() {
+    try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '[]'); } catch { return []; }
+  }
+
+  // ===== Offer Tools =====
+  const OFFER_COMPARE_KEY = 'keio_navi_offer_compare_v1';
+  const OFFER_AXES = [
+    { key: 'salary', label: '給与・待遇' },
+    { key: 'growth', label: '成長環境' },
+    { key: 'balance', label: 'ワークライフバランス' },
+    { key: 'purpose', label: 'やりがい' },
+    { key: 'culture', label: '企業文化・雰囲気' }
+  ];
+  const OFFER_COLORS = [
+    { bg: 'rgba(10,26,62,0.18)', border: '#0a1a3e', label: 'var(--navy)' },
+    { bg: 'rgba(192,0,26,0.18)', border: '#c0001a', label: 'var(--crimson)' },
+    { bg: 'rgba(201,168,76,0.18)', border: '#c9a84c', label: 'var(--gold)' },
+    { bg: 'rgba(0,112,60,0.18)', border: '#00703c', label: '#00703c' },
+    { bg: 'rgba(123,47,190,0.18)', border: '#7b2fbe', label: '#7b2fbe' }
+  ];
+
+  function readOfferScores() { try { return JSON.parse(localStorage.getItem(OFFER_COMPARE_KEY) || '{}'); } catch { return {}; } }
+  function writeOfferScores(data) { localStorage.setItem(OFFER_COMPARE_KEY, JSON.stringify(data)); }
+  function getOfferEntries() { return readProgress().filter(e => e.status === 'offer'); }
+
+  function switchOfferTab(tab) {
+    document.querySelectorAll('.offer-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.offer-tab-panel').forEach(p => p.classList.remove('active'));
+    const btnIdx = tab === 'compare' ? 0 : 1;
+    document.querySelectorAll('.offer-tab-btn')[btnIdx].classList.add('active');
+    document.getElementById('offer-tab-' + tab).classList.add('active');
+  }
+
+  function renderOfferTools() {
+    const offers = getOfferEntries();
+    if (offers.length === 0) {
+      document.getElementById('offer-compare-body').innerHTML = '<div class="offer-no-data">内定企業がまだ登録されていません。<br><a href="pipeline.html" style="color:var(--navy);font-weight:700;">選考管理ページ</a>で企業のステータスを「内定」にすると、ここで比較できます。</div>';
+      document.getElementById('offer-card-body').innerHTML = '<div class="offer-no-data">内定を獲得すると報告カードを作成できます。</div>';
+      return;
+    }
+    renderOfferCompare(offers);
+    renderOfferCard(offers);
+  }
+
+  function renderOfferCompare(offers) {
+    const body = document.getElementById('offer-compare-body');
+    if (offers.length < 2) { body.innerHTML = '<div class="offer-no-data">内定が2社以上になると比較できます</div>'; return; }
+    const scores = readOfferScores();
+    offers.forEach(o => { if (!scores[o.id]) scores[o.id] = { salary:3, growth:3, balance:3, purpose:3, culture:3 }; });
+    writeOfferScores(scores);
+    const gridCols = '140px repeat(' + offers.length + ', 1fr)';
+    let html = '<div class="offer-compare-grid"><div class="offer-compare-row header" style="grid-template-columns:' + gridCols + ';"><span>評価軸</span>';
+    offers.forEach((o, i) => { const c = OFFER_COLORS[i % OFFER_COLORS.length]; html += '<span><span class="offer-company-tag" style="border-color:' + c.border + ';color:' + c.border + ';background:' + c.bg + ';">' + o.company + '</span></span>'; });
+    html += '</div>';
+    OFFER_AXES.forEach(axis => {
+      html += '<div class="offer-compare-row" style="grid-template-columns:' + gridCols + ';"><span class="offer-axis-label">' + axis.label + '</span>';
+      offers.forEach(o => { const val = scores[o.id][axis.key] || 3; html += '<div class="offer-range-group"><input type="range" min="1" max="5" value="' + val + '" oninput="updateOfferScore(\'' + o.id + '\',\'' + axis.key + '\',this.value)"><span class="offer-range-val" id="ov-' + o.id + '-' + axis.key + '">' + val + '</span></div>'; });
+      html += '</div>';
+    });
+    html += '</div><div class="radar-wrap"><canvas id="offer-radar" width="360" height="360"></canvas><div class="radar-legend">';
+    offers.forEach((o, i) => { const c = OFFER_COLORS[i % OFFER_COLORS.length]; html += '<div class="radar-legend-item"><span class="radar-legend-dot" style="background:' + c.border + ';"></span>' + o.company + '</div>'; });
+    html += '</div></div><div id="offer-recommend"></div>';
+    body.innerHTML = html;
+    drawRadarChart(offers, scores);
+    renderOfferRecommend(offers, scores);
+  }
+
+  function updateOfferScore(id, axis, val) {
+    const scores = readOfferScores();
+    if (!scores[id]) scores[id] = { salary:3, growth:3, balance:3, purpose:3, culture:3 };
+    scores[id][axis] = parseInt(val);
+    writeOfferScores(scores);
+    const label = document.getElementById('ov-' + id + '-' + axis);
+    if (label) label.textContent = val;
+    const offers = getOfferEntries();
+    drawRadarChart(offers, scores);
+    renderOfferRecommend(offers, scores);
+  }
+
+  function drawRadarChart(offers, scores) {
+    const canvas = document.getElementById('offer-radar');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2;
+    const R = Math.min(cx, cy) - 40;
+    const n = OFFER_AXES.length;
+    ctx.clearRect(0, 0, W, H);
+    for (let level = 1; level <= 5; level++) {
+      const r = (R / 5) * level;
+      ctx.beginPath();
+      for (let i = 0; i < n; i++) { const angle = (Math.PI * 2 * i / n) - Math.PI / 2; const x = cx + r * Math.cos(angle); const y = cy + r * Math.sin(angle); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); }
+      ctx.closePath(); ctx.strokeStyle = 'rgba(10,26,62,0.12)'; ctx.lineWidth = 1; ctx.stroke();
+      if (level === 5) { ctx.fillStyle = 'rgba(10,26,62,0.02)'; ctx.fill(); }
+    }
+    for (let i = 0; i < n; i++) {
+      const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + R * Math.cos(angle), cy + R * Math.sin(angle));
+      ctx.strokeStyle = 'rgba(10,26,62,0.1)'; ctx.lineWidth = 1; ctx.stroke();
+      const labelR = R + 22; const lx = cx + labelR * Math.cos(angle); const ly = cy + labelR * Math.sin(angle);
+      ctx.font = '11px "Noto Sans JP", sans-serif'; ctx.fillStyle = '#0a1a3e'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(OFFER_AXES[i].label, lx, ly);
+    }
+    offers.forEach((o, idx) => {
+      const c = OFFER_COLORS[idx % OFFER_COLORS.length]; const s = scores[o.id] || {};
+      ctx.beginPath();
+      OFFER_AXES.forEach((axis, i) => { const val = s[axis.key] || 3; const r = (R / 5) * val; const angle = (Math.PI * 2 * i / n) - Math.PI / 2; const x = cx + r * Math.cos(angle); const y = cy + r * Math.sin(angle); if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); });
+      ctx.closePath(); ctx.fillStyle = c.bg; ctx.fill(); ctx.strokeStyle = c.border; ctx.lineWidth = 2; ctx.stroke();
+      OFFER_AXES.forEach((axis, i) => { const val = s[axis.key] || 3; const r = (R / 5) * val; const angle = (Math.PI * 2 * i / n) - Math.PI / 2; ctx.beginPath(); ctx.arc(cx + r * Math.cos(angle), cy + r * Math.sin(angle), 3, 0, Math.PI * 2); ctx.fillStyle = c.border; ctx.fill(); });
+    });
+  }
+
+  function renderOfferRecommend(offers, scores) {
+    const el = document.getElementById('offer-recommend');
+    if (!el) return;
+    let saData = {}; try { saData = JSON.parse(localStorage.getItem('keio_navi_self_analysis_v1') || '{}'); } catch {}
+    const saValues = saData.values || [];
+    const valueAxisMap = { '成長': 'growth', '挑戦': 'growth', '専門性': 'growth', '安定': 'salary', '効率': 'salary', 'バランス': 'balance', '自由': 'balance', '独立': 'balance', '貢献': 'purpose', '影響力': 'purpose', 'リーダーシップ': 'purpose', 'チームワーク': 'culture', '多様性': 'culture', '国際性': 'culture', '創造性': 'culture', '誠実さ': 'culture' };
+    let weights = { salary: 1, growth: 1, balance: 1, purpose: 1, culture: 1 };
+    saValues.forEach(v => { const axis = valueAxisMap[v]; if (axis) weights[axis] += 1.5; });
+    let bestOffer = null, bestScore = -1;
+    offers.forEach(o => { const s = scores[o.id] || {}; let total = 0; OFFER_AXES.forEach(axis => { total += (s[axis.key] || 3) * (weights[axis.key] || 1); }); if (total > bestScore) { bestScore = total; bestOffer = o; } });
+    if (!bestOffer) { el.innerHTML = ''; return; }
+    let reason = saValues.length > 0 ? '自己分析で選んだ価値観（' + saValues.slice(0, 3).join('・') + (saValues.length > 3 ? ' 他' : '') + '）を加味した結果、' : '各評価軸のスコアを総合すると、';
+    el.innerHTML = '<div class="offer-recommend"><strong>おすすめ：' + bestOffer.company + '</strong><br>' + reason + '<strong>' + bestOffer.company + '</strong>がもっともあなたに合っている可能性があります。' + (saValues.length === 0 ? '<br><span style="font-size:0.75rem;color:var(--text-muted);">※ 自己分析ワークブックで価値観を設定すると、より精度の高いおすすめが表示されます。</span>' : '') + '</div>';
+  }
+
+  function renderOfferCard(offers) {
+    const body = document.getElementById('offer-card-body');
+    if (offers.length === 0) { body.innerHTML = '<div class="offer-no-data">内定を獲得すると報告カードを作成できます。</div>'; return; }
+    const allEntries = readProgress();
+    const industries = [...new Set(offers.map(o => o.industry).filter(Boolean))];
+    const industryText = industries.length > 0 ? industries.join('、') : '未設定';
+    const totalApplied = allEntries.length;
+    let periodText = '';
+    const timestamps = allEntries.map(e => { if (e.deadline) return new Date(e.deadline).getTime(); return parseInt(e.id) || Date.now(); }).filter(t => !isNaN(t));
+    if (timestamps.length > 0) { const earliest = new Date(Math.min(...timestamps)); const latest = new Date(Math.max(...timestamps)); const months = Math.max(1, Math.round((latest - earliest) / (30 * 24 * 60 * 60 * 1000))); periodText = '約' + months + 'ヶ月'; }
+    if (!periodText) periodText = '---';
+    body.innerHTML = '<div class="card-editor"><label>内定先を選択</label><select id="card-offer-select" onchange="updateCardPreview()">' + offers.map(o => '<option value="' + o.id + '">' + o.company + '</option>').join('') + '</select><label>内定業界</label><div class="card-auto-field" id="card-industry">' + industryText + '</div><label>就活期間</label><div class="card-auto-field" id="card-period">' + periodText + '</div><label>応募社数</label><div class="card-auto-field" id="card-applied">' + totalApplied + '社</div><label>ひとこと（任意）</label><input type="text" id="card-message" placeholder="例：諦めなくてよかった！" oninput="updateCardPreview()" maxlength="40"></div><div class="card-preview-wrap"><canvas id="offer-card-canvas" width="1200" height="630"></canvas></div><div class="card-actions"><button class="card-dl-btn" onclick="downloadOfferCard()">PNGをダウンロード</button><a class="card-share-x" id="card-share-x" href="#" target="_blank" rel="noopener">Xでシェア</a><a class="card-share-line" id="card-share-line" href="#" target="_blank" rel="noopener">LINEでシェア</a></div>';
+    updateCardPreview();
+  }
+
+  function updateCardPreview() {
+    const canvas = document.getElementById('offer-card-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d'); const W = 1200, H = 630;
+    const selectEl = document.getElementById('card-offer-select');
+    const offers = getOfferEntries();
+    const selectedOffer = offers.find(o => o.id === (selectEl ? selectEl.value : '')) || offers[0];
+    const companyName = selectedOffer ? selectedOffer.company : '---';
+    const industry = document.getElementById('card-industry')?.textContent || '';
+    const period = document.getElementById('card-period')?.textContent || '';
+    const applied = document.getElementById('card-applied')?.textContent || '';
+    const message = document.getElementById('card-message')?.value || '';
+    const grad = ctx.createLinearGradient(0, 0, W, H); grad.addColorStop(0, '#0a1a3e'); grad.addColorStop(0.5, '#0f2555'); grad.addColorStop(1, '#0a1a3e');
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = '#c9a84c'; ctx.lineWidth = 4; ctx.strokeRect(24, 24, W - 48, H - 48);
+    ctx.strokeStyle = 'rgba(201,168,76,0.3)'; ctx.lineWidth = 1; ctx.strokeRect(36, 36, W - 72, H - 72);
+    ctx.strokeStyle = '#c9a84c'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(24, 64); ctx.lineTo(24, 24); ctx.lineTo(64, 24); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(W-64, 24); ctx.lineTo(W-24, 24); ctx.lineTo(W-24, 64); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(24, H-64); ctx.lineTo(24, H-24); ctx.lineTo(64, H-24); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(W-64, H-24); ctx.lineTo(W-24, H-24); ctx.lineTo(W-24, H-64); ctx.stroke();
+    ctx.fillStyle = '#c0001a'; ctx.fillRect(60, 60, W - 120, 3);
+    ctx.font = 'bold 52px "Noto Serif JP", serif'; ctx.fillStyle = '#c9a84c'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('内定獲得!', W / 2, 130);
+    ctx.font = 'bold 60px "Noto Serif JP", serif'; ctx.fillStyle = '#ffffff'; ctx.fillText(companyName, W / 2, 220);
+    ctx.fillStyle = 'rgba(201,168,76,0.4)'; ctx.fillRect(W / 2 - 80, 265, 160, 2);
+    ctx.font = '24px "Noto Sans JP", sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ['業界：' + industry, '就活期間：' + period, '応募社数：' + applied].forEach((s, i) => { ctx.fillText(s, W / 2, 320 + i * 42); });
+    if (message) { ctx.font = '28px "Noto Sans JP", sans-serif'; ctx.fillStyle = '#c9a84c'; ctx.fillText('"' + message + '"', W / 2, 475); }
+    ctx.font = '18px "Noto Sans JP", sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.fillText(SITE_BRAND, W / 2, H - 50);
+    const shareText = companyName + 'から内定をいただきました！ #就活 #内定';
+    const encodedText = encodeURIComponent(shareText);
+    const xLink = document.getElementById('card-share-x'); const lineLink = document.getElementById('card-share-line');
+    if (xLink) xLink.href = 'https://twitter.com/intent/tweet?text=' + encodedText;
+    if (lineLink) lineLink.href = 'https://social-plugins.line.me/lineit/share?text=' + encodedText;
+  }
+
+  function downloadOfferCard() {
+    const canvas = document.getElementById('offer-card-canvas');
+    if (!canvas) return;
+    const link = document.createElement('a'); link.download = '内定報告カード.png'; link.href = canvas.toDataURL('image/png'); link.click();
+  }
+
+  // ===== AUTH GATE + INIT =====
+  function showPage(user) {
+    document.getElementById('password-screen').style.display = 'none';
+    document.getElementById('page-content').style.display = 'block';
+    document.getElementById('member-badge').style.display = 'inline-block';
+    document.getElementById('logout-btn').style.display = 'inline-block';
+    document.getElementById('member-badge').textContent = (user?.username || '会員') + ' さん';
+    renderOfferTools();
+  }
+
+  const currentMember = KeioNaviAuth.getCurrentUser();
+  if (currentMember) { showPage(currentMember); }
+</script>
+
+<nav class="bottom-tab-bar">
+  <a href="account.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>マイページ</span></a>
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>ホーム</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>ES</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="resources.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
+</nav>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script>
+</body>
+</html>

@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<script>
+  (function(measurementId){
+    if (!measurementId) return;
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+    document.head.appendChild(script);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', measurementId);
+  })('');
+</script>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>業界研究ガイド｜就活ナビ - 主要10業界の特徴と選考対策</title>
+<meta name="description" content="メーカー・商社・金融・IT・コンサルなど主要10業界の特徴、求められる人材像、選考の傾向をわかりやすく解説。就活の業界研究に。">
+<meta name="robots" content="index, follow">
+
+<!-- OGP -->
+<meta property="og:title" content="業界研究ガイド｜就活ナビ">
+<meta property="og:description" content="メーカー・商社・金融・IT・コンサルなど主要10業界の特徴、求められる人材像、選考の傾向をわかりやすく解説。">
+<meta property="og:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+<meta property="og:url" content="https://naotama1123.github.io/keio-syukatu-navi/industry-guide.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="就活ナビ">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="業界研究ガイド｜就活ナビ">
+<meta name="twitter:description" content="メーカー・商社・金融・IT・コンサルなど主要10業界の特徴、求められる人材像、選考の傾向をわかりやすく解説。">
+<meta name="twitter:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --navy-light: #142254;
+    --crimson: #c0001a;
+    --crimson-light: #e8001f;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+    padding-bottom: 60px;
+  }
+
+  /* ===== NAV ===== */
+  nav.top-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vw;
+    height: 68px;
+    background: rgba(10, 26, 62, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.25);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold-light); }
+
+  .nav-cta {
+    background: var(--crimson);
+    color: white !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2px;
+    font-size: 0.8rem !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--crimson-light) !important; color: white !important; }
+
+  /* ===== HAMBURGER ===== */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: rgba(255,255,255,0.8);
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: rgba(10,26,62,0.98);
+    backdrop-filter: blur(12px);
+    z-index: 99;
+    flex-direction: column;
+    padding: 1.5rem 6vw 2rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--gold-light); }
+  .mobile-menu-cta {
+    margin-top: 1rem;
+    background: var(--crimson) !important;
+    color: white !important;
+    text-align: center;
+    padding: 0.9rem !important;
+    border: none !important;
+    font-weight: 500;
+  }
+
+  @media (max-width: 900px) {
+    .hamburger { display: flex; }
+    .nav-links { display: none; }
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: var(--navy);
+    padding: 120px 5vw 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,168,76,0.04) 60px, rgba(201,168,76,0.04) 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,168,76,0.04) 60px, rgba(201,168,76,0.04) 61px);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(201,168,76,0.5);
+    padding: 0.35rem 1rem;
+    border-radius: 2px;
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--crimson);
+  }
+  .hero-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--white);
+    line-height: 1.3;
+    margin-bottom: 1.2rem;
+  }
+  .hero-sub {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.9;
+    font-weight: 300;
+  }
+  .hero-count {
+    margin-top: 1.5rem;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.4);
+  }
+  .hero-count strong {
+    color: var(--gold-light);
+    font-size: 1.1rem;
+  }
+
+  /* ===== MAIN ===== */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2.5rem 1.2rem 3rem;
+  }
+
+  /* ===== FILTER TABS ===== */
+  .filter-tabs {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 0 1rem;
+    margin-bottom: 1.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(10,26,62,0.15) transparent;
+  }
+  .filter-tabs::-webkit-scrollbar { height: 4px; }
+  .filter-tabs::-webkit-scrollbar-track { background: transparent; }
+  .filter-tabs::-webkit-scrollbar-thumb { background: rgba(10,26,62,0.15); border-radius: 2px; }
+
+  .filter-tab {
+    padding: 0.45rem 1rem;
+    font-size: 0.78rem;
+    border: 1px solid rgba(10,26,62,0.15);
+    background: var(--white);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: all 0.2s;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .filter-tab:hover { border-color: var(--navy); color: var(--navy); }
+  .filter-tab.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+  /* ===== INDUSTRY CARD ===== */
+  .industry-card {
+    background: var(--white);
+    border: 1px solid rgba(10,26,62,0.08);
+    border-left: 4px solid var(--navy);
+    margin-bottom: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .industry-card:hover {
+    border-color: rgba(201,168,76,0.4);
+    border-left-color: var(--gold);
+    box-shadow: 0 2px 12px rgba(10,26,62,0.06);
+  }
+
+  .industry-header {
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .industry-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray);
+    border-radius: 4px;
+  }
+  .industry-meta { flex: 1; }
+  .industry-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.4;
+  }
+  .industry-name-en {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    margin-top: 0.15rem;
+  }
+
+  .industry-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    padding: 0 1.5rem 0.8rem;
+  }
+  .industry-tag {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.6rem;
+    background: rgba(10,26,62,0.04);
+    border: 1px solid rgba(10,26,62,0.08);
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  /* ===== ACCORDION SECTIONS ===== */
+  .accordion-section {
+    border-top: 1px solid rgba(10,26,62,0.06);
+  }
+  .accordion-header {
+    padding: 0.85rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .accordion-header:hover { background: rgba(10,26,62,0.02); }
+  .accordion-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .accordion-title .acc-icon {
+    font-size: 0.9rem;
+    width: 20px;
+    text-align: center;
+  }
+  .accordion-arrow {
+    font-size: 0.75rem;
+    color: rgba(10,26,62,0.3);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .accordion-section.open .accordion-arrow { transform: rotate(90deg); }
+
+  .accordion-body {
+    display: none;
+    padding: 0 1.5rem 1.2rem 3.5rem;
+    font-size: 0.84rem;
+    line-height: 1.9;
+    color: var(--text);
+  }
+  .accordion-section.open .accordion-body { display: block; }
+
+  /* ===== CARD LINKS ===== */
+  .card-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.8rem 1.5rem 1.2rem;
+    border-top: 1px solid rgba(10,26,62,0.06);
+  }
+  .card-link {
+    font-size: 0.78rem;
+    color: var(--crimson);
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+  .card-link:hover { color: var(--crimson-light); text-decoration: underline; }
+
+  /* ===== BOTTOM CTA ===== */
+  .bottom-cta {
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-top: 1rem;
+  }
+  .bottom-cta-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.2rem;
+    color: var(--navy);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .bottom-cta-btn {
+    display: inline-block;
+    background: var(--crimson);
+    color: var(--white);
+    padding: 0.9rem 2.2rem;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    transition: all 0.25s;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+  }
+  .bottom-cta-btn:hover {
+    background: var(--crimson-light);
+    transform: translateY(-2px);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #060e20;
+    padding: 4rem 5vw 2.5rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    position: relative;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    margin-bottom: 3rem;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+  .footer-tagline {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.8;
+  }
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .footer-nav-group h4 {
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .footer-nav-group ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .footer-nav-group a {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .footer-nav-group a:hover { color: var(--gold-light); }
+  .footer-bottom {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    text-align: center;
+  }
+  .footer-copy {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.05em;
+  }
+  .footer-note {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.18);
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-nav { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ===== BOTTOM TAB BAR ===== */
+  .bottom-tab-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    display: flex; background: var(--navy); border-top: 1px solid rgba(201,168,76,0.2);
+    height: 56px;
+  }
+  .bottom-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.6rem; gap: 2px;
+    transition: color 0.2s; padding: 4px 0;
+  }
+  .bottom-tab svg { width: 20px; height: 20px; }
+  .bottom-tab:hover, .bottom-tab.active { color: var(--gold-light); }
+  .bottom-tab.active { font-weight: 700; }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .hero { padding: 100px 6vw 50px; }
+    .hero-title { font-size: 1.8rem; }
+    main { padding: 1.5rem 0.8rem 3rem; }
+    .industry-header { padding: 1rem 1rem; gap: 0.8rem; }
+    .industry-tags { padding: 0 1rem 0.6rem; }
+    .accordion-header { padding: 0.75rem 1rem; }
+    .accordion-body { padding: 0 1rem 1rem 2.8rem; }
+    .card-links { padding: 0.6rem 1rem 1rem; flex-direction: column; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">就活ナビ</a>
+  <ul class="nav-links">
+    <li><a href="index.html">トップ</a></li>
+    <li><a href="glossary.html">用語集</a></li>
+    <li><a href="industry-guide.html" style="color:var(--gold-light);">業界研究</a></li>
+    <li><a href="blog.html">コラム</a></li>
+    <li><a href="quiz.html">準備度チェック</a></li>
+    <li><a href="writing.html">ES対策</a></li>
+    <li><a href="account.html">ログイン</a></li>
+    <li><a href="account.html" class="nav-cta">無料会員登録</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html">トップ</a>
+  <a href="glossary.html">用語集</a>
+  <a href="industry-guide.html" style="color:var(--gold-light);font-weight:700;">業界研究ガイド</a>
+  <a href="blog.html">コラム</a>
+  <a href="quiz.html">準備度チェック</a>
+  <a href="writing.html">ES対策</a>
+  <a href="account.html">ログイン / 会員登録</a>
+  <a href="account.html" class="mobile-menu-cta">無料会員登録</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-content">
+    <div class="hero-badge">INDUSTRY RESEARCH GUIDE</div>
+    <h1 class="hero-title">業界研究ガイド</h1>
+    <p class="hero-sub">主要業界の特徴・動向・求められる人材像をまとめました</p>
+    <div class="hero-count">全 <strong>10</strong> 業界を網羅</div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main>
+
+  <!-- FILTER TABS -->
+  <div class="filter-tabs" id="filter-tabs">
+    <button class="filter-tab active" data-filter="all">すべて表示</button>
+    <button class="filter-tab" data-filter="maker">メーカー</button>
+    <button class="filter-tab" data-filter="trading">商社</button>
+    <button class="filter-tab" data-filter="finance">金融</button>
+    <button class="filter-tab" data-filter="it">IT・通信</button>
+    <button class="filter-tab" data-filter="consulting">コンサル</button>
+    <button class="filter-tab" data-filter="media">広告・マスコミ</button>
+    <button class="filter-tab" data-filter="infra">サービス・インフラ</button>
+    <button class="filter-tab" data-filter="retail">小売・流通</button>
+    <button class="filter-tab" data-filter="gov">官公庁・公社</button>
+    <button class="filter-tab" data-filter="startup">ベンチャー</button>
+  </div>
+
+  <!-- INDUSTRY CARDS -->
+  <div id="industry-list">
+
+    <!-- 1. メーカー -->
+    <div class="industry-card" data-industry="maker">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f3ed;</div>
+        <div class="industry-meta">
+          <div class="industry-name">メーカー</div>
+          <div class="industry-name-en">Manufacturing</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">モノづくり</span>
+        <span class="industry-tag">技術力</span>
+        <span class="industry-tag">グローバル展開</span>
+        <span class="industry-tag">長期キャリア</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>モノづくりを通じて社会に価値を提供する業界。素材・部品・完成品まで幅広い領域がある。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>技術力とグローバル展開が強み。長期的なキャリアパスが描きやすく、専門性を高めながら成長できる環境。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>粘り強さ</strong> &#8212; 製品開発は長期戦。途中で諦めず最後までやり抜く力が重視される。</p>
+          <p><strong>チームワーク</strong> &#8212; 一つの製品に多くの部署が関わるため、協調性とコミュニケーション力が不可欠。</p>
+          <p><strong>論理的思考力</strong> &#8212; データや事実に基づいて判断・改善を繰り返す姿勢が求められる。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>工場見学やOB訪問で現場を知ることが重要。志望動機で「なぜモノづくりか」を自分の言葉で語れるかが問われる。業界の中でも素材・部品・完成品のどこに興味があるか明確にしておくと説得力が増す。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>ES → 適性検査（テスト） → 面接3〜4回という王道パターンが多い。技術職は専門面接があり、研究内容のプレゼンを求められることも。選考時期は比較的早め。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 2. 商社 -->
+    <div class="industry-card" data-industry="trading">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f310;</div>
+        <div class="industry-meta">
+          <div class="industry-name">商社</div>
+          <div class="industry-name-en">Trading</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">グローバル</span>
+        <span class="industry-tag">高年収</span>
+        <span class="industry-tag">体育会系文化</span>
+        <span class="industry-tag">総合商社・専門商社</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>世界中の資源・商材を結ぶ仲介役。総合商社と専門商社の2種類がある。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>グローバルなビジネス環境、高年収、体育会系的な文化。若手から海外駐在のチャンスもある。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>行動力</strong> &#8212; 自ら動いてビジネスを切り拓く姿勢が必須。</p>
+          <p><strong>コミュニケーション力</strong> &#8212; 多様なステークホルダーと信頼関係を構築する力。</p>
+          <p><strong>リーダーシップ</strong> &#8212; チームをまとめ、プロジェクトを推進する力。</p>
+          <p><strong>泥臭さ</strong> &#8212; 華やかなイメージとは裏腹に、地道な現場仕事も多い。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>OB訪問が必須級。できるだけ多くの社員に会い、業界理解の深さを示すことが重要。「なぜ商社か」「総合か専門か」「どのセグメントに興味があるか」を語れるようにしておく。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>インターン経由での内定が非常に有利。ケース面接を課す企業もある。OB訪問の回数や質が評価に直結するケースも。体力やストレス耐性を見るグループワークも。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 3. 金融 -->
+    <div class="industry-card" data-industry="finance">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f3e6;</div>
+        <div class="industry-meta">
+          <div class="industry-name">金融</div>
+          <div class="industry-name-en">Finance</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">銀行・証券・保険</span>
+        <span class="industry-tag">安定性</span>
+        <span class="industry-tag">専門知識</span>
+        <span class="industry-tag">部門異動</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>銀行・証券・保険・リースなど、お金の流れを支える業界。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>安定性が高く、専門知識が身につく。部門異動が多く、幅広い経験を積める。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>信頼性</strong> &#8212; 顧客の大切な資産を扱うため、誠実さと責任感が最重要。</p>
+          <p><strong>数字への強さ</strong> &#8212; 数値データに基づいた判断力が求められる。</p>
+          <p><strong>ストレス耐性</strong> &#8212; 市場の変動やノルマなど、プレッシャーのかかる環境で働く力。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>資格（FP等）は加点要素になる。「なぜ金融か」「銀行・証券・保険のどれか、なぜか」を明確にしておくことが重要。金融業界のデジタル化（フィンテック）についても理解しておくと差別化できる。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>早期選考が多く、3年生の夏から動き始める必要がある。リクルーター面談が実質的な選考になっているケースも多い。銀行は面接回数が多め。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 4. IT・通信 -->
+    <div class="industry-card" data-industry="it">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f4bb;</div>
+        <div class="industry-meta">
+          <div class="industry-name">IT・通信</div>
+          <div class="industry-name-en">IT / Telecom</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">成長産業</span>
+        <span class="industry-tag">柔軟な働き方</span>
+        <span class="industry-tag">SaaS</span>
+        <span class="industry-tag">Web・アプリ</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>システム開発、SaaS、通信インフラ、Web/アプリサービスなど幅広い領域を含む。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>成長産業であり、リモートワークなど柔軟な働き方が浸透。技術力で勝負できる実力主義の環境。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>論理的思考</strong> &#8212; 複雑な問題を構造化し、効率的に解決する力。</p>
+          <p><strong>学習意欲</strong> &#8212; 技術の進化が速いため、常に学び続ける姿勢が不可欠。</p>
+          <p><strong>変化への適応力</strong> &#8212; 市場や技術トレンドの変化に柔軟に対応できる力。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>ポートフォリオやプログラミング経験があれば有利だが、文系出身でも歓迎される企業は多い。IT業界の中でもSIer・Web系・SaaS・通信で文化が大きく異なるため、自分に合う領域を見極めることが重要。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>コーディングテストやハッカソン型選考を実施する企業も。エンジニア職はGitHubや成果物の提出を求められることがある。ビジネス職は通常のES・面接が中心。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 5. コンサルティング -->
+    <div class="industry-card" data-industry="consulting">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f4ca;</div>
+        <div class="industry-meta">
+          <div class="industry-name">コンサルティング</div>
+          <div class="industry-name-en">Consulting</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">知的専門職</span>
+        <span class="industry-tag">高い成長環境</span>
+        <span class="industry-tag">若手から裁量</span>
+        <span class="industry-tag">ハードワーク</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>企業の課題を分析し、解決策を提案する知的専門職。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>高い成長環境で、若手から大きな裁量を任される。ハードワークだが、短期間で圧倒的なスキルが身につく。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>論理的思考</strong> &#8212; 複雑な課題をロジカルに整理・分析する力。</p>
+          <p><strong>構造化力</strong> &#8212; 曖昧な問題を明確なフレームワークで捉え直す力。</p>
+          <p><strong>プレゼン力</strong> &#8212; 分析結果をクライアントにわかりやすく伝える力。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>ケース面接対策が必須。フェルミ推定（市場規模推定）も頻出テーマ。日頃からニュースに触れ、ビジネス課題を構造化して考える訓練をしておくと良い。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>ES → 適性検査 → ケース面接 → パートナー面接という流れが一般的。ケース面接では30分程度で課題を分析し、解決策を提案する。ジョブ（インターン）で実際のプロジェクト体験をさせる企業も多い。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 6. 広告・マスコミ -->
+    <div class="industry-card" data-industry="media">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f4f0;</div>
+        <div class="industry-meta">
+          <div class="industry-name">広告・マスコミ</div>
+          <div class="industry-name-en">Advertising / Media</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">クリエイティブ</span>
+        <span class="industry-tag">トレンド感度</span>
+        <span class="industry-tag">デジタルシフト</span>
+        <span class="industry-tag">企画力</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>テレビ・新聞・Web広告・PR・制作会社など、情報を届ける業界。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>クリエイティブな仕事が多く、トレンドへの感度が求められる。現在はデジタルシフトの真っ最中で、Web広告やSNSマーケティングの比重が増加。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>発想力</strong> &#8212; 既存の枠にとらわれない柔軟なアイデアを生み出す力。</p>
+          <p><strong>好奇心</strong> &#8212; あらゆるジャンルに興味を持ち、情報を収集する姿勢。</p>
+          <p><strong>行動力</strong> &#8212; 企画を自ら提案し、実行に移す推進力。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>作品やポートフォリオがあると強い。業界イベントや説明会への積極的な参加が有効。「自分がどんなコンテンツ・広告を作りたいか」を具体的に語れると評価が高い。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>クリエイティブテストやグループワークが特徴的。広告代理店では企画書の作成を求められることも。テレビ局は倍率が非常に高く、早期からの対策が必要。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 7. サービス・インフラ -->
+    <div class="industry-card" data-industry="infra">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f682;</div>
+        <div class="industry-meta">
+          <div class="industry-name">サービス・インフラ</div>
+          <div class="industry-name-en">Service / Infrastructure</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">社会基盤</span>
+        <span class="industry-tag">安定性</span>
+        <span class="industry-tag">地域密着</span>
+        <span class="industry-tag">社会貢献</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>鉄道・電力・ガス・物流・不動産など、社会基盤を支える業界。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>安定性が高く、地域密着型の事業が多い。社会貢献度が高く、人々の生活に直接関わる仕事。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>責任感</strong> &#8212; 社会インフラを支える仕事だからこそ、強い使命感が必要。</p>
+          <p><strong>協調性</strong> &#8212; 大規模な組織で多くの人と協力して業務を進める力。</p>
+          <p><strong>長期的視野</strong> &#8212; 10年、20年先を見据えた事業計画に携わるため、先を見通す力。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>インフラ業界は人気が高く倍率も高い。「なぜこのインフラか」「鉄道なのか電力なのか」を明確に語れることが重要。地域への愛着やその業界ならではの社会貢献を具体的に示す。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>ES重視で、志望動機の質が特に問われる。面接は穏やかな雰囲気で、人物重視の傾向が強い。技術職は専門試験がある場合も。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+        <a href="game-developer.html" class="card-link" style="background:linear-gradient(135deg, rgba(10,26,62,0.06), rgba(201,168,76,0.1)); border:1px solid rgba(201,168,76,0.3); font-weight:700;">🎮 不動産デベロッパーの仕事を体験してみる &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 8. 小売・流通 -->
+    <div class="industry-card" data-industry="retail">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f6d2;</div>
+        <div class="industry-meta">
+          <div class="industry-name">小売・流通</div>
+          <div class="industry-name-en">Retail / Distribution</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">消費者に最も近い</span>
+        <span class="industry-tag">現場スタート</span>
+        <span class="industry-tag">マーケティング</span>
+        <span class="industry-tag">EC</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>百貨店・スーパー・EC・専門店など、消費者に一番近い業界。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>現場からのスタートが基本で、マーケティング感覚が身につく。消費者のニーズを直接感じられる仕事。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>顧客視点</strong> &#8212; お客様の立場に立って考え、提案できる力。</p>
+          <p><strong>体力</strong> &#8212; 店舗での立ち仕事や繁忙期の対応に耐えられる体力。</p>
+          <p><strong>マネジメント志向</strong> &#8212; 店長やエリアマネージャーへのキャリアパスがあるため、人をまとめる意欲。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>店舗訪問で志望理由を具体化するのが効果的。実際に店舗を見て、品揃えや接客の工夫を観察し、面接で話すと説得力が増す。「なぜこの業態か」を明確に。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>グループディスカッションが多めで、チームでの協調性やリーダーシップが見られる。接客ロールプレイを課す企業も。選考は比較的スピーディーに進む傾向がある。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 9. 官公庁・公社・団体 -->
+    <div class="industry-card" data-industry="gov">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f3db;</div>
+        <div class="industry-meta">
+          <div class="industry-name">官公庁・公社・団体</div>
+          <div class="industry-name-en">Government / Public</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">公共性</span>
+        <span class="industry-tag">安定</span>
+        <span class="industry-tag">社会全体への影響</span>
+        <span class="industry-tag">公務員試験</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>国家公務員、地方公務員、独立行政法人など、公的機関での仕事。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>公共性が高く、安定した雇用。社会全体に影響を与える政策や事業に携わることができる。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>公共心</strong> &#8212; 社会全体の利益を考え、公平に判断する姿勢。</p>
+          <p><strong>バランス感覚</strong> &#8212; 多様な立場の意見を調整し、最適解を導く力。</p>
+          <p><strong>調整力</strong> &#8212; 部署間・組織間の連携をスムーズに進めるコミュニケーション力。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>公務員試験の対策が必要で、早めの準備が重要。民間企業との併願も多い。「なぜ公務員か」「どの分野に貢献したいか」を具体的に語れると強い。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>国家公務員は筆記試験 → 官庁訪問という流れ。地方公務員は筆記試験 → 面接が中心。近年は人物重視の傾向が強まり、面接の比重が増している。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+      </div>
+    </div>
+
+    <!-- 10. ベンチャー・スタートアップ -->
+    <div class="industry-card" data-industry="startup">
+      <div class="industry-header">
+        <div class="industry-icon">&#x1f680;</div>
+        <div class="industry-meta">
+          <div class="industry-name">その他（ベンチャー・スタートアップ）</div>
+          <div class="industry-name-en">Venture / Startup</div>
+        </div>
+      </div>
+      <div class="industry-tags">
+        <span class="industry-tag">裁量大</span>
+        <span class="industry-tag">成長スピード</span>
+        <span class="industry-tag">0→1</span>
+        <span class="industry-tag">イノベーション</span>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4cb;</span>概要と特徴</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>設立間もない企業で、新規事業やイノベーションに取り組む。</p>
+          <p style="margin-top:0.6rem;"><strong>特徴：</strong>裁量が大きく成長スピードが速い一方、リスクもある。経営陣との距離が近く、事業全体を見渡せる環境。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f464;</span>求められる人材</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>自走力</strong> &#8212; 指示を待たず、自ら課題を見つけて動ける力。</p>
+          <p><strong>不確実性への耐性</strong> &#8212; 正解がない中で試行錯誤し続けられるメンタリティ。</p>
+          <p><strong>0→1志向</strong> &#8212; ゼロからイチを生み出すことにワクワクできる人。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4a1;</span>就活のポイント</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>社長面接が多いため、そのスタートアップのビジョンへの共感が重要。「なぜ大手ではなくスタートアップか」を自分の価値観と紐づけて語れるようにしておく。インターンで実際に働いてみるのが最も有効。</p>
+        </div>
+      </div>
+      <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-title"><span class="acc-icon">&#x1f4dd;</span>選考の傾向</div>
+          <span class="accordion-arrow">&#x25b6;</span>
+        </div>
+        <div class="accordion-body">
+          <p>カジュアル面談 → 本選考というフローが多く、スピード内定もある。形式的な選考よりも、カルチャーフィットや実際のスキルを重視する傾向。社長や経営陣と直接話す機会が多い。</p>
+        </div>
+      </div>
+      <div class="card-links">
+        <a href="writing.html" class="card-link">この業界の自己分析をする &rarr;</a>
+        <a href="glossary.html" class="card-link">この業界の用語を学ぶ &rarr;</a>
+      </div>
+    </div>
+
+  </div><!-- /industry-list -->
+
+  <!-- BOTTOM CTA -->
+  <div class="bottom-cta">
+    <div class="bottom-cta-title">就活ナビに登録して本格的に準備を始める</div>
+    <a href="account.html" class="bottom-cta-btn">無料会員登録 &rarr;</a>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <span class="footer-logo">就活ナビ</span>
+        <p class="footer-tagline">就活を、ひとりで戦わない。<br>就活生のための就活支援プラットフォーム。</p>
+      </div>
+      <div class="footer-nav">
+        <div class="footer-nav-group">
+          <h4>コンテンツ</h4>
+          <ul>
+            <li><a href="index.html">トップ</a></li>
+            <li><a href="industry-guide.html">業界研究ガイド</a></li>
+            <li><a href="glossary.html">用語集</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-group">
+          <h4>機能</h4>
+          <ul>
+            <li><a href="writing.html">ES対策</a></li>
+            <li><a href="members.html">会員ページ</a></li>
+            <li><a href="account.html">ログイン / 会員登録</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-group">
+          <h4>その他</h4>
+          <ul>
+            <li><a href="privacy.html">プライバシーポリシー</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026 就活ナビ. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- BOTTOM TAB BAR -->
+<nav class="bottom-tab-bar">
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>ホーム</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="community.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
+</nav>
+
+<script>
+  // ===== HAMBURGER MENU =====
+  function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('open');
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+
+  // ===== FILTER TABS =====
+  var filterTabs = document.querySelectorAll('.filter-tab');
+  filterTabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      filterTabs.forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      var filter = tab.getAttribute('data-filter');
+      var cards = document.querySelectorAll('.industry-card');
+      cards.forEach(function(card) {
+        if (filter === 'all' || card.getAttribute('data-industry') === filter) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // ===== ACCORDION =====
+  function toggleAccordion(header) {
+    var section = header.parentElement;
+    section.classList.toggle('open');
+  }
+
+  // ===== EXPAND ALL ON CARD CLICK (optional: expand first section on load) =====
+  // Auto-expand first accordion section for each visible card
+  document.querySelectorAll('.industry-card').forEach(function(card) {
+    var first = card.querySelector('.accordion-section');
+    if (first) first.classList.add('open');
+  });
+</script>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script>
+</body>
+</html>
