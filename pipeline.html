@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
   :root {
     --navy: #0a1a3e;
@@ -341,10 +342,13 @@
 <!-- PAGE CONTENT -->
 <div id="page-content">
   <div class="page-hero">
-    <div class="page-hero-inner">
-      <div class="page-badge">PIPELINE</div>
-      <h1>選考管理</h1>
-      <p>選考の進捗をトラッキング。カレンダーで締切を管理。</p>
+    <div class="page-hero-inner" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+      <div>
+        <div class="page-badge">PIPELINE</div>
+        <h1>選考管理</h1>
+        <p>選考の進捗をトラッキング。カレンダーで締切を管理。</p>
+      </div>
+      <button onclick="window.location.href='more.html';" style="background:none;border:1px solid rgba(201,168,76,0.4);color:var(--gold-light);font-size:0.72rem;font-family:'Noto Sans JP',sans-serif;padding:0.4rem 0.8rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;margin-bottom:4px;" onmouseover="this.style.background='rgba(201,168,76,0.15)'" onmouseout="this.style.background='none'">📥 選考データをエクスポート</button>
     </div>
   </div>
 
@@ -459,7 +463,7 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
   const GAS_URL = GAS_PROXY_URL;
 
   async function callAuthApi(action, extraPayload) {

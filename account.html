@@ -2,19 +2,6 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<script>
-  (function(measurementId){
-    if (!measurementId) return;
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', measurementId);
-  })('');
-</script>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>アカウント | 慶應就活ナビ</title>
 <meta name="description" content="慶應就活ナビの個人アカウント作成・ログイン・プロフィール管理ページです。">
@@ -609,6 +596,27 @@
     justify-content: flex-end;
     margin-top: 1.3rem;
   }
+  .session-row {
+    display: flex;
+    gap: 0.9rem;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.9rem 1rem;
+    background: var(--gray);
+    overflow-wrap: anywhere;
+  }
+  .session-row-copy {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+  .session-row-meta {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .session-row.current { border-left: 3px solid var(--success); }
+  .session-row:not(.current) { border-left: 3px solid rgba(0,0,0,0.12); }
 
   @media (max-width: 960px) {
     .account-shell {
@@ -637,19 +645,10 @@
     .tabs { grid-template-columns: 1fr; }
     .member-top { flex-direction: column; }
     .quick-launch { flex-direction: column; align-items: flex-start; }
+    .session-row { flex-direction: column; }
+    .session-row .subtle-btn { width: 100%; }
   }
 </style>
-<script type="text/javascript">
-    (function(projectId){
-        if (!projectId) return;
-        window.clarity = window.clarity || function(){ (window.clarity.q = window.clarity.q || []).push(arguments); };
-        var script = document.createElement("script");
-        script.async = 1;
-        script.src = "https://www.clarity.ms/tag/" + projectId;
-        var firstScript = document.getElementsByTagName("script")[0];
-        firstScript.parentNode.insertBefore(script, firstScript);
-    })("");
-</script>
 </head>
 <body>
 <nav>
@@ -777,7 +776,7 @@
 
         <label class="field-group" style="flex-direction:row; align-items:flex-start; gap:0.6rem; cursor:pointer;">
           <input type="checkbox" name="agreePrivacy" required style="margin-top:0.25rem; width:18px; height:18px; flex-shrink:0; cursor:pointer;">
-          <span class="field-help" style="font-size:0.78rem; line-height:1.7;"><a href="privacy.html" target="_blank" style="color:var(--crimson); text-decoration:underline;">プライバシーポリシー・利用規約</a>を読み、同意します。AI生成コンテンツは参考情報であり、本サービスはその結果について責任を負いません。</span>
+          <span class="field-help" style="font-size:0.78rem; line-height:1.7;"><a href="privacy.html" target="_blank" style="color:var(--crimson); text-decoration:underline;">プライバシーポリシー</a>および<a href="terms.html" target="_blank" style="color:var(--crimson); text-decoration:underline;">利用規約</a>を読み、同意します。AI生成コンテンツは参考情報であり、本サービスはその結果について責任を負いません。</span>
         </label>
 
         <div class="form-actions">
@@ -952,8 +951,8 @@
           <label class="field-group">
             <span class="field-label">LINE通知</span>
             <div style="display:flex;align-items:center;gap:0.8rem;">
-              <input type="checkbox" name="lineNotify" style="width:18px;height:18px;">
-              <span class="field-help">LINE Notifyで締切リマインダーや新着通知を受け取る（準備中）</span>
+              <input type="checkbox" name="lineNotify" style="width:18px;height:18px;" disabled>
+              <span class="field-help">LINE Notifyで締切リマインダーや新着通知を受け取る（今後実装予定）</span>
             </div>
           </label>
 
@@ -1100,9 +1099,14 @@
 <script src="auth.js"></script>
 <script>
   const params = new URLSearchParams(location.search);
-  const resetToken = params.get('token') || '';
-  const requestedMode = resetToken ? 'reset-confirm' : (params.get('mode') === 'login' ? 'login' : (params.get('mode') === 'reset' ? 'reset' : 'signup'));
-  const returnTo = params.get('returnTo') || '';
+  const authApi = window.KeioNaviAuth;
+  const modeParam = params.get('mode') || '';
+  const resetToken = modeParam === 'reset' ? (params.get('token') || '') : '';
+  const verificationToken = modeParam === 'verify' ? (params.get('token') || '') : '';
+  const requestedMode = resetToken
+    ? 'reset-confirm'
+    : (verificationToken ? 'login' : (modeParam === 'login' ? 'login' : (modeParam === 'reset' ? 'reset' : 'signup')));
+  const returnTo = authApi.sanitizeReturnTo(params.get('returnTo') || '');
 
   const flash = document.getElementById('flash');
   const guestView = document.getElementById('guest-view');
@@ -1122,7 +1126,7 @@
   const signupLineQrStatus = document.getElementById('signup-line-qr-status');
   const profileLineQrStatus = document.getElementById('profile-line-qr-status');
 
-  if (returnTo) KeioNaviAuth.setReturnTo(returnTo);
+  if (returnTo) authApi.setReturnTo(returnTo);
 
   let flashTimer = null;
   function showFlash(message, type) {
@@ -1156,6 +1160,87 @@
 
   function field(form, name) {
     return form.elements.namedItem(name);
+  }
+
+  function escHtml(value) {
+    const div = document.createElement('div');
+    div.textContent = value == null ? '' : String(value);
+    return div.innerHTML;
+  }
+
+  const BACKUP_LABELS = {
+    keio_navi_progress_v1: '選考進捗',
+    keio_navi_research_notes_v1: '企業研究ノート',
+    keio_navi_checklist_v1: 'チェックリスト',
+    keio_navi_interview_prep_v1: '面接対策ノート',
+    keio_navi_gd_feedback_v1: 'GDフィードバック',
+    keio_navi_offer_compare_v1: '内定比較',
+    keio_navi_self_analysis_v1: '自己分析',
+    keio_navi_self_pr_v1: '自己PR',
+    keio_navi_gk_deepdive_v1: 'ガクチカ深掘り',
+    keio_navi_es_bank_v1: 'ES保管庫',
+    keio_navi_stage_v1: '就活ステージ',
+    keio_navi_wizard_done_v1: '初回セットアップ',
+    keio_navi_sel_status_v1: '選考ステータス',
+    keio_navi_memo_v1: '企業メモ',
+    keio_navi_difficulty_v1: '苦手分析',
+    keio_navi_past_exams_v1: '過去問メモ',
+    keio_navi_ai_consent_v1: 'AI利用設定',
+    keio_navi_notification_prefs_v1: '通知設定',
+  };
+
+  function countBackupItems(value) {
+    if (Array.isArray(value)) return value.length;
+    if (value && typeof value === 'object') return Object.keys(value).length;
+    if (typeof value === 'string') return value.trim() ? 1 : 0;
+    return value == null ? 0 : 1;
+  }
+
+  async function readBackupPreview(file) {
+    if (!file) return { ok: false, error: 'バックアップファイルを選択してください。' };
+    try {
+      const raw = await file.text();
+      const parsed = JSON.parse(raw);
+      const items = parsed && parsed.items && typeof parsed.items === 'object' ? parsed.items : null;
+      if (!items) return { ok: false, error: 'バックアップファイルの形式が正しくありません。' };
+      const summary = Object.keys(items).map(key => ({
+        key,
+        label: BACKUP_LABELS[key] || key,
+        count: countBackupItems(items[key]),
+      }));
+      return {
+        ok: true,
+        exportedAt: parsed.exportedAt || '',
+        exportedBy: parsed.exportedBy || '',
+        summary,
+      };
+    } catch (error) {
+      return { ok: false, error: 'バックアップファイルを読み込めませんでした。' };
+    }
+  }
+
+  function renderBackupPreview(preview) {
+    const previewEl = document.getElementById('backup-import-preview');
+    if (!previewEl) return;
+    if (!preview || !preview.ok) {
+      previewEl.style.display = 'none';
+      previewEl.innerHTML = '';
+      return;
+    }
+    previewEl.style.display = 'block';
+    previewEl.innerHTML = `
+      <div style="font-size:0.74rem; color:var(--navy); font-weight:700; margin-bottom:0.45rem;">復元プレビュー</div>
+      <div style="font-size:0.72rem; color:var(--text-muted); line-height:1.8; margin-bottom:0.55rem;">
+        ${preview.exportedAt ? `書き出し日時: ${escHtml(formatDateTime(preview.exportedAt) || preview.exportedAt)}` : '書き出し日時: 不明'}
+        ${preview.exportedBy ? `<br>書き出し元: ${escHtml(preview.exportedBy)}` : ''}
+      </div>
+      ${preview.summary.map(item => `
+        <div style="display:flex; justify-content:space-between; gap:1rem; padding:0.55rem 0; border-top:1px solid rgba(10,26,62,0.06); font-size:0.74rem;">
+          <span>${escHtml(item.label)}</span>
+          <span style="color:var(--text-muted);">${Number(item.count) || 0}件</span>
+        </div>
+      `).join('')}
+    `;
   }
 
   function readFileAsDataUrl(file) {
@@ -1205,6 +1290,374 @@
     profileLineQrStatus.textContent = user && user.hasLineQr
       ? '現在のLINE QRはサーバー側に保存されています。変更する場合だけ再アップロードしてください。'
       : 'まだLINE QRが登録されていません。ここから追加できます。';
+  }
+
+  function formatDateTime(value) {
+    if (!value) return '';
+    const date = new Date(value);
+    if (isNaN(date)) return '';
+    return date.toLocaleString('ja-JP', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  function getSessionDeviceLabel(session) {
+    const ua = String(session && session.userAgent || '');
+    const platform = /iPhone|iPad|iPod/.test(ua)
+      ? 'iPhone / iPad'
+      : /Android/.test(ua)
+        ? 'Android'
+        : /Macintosh|Mac OS X/.test(ua)
+          ? 'Mac'
+          : /Windows/.test(ua)
+            ? 'Windows'
+            : /Linux/.test(ua)
+              ? 'Linux'
+              : '不明な端末';
+    const browser = /Edg\//.test(ua)
+      ? 'Edge'
+      : /Chrome\//.test(ua) && !/Edg\//.test(ua)
+        ? 'Chrome'
+        : /Safari\//.test(ua) && !/Chrome\//.test(ua)
+          ? 'Safari'
+          : /Firefox\//.test(ua)
+            ? 'Firefox'
+            : 'ブラウザ';
+    return platform + ' / ' + browser;
+  }
+
+  function setBlockMessage(element, message, type) {
+    if (!element) return;
+    element.textContent = message || '';
+    element.style.color = type === 'error' ? 'var(--accent, var(--crimson, #c0001a))' : 'var(--text-muted)';
+  }
+
+  function ensureAccountSecurityBlocks() {
+    if (!memberView) return;
+
+    if (!document.getElementById('email-verification-block')) {
+      const profileBlock = profileForm && profileForm.closest('.settings-block');
+      if (profileBlock) {
+        profileBlock.insertAdjacentHTML('beforebegin', `
+          <div class="settings-block" id="email-verification-block">
+            <h3 class="settings-title">メール認証</h3>
+            <p class="settings-sub">登録メールアドレスの確認状態です。未確認でも閲覧はできますが、投稿・返信・募集・参加などのコミュニティ機能は認証後に有効になります。</p>
+            <div style="display:grid; gap:0.7rem; margin-top:0.9rem;">
+              <div id="email-verification-status" style="font-size:0.86rem; font-weight:700; color:var(--text);"></div>
+              <div id="email-verification-meta" style="font-size:0.76rem; color:var(--text-muted); line-height:1.8;"></div>
+              <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;">
+                <button type="button" class="subtle-btn" id="email-verification-resend-btn">確認メールを再送する</button>
+              </div>
+            </div>
+          </div>
+        `);
+      }
+    }
+
+    if (!document.getElementById('session-management-block')) {
+      const logoutWrap = memberView.querySelector('.logout-wrap');
+      if (logoutWrap) {
+        logoutWrap.insertAdjacentHTML('beforebegin', `
+          <div class="settings-block" id="session-management-block">
+            <h3 class="settings-title">ログイン中の端末</h3>
+            <p class="settings-sub">現在ログインしているブラウザや端末を確認できます。身に覚えのない端末はここからログアウトできます。</p>
+            <div id="session-list" style="display:grid; gap:0.7rem; margin-top:0.9rem;"></div>
+            <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; margin-top:1rem;">
+              <button type="button" class="subtle-btn" id="revoke-other-sessions-btn">他の端末をすべてログアウト</button>
+              <span id="session-management-status" style="font-size:0.72rem; color:var(--text-muted);"></span>
+            </div>
+          </div>
+        `);
+      }
+    }
+
+    if (!document.getElementById('backup-sync-block')) {
+      const sessionBlock = document.getElementById('session-management-block');
+      const logoutWrap = memberView.querySelector('.logout-wrap');
+      const anchor = sessionBlock || logoutWrap;
+      if (anchor) {
+        anchor.insertAdjacentHTML(sessionBlock ? 'afterend' : 'beforebegin', `
+          <div class="settings-block" id="backup-sync-block">
+            <h3 class="settings-title">バックアップ / 同期</h3>
+            <p class="settings-sub">プロフィールや気になる企業はサーバー同期されます。面接メモや自己分析など端末保存データは、ここから書き出しと復元ができます。</p>
+            <div id="backup-sync-status" style="font-size:0.76rem; color:var(--text-muted); line-height:1.8; margin-bottom:0.9rem;"></div>
+            <div id="backup-summary" style="display:grid; gap:0.55rem; margin-bottom:0.9rem;"></div>
+            <div id="backup-import-preview" style="display:none; margin-bottom:0.9rem; padding:0.9rem 1rem; background:rgba(10,26,62,0.03); border-left:3px solid var(--gold);"></div>
+            <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;">
+              <button type="button" class="subtle-btn" id="backup-export-btn">端末データを書き出す</button>
+              <button type="button" class="subtle-btn" id="backup-import-btn">バックアップを復元</button>
+              <button type="button" class="subtle-btn" id="backup-refresh-btn">最新状況を更新</button>
+              <input type="file" id="backup-import-file" accept="application/json" hidden>
+            </div>
+          </div>
+        `);
+      }
+    }
+
+    const resendBtn = document.getElementById('email-verification-resend-btn');
+    if (resendBtn && !resendBtn.dataset.bound) {
+      resendBtn.dataset.bound = '1';
+      resendBtn.addEventListener('click', async () => {
+        resendBtn.disabled = true;
+        resendBtn.textContent = '送信中...';
+        const result = await authApi.resendVerificationEmail();
+        resendBtn.disabled = false;
+        resendBtn.textContent = '確認メールを再送する';
+
+        if (!result.ok) {
+          showFlash(result.error, 'error');
+          return;
+        }
+
+        renderEmailVerificationStatus();
+        showFlash(result.message || '確認メールを再送しました。', 'success');
+      });
+    }
+
+    const revokeOthersBtn = document.getElementById('revoke-other-sessions-btn');
+    if (revokeOthersBtn && !revokeOthersBtn.dataset.bound) {
+      revokeOthersBtn.dataset.bound = '1';
+      revokeOthersBtn.addEventListener('click', async () => {
+        const statusEl = document.getElementById('session-management-status');
+        revokeOthersBtn.disabled = true;
+        setBlockMessage(statusEl, 'ログアウト中...', 'info');
+
+        const result = await authApi.revokeOtherSessions();
+        revokeOthersBtn.disabled = false;
+        if (!result.ok) {
+          setBlockMessage(statusEl, result.error, 'error');
+          return;
+        }
+
+        setBlockMessage(statusEl, (result.revokedCount || 0) + '件の端末をログアウトしました。', 'info');
+        loadSessionManagement();
+      });
+    }
+
+    const exportBtn = document.getElementById('backup-export-btn');
+    if (exportBtn && !exportBtn.dataset.bound) {
+      exportBtn.dataset.bound = '1';
+      exportBtn.addEventListener('click', () => {
+        const result = authApi.downloadLocalBackup ? authApi.downloadLocalBackup() : { ok: false, error: 'バックアップ機能を読み込めませんでした。' };
+        if (!result.ok) {
+          showFlash(result.error, 'error');
+          return;
+        }
+        renderBackupCenter();
+        showFlash('端末保存データをバックアップしました。', 'success');
+      });
+    }
+
+    const importBtn = document.getElementById('backup-import-btn');
+    const importFile = document.getElementById('backup-import-file');
+    if (importBtn && importFile && !importBtn.dataset.bound) {
+      importBtn.dataset.bound = '1';
+      importBtn.addEventListener('click', () => importFile.click());
+      importFile.addEventListener('change', async () => {
+        const file = importFile.files && importFile.files[0];
+        if (!file) return;
+        const preview = await readBackupPreview(file);
+        if (!preview.ok) {
+          importFile.value = '';
+          showFlash(preview.error, 'error');
+          return;
+        }
+        renderBackupPreview(preview);
+        const summaryLabel = preview.summary.map(item => item.label + ':' + (Number(item.count) || 0) + '件').join(' / ');
+        if (!confirm('この端末の対象データを上書きして復元します。\n\n' + summaryLabel + '\n\n必要なら先に「端末データを書き出す」で現在の状態を保存してください。')) {
+          importFile.value = '';
+          return;
+        }
+        importBtn.disabled = true;
+        const result = await authApi.restoreLocalBackup(file);
+        importBtn.disabled = false;
+        importFile.value = '';
+        if (!result.ok) {
+          showFlash(result.error, 'error');
+          return;
+        }
+        renderBackupCenter();
+        showFlash((result.restoredKeys || []).length + '件の端末保存データを復元しました。', 'success');
+      });
+    }
+
+    const refreshBtn = document.getElementById('backup-refresh-btn');
+    if (refreshBtn && !refreshBtn.dataset.bound) {
+      refreshBtn.dataset.bound = '1';
+      refreshBtn.addEventListener('click', () => {
+        renderBackupCenter();
+        showFlash('バックアップ状況を更新しました。', 'info');
+      });
+    }
+  }
+
+  function renderEmailVerificationStatus() {
+    ensureAccountSecurityBlocks();
+    const block = document.getElementById('email-verification-block');
+    if (!block) return;
+
+    const user = authApi.getCurrentUser();
+    if (!user) {
+      block.style.display = 'none';
+      return;
+    }
+
+    block.style.display = '';
+    const statusEl = document.getElementById('email-verification-status');
+    const metaEl = document.getElementById('email-verification-meta');
+    const resendBtn = document.getElementById('email-verification-resend-btn');
+
+    if (user.emailVerified) {
+      statusEl.textContent = '確認済み';
+      statusEl.style.color = 'var(--success)';
+      metaEl.textContent = user.email + ' は確認済みです。' + (user.emailVerifiedAt ? ' 確認日: ' + formatDateTime(user.emailVerifiedAt) : '');
+      resendBtn.hidden = true;
+      return;
+    }
+
+    statusEl.textContent = '未確認';
+    statusEl.style.color = 'var(--accent, var(--crimson, #c0001a))';
+    metaEl.textContent = user.email + ' 宛に確認メールを送れます。認証が済むと、掲示板投稿・返信・募集・参加などのコミュニティ機能が有効になります。';
+    resendBtn.hidden = false;
+  }
+
+  async function loadSessionManagement() {
+    ensureAccountSecurityBlocks();
+    const block = document.getElementById('session-management-block');
+    const listEl = document.getElementById('session-list');
+    const statusEl = document.getElementById('session-management-status');
+    if (!block || !listEl) return;
+
+    const user = authApi.getCurrentUser();
+    if (!user) {
+      block.style.display = 'none';
+      return;
+    }
+
+    block.style.display = '';
+    listEl.innerHTML = '<div style="font-size:0.78rem; color:var(--text-muted);">読み込み中...</div>';
+    setBlockMessage(statusEl, '', 'info');
+
+    const result = await authApi.listSessions();
+    if (!result.ok) {
+      listEl.innerHTML = '';
+      setBlockMessage(statusEl, result.error, 'error');
+      return;
+    }
+
+    if (!result.sessions.length) {
+      listEl.innerHTML = '<div style="font-size:0.78rem; color:var(--text-muted);">ログイン中の端末はありません。</div>';
+      return;
+    }
+
+    listEl.innerHTML = result.sessions.map(session => `
+      <div class="session-row ${session.current ? 'current' : ''}">
+        <div class="session-row-copy">
+          <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+            <span style="font-size:0.84rem; font-weight:700; color:var(--text);">${escHtml(getSessionDeviceLabel(session))}</span>
+            ${session.current ? '<span style="font-size:0.65rem; padding:0.18rem 0.5rem; background:var(--success-soft); color:var(--success); font-weight:700;">この端末</span>' : ''}
+          </div>
+          <div class="session-row-meta">
+            最終利用: ${escHtml(formatDateTime(session.lastSeenAt) || '不明')}<br>
+            ログイン日時: ${escHtml(formatDateTime(session.createdAt) || '不明')}
+          </div>
+        </div>
+        <button type="button" class="subtle-btn" data-session-ref="${escHtml(session.sessionRef)}" style="font-size:0.72rem;">${session.current ? 'この端末をログアウト' : 'ログアウト'}</button>
+      </div>
+    `).join('');
+
+    Array.from(listEl.querySelectorAll('[data-session-ref]')).forEach(button => {
+      button.addEventListener('click', async () => {
+        const sessionRef = button.getAttribute('data-session-ref') || '';
+        button.disabled = true;
+        const result = await authApi.revokeSession(sessionRef);
+        button.disabled = false;
+
+        if (!result.ok) {
+          setBlockMessage(statusEl, result.error, 'error');
+          return;
+        }
+
+        if (result.currentRevoked) {
+          switchMode('login');
+          renderNav();
+          renderMemberView();
+          showFlash('この端末をログアウトしました。', 'info');
+          return;
+        }
+
+        setBlockMessage(statusEl, '端末をログアウトしました。', 'info');
+        loadSessionManagement();
+      });
+    });
+  }
+
+  function renderBackupCenter() {
+    ensureAccountSecurityBlocks();
+    const block = document.getElementById('backup-sync-block');
+    const statusEl = document.getElementById('backup-sync-status');
+    const summaryEl = document.getElementById('backup-summary');
+    if (!block || !statusEl || !summaryEl) return;
+
+    const user = authApi.getCurrentUser();
+    if (!user) {
+      block.style.display = 'none';
+      return;
+    }
+
+    block.style.display = '';
+    statusEl.innerHTML = `
+      <div style="display:grid; gap:0.7rem;">
+        <div style="padding:0.85rem 1rem; background:rgba(10,26,62,0.03); border-left:3px solid var(--navy);">
+          <div style="font-size:0.72rem; font-weight:700; color:var(--navy); margin-bottom:0.3rem;">サーバー同期</div>
+          <div style="font-size:0.74rem; color:var(--text-muted); line-height:1.8;">アカウント情報 / 気になる企業 / メール認証 / セッション管理</div>
+        </div>
+        <div style="padding:0.85rem 1rem; background:rgba(201,168,76,0.08); border-left:3px solid var(--gold);">
+          <div style="font-size:0.72rem; font-weight:700; color:#7a5f10; margin-bottom:0.3rem;">この端末だけに保存</div>
+          <div style="font-size:0.74rem; color:var(--text-muted); line-height:1.8;">選考進捗 / 企業研究ノート / 面接対策ノート / 自己分析 / 各種メモ</div>
+        </div>
+        <div style="font-size:0.72rem; color:var(--crimson); line-height:1.7;">復元はこの端末の対象データを上書きします。実行前に現在の状態を書き出しておくのがおすすめです。</div>
+      </div>
+    `;
+
+    const summary = authApi.getLocalBackupSummary ? authApi.getLocalBackupSummary() : [];
+    if (!summary.length) {
+      summaryEl.innerHTML = '<div style="padding:0.9rem 1rem; background:var(--gray); font-size:0.78rem; color:var(--text-muted); line-height:1.8;">現在この端末にバックアップ対象の保存データはありません。今後作成した面接メモや自己分析はここから書き出せます。</div>';
+      return;
+    }
+
+    summaryEl.innerHTML = summary.map(item => `
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.8rem 1rem; background:var(--gray); border-left:3px solid var(--gold);">
+        <div style="font-size:0.8rem; color:var(--text); font-weight:700;">${escHtml(item.label)}</div>
+        <div style="font-size:0.75rem; color:var(--text-muted);">${Number(item.count) || 0}件</div>
+      </div>
+    `).join('');
+  }
+
+  let verificationHandled = false;
+  async function handleVerificationToken() {
+    if (!verificationToken || verificationHandled) return;
+    verificationHandled = true;
+
+    const result = await authApi.verifyEmail(verificationToken);
+    if (!result.ok) {
+      showFlash(result.error, 'error');
+      return;
+    }
+
+    renderNav();
+    renderMemberView();
+    showFlash(result.message || 'メールアドレスを確認しました。', 'success');
+
+    const nextParams = new URLSearchParams(location.search);
+    nextParams.delete('mode');
+    nextParams.delete('token');
+    const nextQuery = nextParams.toString();
+    history.replaceState({}, '', location.pathname + (nextQuery ? '?' + nextQuery : ''));
   }
 
   const INDUSTRY_GROUPS = [
@@ -1276,7 +1729,7 @@
   }
 
   function getReturnTarget() {
-    const target = returnTo || KeioNaviAuth.consumeReturnTo();
+    const target = KeioNaviAuth.sanitizeReturnTo(returnTo || KeioNaviAuth.consumeReturnTo());
     return target && !target.startsWith('account.html') ? target : '';
   }
 
@@ -1303,9 +1756,16 @@
       memberDetailNote.textContent = '';
       updateIntroForUser(null);
       refreshSignupLineQrStatus();
+      const verificationBlock = document.getElementById('email-verification-block');
+      const sessionBlock = document.getElementById('session-management-block');
+      const backupBlock = document.getElementById('backup-sync-block');
+      if (verificationBlock) verificationBlock.style.display = 'none';
+      if (sessionBlock) sessionBlock.style.display = 'none';
+      if (backupBlock) backupBlock.style.display = 'none';
       return;
     }
 
+    ensureAccountSecurityBlocks();
     guestView.hidden = true;
     memberView.hidden = false;
     panelTitle.textContent = 'マイページ';
@@ -1344,6 +1804,9 @@
     field(profileForm, 'lineName').value = user.lineName || '';
     field(profileForm, 'lineQr').value = '';
     refreshProfileLineQrStatus();
+    renderEmailVerificationStatus();
+    loadSessionManagement();
+    renderBackupCenter();
 
     // 気になる企業リスト
     const liked = KeioNaviAuth.getLikedCompanies();
@@ -1354,8 +1817,8 @@
       likedList.innerHTML = liked.map(c => `
         <div style="display:flex; align-items:center; justify-content:space-between; padding:0.7rem 1rem; background:var(--gray); border-left:3px solid var(--gold);">
           <div>
-            <div style="font-size:0.88rem; font-weight:700; color:var(--navy);">${c.name || '–'}</div>
-            ${c.industry ? `<div style="font-size:0.7rem; color:var(--text-muted);">${c.industry}</div>` : ''}
+            <div style="font-size:0.88rem; font-weight:700; color:var(--navy);">${escHtml(c.name || '–')}</div>
+            ${c.industry ? `<div style="font-size:0.7rem; color:var(--text-muted);">${escHtml(c.industry)}</div>` : ''}
           </div>
           <span style="font-size:0.65rem; color:var(--crimson); font-weight:700;">♥</span>
         </div>`).join('');
@@ -1381,24 +1844,26 @@
 
     navLinks.innerHTML = `
       <a href="members.html" class="nav-link">会員ページ</a>
-      <a href="index.html" class="nav-link">${user.displayName} さん</a>
+      <a href="index.html" class="nav-link">${escHtml(user.displayName)} さん</a>
     `;
   }
 
   async function handleAuthSuccess(label) {
     renderNav();
     renderMemberView();
+    const currentUser = authApi.getCurrentUser();
+    const verificationNote = currentUser && !currentUser.emailVerified ? ' 確認メールも送信しています。' : '';
 
     const target = getReturnTarget();
     if (target) {
-      showFlash(label + '。元のページへ移動します。', 'success');
+      showFlash(label + '。元のページへ移動します。' + verificationNote, 'success');
       setTimeout(() => {
         location.href = target;
       }, 700);
       return;
     }
 
-    showFlash(label + '。マイページを表示しています。', 'success');
+    showFlash(label + '。マイページを表示しています。' + verificationNote, 'success');
   }
 
   document.querySelectorAll('.tab-btn').forEach(button => {
@@ -1407,6 +1872,7 @@
 
   field(signupForm, 'lineQr').addEventListener('change', refreshSignupLineQrStatus);
   field(profileForm, 'lineQr').addEventListener('change', refreshProfileLineQrStatus);
+  window.addEventListener('keio-navi-local-data-restored', renderBackupCenter);
 
   signupForm.addEventListener('submit', async event => {
     event.preventDefault();
@@ -1646,8 +2112,9 @@
   refreshProfileLineQrStatus();
   renderNav();
   renderMemberView();
+  handleVerificationToken();
 
-  if (!KeioNaviAuth.getCurrentUser() && returnTo) {
+  if (!KeioNaviAuth.getCurrentUser() && returnTo && !verificationToken) {
     showFlash('ログインまたは登録が完了すると、元のページへ戻ります。', 'info');
   }
 
@@ -1848,6 +2315,94 @@
       setTimeout(function () { notifStatus.textContent = ''; }, 3000);
     });
   })();
+</script>
+<style>
+.field-error { border-color: var(--crimson) !important; }
+.field-error-msg { font-size: 0.68rem; color: var(--crimson); margin-top: 0.2rem; }
+.field-ok { border-color: #00703c !important; }
+.pw-strength { font-size: 0.68rem; margin-top: 0.2rem; }
+.pw-strength.weak { color: var(--crimson); }
+.pw-strength.medium { color: #b8860b; }
+.pw-strength.strong { color: #00703c; }
+</style>
+<script>
+(function() {
+  var signupForm = document.getElementById('signup-form');
+  if (!signupForm) return;
+
+  var emailInput = signupForm.querySelector('input[name="email"]');
+  var displayInput = signupForm.querySelector('input[name="displayName"]');
+  var pwInput = signupForm.querySelector('input[name="password"]');
+
+  function addErrorMsg(input, msg) {
+    removeErrorMsg(input);
+    input.classList.add('field-error');
+    input.classList.remove('field-ok');
+    var el = document.createElement('div');
+    el.className = 'field-error-msg';
+    el.textContent = msg;
+    input.parentNode.appendChild(el);
+  }
+  function removeErrorMsg(input) {
+    input.classList.remove('field-error');
+    var existing = input.parentNode.querySelector('.field-error-msg');
+    if (existing) existing.remove();
+  }
+  function setOk(input) {
+    removeErrorMsg(input);
+    input.classList.add('field-ok');
+  }
+
+  if (emailInput) {
+    emailInput.addEventListener('blur', function() {
+      var val = emailInput.value.trim();
+      if (!val) { addErrorMsg(emailInput, 'メールアドレスを入力してください。'); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { addErrorMsg(emailInput, '有効なメールアドレスを入力してください。'); return; }
+      setOk(emailInput);
+    });
+  }
+
+  if (displayInput) {
+    displayInput.addEventListener('blur', function() {
+      if (!displayInput.value.trim()) { addErrorMsg(displayInput, '表示名を入力してください。'); return; }
+      setOk(displayInput);
+    });
+  }
+
+  if (pwInput) {
+    var strengthEl = document.createElement('div');
+    strengthEl.className = 'pw-strength';
+    pwInput.closest('.field-group').appendChild(strengthEl);
+
+    pwInput.addEventListener('input', function() {
+      var val = pwInput.value;
+      var len = val.length;
+      var hasUpper = /[A-Z]/.test(val);
+      var hasLower = /[a-z]/.test(val);
+      var hasNum = /[0-9]/.test(val);
+      var hasSymbol = /[^A-Za-z0-9]/.test(val);
+      var score = 0;
+      if (len >= 8) score++;
+      if (len >= 12) score++;
+      if (hasUpper && hasLower) score++;
+      if (hasNum) score++;
+      if (hasSymbol) score++;
+
+      if (len === 0) { strengthEl.textContent = ''; strengthEl.className = 'pw-strength'; return; }
+      if (score <= 2) { strengthEl.textContent = len + '文字 - 弱い'; strengthEl.className = 'pw-strength weak'; }
+      else if (score <= 3) { strengthEl.textContent = len + '文字 - 普通'; strengthEl.className = 'pw-strength medium'; }
+      else { strengthEl.textContent = len + '文字 - 強い'; strengthEl.className = 'pw-strength strong'; }
+    });
+
+    pwInput.addEventListener('blur', function() {
+      if (pwInput.value.length > 0 && pwInput.value.length < 8) {
+        addErrorMsg(pwInput.closest('.pw-field-wrap') || pwInput, 'パスワードは8文字以上で入力してください。');
+      } else if (pwInput.value.length >= 8) {
+        removeErrorMsg(pwInput.closest('.pw-field-wrap') || pwInput);
+      }
+    });
+  }
+})();
 </script>
 <script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
 </html>

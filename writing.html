@@ -2,25 +2,13 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<script>
-  (function(measurementId){
-    if (!measurementId) return;
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', measurementId);
-  })('');
-</script>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ES・ガクチカを書く ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
   :root {
     --navy: #0a1a3e;
@@ -269,7 +257,7 @@
   .ai-submit-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.8rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP',sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: background 0.2s; }
   .ai-submit-btn:hover:not(:disabled) { background: var(--crimson); }
   .ai-submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-  .ai-result-box { margin-top: 1.5rem; background: var(--gray); border-left: 3px solid var(--navy); padding: 1.2rem 1.4rem; font-size: 0.88rem; line-height: 1.85; white-space: pre-wrap; min-height: 80px; display: none; }
+  .ai-result-box { margin-top: 1.5rem; margin-bottom: 4rem; background: var(--gray); border-left: 3px solid var(--navy); padding: 1.2rem 1.4rem; font-size: 0.88rem; line-height: 1.85; white-space: pre-wrap; min-height: 80px; display: none; }
   .ai-result-box.visible { display: block; }
   .ai-result-box.loading { color: var(--text-muted); font-style: italic; }
   .ai-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
@@ -433,6 +421,52 @@
   .rubric-bar-fill { height:100%; transition:width 0.6s ease; }
   @media(max-width:600px) { .rubric-cards { gap:0.3rem; } .rubric-card { min-width:70px; padding:0.5rem 0.3rem; } .rubric-card-score { font-size:0.95rem; } }
 
+  /* ===== ES添削履歴 ===== */
+  .esh-btn { display:inline-flex; align-items:center; gap:0.3rem; padding:0.45rem 0.9rem; background:rgba(10,26,62,0.04); border:1px solid rgba(10,26,62,0.15); font-family:'Noto Sans JP',sans-serif; font-size:0.75rem; font-weight:600; color:var(--navy); cursor:pointer; transition:all 0.2s; margin-left:0.5rem; }
+  .esh-btn:hover { background:rgba(10,26,62,0.08); border-color:var(--navy); }
+  .esh-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:300; display:flex; align-items:center; justify-content:center; padding:1rem; }
+  .esh-panel { background:var(--cream); max-width:680px; width:100%; max-height:85vh; overflow-y:auto; position:relative; border:1px solid rgba(10,26,62,0.1); }
+  .esh-panel-header { background:var(--navy); padding:0.8rem 1.2rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:1; }
+  .esh-panel-title { font-family:'Noto Serif JP',serif; font-size:0.95rem; font-weight:700; color:var(--white); }
+  .esh-close { background:none; border:none; color:rgba(255,255,255,0.6); font-size:1.2rem; cursor:pointer; padding:0.2rem 0.5rem; }
+  .esh-close:hover { color:var(--white); }
+  .esh-panel-body { padding:1.2rem; }
+  .esh-empty { text-align:center; padding:2rem 1rem; color:var(--text-muted); font-size:0.85rem; }
+  .esh-timeline { position:relative; padding-left:28px; }
+  .esh-timeline::before { content:''; position:absolute; left:10px; top:8px; bottom:8px; width:2px; background:rgba(10,26,62,0.12); }
+  .esh-version { position:relative; margin-bottom:1.2rem; padding:0.8rem 1rem; background:var(--white); border:1px solid rgba(10,26,62,0.08); cursor:pointer; transition:all 0.2s; }
+  .esh-version:hover { border-color:var(--navy); }
+  .esh-version.active { border-color:var(--navy); border-left:3px solid var(--navy); }
+  .esh-version::before { content:''; position:absolute; left:-22px; top:14px; width:10px; height:10px; background:var(--navy); border-radius:0; z-index:1; }
+  .esh-version.latest::before { background:var(--gold); }
+  .esh-ver-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.4rem; }
+  .esh-ver-num { font-size:0.78rem; font-weight:700; color:var(--navy); }
+  .esh-ver-date { font-size:0.65rem; color:var(--text-muted); }
+  .esh-ver-preview { font-size:0.75rem; color:var(--text-muted); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .esh-scores-row { display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.4rem; }
+  .esh-score-badge { font-size:0.62rem; font-weight:700; padding:0.1rem 0.4rem; border:1px solid rgba(10,26,62,0.1); }
+  .esh-trend { margin-top:0.3rem; display:flex; align-items:center; gap:0.3rem; }
+  .esh-trend-arrow { font-size:0.72rem; font-weight:700; }
+  .esh-trend-up { color:#00703c; }
+  .esh-trend-down { color:var(--crimson); }
+  .esh-trend-same { color:var(--text-muted); }
+  .esh-detail { margin-top:1rem; padding:1rem; background:var(--white); border:1px solid rgba(10,26,62,0.08); }
+  .esh-detail-title { font-size:0.78rem; font-weight:700; color:var(--navy); margin-bottom:0.6rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(10,26,62,0.06); }
+  .esh-detail-es { font-size:0.82rem; line-height:1.7; white-space:pre-wrap; color:var(--text); margin-bottom:0.8rem; padding:0.6rem; background:var(--cream); border:1px solid rgba(10,26,62,0.06); max-height:200px; overflow-y:auto; }
+  .esh-detail-ai { font-size:0.8rem; line-height:1.7; white-space:pre-wrap; color:var(--text); max-height:300px; overflow-y:auto; }
+  .esh-score-chart { margin-top:1rem; }
+  .esh-chart-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; padding:0.4rem 0.6rem; background:var(--white); border:1px solid rgba(10,26,62,0.06); }
+  .esh-chart-ver { font-size:0.72rem; font-weight:700; color:var(--navy); min-width:28px; }
+  .esh-chart-bars { display:flex; gap:0.3rem; flex:1; align-items:center; }
+  .esh-chart-bar { display:flex; flex-direction:column; align-items:center; flex:1; }
+  .esh-chart-bar-label { font-size:0.55rem; color:var(--text-muted); margin-bottom:0.15rem; }
+  .esh-chart-bar-fill { height:6px; width:100%; background:rgba(10,26,62,0.08); overflow:hidden; }
+  .esh-chart-bar-inner { height:100%; transition:width 0.4s; }
+  .esh-chart-bar-val { font-size:0.6rem; font-weight:700; margin-top:0.1rem; }
+  .esh-chart-avg { font-size:0.72rem; font-weight:700; min-width:50px; text-align:right; }
+  .esh-chart-trend { font-size:0.72rem; font-weight:700; min-width:20px; text-align:center; }
+  @media(max-width:600px) { .esh-panel { max-height:90vh; } .esh-chart-bar-label { font-size:0.5rem; } }
+
   /* ===== 通過ESギャラリー ===== */
   .passed-es-card { background:white; border:1px solid rgba(10,26,62,0.1); border-top:3px solid var(--gold); padding:1.2rem 1.5rem; margin-bottom:1rem; }
   .passed-es-meta { font-size:0.7rem; color:var(--text-muted); margin-bottom:0.4rem; }
@@ -571,6 +605,86 @@
   }
   .sa-ai-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
   .sa-ai-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  /* ===== EXPERIENCE DEEP DIVE ===== */
+  .exp-dive-body { padding: 1.5rem; background: #fffdf7; border: 1px solid rgba(201,168,76,0.18); }
+  .exp-dive-intro { font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.2rem; }
+  .exp-dive-add { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem; padding: 1rem; background: white; border: 1px dashed rgba(201,168,76,0.35); }
+  .exp-dive-add select, .exp-dive-add input, .exp-dive-add textarea {
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; padding: 0.55rem 0.7rem;
+    border: 1px solid rgba(10,26,62,0.12); background: #fefcf8; color: var(--text); outline: none; transition: border-color 0.2s;
+  }
+  .exp-dive-add select:focus, .exp-dive-add input:focus, .exp-dive-add textarea:focus { border-color: #c9a84c; }
+  .exp-dive-add textarea { min-height: 60px; resize: vertical; }
+  .exp-dive-add button {
+    align-self: flex-start; padding: 0.5rem 1.2rem; background: #c9a84c; color: white; border: none;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
+  }
+  .exp-dive-add button:hover { background: #b8973e; }
+  .exp-card {
+    background: white; border: 1px solid rgba(10,26,62,0.08); margin-bottom: 0.8rem; transition: box-shadow 0.2s;
+  }
+  .exp-card:hover { box-shadow: 0 2px 12px rgba(201,168,76,0.12); }
+  .exp-card-header {
+    display: flex; align-items: center; gap: 0.6rem; padding: 0.8rem 1rem; cursor: pointer; user-select: none;
+  }
+  .exp-card-header:hover { background: rgba(201,168,76,0.04); }
+  .exp-period-badge {
+    font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 2px; letter-spacing: 0.05em; flex-shrink: 0;
+  }
+  .exp-period-badge[data-period="幼少期"] { background: #f0e6f6; color: #7b4f9d; }
+  .exp-period-badge[data-period="小学校"] { background: #e3f0fa; color: #2d6da3; }
+  .exp-period-badge[data-period="中学校"] { background: #e0f5f0; color: #1a7a63; }
+  .exp-period-badge[data-period="高校"]   { background: #fdf3dc; color: #9a7b2a; }
+  .exp-period-badge[data-period="大学"]   { background: #e8eaf0; color: #0a1a3e; }
+  .exp-card-title { font-size: 0.88rem; font-weight: 600; color: var(--navy); flex: 1; }
+  .exp-card-toggle { font-size: 0.7rem; color: var(--text-muted); flex-shrink: 0; transition: transform 0.2s; }
+  .exp-card.open .exp-card-toggle { transform: rotate(180deg); }
+  .exp-card-body { display: none; padding: 0 1rem 1rem; }
+  .exp-card.open .exp-card-body { display: block; }
+  .exp-card-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.8rem; padding: 0.5rem 0.7rem; background: #faf7f2; border-left: 3px solid rgba(201,168,76,0.4); }
+  .exp-card-actions { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .exp-gen-btn {
+    padding: 0.45rem 1rem; background: #c9a84c; color: white; border: none;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
+  }
+  .exp-gen-btn:hover { background: #b8973e; }
+  .exp-gen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .exp-del-btn {
+    padding: 0.45rem 0.8rem; background: none; color: var(--text-muted); border: 1px solid rgba(10,26,62,0.12);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.72rem; cursor: pointer; transition: all 0.2s;
+  }
+  .exp-del-btn:hover { border-color: #c0001a; color: #c0001a; }
+  .exp-q-item { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(201,168,76,0.12); }
+  .exp-q-label { font-size: 0.8rem; color: var(--navy); font-weight: 600; margin-bottom: 0.4rem; line-height: 1.5; }
+  .exp-q-textarea {
+    width: 100%; font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; padding: 0.55rem 0.7rem;
+    border: 1px solid rgba(201,168,76,0.25); background: #fffdf7; color: var(--text); outline: none;
+    min-height: 70px; resize: vertical; line-height: 1.6; transition: border-color 0.2s;
+  }
+  .exp-q-textarea:focus { border-color: #c9a84c; }
+  .exp-loading { text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.8rem; }
+  .exp-analyze-btn {
+    display: block; width: 100%; padding: 0.7rem 1.2rem; background: var(--navy); color: white; border: none;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 0.5rem;
+  }
+  .exp-analyze-btn:hover { background: #162d5a; }
+  .exp-analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .exp-analysis-result {
+    margin-top: 1rem; padding: 1.2rem; background: white; border: 1px solid rgba(201,168,76,0.25);
+    border-left: 4px solid #c9a84c; font-size: 0.82rem; line-height: 1.8; color: var(--text); white-space: pre-wrap;
+  }
+  .exp-apply-btn {
+    display: block; width: 100%; padding: 0.7rem 1.2rem; margin-top: 0.8rem;
+    background: linear-gradient(135deg, #c9a84c, #b8973e); color: white; border: none;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s;
+  }
+  .exp-apply-btn:hover { opacity: 0.9; }
+  .exp-applied-msg {
+    display: none; margin-top: 0.6rem; padding: 0.6rem 0.8rem; background: rgba(0,112,60,0.08);
+    border: 1px solid rgba(0,112,60,0.2); color: #00703c; font-size: 0.78rem; font-weight: 600; text-align: center;
+  }
+  .exp-applied-msg.show { display: block; }
 </style>
 </head>
 <body>
@@ -613,10 +727,54 @@
 
   <div class="members-main">
 
-    <div style="margin:2.5rem 0 1.5rem; padding:0 0.5rem;">
-      <div style="font-size:0.65rem; letter-spacing:0.18em; color:var(--gold); font-weight:700; text-transform:uppercase;">WRITE</div>
-      <div style="font-family:'Noto Serif JP',serif; font-size:1.2rem; font-weight:700; color:var(--navy); margin-top:0.2rem;">ES・ガクチカを書く</div>
-      <div style="width:40px; height:2px; background:var(--gold); margin-top:0.5rem;"></div>
+    <div style="margin:2.5rem 0 1.5rem; padding:0 0.5rem; display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+      <div>
+        <div style="font-size:0.65rem; letter-spacing:0.18em; color:var(--gold); font-weight:700; text-transform:uppercase;">WRITE</div>
+        <div style="font-family:'Noto Serif JP',serif; font-size:1.2rem; font-weight:700; color:var(--navy); margin-top:0.2rem;">ES・ガクチカを書く</div>
+        <div style="width:40px; height:2px; background:var(--gold); margin-top:0.5rem;"></div>
+      </div>
+      <button onclick="window.location.href='more.html';setTimeout(function(){if(typeof openExportModal==='function')openExportModal();},300);" style="background:none;border:1px solid rgba(10,26,62,0.2);color:var(--navy);font-size:0.72rem;font-family:'Noto Sans JP',sans-serif;padding:0.4rem 0.8rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;" onmouseover="this.style.borderColor='#c9a84c';this.style.color='#c9a84c'" onmouseout="this.style.borderColor='rgba(10,26,62,0.2)';this.style.color='#0a1a3e'">📥 データをエクスポート</button>
+    </div>
+
+    <!-- ===== 経験深掘り（自己分析用） ===== -->
+    <div class="m-section" id="experience-dive-section">
+      <div class="m-section-header">
+        <div class="m-section-icon" style="background:#c9a84c;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label" style="color:#c9a84c;">EXPERIENCE REFLECTION</div>
+          <div class="m-section-title">経験を振り返って自分を知る</div>
+        </div>
+      </div>
+      <div class="exp-dive-body">
+        <p class="exp-dive-intro">過去の経験を振り返り、AIと一緒にあなたの価値観・強みを発見しましょう。幼少期から大学まで、印象に残っている経験を追加して、振り返り質問に答えていくことで、自分の特徴が見えてきます。</p>
+        <div class="exp-dive-add">
+          <select id="exp-dive-period">
+            <option value="">時期を選択</option>
+            <option>幼少期</option>
+            <option>小学校</option>
+            <option>中学校</option>
+            <option>高校</option>
+            <option>大学</option>
+          </select>
+          <input type="text" id="exp-dive-title" placeholder="経験のタイトル（例：部活でキャプテンをやった）">
+          <textarea id="exp-dive-desc" placeholder="どんな経験だったか簡単に書いてください（100字程度）"></textarea>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button onclick="addExperience()">経験を追加</button>
+            <button onclick="loadGkForExpDive()" style="background:transparent;border:1px solid rgba(10,26,62,0.2);color:var(--navy);font-family:'Noto Sans JP',sans-serif;font-size:0.78rem;padding:0.5rem 1rem;cursor:pointer;transition:all 0.2s;">ガクチカバンクから選ぶ</button>
+          </div>
+        </div>
+        <div id="exp-dive-list"></div>
+        <div id="exp-dive-analyze-area" style="display:none;">
+          <button class="exp-analyze-btn" onclick="analyzeAllExperiences()">&#10022; 全経験からパターンを分析</button>
+        </div>
+        <div id="exp-dive-analysis-result"></div>
+        <div id="exp-dive-apply" style="display:none;">
+          <button class="exp-apply-btn" onclick="applyToWorkbook()">自己分析ワークブックに反映する &#8594;</button>
+          <div class="exp-applied-msg" id="exp-applied-msg">反映しました！ワークブックを確認してください</div>
+        </div>
+      </div>
     </div>
 
     <!-- ===== 自己分析ワークブック ===== -->
@@ -848,13 +1006,14 @@
         </div>
       </div>
       <p class="ai-note">⚠ AI回答は参考情報です。最終判断は必ずご自身で行ってください。GASを経由してAnthropicのAPIを呼び出しています（要ログイン）。</p>
+      <div style="font-size:0.68rem;color:var(--text-muted);padding:0.4rem 0.8rem;background:rgba(10,26,62,0.02);border:1px solid rgba(10,26,62,0.06);margin-bottom:1rem;line-height:1.6;">
+        ※ AI機能はAnthropic社のClaude APIを使用しています。回答は参考情報であり、正確性・完全性を保証するものではありません。重要な判断には必ずご自身で確認してください。
+      </div>
 
       <!-- タブ切り替え -->
       <div class="ai-tool-tabs">
         <button class="ai-tab-btn active" data-tab="es-review">&#x1f4dd; ES添削</button>
         <button class="ai-tab-btn" data-tab="motivation-builder">&#x2726; 志望動機ビルダー</button>
-        <button class="ai-tab-btn coming-soon" disabled>&#x1f3a4; 面接練習<span class="soon-badge">近日公開</span></button>
-        <button class="ai-tab-btn coming-soon" disabled>&#x1f504; ES流用<span class="soon-badge">近日公開</span></button>
       </div>
 
       <!-- タブ1: ES自動添削 -->
@@ -887,9 +1046,12 @@
           <label class="ai-label" style="display:flex;align-items:center;gap:0.4rem;">添削の方向性・重点指示 <span style="font-size:0.65rem;color:var(--text-muted);font-weight:400;">（任意）</span></label>
           <textarea class="ai-textarea" id="esr-direction" placeholder="例：&#10;・リーダーシップの部分をもっと強調したい&#10;・結論を先に持ってきたい&#10;・数値的な成果をアピールしたい&#10;・○○業界向けに調整したい" style="min-height:60px;font-size:0.78rem;"></textarea>
         </div>
-        <button class="ai-submit-btn" id="esr-submit-btn" onclick="submitEsReview()">
-          <span class="btn-text">✨ AIに添削してもらう</span>
-        </button>
+        <div style="display:flex;gap:0.5rem;align-items:stretch;flex-wrap:wrap;">
+          <button class="ai-submit-btn" id="esr-submit-btn" onclick="submitEsReview()" style="flex:1;min-width:200px;">
+            <span class="btn-text">✨ AIに添削してもらう</span>
+          </button>
+          <button class="esh-btn" onclick="showEsHistory()">&#x1f4ca; 添削履歴</button>
+        </div>
         <div class="ai-error-msg" id="esr-error"></div>
         <div class="ai-result-box" id="esr-result"></div>
         <!-- チャットエリア（添削後に表示） -->
@@ -1087,7 +1249,7 @@
 
 <!-- ガクチカ深掘りモーダル -->
 <div class="es-view-overlay" id="gk-dd-modal">
-  <div class="es-view-modal" style="max-width:680px;max-height:90vh;overflow-y:auto;">
+  <div class="es-view-modal" style="max-width:720px;max-height:90vh;overflow-y:auto;">
     <div class="es-view-modal-header">
       <div>
         <div style="font-size:0.6rem;letter-spacing:0.12em;color:var(--gold);font-weight:700;">DEEP DIVE</div>
@@ -1096,14 +1258,31 @@
       <button class="es-view-close" onclick="closeGkDeepDive()">✕</button>
     </div>
     <div style="padding:0 1.2rem 1rem;">
+      <!-- Overall stats -->
+      <div id="gk-dd-stats" style="display:none;font-size:0.72rem;color:var(--navy);padding:0.5rem 0.8rem;background:rgba(10,26,62,0.03);border:1px solid rgba(10,26,62,0.08);margin-bottom:0.6rem;font-weight:600;letter-spacing:0.02em;"></div>
+      <!-- Progress bar -->
+      <div id="gk-dd-progress" style="display:none;display:flex;gap:0.35rem;flex-wrap:wrap;margin-bottom:0.8rem;align-items:center;">
+        <span style="font-size:0.62rem;color:var(--text-muted);margin-right:0.2rem;">進捗:</span>
+      </div>
       <div id="gk-dd-summary" style="font-size:0.75rem;color:var(--text-muted);padding:0.6rem 0.8rem;background:var(--cream);border-left:3px solid var(--gold);margin-bottom:1rem;line-height:1.6;"></div>
       <div id="gk-dd-questions"></div>
       <div id="gk-dd-loading" style="display:none;text-align:center;padding:2rem;color:var(--text-muted);font-size:0.82rem;">
         <span style="display:inline-block;animation:pulse 1.2s infinite;">質問を生成中...</span>
       </div>
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem;">
-        <button id="gk-dd-generate-btn" onclick="gkDdGenerate()" style="padding:0.6rem 1.2rem;background:var(--crimson);color:white;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">✦ 深掘り質問を生成</button>
-        <button id="gk-dd-more-btn" onclick="gkDdGenerate()" style="display:none;padding:0.6rem 1.2rem;background:var(--navy);color:white;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">✦ さらに深掘り</button>
+        <button id="gk-dd-generate-btn" onclick="gkDdGenerate()" style="padding:0.6rem 1.2rem;background:var(--crimson);color:white;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">&#10022; 深掘り質問を生成</button>
+        <button id="gk-dd-more-btn" onclick="gkDdGenerate()" style="display:none;padding:0.6rem 1.2rem;background:var(--navy);color:white;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">&#10022; さらに深掘り</button>
+      </div>
+      <!-- Action buttons -->
+      <div id="gk-dd-actions" style="display:none;margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(10,26,62,0.08);display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button onclick="gkDdExportToInterview()" style="padding:0.5rem 1rem;background:var(--navy);color:white;border:none;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">&#128221; 面接ノートに反映</button>
+        <button onclick="gkDdOpenEsPanel()" style="padding:0.5rem 1rem;background:var(--gold);color:var(--navy);border:none;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;">&#9998; ESに活用</button>
+      </div>
+      <!-- ES活用パネル -->
+      <div id="gk-dd-es-panel" style="display:none;margin-top:0.8rem;padding:0.8rem;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);font-size:0.75rem;">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:0.5rem;">回答から使えるポイント</div>
+        <div id="gk-dd-es-quotes"></div>
+        <div style="margin-top:0.5rem;font-size:0.68rem;color:var(--text-muted);">テキストをクリックでクリップボードにコピーされます</div>
       </div>
     </div>
   </div>
@@ -1286,8 +1465,16 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
   const GAS_URL = GAS_PROXY_URL;
+
+  var AI_CONSENT_KEY = 'keio_navi_ai_consent_v1';
+  function checkAiConsent() {
+    if (localStorage.getItem(AI_CONSENT_KEY)) return true;
+    var ok = confirm('AI機能の利用について\n\n・入力されたテキストはAI（Claude）に送信されます\n・送信されたテキストはAI処理のみに使用され、第三者に共有されません\n・AIの回答は参考情報であり、正確性を保証するものではありません\n・重要な判断には必ずご自身で確認してください\n\nよろしいですか？');
+    if (ok) localStorage.setItem(AI_CONSENT_KEY, '1');
+    return ok;
+  }
 
   function logout() {
     KeioNaviAuth.logout();
@@ -1529,7 +1716,8 @@
       groups[e.company].push(e);
     });
     var user = KeioNaviAuth.getCurrentUser();
-    var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ES保管庫 - ' + (user ? user.displayName : '') + '</title>'
+    var userDisplayName = escHtml(user ? user.displayName : '');
+    var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ES保管庫 - ' + userDisplayName + '</title>'
       + '<style>'
       + '@page { margin: 20mm; }'
       + 'body { font-family: "Noto Sans JP", "Hiragino Sans", sans-serif; color: #1a1a2e; font-size: 11pt; line-height: 1.8; }'
@@ -1543,21 +1731,21 @@
       + '</style></head><body>'
       + '<button onclick="window.print()" style="position:fixed;top:10px;right:10px;padding:8px 20px;background:#0a1a3e;color:white;border:none;cursor:pointer;font-size:12px;z-index:99;">PDF保存 / 印刷</button>'
       + '<h1>ES保管庫</h1>';
-    if (user) html += '<p class="meta">' + user.displayName + ' | 出力日: ' + new Date().toLocaleDateString('ja-JP') + '</p>';
+    if (user) html += '<p class="meta">' + userDisplayName + ' | 出力日: ' + escHtml(new Date().toLocaleDateString('ja-JP')) + '</p>';
 
     var first = true;
     Object.keys(groups).forEach(function(company) {
       if (!first) html += '<div class="page-break"></div>';
       first = false;
-      html += '<h2>' + company + '</h2>';
+      html += '<h2>' + escHtml(company) + '</h2>';
       groups[company].forEach(function(entry) {
         if (entry.questions) {
           entry.questions.forEach(function(q) {
-            html += '<div class="question">' + (q.question || '設問') + '</div><div class="answer">' + (q.answer || '').replace(/\x3c/g, '\x26lt;') + '</div>';
+            html += '<div class="question">' + escHtml(q.question || '設問') + '</div><div class="answer">' + escHtml(q.answer || '') + '</div>';
           });
         } else {
-          if (entry.question) html += '<div class="question">' + entry.question + '</div>';
-          html += '<div class="answer">' + (entry.esText || '').replace(/\x3c/g, '\x26lt;') + '</div>';
+          if (entry.question) html += '<div class="question">' + escHtml(entry.question) + '</div>';
+          html += '<div class="answer">' + escHtml(entry.esText || '') + '</div>';
         }
       });
     });
@@ -1570,7 +1758,8 @@
   function exportGakuchikaToPdf() {
     if (!gakuchikaEntries.length) { alert('ガクチカが保存されていません。'); return; }
     var user = KeioNaviAuth.getCurrentUser();
-    var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ガクチカ保管庫 - ' + (user ? user.displayName : '') + '</title>'
+    var userDisplayName = escHtml(user ? user.displayName : '');
+    var html = '<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ガクチカ保管庫 - ' + userDisplayName + '</title>'
       + '<style>'
       + '@page { margin: 20mm; }'
       + 'body { font-family: "Noto Sans JP", "Hiragino Sans", sans-serif; color: #1a1a2e; font-size: 11pt; line-height: 1.8; }'
@@ -1584,12 +1773,12 @@
       + '</style></head><body>'
       + '<button onclick="window.print()" style="position:fixed;top:10px;right:10px;padding:8px 20px;background:#0a1a3e;color:white;border:none;cursor:pointer;font-size:12px;z-index:99;">PDF保存 / 印刷</button>'
       + '<h1>ガクチカ保管庫</h1>';
-    if (user) html += '<p class="meta">' + user.displayName + ' | 出力日: ' + new Date().toLocaleDateString('ja-JP') + '</p>';
+    if (user) html += '<p class="meta">' + userDisplayName + ' | 出力日: ' + escHtml(new Date().toLocaleDateString('ja-JP')) + '</p>';
 
     gakuchikaEntries.forEach(function(entry, i) {
       if (i > 0) html += '<div class="page-break"></div>';
-      html += '<h2>' + (entry.title || 'ガクチカ ' + (i + 1)) + '</h2>';
-      if (entry.category) html += '<p class="meta">カテゴリ: ' + entry.category + '</p>';
+      html += '<h2>' + escHtml(entry.title || 'ガクチカ ' + (i + 1)) + '</h2>';
+      if (entry.category) html += '<p class="meta">カテゴリ: ' + escHtml(entry.category) + '</p>';
       var starFields = [
         { key: 'situation', label: 'Situation（状況）' },
         { key: 'task', label: 'Task（課題）' },
@@ -1598,11 +1787,11 @@
       ];
       starFields.forEach(function(f) {
         if (entry[f.key]) {
-          html += '<div class="label">' + f.label + '</div><div class="content">' + (entry[f.key] || '').replace(/\x3c/g, '\x26lt;') + '</div>';
+          html += '<div class="label">' + escHtml(f.label) + '</div><div class="content">' + escHtml(entry[f.key] || '') + '</div>';
         }
       });
       if (entry.fullText) {
-        html += '<div class="label">本文</div><div class="content">' + entry.fullText.replace(/\x3c/g, '\x26lt;') + '</div>';
+        html += '<div class="label">本文</div><div class="content">' + escHtml(entry.fullText) + '</div>';
       }
     });
     html += '\x3c/body>\x3c/html>';
@@ -1623,7 +1812,7 @@
       esBankEntries = data.entries || [];
       renderEsBank();
     } catch(e) {
-      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 ' + e.message + '</div>';
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 ' + escHtml(e.message) + '</div>';
     }
   }
 
@@ -1640,21 +1829,24 @@
     });
     el.innerHTML = Object.entries(groups).map(function(pair) {
       var company = pair[0], entries = pair[1];
+      var companyLabel = escHtml(company || '');
+      var industryLabel = entries[0].industry ? ' \xb7 ' + escHtml(entries[0].industry) : '';
       return '<div class="es-bank-company">'
         + '<button class="es-bank-company-header" onclick="toggleEsCompany(this)">'
-        + '<div><div class="es-bank-company-name">' + company + '</div>'
-        + '<div class="es-bank-company-meta">' + entries.length + '件の設問' + (entries[0].industry ? ' \xb7 ' + entries[0].industry : '') + '</div></div>'
+        + '<div><div class="es-bank-company-name">' + companyLabel + '</div>'
+        + '<div class="es-bank-company-meta">' + entries.length + '件の設問' + industryLabel + '</div></div>'
         + '<span class="es-bank-company-arrow">\u25bc</span></button>'
         + '<div class="es-bank-company-body">'
         + entries.map(function(e) {
+          var entryIdJs = escJsString(e.id || '');
           return '<div class="es-bank-entry">'
-            + (e.question ? '<div class="es-bank-question">\ud83d\udccc ' + e.question + '</div>' : '')
-            + '<div class="es-bank-text" onclick="this.classList.toggle(\'expanded\')">' + e.esText + '</div>'
+            + (e.question ? '<div class="es-bank-question">\ud83d\udccc ' + escHtml(e.question) + '</div>' : '')
+            + '<div class="es-bank-text" onclick="this.classList.toggle(\'expanded\')">' + escHtml(e.esText || '') + '</div>'
             + '<div class="es-bank-entry-footer">'
             + resultBadge(e.result)
-            + '<button class="es-bank-btn" onclick="openEsViewModal(\'' + e.id + '\')">閲覧</button>'
-            + '<button class="es-bank-btn primary" onclick="openEsBankModal(\'' + e.id + '\')">編集</button>'
-            + '<button class="es-bank-btn" onclick="deleteEsBankEntry(\'' + e.id + '\')">削除</button>'
+            + '<button class="es-bank-btn" onclick="openEsViewModal(\'' + entryIdJs + '\')">閲覧</button>'
+            + '<button class="es-bank-btn primary" onclick="openEsBankModal(\'' + entryIdJs + '\')">編集</button>'
+            + '<button class="es-bank-btn" onclick="deleteEsBankEntry(\'' + entryIdJs + '\')">削除</button>'
             + '</div></div>';
         }).join('')
         + '</div></div>';
@@ -1664,7 +1856,7 @@
   function resultBadge(result) {
     if (result === '通過')   return '<span class="es-bank-result pass">通過</span>';
     if (result === '不通過') return '<span class="es-bank-result fail">不通過</span>';
-    return result ? '<span class="es-bank-result pending">' + result + '</span>' : '';
+    return result ? '<span class="es-bank-result pending">' + escHtml(result) + '</span>' : '';
   }
 
   function toggleEsCompany(btn) {
@@ -1785,7 +1977,7 @@
       gakuchikaEntries = data.entries || [];
       renderGakuchika();
     } catch(e) {
-      el.innerHTML = '<div class="gk-empty" style="color:var(--crimson);">\u26a0 ' + e.message + '</div>';
+      el.innerHTML = '<div class="gk-empty" style="color:var(--crimson);">\u26a0 ' + escHtml(e.message) + '</div>';
     }
   }
 
@@ -1796,17 +1988,18 @@
       return;
     }
     el.innerHTML = '<div class="gk-list">' + gakuchikaEntries.map(function(g) {
+      var entryIdJs = escJsString(g.id || '');
       return '<div class="gk-card">'
         + '<div class="gk-card-header">'
-        + '<div class="gk-card-title">' + (g.title || '（タイトルなし）') + '</div>'
-        + (g.category ? '<span class="gk-card-category">' + g.category + '</span>' : '')
+        + '<div class="gk-card-title">' + escHtml(g.title || '（タイトルなし）') + '</div>'
+        + (g.category ? '<span class="gk-card-category">' + escHtml(g.category) + '</span>' : '')
         + '</div>'
-        + '<div class="gk-card-body" onclick="this.classList.toggle(\'expanded\')">' + (g.action || g.situation || g.appeal || '（詳細未入力）') + '</div>'
+        + '<div class="gk-card-body" onclick="this.classList.toggle(\'expanded\')">' + escHtml(g.action || g.situation || g.appeal || '（詳細未入力）') + '</div>'
         + '<div class="gk-card-footer">'
-        + '<button class="gk-btn" onclick="openGkViewModal(\'' + g.id + '\')">閲覧</button>'
-        + '<button class="gk-btn primary" onclick="openGakuchikaModal(\'' + g.id + '\')">編集</button>'
-        + '<button class="gk-btn" onclick="deleteGakuchikaEntry(\'' + g.id + '\')">削除</button>'
-        + '<button class="gk-btn accent" onclick="openGkGenModalWithEntry(\'' + g.id + '\')">ESを生成</button>'
+        + '<button class="gk-btn" onclick="openGkViewModal(\'' + entryIdJs + '\')">閲覧</button>'
+        + '<button class="gk-btn primary" onclick="openGakuchikaModal(\'' + entryIdJs + '\')">編集</button>'
+        + '<button class="gk-btn" onclick="deleteGakuchikaEntry(\'' + entryIdJs + '\')">削除</button>'
+        + '<button class="gk-btn accent" onclick="openGkGenModalWithEntry(\'' + entryIdJs + '\')">ESを生成</button>'
         + '</div></div>';
     }).join('') + '</div>';
   }
@@ -1819,7 +2012,7 @@
     document.getElementById('gk-view-category').textContent = g.category || '';
     var starEl = document.getElementById('gk-view-star-sections');
     starEl.innerHTML = Object.entries(GK_STAR_LABELS).filter(function(pair) { return g[pair[0]]; }).map(function(pair) {
-      return '<div class="es-view-section"><div class="es-view-label">' + pair[1] + '</div><div class="es-view-memo">' + g[pair[0]] + '</div></div>';
+      return '<div class="es-view-section"><div class="es-view-label">' + escHtml(pair[1]) + '</div><div class="es-view-memo">' + escHtml(g[pair[0]]) + '</div></div>';
     }).join('');
     var appealSection = document.getElementById('gk-view-appeal-section');
     if (g.appeal) {
@@ -1866,43 +2059,172 @@
     _gkDdCurrentId = null;
   }
 
+  // --- Parse structured AI feedback into sections ---
+  function gkDdParseFeedback(raw) {
+    if (!raw) return null;
+    var result = { score: 0, goodPoints: '', improvements: '', modelAnswer: '', interviewerView: '', raw: raw };
+    // Try to parse score
+    var scoreMatch = raw.match(/【スコア】\s*(\d)\/5/);
+    if (scoreMatch) result.score = parseInt(scoreMatch[1]);
+    // Parse sections
+    var sections = ['良い点', '改善点', '模範回答例', '面接官の視点'];
+    sections.forEach(function(sec) {
+      var re = new RegExp('【' + sec + '】([\\s\\S]*?)(?=【[^】]+】|$)');
+      var m = raw.match(re);
+      if (m) {
+        var val = m[1].trim();
+        if (sec === '良い点') result.goodPoints = val;
+        else if (sec === '改善点') result.improvements = val;
+        else if (sec === '模範回答例') result.modelAnswer = val;
+        else if (sec === '面接官の視点') result.interviewerView = val;
+      }
+    });
+    // If no structured sections found, treat as plain text
+    if (!scoreMatch && !result.goodPoints && !result.improvements) return null;
+    return result;
+  }
+
+  function gkDdScoreColor(score) {
+    if (score <= 2) return 'var(--crimson)';
+    if (score === 3) return 'var(--gold)';
+    return '#1a8a4a';
+  }
+
+  function gkDdScoreBadge(score) {
+    if (!score) return '';
+    var c = gkDdScoreColor(score);
+    return '<span style="display:inline-block;font-size:0.62rem;font-weight:700;color:white;background:' + c + ';padding:0.1rem 0.4rem;margin-left:0.4rem;vertical-align:middle;">' + score + '/5</span>';
+  }
+
+  function gkDdProgressIcon(item) {
+    if (!item.answer || !item.answer.trim()) return '<span style="color:var(--text-muted);" title="未回答">&#9675;</span>';
+    if (!item.feedback) return '<span style="color:var(--navy);" title="回答済み（未添削）">&#9679;</span>';
+    var parsed = gkDdParseFeedback(item.feedback);
+    if (parsed && parsed.score >= 4) return '<span style="color:#1a8a4a;" title="スコア ' + parsed.score + '/5">&#9733;</span>';
+    if (parsed && parsed.score >= 1) return '<span style="color:var(--gold);" title="スコア ' + parsed.score + '/5">&#9650;</span>';
+    return '<span style="color:var(--navy);" title="添削済み">&#9679;</span>';
+  }
+
+  function gkDdCharCountColor(len) {
+    if (len < 50) return 'var(--text-muted)';
+    if (len <= 200) return 'var(--navy)';
+    return 'var(--gold)';
+  }
+
   function gkDdRender() {
     var allData = gkDdLoad();
     var qa = (allData[_gkDdCurrentId] || {}).questions || [];
     var el = document.getElementById('gk-dd-questions');
     var genBtn = document.getElementById('gk-dd-generate-btn');
     var moreBtn = document.getElementById('gk-dd-more-btn');
+    var statsEl = document.getElementById('gk-dd-stats');
+    var progressEl = document.getElementById('gk-dd-progress');
+    var actionsEl = document.getElementById('gk-dd-actions');
 
     if (!qa.length) {
-      el.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:0.82rem;">「深掘り質問を生成」を押すと、AIがこのガクチカに対する質問を生成します。</div>';
+      el.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:0.82rem;">\u300C\u6DF1\u6398\u308A\u8CEA\u554F\u3092\u751F\u6210\u300D\u3092\u62BC\u3059\u3068\u3001AI\u304C\u3053\u306E\u30AC\u30AF\u30C1\u30AB\u306B\u5BFE\u3059\u308B\u8CEA\u554F\u3092\u751F\u6210\u3057\u307E\u3059\u3002</div>';
       genBtn.style.display = '';
       moreBtn.style.display = 'none';
+      statsEl.style.display = 'none';
+      progressEl.style.display = 'none';
+      actionsEl.style.display = 'none';
       return;
     }
     genBtn.style.display = 'none';
     moreBtn.style.display = '';
+    actionsEl.style.display = 'flex';
+
+    // Compute stats
+    var answered = 0, reviewed = 0, totalScore = 0, scoredCount = 0;
+    qa.forEach(function(item) {
+      if (item.answer && item.answer.trim()) answered++;
+      if (item.feedback) {
+        reviewed++;
+        var p = gkDdParseFeedback(item.feedback);
+        if (p && p.score) { totalScore += p.score; scoredCount++; }
+      }
+    });
+    var avgScore = scoredCount > 0 ? (totalScore / scoredCount).toFixed(1) : '-';
+    statsEl.style.display = '';
+    statsEl.innerHTML = '\u56DE\u7B54\u6E08\u307F: ' + answered + '/' + qa.length + ' &nbsp;|&nbsp; AI\u6DFB\u524A\u6E08\u307F: ' + reviewed + '/' + qa.length + ' &nbsp;|&nbsp; \u5E73\u5747\u30B9\u30B3\u30A2: ' + avgScore + '/5';
+
+    // Progress bar
+    progressEl.style.display = 'flex';
+    progressEl.innerHTML = '<span style="font-size:0.62rem;color:var(--text-muted);margin-right:0.2rem;">\u9032\u6357:</span>' + qa.map(function(item, idx) {
+      return '<span style="font-size:0.82rem;cursor:pointer;" onclick="document.getElementById(\'gk-dd-q-' + idx + '\').scrollIntoView({behavior:\'smooth\',block:\'center\'})" title="Q' + (idx+1) + '">' + gkDdProgressIcon(item) + '</span>';
+    }).join('');
 
     el.innerHTML = qa.map(function(item, idx) {
-      var answerHtml = item.answer
-        ? '<div style="font-size:0.82rem;color:var(--text);padding:0.6rem 0.8rem;background:rgba(10,26,62,0.02);border:1px solid rgba(10,26,62,0.08);line-height:1.7;white-space:pre-wrap;margin-top:0.4rem;">' + item.answer.replace(/</g,'&lt;') + '</div>'
-        : '';
-      var feedbackHtml = item.feedback
-        ? '<div style="font-size:0.78rem;color:var(--text);padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);line-height:1.7;white-space:pre-wrap;margin-top:0.4rem;">' + item.feedback.replace(/</g,'&lt;') + '</div>'
-        : '';
-      return '<div style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(10,26,62,0.06);">'
+      var ansLen = (item.answer || '').length;
+      var parsed = item.feedback ? gkDdParseFeedback(item.feedback) : null;
+      var scoreBadgeHtml = parsed && parsed.score ? gkDdScoreBadge(parsed.score) : '';
+
+      // Build structured feedback HTML
+      var feedbackHtml = '';
+      if (item.feedback) {
+        if (parsed) {
+          feedbackHtml += '<div style="margin-top:0.5rem;">';
+          // Score
+          if (parsed.score) {
+            feedbackHtml += '<div style="font-size:0.75rem;font-weight:700;color:' + gkDdScoreColor(parsed.score) + ';margin-bottom:0.4rem;">\u30B9\u30B3\u30A2: ' + parsed.score + '/5</div>';
+          }
+          // Good points
+          if (parsed.goodPoints) {
+            feedbackHtml += '<div style="font-size:0.78rem;color:var(--text);padding:0.5rem 0.8rem;background:rgba(26,138,74,0.04);border-left:3px solid #1a8a4a;line-height:1.7;white-space:pre-wrap;margin-bottom:0.4rem;">'
+              + '<div style="font-weight:700;color:#1a8a4a;font-size:0.7rem;margin-bottom:0.2rem;">\u826F\u3044\u70B9</div>'
+              + parsed.goodPoints.replace(/</g,'&lt;') + '</div>';
+          }
+          // Improvements
+          if (parsed.improvements) {
+            feedbackHtml += '<div style="font-size:0.78rem;color:var(--text);padding:0.5rem 0.8rem;background:rgba(180,40,40,0.03);border-left:3px solid var(--crimson);line-height:1.7;white-space:pre-wrap;margin-bottom:0.4rem;">'
+              + '<div style="font-weight:700;color:var(--crimson);font-size:0.7rem;margin-bottom:0.2rem;">\u6539\u5584\u70B9</div>'
+              + parsed.improvements.replace(/</g,'&lt;') + '</div>';
+          }
+          // Model answer (collapsible)
+          if (parsed.modelAnswer) {
+            feedbackHtml += '<div style="margin-bottom:0.4rem;">'
+              + '<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'block\':\'none\'" style="font-size:0.68rem;padding:0.2rem 0.6rem;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;color:var(--gold);font-weight:600;">\u25BC \u6A21\u7BC4\u56DE\u7B54\u3092\u898B\u308B</button>'
+              + '<div style="display:none;font-size:0.78rem;color:var(--text);padding:0.5rem 0.8rem;background:rgba(201,168,76,0.04);border-left:3px solid var(--gold);line-height:1.7;white-space:pre-wrap;margin-top:0.3rem;">'
+              + parsed.modelAnswer.replace(/</g,'&lt;') + '</div></div>';
+          }
+          // Interviewer's perspective
+          if (parsed.interviewerView) {
+            feedbackHtml += '<div style="font-size:0.75rem;color:rgba(255,255,255,0.95);padding:0.5rem 0.8rem;background:var(--navy);line-height:1.7;font-style:italic;white-space:pre-wrap;">'
+              + '<span style="font-style:normal;font-weight:700;font-size:0.65rem;opacity:0.7;">\u9762\u63A5\u5B98\u306E\u8996\u70B9</span><br>'
+              + parsed.interviewerView.replace(/</g,'&lt;') + '</div>';
+          }
+          feedbackHtml += '</div>';
+        } else {
+          // Fallback: plain text display
+          feedbackHtml = '<div style="font-size:0.78rem;color:var(--text);padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);line-height:1.7;white-space:pre-wrap;margin-top:0.4rem;">' + item.feedback.replace(/</g,'&lt;') + '</div>';
+        }
+      }
+
+      return '<div id="gk-dd-q-' + idx + '" style="margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(10,26,62,0.06);">'
         + '<div style="display:flex;align-items:flex-start;gap:0.5rem;">'
         + '<span style="background:var(--crimson);color:white;font-size:0.6rem;font-weight:700;padding:0.15rem 0.45rem;flex-shrink:0;margin-top:0.1rem;">Q' + (idx+1) + '</span>'
-        + '<div style="font-size:0.85rem;font-weight:600;color:var(--navy);line-height:1.5;">' + item.question.replace(/</g,'&lt;') + '</div>'
+        + '<div style="font-size:0.85rem;font-weight:600;color:var(--navy);line-height:1.5;">' + item.question.replace(/</g,'&lt;') + scoreBadgeHtml + '</div>'
         + '</div>'
-        + answerHtml
-        + '<textarea class="sa-textarea" id="gk-dd-ans-' + idx + '" placeholder="ここに回答を書く..." oninput="gkDdSaveAnswer(' + idx + ')" style="margin-top:0.4rem;min-height:70px;">' + (item.answer || '').replace(/</g,'&lt;') + '</textarea>'
+        + '<textarea class="sa-textarea" id="gk-dd-ans-' + idx + '" placeholder="200\u5B57\u7A0B\u5EA6\u3092\u76EE\u5B89\u306B\u3001\u5177\u4F53\u7684\u306B\u66F8\u304D\u307E\u3057\u3087\u3046" oninput="gkDdOnInput(' + idx + ')" style="margin-top:0.4rem;min-height:80px;">' + (item.answer || '').replace(/</g,'&lt;') + '</textarea>'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.15rem;">'
+        + '<span id="gk-dd-charcount-' + idx + '" style="font-size:0.65rem;color:' + gkDdCharCountColor(ansLen) + ';">' + ansLen + '\u5B57</span>'
+        + '<span style="font-size:0.6rem;color:var(--text-muted);font-style:italic;">STAR\u6CD5\uFF08\u72B6\u6CC1\u2192\u8AB2\u984C\u2192\u884C\u52D5\u2192\u7D50\u679C\uFF09\u3092\u610F\u8B58\u3059\u308B\u3068\u4F1D\u308F\u308A\u3084\u3059\u304F\u306A\u308A\u307E\u3059</span>'
+        + '</div>'
         + '<div style="display:flex;gap:0.3rem;margin-top:0.3rem;">'
-        + '<button onclick="gkDdReviewAnswer(' + idx + ')" style="font-size:0.68rem;padding:0.25rem 0.7rem;background:rgba(10,26,62,0.04);border:1px solid rgba(10,26,62,0.12);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;color:var(--navy);transition:all 0.2s;">✦ AI添削</button>'
+        + '<button onclick="gkDdReviewAnswer(' + idx + ')" style="font-size:0.68rem;padding:0.25rem 0.7rem;background:rgba(10,26,62,0.04);border:1px solid rgba(10,26,62,0.12);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;color:var(--navy);transition:all 0.2s;">&#10022; AI\u6DFB\u524A</button>'
         + '<span id="gk-dd-fb-status-' + idx + '" style="font-size:0.65rem;color:var(--text-muted);line-height:2;"></span>'
         + '</div>'
         + feedbackHtml
         + '</div>';
     }).join('');
+  }
+
+  function gkDdOnInput(idx) {
+    var ta = document.getElementById('gk-dd-ans-' + idx);
+    var len = ta.value.length;
+    var cc = document.getElementById('gk-dd-charcount-' + idx);
+    if (cc) { cc.textContent = len + '\u5B57'; cc.style.color = gkDdCharCountColor(len); }
+    gkDdSaveAnswer(idx);
   }
 
   function gkDdSaveAnswer(idx) {
@@ -1914,6 +2236,7 @@
   }
 
   async function gkDdGenerate() {
+    if (!checkAiConsent()) return;
     if (_gkDdLoading) return;
     var g = gakuchikaEntries.find(function(e) { return e.id === _gkDdCurrentId; });
     if (!g) return;
@@ -1937,14 +2260,12 @@
       lines.forEach(function(line) {
         var trimmed = line.replace(/^\s*[\d]+[\.\)）]\s*/, '').replace(/^[\-\*]\s*/, '').replace(/^❓\s*/, '').replace(/^「/, '').replace(/」$/, '').trim();
         if (trimmed.length > 10 && trimmed.endsWith('？') || trimmed.endsWith('?') || trimmed.includes('？') || trimmed.includes('?')) {
-          // 質問っぽい行を抽出
           var q = trimmed.replace(/^[\s\S]*?(?=「)/, '').replace(/^「/, '').replace(/」[\s\S]*$/, '');
           if (q.length < 10) q = trimmed;
           newQs.push({ question: q, answer: '', feedback: '' });
         }
       });
 
-      // もし質問が少なければ全行スキャンしてフォールバック
       if (newQs.length < 3) {
         newQs = [];
         lines.forEach(function(line) {
@@ -1968,6 +2289,7 @@
   }
 
   async function gkDdReviewAnswer(idx) {
+    if (!checkAiConsent()) return;
     var allData = gkDdLoad();
     var entry = allData[_gkDdCurrentId];
     if (!entry || !entry.questions[idx]) return;
@@ -1983,7 +2305,7 @@
       var g = gakuchikaEntries.find(function(e) { return e.id === _gkDdCurrentId; });
       var res = await callClaudeApi('deepDiveChatGk', {
         context: 'ガクチカ: ' + (g ? g.title : '') + '\n質問: ' + q.question + '\n回答: ' + answer,
-        question: 'この回答を面接官の視点で添削してください。良い点・改善点・修正案を具体的に示してください。'
+        question: 'この回答を面接官の視点で添削してください。以下の形式で出力してください：\n\n【スコア】X/5（1=不十分 2=やや不足 3=普通 4=良い 5=面接官を唸らせるレベル）\n\n【良い点】\n・具体的に何が良いか\n\n【改善点】\n・何が足りないか\n\n【模範回答例】\n理想的な回答例（200字程度）\n\n【面接官の視点】\nこの回答を聞いた面接官はどう感じるか'
       });
       q.feedback = res || '';
       gkDdSave(allData);
@@ -1992,6 +2314,92 @@
     } catch(e) {
       statusEl.textContent = '添削に失敗しました';
     }
+  }
+
+  // --- Export to Interview Prep ---
+  function gkDdExportToInterview() {
+    var allData = gkDdLoad();
+    var entry = allData[_gkDdCurrentId];
+    if (!entry || !entry.questions || !entry.questions.length) { alert('エクスポートする質問がありません。'); return; }
+    var g = gakuchikaEntries.find(function(e) { return e.id === _gkDdCurrentId; });
+    var gTitle = g ? g.title : 'ガクチカ深掘り';
+
+    var ipKey = 'keio_navi_interview_prep_v1';
+    var ipDb;
+    try { ipDb = JSON.parse(localStorage.getItem(ipKey) || '{"companies":[],"questions":[]}'); } catch(e) { ipDb = { companies: [], questions: [] }; }
+    if (!ipDb.companies) ipDb.companies = [];
+    if (!ipDb.questions) ipDb.questions = [];
+
+    // Create company entry
+    var companyId = 'c_dd_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+    ipDb.companies.push({
+      id: companyId,
+      name: gTitle + '（深掘り練習）',
+      industry: '',
+      position: '',
+      status: '準備中',
+      createdAt: new Date().toISOString()
+    });
+
+    // Add questions
+    entry.questions.forEach(function(item) {
+      ipDb.questions.push({
+        id: 'q_' + Date.now() + '_' + Math.floor(Math.random() * 10000),
+        companyId: companyId,
+        type: 'gakuchika',
+        category: 'ガクチカ深掘り',
+        question: item.question,
+        answer: item.answer || '',
+        aiFeedback: item.feedback || '',
+        ready: !!(item.answer && item.answer.trim()),
+        createdAt: new Date().toISOString()
+      });
+    });
+
+    localStorage.setItem(ipKey, JSON.stringify(ipDb));
+    alert('面接ノートに ' + entry.questions.length + ' 件の質問を反映しました。\n「面接対策」ページで確認できます。');
+  }
+
+  // --- ES Panel ---
+  function gkDdOpenEsPanel() {
+    var panel = document.getElementById('gk-dd-es-panel');
+    if (panel.style.display !== 'none') { panel.style.display = 'none'; return; }
+    var allData = gkDdLoad();
+    var entry = allData[_gkDdCurrentId];
+    if (!entry || !entry.questions || !entry.questions.length) { alert('回答がありません。'); return; }
+
+    var quotes = [];
+    entry.questions.forEach(function(item, idx) {
+      if (item.answer && item.answer.trim()) {
+        // Extract key sentences (first sentence or first 80 chars)
+        var ans = item.answer.trim();
+        var firstSentence = ans.split(/[。\n]/)[0];
+        if (firstSentence.length > 80) firstSentence = firstSentence.substring(0, 80) + '...';
+        quotes.push({ qNum: idx + 1, text: firstSentence, full: ans });
+      }
+    });
+
+    if (!quotes.length) { alert('回答を先に記入してください。'); return; }
+
+    var quotesEl = document.getElementById('gk-dd-es-quotes');
+    quotesEl.innerHTML = quotes.map(function(q) {
+      return '<div onclick="gkDdCopyQuote(this)" style="padding:0.4rem 0.6rem;margin-bottom:0.3rem;background:white;border:1px solid rgba(10,26,62,0.08);cursor:pointer;transition:all 0.2s;font-size:0.73rem;line-height:1.5;" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'rgba(10,26,62,0.08)\'">'
+        + '<span style="font-weight:700;color:var(--crimson);font-size:0.65rem;">Q' + q.qNum + '</span> '
+        + q.text.replace(/</g,'&lt;')
+        + '</div>';
+    }).join('');
+
+    panel.style.display = '';
+  }
+
+  function gkDdCopyQuote(el) {
+    var text = el.textContent.replace(/^Q\d+\s*/, '');
+    navigator.clipboard.writeText(text).then(function() {
+      var orig = el.style.borderColor;
+      el.style.borderColor = 'var(--gold)';
+      el.style.background = 'rgba(201,168,76,0.08)';
+      setTimeout(function() { el.style.borderColor = orig; el.style.background = 'white'; }, 800);
+    });
   }
 
   function openGakuchikaModal(id) {
@@ -2089,11 +2497,12 @@
       return;
     }
     el.innerHTML = gakuchikaEntries.map(function(g) {
-      return '<div class="gk-gen-item' + (gkGenSelected.has(g.id) ? ' selected' : '') + '" onclick="toggleGkGenItem(\'' + g.id + '\', this)">'
+      var gId = g.id || '';
+      return '<div class="gk-gen-item' + (gkGenSelected.has(gId) ? ' selected' : '') + '" onclick="toggleGkGenItem(\'' + escJsString(gId) + '\', this)">'
         + '<div class="gk-gen-item-check">\u2713</div>'
         + '<div>'
-        + '<div style="font-weight:600;font-size:0.85rem;color:var(--navy);">' + (g.title || '（タイトルなし）') + '</div>'
-        + (g.category ? '<div style="font-size:0.72rem;color:var(--text-muted);">' + g.category + '</div>' : '')
+        + '<div style="font-weight:600;font-size:0.85rem;color:var(--navy);">' + escHtml(g.title || '（タイトルなし）') + '</div>'
+        + (g.category ? '<div style="font-size:0.72rem;color:var(--text-muted);">' + escHtml(g.category) + '</div>' : '')
         + '</div></div>';
     }).join('');
   }
@@ -2163,8 +2572,8 @@
       listEl.innerHTML = esBankEntries.map(function(e, i) {
         return '<div class="es-load-entry" onclick="toggleLoadSelect(this, ' + i + ')" data-idx="' + i + '">'
           + '<span class="es-load-entry-check" style="display:none;">\u2714 選択中</span>'
-          + '<div class="es-load-entry-company">' + e.company + '</div>'
-          + '<div class="es-load-entry-q">' + (e.question || '（設問なし）') + '</div></div>';
+          + '<div class="es-load-entry-company">' + escHtml(e.company || '') + '</div>'
+          + '<div class="es-load-entry-q">' + escHtml(e.question || '（設問なし）') + '</div></div>';
       }).join('');
     }
     document.getElementById('es-load-modal').classList.add('open');
@@ -2214,13 +2623,13 @@
       + (idx > 0 ? '<button class="esr-remove-btn" onclick="removeEsrQuestion(this)">\u2715</button>' : '')
       + '<div style="display:flex;gap:0.6rem;margin-bottom:0.55rem;">'
       + '<div class="ai-form-group" style="flex:1;margin-bottom:0;">'
-      + '<input type="text" class="ai-input esr-q-input" placeholder="設問テキスト（任意）" value="' + (question || '') + '">'
+      + '<input type="text" class="ai-input esr-q-input" placeholder="設問テキスト（任意）" value="' + escAttr(question || '') + '">'
       + '</div>'
       + '<div class="ai-form-group" style="width:90px;margin-bottom:0;">'
       + '<input type="number" class="ai-input esr-limit-input" placeholder="字数制限" min="1" style="text-align:center;">'
       + '</div></div>'
       + '<div class="ai-form-group" style="margin-bottom:0.25rem;">'
-      + '<textarea class="ai-textarea esr-t-input" placeholder="ES内容をここに貼り付けてください..." oninput="updateEsrCharCount(this)">' + (esText || '') + '</textarea>'
+      + '<textarea class="ai-textarea esr-t-input" placeholder="ES内容をここに貼り付けてください..." oninput="updateEsrCharCount(this)">' + escHtml(esText || '') + '</textarea>'
       + '<div class="ai-char-count">' + (esText || '').length + ' 字</div></div>';
     container.appendChild(block);
     renumberEsrBlocks();
@@ -2408,6 +2817,20 @@
     saveDiv.innerHTML = '<button onclick="saveRevisedEsToBank()" style="padding:0.45rem 1rem;background:var(--navy);color:white;border:none;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">添削結果をESバンクに保存</button>'
       + '<span id="esr-save-feedback" style="font-size:0.68rem;color:#00703c;"></span>';
     result.appendChild(saveDiv);
+    // ES添削履歴に保存（ES添削タブの場合のみ）
+    if (btnId === 'esr-submit-btn') {
+      var esrCompany = (document.getElementById('esr-company') || {}).value || '';
+      var esrBlocks = document.querySelectorAll('.esr-question-block');
+      var esrQuestion = '';
+      var esrText = '';
+      if (esrBlocks.length) {
+        esrQuestion = (esrBlocks[0].querySelector('.esr-q-input') || {}).value || '';
+        esrText = lastSubmittedEsText || '';
+      }
+      saveEsReviewHistory(esrCompany, esrQuestion, esrText, text, rubricScores);
+    }
+    // 結果エリアまで自動スクロール
+    setTimeout(function() { result.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
   }
 
   function saveRevisedEsToBank() {
@@ -2449,6 +2872,196 @@
 
     var fb = document.getElementById('esr-save-feedback');
     if (fb) { fb.textContent = '保存しました'; setTimeout(function() { fb.textContent = ''; }, 3000); }
+  }
+
+  // ===== ES添削履歴管理 =====
+  var ES_HISTORY_KEY = 'keio_navi_es_history_v1';
+
+  function getEsHistoryKey(company, question) {
+    var str = (company || '').trim().toLowerCase() + '|' + (question || '').trim().toLowerCase();
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      var ch = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + ch;
+      hash = hash & hash;
+    }
+    return 'es_' + Math.abs(hash).toString(36);
+  }
+
+  function readEsHistory() {
+    try { return JSON.parse(localStorage.getItem(ES_HISTORY_KEY) || '{}'); } catch(e) { return {}; }
+  }
+
+  function saveEsReviewHistory(company, question, esText, aiResult, scores) {
+    if (!esText) return;
+    var history = readEsHistory();
+    var key = getEsHistoryKey(company, question);
+    if (!history[key]) history[key] = { company: company || '', question: question || '', versions: [] };
+    history[key].company = company || history[key].company;
+    history[key].question = question || history[key].question;
+    var nextVersion = history[key].versions.length + 1;
+    history[key].versions.push({
+      version: nextVersion,
+      esText: esText,
+      aiResult: aiResult,
+      scores: scores || null,
+      timestamp: new Date().toISOString()
+    });
+    localStorage.setItem(ES_HISTORY_KEY, JSON.stringify(history));
+  }
+
+  function showEsHistory() {
+    var company = (document.getElementById('esr-company') || {}).value || '';
+    var blocks = document.querySelectorAll('.esr-question-block');
+    var question = '';
+    if (blocks.length) question = (blocks[0].querySelector('.esr-q-input') || {}).value || '';
+    var history = readEsHistory();
+    var key = getEsHistoryKey(company, question);
+    var entry = history[key];
+    // If no exact match, show all history
+    var overlay = document.createElement('div');
+    overlay.className = 'esh-overlay';
+    overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+    var panel = document.createElement('div');
+    panel.className = 'esh-panel';
+    var headerHtml = '<div class="esh-panel-header"><div class="esh-panel-title">添削履歴</div><button class="esh-close" onclick="this.closest(\'.esh-overlay\').remove()">&times;</button></div>';
+    panel.innerHTML = headerHtml + '<div class="esh-panel-body" id="esh-body"></div>';
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+    var bodyEl = document.getElementById('esh-body');
+    if (entry && entry.versions.length > 0) {
+      renderEsTimeline(entry, bodyEl);
+    } else {
+      // Show all history entries
+      var allKeys = Object.keys(history);
+      if (allKeys.length === 0) {
+        bodyEl.innerHTML = '<div class="esh-empty">まだ添削履歴がありません。<br>ESを添削すると、ここに履歴が表示されます。</div>';
+        return;
+      }
+      var listHtml = '<div style="margin-bottom:0.8rem;font-size:0.78rem;color:var(--text-muted);">全ての添削履歴（' + allKeys.length + '件）</div>';
+      allKeys.forEach(function(k) {
+        var h = history[k];
+        var latestVer = h.versions[h.versions.length - 1];
+        var latestScores = latestVer.scores;
+        var avg = '';
+        if (latestScores) {
+          var vals = ['structure','specificity','logic','expression','persuasion'].map(function(d) { return latestScores[d] || 0; });
+          avg = (vals.reduce(function(a,b){return a+b;},0) / vals.length).toFixed(1);
+        }
+        listHtml += '<div class="esh-version" onclick="eshShowEntry(\'' + k + '\')" style="cursor:pointer;">'
+          + '<div class="esh-ver-header"><div class="esh-ver-num">' + (h.company || '未指定') + (h.question ? ' / ' + h.question.substring(0,30) : '') + '</div>'
+          + '<div class="esh-ver-date">' + h.versions.length + '件のバージョン</div></div>'
+          + (avg ? '<div style="font-size:0.68rem;color:var(--text-muted);">最新スコア: ' + avg + '/5</div>' : '')
+          + '</div>';
+      });
+      bodyEl.innerHTML = listHtml;
+    }
+  }
+
+  function eshShowEntry(key) {
+    var history = readEsHistory();
+    var entry = history[key];
+    if (!entry) return;
+    var bodyEl = document.getElementById('esh-body');
+    if (!bodyEl) return;
+    renderEsTimeline(entry, bodyEl);
+  }
+
+  function renderEsTimeline(entry, container) {
+    var versions = entry.versions;
+    var DIMS = [
+      { key:'structure', name:'\u69CB\u6210' },
+      { key:'specificity', name:'\u5177\u4F53\u6027' },
+      { key:'logic', name:'\u8AD6\u7406\u6027' },
+      { key:'expression', name:'\u8868\u73FE\u529B' },
+      { key:'persuasion', name:'\u8AAC\u5F97\u529B' }
+    ];
+    function scoreColor(v) { return v <= 2 ? '#c0001a' : v === 3 ? '#d4a017' : '#0a6e45'; }
+    var html = '<div style="margin-bottom:0.8rem;">';
+    html += '<div style="font-size:0.85rem;font-weight:700;color:var(--navy);">' + (entry.company || '企業未指定') + '</div>';
+    if (entry.question) html += '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem;">' + entry.question + '</div>';
+    html += '</div>';
+    // Score trend chart (if multiple scored versions exist)
+    var scoredVersions = versions.filter(function(v) { return v.scores; });
+    if (scoredVersions.length >= 1) {
+      html += '<div class="esh-score-chart"><div style="font-size:0.75rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;">スコア推移</div>';
+      var prevAvg = null;
+      scoredVersions.forEach(function(v, vi) {
+        var vals = DIMS.map(function(d) { return v.scores[d.key] || 0; });
+        var avg = vals.reduce(function(a,b){return a+b;},0) / vals.length;
+        var avgRound = Math.round(avg * 10) / 10;
+        var trendHtml = '';
+        if (prevAvg !== null) {
+          if (avgRound > prevAvg) trendHtml = '<span class="esh-trend-arrow esh-trend-up">&uarr;</span>';
+          else if (avgRound < prevAvg) trendHtml = '<span class="esh-trend-arrow esh-trend-down">&darr;</span>';
+          else trendHtml = '<span class="esh-trend-arrow esh-trend-same">&rarr;</span>';
+        }
+        html += '<div class="esh-chart-row"><div class="esh-chart-ver">v' + v.version + '</div><div class="esh-chart-bars">';
+        DIMS.forEach(function(d, di) {
+          var val = v.scores[d.key] || 0;
+          var c = scoreColor(val);
+          html += '<div class="esh-chart-bar"><div class="esh-chart-bar-label">' + d.name + '</div><div class="esh-chart-bar-fill"><div class="esh-chart-bar-inner" style="width:' + (val * 20) + '%;background:' + c + ';"></div></div><div class="esh-chart-bar-val" style="color:' + c + ';">' + val + '</div></div>';
+        });
+        html += '</div><div class="esh-chart-avg" style="color:' + scoreColor(Math.round(avgRound)) + ';">' + avgRound.toFixed(1) + '</div><div class="esh-chart-trend">' + trendHtml + '</div></div>';
+        prevAvg = avgRound;
+      });
+      html += '</div>';
+    }
+    // Timeline
+    html += '<div style="font-size:0.75rem;font-weight:700;color:var(--navy);margin:1rem 0 0.5rem;">バージョン履歴</div>';
+    html += '<div class="esh-timeline">';
+    for (var i = versions.length - 1; i >= 0; i--) {
+      var v = versions[i];
+      var isLatest = i === versions.length - 1;
+      var dateStr = '';
+      try { var d = new Date(v.timestamp); dateStr = d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0'); } catch(e) {}
+      var preview = (v.esText || '').substring(0, 100).replace(/\n/g, ' ');
+      if ((v.esText || '').length > 100) preview += '...';
+      html += '<div class="esh-version' + (isLatest ? ' latest' : '') + '" onclick="eshShowDetail(' + i + ')">'
+        + '<div class="esh-ver-header"><div class="esh-ver-num">v' + v.version + (isLatest ? '（最新）' : '') + '</div><div class="esh-ver-date">' + dateStr + '</div></div>'
+        + '<div class="esh-ver-preview">' + preview.replace(/</g,'&lt;') + '</div>';
+      if (v.scores) {
+        var vals = DIMS.map(function(dim) { return v.scores[dim.key] || 0; });
+        var avg = (vals.reduce(function(a,b){return a+b;},0) / vals.length).toFixed(1);
+        html += '<div class="esh-scores-row">';
+        DIMS.forEach(function(dim) {
+          var val = v.scores[dim.key] || 0;
+          html += '<span class="esh-score-badge" style="color:' + scoreColor(val) + ';border-color:' + scoreColor(val) + ';">' + dim.name + ' ' + val + '</span>';
+        });
+        html += '<span class="esh-score-badge" style="font-weight:800;color:var(--navy);border-color:var(--navy);">avg ' + avg + '</span></div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+    html += '<div id="esh-detail-area"></div>';
+    container.innerHTML = html;
+    // Store current entry in a global for detail view
+    window._eshCurrentEntry = entry;
+  }
+
+  function eshShowDetail(versionIndex) {
+    var entry = window._eshCurrentEntry;
+    if (!entry) return;
+    var v = entry.versions[versionIndex];
+    if (!v) return;
+    var detailEl = document.getElementById('esh-detail-area');
+    if (!detailEl) return;
+    // Highlight active version
+    document.querySelectorAll('.esh-version').forEach(function(el) { el.classList.remove('active'); });
+    var allVersionEls = document.querySelectorAll('.esh-version');
+    var reverseIdx = entry.versions.length - 1 - versionIndex;
+    if (allVersionEls[reverseIdx]) allVersionEls[reverseIdx].classList.add('active');
+    var html = '<div class="esh-detail">';
+    html += '<div class="esh-detail-title">v' + v.version + ' の詳細</div>';
+    html += '<div style="font-size:0.72rem;font-weight:600;color:var(--text-muted);margin-bottom:0.3rem;">提出したES</div>';
+    html += '<div class="esh-detail-es">' + (v.esText || '').replace(/</g,'&lt;') + '</div>';
+    html += '<div style="font-size:0.72rem;font-weight:600;color:var(--text-muted);margin-bottom:0.3rem;">AIフィードバック</div>';
+    var aiText = v.aiResult || '';
+    aiText = aiText.replace(/\[SCORES\][\s\S]*?\[\/SCORES\]\s*/, '');
+    html += '<div class="esh-detail-ai">' + aiText.replace(/</g,'&lt;') + '</div>';
+    html += '</div>';
+    detailEl.innerHTML = html;
+    detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function shareScore(score, platform) {
@@ -2602,6 +3215,7 @@
   }
 
   async function submitEsReview() {
+    if (!checkAiConsent()) return;
     var errEl = document.getElementById('esr-error');
     errEl.textContent = '';
     var company = document.getElementById('esr-company').value.trim();
@@ -2691,6 +3305,7 @@
   var lastMotivationResult = '';
 
   async function submitMotivationBuilder() {
+    if (!checkAiConsent()) return;
     var errEl = document.getElementById('mb-error');
     errEl.textContent = '';
     var industry       = document.getElementById('mb-industry').value.trim();
@@ -3154,6 +3769,7 @@
   }
 
   async function saRequestAnalysis() {
+    if (!checkAiConsent()) return;
     if (_saAiLoading) return;
     var d = saLoad();
     if ((!d.values || !d.values.length) && !d.strengths && !d.will) {
@@ -3234,9 +3850,336 @@
     }
   }
 
+  // ===== 経験深掘り（自己分析用） =====
+  var EXP_DIVE_KEY = 'keio_navi_experience_dive_v1';
+
+  function expDiveLoad() {
+    try { return JSON.parse(localStorage.getItem(EXP_DIVE_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function expDiveSave(data) {
+    localStorage.setItem(EXP_DIVE_KEY, JSON.stringify(data));
+  }
+  function expDiveGetExperiences() {
+    var d = expDiveLoad();
+    return d.experiences || [];
+  }
+
+  function loadGkForExpDive() {
+    // ガクチカバンクから経験をインポート
+    var list = gakuchikaEntries || [];
+    if (!list.length) { alert('ガクチカバンクにエピソードがありません。先にガクチカを登録してください。'); return; }
+    var html = '<div style="font-size:0.85rem;font-weight:700;color:var(--navy);margin-bottom:0.8rem;">ガクチカを選択</div>';
+    html += list.map(function(g) {
+      var preview = [g.situation, g.task, g.action, g.result].filter(Boolean).join(' → ');
+      if (preview.length > 80) preview = preview.substring(0, 80) + '...';
+      return '<div onclick="importGkToExpDive(\'' + g.id + '\')" style="padding:0.7rem;border:1px solid rgba(10,26,62,0.1);margin-bottom:0.4rem;cursor:pointer;transition:background 0.2s;background:white;" onmouseover="this.style.background=\'#f8f5f0\'" onmouseout="this.style.background=\'white\'">'
+        + '<div style="font-weight:600;font-size:0.82rem;color:var(--navy);">' + (g.title || '（タイトルなし）') + '</div>'
+        + (g.category ? '<span style="font-size:0.65rem;color:var(--text-muted);">' + g.category + (g.period ? ' / ' + g.period : '') + '</span>' : '')
+        + (preview ? '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.2rem;">' + preview + '</div>' : '')
+        + '</div>';
+    }).join('');
+    // 簡易モーダル表示
+    var overlay = document.createElement('div');
+    overlay.id = 'exp-gk-picker';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2500;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    overlay.onclick = function(e) { if (e.target === overlay) overlay.remove(); };
+    var box = document.createElement('div');
+    box.style.cssText = 'background:var(--cream);max-width:500px;width:100%;max-height:70vh;overflow-y:auto;padding:1.2rem;border-top:3px solid var(--gold);';
+    box.innerHTML = html + '<button onclick="document.getElementById(\'exp-gk-picker\').remove()" style="margin-top:0.8rem;padding:0.5rem 1rem;background:none;border:1px solid rgba(10,26,62,0.2);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;font-size:0.78rem;">閉じる</button>';
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+  }
+
+  function importGkToExpDive(gkId) {
+    var g = (gakuchikaEntries || []).find(function(e) { return e.id === gkId; });
+    if (!g) return;
+    // フォームに自動入力
+    document.getElementById('exp-dive-period').value = g.period || '大学';
+    document.getElementById('exp-dive-title').value = g.title || '';
+    var desc = [
+      g.situation ? '【状況】' + g.situation : '',
+      g.task ? '【課題】' + g.task : '',
+      g.action ? '【行動】' + g.action : '',
+      g.result ? '【結果】' + g.result : '',
+      g.appeal ? '【学び】' + g.appeal : ''
+    ].filter(Boolean).join('\n');
+    document.getElementById('exp-dive-desc').value = desc;
+    // ピッカーを閉じる
+    var picker = document.getElementById('exp-gk-picker');
+    if (picker) picker.remove();
+  }
+
+  function addExperience() {
+    var period = document.getElementById('exp-dive-period').value;
+    var title = document.getElementById('exp-dive-title').value.trim();
+    var desc = document.getElementById('exp-dive-desc').value.trim();
+    if (!title) { alert('経験のタイトルを入力してください。'); return; }
+    var d = expDiveLoad();
+    if (!d.experiences) d.experiences = [];
+    d.experiences.push({
+      id: 'exp_' + Date.now(),
+      period: period || '',
+      title: title,
+      desc: desc,
+      questions: [],
+      createdAt: new Date().toISOString()
+    });
+    expDiveSave(d);
+    document.getElementById('exp-dive-period').value = '';
+    document.getElementById('exp-dive-title').value = '';
+    document.getElementById('exp-dive-desc').value = '';
+    renderExperiences();
+  }
+
+  function deleteExperience(expId) {
+    if (!confirm('この経験を削除しますか？回答も全て失われます。')) return;
+    var d = expDiveLoad();
+    d.experiences = (d.experiences || []).filter(function(e) { return e.id !== expId; });
+    expDiveSave(d);
+    renderExperiences();
+  }
+
+  function renderExperiences() {
+    var exps = expDiveGetExperiences();
+    var listEl = document.getElementById('exp-dive-list');
+    if (!exps.length) {
+      listEl.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--text-muted);font-size:0.8rem;">まだ経験が追加されていません。上のフォームから経験を追加しましょう。</div>';
+      document.getElementById('exp-dive-analyze-area').style.display = 'none';
+      document.getElementById('exp-dive-apply').style.display = 'none';
+      return;
+    }
+    var html = '';
+    exps.forEach(function(exp) {
+      var hasQs = exp.questions && exp.questions.length > 0;
+      var answeredCount = hasQs ? exp.questions.filter(function(q) { return q.answer && q.answer.trim(); }).length : 0;
+      var periodAttr = exp.period ? ' data-period="' + exp.period.replace(/"/g,'&quot;') + '"' : '';
+      html += '<div class="exp-card" id="exp-card-' + exp.id + '">';
+      html += '<div class="exp-card-header" onclick="toggleExpCard(\'' + exp.id + '\')">';
+      if (exp.period) html += '<span class="exp-period-badge"' + periodAttr + '>' + exp.period.replace(/</g,'&lt;') + '</span>';
+      html += '<span class="exp-card-title">' + exp.title.replace(/</g,'&lt;') + '</span>';
+      if (hasQs) html += '<span style="font-size:0.65rem;color:var(--text-muted);">' + answeredCount + '/' + exp.questions.length + '</span>';
+      html += '<span class="exp-card-toggle">&#9660;</span>';
+      html += '</div>';
+      html += '<div class="exp-card-body">';
+      if (exp.desc) html += '<div class="exp-card-desc">' + exp.desc.replace(/</g,'&lt;') + '</div>';
+      html += '<div class="exp-card-actions">';
+      if (!hasQs) {
+        html += '<button class="exp-gen-btn" id="exp-gen-btn-' + exp.id + '" onclick="generateExpQuestions(\'' + exp.id + '\')">&#10022; AIに質問してもらう</button>';
+      } else {
+        html += '<button class="exp-gen-btn" id="exp-gen-btn-' + exp.id + '" onclick="generateExpQuestions(\'' + exp.id + '\')" style="background:var(--navy);">&#10022; 追加の質問を生成</button>';
+      }
+      html += '<button class="exp-del-btn" onclick="deleteExperience(\'' + exp.id + '\')">削除</button>';
+      html += '</div>';
+      html += '<div id="exp-loading-' + exp.id + '" class="exp-loading" style="display:none;">質問を生成中...</div>';
+      if (hasQs) {
+        html += '<div id="exp-qs-' + exp.id + '">';
+        exp.questions.forEach(function(q, idx) {
+          html += '<div class="exp-q-item">';
+          html += '<div class="exp-q-label">\uD83D\uDCAD ' + q.question.replace(/</g,'&lt;') + '</div>';
+          html += '<textarea class="exp-q-textarea" id="exp-ans-' + exp.id + '-' + idx + '" placeholder="自分の言葉で振り返ってみましょう..." oninput="saveExpAnswer(\'' + exp.id + '\',' + idx + ')">' + (q.answer || '').replace(/</g,'&lt;') + '</textarea>';
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+      html += '</div></div>';
+    });
+    listEl.innerHTML = html;
+
+    // Check if we should show the analyze button (2+ experiences with at least 1 answer each)
+    var answeredExps = exps.filter(function(e) {
+      return e.questions && e.questions.length > 0 && e.questions.some(function(q) { return q.answer && q.answer.trim(); });
+    });
+    document.getElementById('exp-dive-analyze-area').style.display = answeredExps.length >= 2 ? 'block' : 'none';
+
+    // Show apply button if analysis exists
+    var d = expDiveLoad();
+    if (d.analysis) {
+      document.getElementById('exp-dive-apply').style.display = 'block';
+    }
+  }
+
+  function toggleExpCard(expId) {
+    var card = document.getElementById('exp-card-' + expId);
+    if (card) card.classList.toggle('open');
+  }
+
+  async function generateExpQuestions(expId) {
+    if (!checkAiConsent()) return;
+    var d = expDiveLoad();
+    var exp = (d.experiences || []).find(function(e) { return e.id === expId; });
+    if (!exp) return;
+    var btn = document.getElementById('exp-gen-btn-' + expId);
+    var loadingEl = document.getElementById('exp-loading-' + expId);
+    btn.disabled = true;
+    btn.textContent = '生成中...';
+    loadingEl.style.display = 'block';
+
+    try {
+      var result = await callClaudeApi('deepDiveExperience', {
+        title: exp.title,
+        period: exp.period,
+        desc: exp.desc
+      });
+      // Parse numbered questions
+      var lines = result.split('\n').filter(function(l) { return l.trim().match(/^\d+[\.\)]/); });
+      var newQs = lines.map(function(l) {
+        return { question: l.replace(/^\d+[\.\)]\s*/, '').trim(), answer: '' };
+      });
+      if (newQs.length === 0) {
+        // Fallback: treat non-empty lines as questions
+        newQs = result.split('\n').filter(function(l) { return l.trim().length > 5; }).slice(0, 8).map(function(l) {
+          return { question: l.replace(/^\d+[\.\)]\s*/, '').replace(/^[-\*]\s*/, '').trim(), answer: '' };
+        });
+      }
+      // Append to existing questions
+      if (!exp.questions) exp.questions = [];
+      exp.questions = exp.questions.concat(newQs);
+      expDiveSave(d);
+      renderExperiences();
+      // Auto-open this card
+      var card = document.getElementById('exp-card-' + expId);
+      if (card && !card.classList.contains('open')) card.classList.add('open');
+    } catch(e) {
+      alert('質問の生成に失敗しました: ' + e.message);
+    } finally {
+      loadingEl.style.display = 'none';
+      btn.disabled = false;
+      btn.textContent = '\u2726 AIに質問してもらう';
+    }
+  }
+
+  function saveExpAnswer(expId, qIdx) {
+    var ta = document.getElementById('exp-ans-' + expId + '-' + qIdx);
+    if (!ta) return;
+    var d = expDiveLoad();
+    var exp = (d.experiences || []).find(function(e) { return e.id === expId; });
+    if (!exp || !exp.questions || !exp.questions[qIdx]) return;
+    exp.questions[qIdx].answer = ta.value;
+    expDiveSave(d);
+    // Re-check analyze button visibility
+    var exps = d.experiences || [];
+    var answeredExps = exps.filter(function(e) {
+      return e.questions && e.questions.length > 0 && e.questions.some(function(q) { return q.answer && q.answer.trim(); });
+    });
+    document.getElementById('exp-dive-analyze-area').style.display = answeredExps.length >= 2 ? 'block' : 'none';
+  }
+
+  async function analyzeAllExperiences() {
+    if (!checkAiConsent()) return;
+    var d = expDiveLoad();
+    var exps = (d.experiences || []).filter(function(e) {
+      return e.questions && e.questions.length > 0 && e.questions.some(function(q) { return q.answer && q.answer.trim(); });
+    });
+    if (exps.length < 2) { alert('パターン分析には、質問に回答済みの経験が2つ以上必要です。'); return; }
+
+    var btn = document.querySelector('#exp-dive-analyze-area .exp-analyze-btn');
+    btn.disabled = true;
+    btn.textContent = '分析中...';
+
+    // Build text summary of all experiences
+    var text = '';
+    exps.forEach(function(exp, i) {
+      text += '--- 経験' + (i+1) + ' ---\n';
+      text += '【時期】' + (exp.period || '不明') + '\n';
+      text += '【タイトル】' + exp.title + '\n';
+      if (exp.desc) text += '【概要】' + exp.desc + '\n';
+      exp.questions.forEach(function(q) {
+        if (q.answer && q.answer.trim()) {
+          text += 'Q: ' + q.question + '\nA: ' + q.answer.trim() + '\n';
+        }
+      });
+      text += '\n';
+    });
+
+    try {
+      var result = await callClaudeApi('analyzeExperiences', {
+        experiencesText: text
+      });
+      d.analysis = result;
+      expDiveSave(d);
+      var resultEl = document.getElementById('exp-dive-analysis-result');
+      resultEl.innerHTML = '<div class="exp-analysis-result">' + result.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</div>';
+      document.getElementById('exp-dive-apply').style.display = 'block';
+    } catch(e) {
+      alert('分析に失敗しました: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '\u2726 全経験からパターンを分析';
+    }
+  }
+
+  function applyToWorkbook() {
+    var d = expDiveLoad();
+    if (!d.analysis) { alert('まず分析を実行してください。'); return; }
+
+    // Try to extract SUGGESTIONS JSON
+    var sugMatch = d.analysis.match(/\[SUGGESTIONS\]([\s\S]*?)\[\/SUGGESTIONS\]/);
+    var saData = saLoad();
+
+    if (sugMatch) {
+      try {
+        var sug = JSON.parse(sugMatch[1]);
+        // Apply values
+        if (sug.values && Array.isArray(sug.values) && sug.values.length > 0) {
+          if (!saData.values) saData.values = [];
+          sug.values.forEach(function(v) {
+            if (saData.values.indexOf(v) === -1) saData.values.push(v);
+          });
+        }
+        // Apply strengths
+        if (sug.strengths) {
+          var existing = (saData.strengths || '').trim();
+          if (existing) {
+            saData.strengths = existing + '\n' + sug.strengths;
+          } else {
+            saData.strengths = sug.strengths;
+          }
+        }
+        // Apply will
+        if (sug.will) {
+          var existingWill = (saData.will || '').trim();
+          if (existingWill) {
+            saData.will = existingWill + '\n' + sug.will;
+          } else {
+            saData.will = sug.will;
+          }
+        }
+      } catch(e) {
+        // JSON parse failed, just show message anyway
+      }
+    }
+
+    saSave(saData);
+    // Re-render the workbook if it's already initialized
+    if (typeof saInit === 'function') saInit();
+
+    // Show success message
+    var msg = document.getElementById('exp-applied-msg');
+    msg.classList.add('show');
+    setTimeout(function() { msg.classList.remove('show'); }, 4000);
+
+    // Scroll to workbook
+    var section = document.getElementById('self-analysis-section');
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Initialize experience dive on load
+  function initExpDive() {
+    renderExperiences();
+    // Render existing analysis if any
+    var d = expDiveLoad();
+    if (d.analysis) {
+      var resultEl = document.getElementById('exp-dive-analysis-result');
+      if (resultEl) {
+        resultEl.innerHTML = '<div class="exp-analysis-result">' + d.analysis.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</div>';
+      }
+    }
+  }
+
   // 初期化
   (function() {
     if (document.getElementById('sa-values-grid')) saInit();
+    if (document.getElementById('exp-dive-list')) initExpDive();
   })();
 </script>
 <style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>

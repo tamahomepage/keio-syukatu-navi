@@ -2,19 +2,6 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<script>
-  (function(measurementId){
-    if (!measurementId) return;
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', measurementId);
-  })('');
-</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>新入生の方へ | 慶應就活ナビ</title>
 <meta name="description" content="慶應就活ナビへようこそ。就活を、ひとりで戦わなくていい。新入生向けの就活支援コミュニティ紹介ページです。">
@@ -258,17 +245,6 @@
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 </style>
-<script type="text/javascript">
-    (function(projectId){
-        if (!projectId) return;
-        window.clarity = window.clarity || function(){ (window.clarity.q = window.clarity.q || []).push(arguments); };
-        var script = document.createElement("script");
-        script.async = 1;
-        script.src = "https://www.clarity.ms/tag/" + projectId;
-        var firstScript = document.getElementsByTagName("script")[0];
-        firstScript.parentNode.insertBefore(script, firstScript);
-    })("");
-</script>
 </head>
 <body>
 
@@ -458,8 +434,14 @@
 
 <script>
 
+  function escHtml(value) {
+    const div = document.createElement('div');
+    div.textContent = value == null ? '' : String(value);
+    return div.innerHTML;
+  }
+
   // ===== 新歓イベント スプシ連携（GASプロキシ経由）=====
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
 
   async function loadOrientationEvents() {
     const el = document.getElementById('orientation-events');
@@ -472,9 +454,10 @@
     let rows = sample;
     if (GAS_PROXY_URL) {
       try {
+        const sessionToken = typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
         const res = await fetch(GAS_PROXY_URL, {
           method: 'POST',
-          body: JSON.stringify({ action: 'read', sheetKey: 'orientation' }),
+          body: JSON.stringify(sessionToken ? { action: 'read', sheetKey: 'orientation', sessionToken } : { action: 'read', sheetKey: 'orientation' }),
           redirect: 'follow',
         });
         const data = await res.json();
@@ -489,9 +472,9 @@
     }
     el.innerHTML = rows.map(r => `
       <div class="event-card">
-        <div class="event-date">${r[0] || ''}</div>
-        <div class="event-title">${r[1] || ''}</div>
-        <div class="event-desc">${r[2] || ''}</div>
+        <div class="event-date">${escHtml(r[0] || '')}</div>
+        <div class="event-title">${escHtml(r[1] || '')}</div>
+        <div class="event-desc">${escHtml(r[2] || '')}</div>
       </div>`).join('');
   }
 

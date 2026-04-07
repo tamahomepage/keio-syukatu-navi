@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
   :root {
     --navy: #0a1a3e; --crimson: #c0001a; --gold: #c9a84c; --gold-light: #e8c96c;
@@ -90,12 +91,47 @@
   .card-share-x:hover { opacity: 0.85; }
   .card-share-line { background: #06c755; color: white; border-color: #06c755; }
   .card-share-line:hover { opacity: 0.85; }
-  .offer-tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 2px solid rgba(10,26,62,0.08); }
+  .offer-tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 2px solid rgba(10,26,62,0.08); flex-wrap: wrap; }
   .offer-tab-btn { padding: 0.6rem 1.2rem; font-family: 'Noto Sans JP', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; transition: all 0.2s; }
   .offer-tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
   .offer-tab-btn:hover { color: var(--navy); }
   .offer-tab-panel { display: none; }
   .offer-tab-panel.active { display: block; }
+
+  /* ===== DECISION WORKSHEET ===== */
+  .dw-company-card { background: var(--white); border: 1px solid rgba(10,26,62,0.1); margin-bottom: 1.5rem; }
+  .dw-company-header { background: var(--navy); padding: 0.7rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+  .dw-company-name { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700; color: var(--white); }
+  .dw-completion { font-size: 0.68rem; color: var(--gold-light); display: flex; align-items: center; gap: 0.4rem; }
+  .dw-completion-dot { width: 8px; height: 8px; background: rgba(255,255,255,0.2); }
+  .dw-completion-dot.done { background: var(--gold); }
+  .dw-question-block { padding: 0.8rem 1rem; border-bottom: 1px solid rgba(10,26,62,0.06); }
+  .dw-question-block:last-child { border-bottom: none; }
+  .dw-question-label { font-size: 0.8rem; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem; display: flex; align-items: flex-start; gap: 0.4rem; }
+  .dw-question-num { font-size: 0.65rem; background: var(--navy); color: var(--white); padding: 0.1rem 0.4rem; font-weight: 700; flex-shrink: 0; margin-top: 0.1rem; }
+  .dw-textarea { width: 100%; min-height: 70px; padding: 0.55rem 0.8rem; border: 1px solid rgba(10,26,62,0.12); font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; color: var(--text); outline: none; resize: vertical; background: var(--cream); transition: border-color 0.2s; line-height: 1.7; }
+  .dw-textarea:focus { border-color: var(--navy); }
+  .dw-final-memo { background: var(--white); border: 1px solid rgba(10,26,62,0.1); padding: 1rem; margin-top: 1.5rem; }
+  .dw-final-label { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem; }
+  .dw-final-label::before { content: ''; display: inline-block; width: 3px; height: 16px; background: var(--gold); }
+  .dw-final-textarea { width: 100%; min-height: 100px; padding: 0.7rem 0.9rem; border: 1px solid rgba(10,26,62,0.12); font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; color: var(--text); outline: none; resize: vertical; background: var(--cream); line-height: 1.8; }
+  .dw-final-textarea:focus { border-color: var(--gold); }
+  .dw-sa-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(10,26,62,0.08); }
+  .dw-sa-title { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 1rem; }
+  .dw-sa-grid { display: grid; gap: 1rem; }
+  .dw-sa-card { background: var(--white); border: 1px solid rgba(10,26,62,0.08); padding: 1rem; }
+  .dw-sa-card-header { font-size: 0.78rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(10,26,62,0.06); }
+  .dw-sa-row { display: flex; gap: 0.8rem; margin-bottom: 0.5rem; align-items: flex-start; }
+  .dw-sa-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); min-width: 70px; flex-shrink: 0; }
+  .dw-sa-value { font-size: 0.78rem; color: var(--text); line-height: 1.6; }
+  .dw-sa-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .dw-sa-chip { font-size: 0.68rem; padding: 0.15rem 0.5rem; border: 1px solid rgba(10,26,62,0.15); color: var(--navy); background: rgba(10,26,62,0.03); }
+  .dw-match-indicator { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.6rem; margin-top: 0.4rem; }
+  .dw-match-high { background: rgba(0,112,60,0.08); color: #00703c; border: 1px solid rgba(0,112,60,0.2); }
+  .dw-match-mid { background: rgba(201,168,76,0.1); color: #b8940a; border: 1px solid rgba(201,168,76,0.3); }
+  .dw-match-low { background: rgba(192,0,26,0.06); color: var(--crimson); border: 1px solid rgba(192,0,26,0.15); }
+  .dw-no-sa { padding: 1rem; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.15); font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; }
+  @media(max-width:600px) { .dw-sa-row { flex-direction: column; gap: 0.2rem; } .dw-sa-label { min-width: auto; } }
 
   .bottom-tab-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; display: flex; background: var(--navy); border-top: 1px solid rgba(201,168,76,0.2); padding: 0; height: 56px; }
   .bottom-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.6rem; gap: 2px; transition: color 0.2s; padding: 4px 0; }
@@ -147,9 +183,11 @@
         <div class="offer-tabs">
           <button class="offer-tab-btn active" onclick="switchOfferTab('compare')">内定比較ツール</button>
           <button class="offer-tab-btn" onclick="switchOfferTab('card')">内定報告カード</button>
+          <button class="offer-tab-btn" onclick="switchOfferTab('decision')">意思決定ワークシート</button>
         </div>
         <div id="offer-tab-compare" class="offer-tab-panel active"><div id="offer-compare-body"></div></div>
         <div id="offer-tab-card" class="offer-tab-panel"><div id="offer-card-body"></div></div>
+        <div id="offer-tab-decision" class="offer-tab-panel"><div id="offer-decision-body"></div></div>
       </div>
     </div>
   </div>
@@ -157,7 +195,7 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
   const GAS_URL = GAS_PROXY_URL;
   const PROGRESS_KEY = 'keio_navi_progress_v1';
   const PROGRESS_STAGES = ['未応募', 'ES提出', '一次面接', '二次面接', '最終面接'];
@@ -202,7 +240,8 @@
   function switchOfferTab(tab) {
     document.querySelectorAll('.offer-tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.offer-tab-panel').forEach(p => p.classList.remove('active'));
-    const btnIdx = tab === 'compare' ? 0 : 1;
+    const tabMap = { compare: 0, card: 1, decision: 2 };
+    const btnIdx = tabMap[tab] !== undefined ? tabMap[tab] : 0;
     document.querySelectorAll('.offer-tab-btn')[btnIdx].classList.add('active');
     document.getElementById('offer-tab-' + tab).classList.add('active');
   }
@@ -212,10 +251,12 @@
     if (offers.length === 0) {
       document.getElementById('offer-compare-body').innerHTML = '<div class="offer-no-data">内定企業がまだ登録されていません。<br><a href="pipeline.html" style="color:var(--navy);font-weight:700;">選考管理ページ</a>で企業のステータスを「内定」にすると、ここで比較できます。</div>';
       document.getElementById('offer-card-body').innerHTML = '<div class="offer-no-data">内定を獲得すると報告カードを作成できます。</div>';
+      document.getElementById('offer-decision-body').innerHTML = '<div class="offer-no-data">内定が2社以上になると意思決定ワークシートを使えます。</div>';
       return;
     }
     renderOfferCompare(offers);
     renderOfferCard(offers);
+    renderDecisionWorksheet(offers);
   }
 
   function renderOfferCompare(offers) {
@@ -356,6 +397,138 @@
     const canvas = document.getElementById('offer-card-canvas');
     if (!canvas) return;
     const link = document.createElement('a'); link.download = '内定報告カード.png'; link.href = canvas.toDataURL('image/png'); link.click();
+  }
+
+  // ===== DECISION WORKSHEET =====
+  const DW_KEY = 'keio_navi_decision_ws_v1';
+  const DW_QUESTIONS = [
+    'この企業で3年後、どんな自分になっていると思う？',
+    'この企業の働き方は、あなたの価値観（Will）と合っている？',
+    '内定を辞退したら、後悔すると思う？その理由は？',
+    '家族や友人に「ここに入社する」と言った時、どんな反応をすると思う？',
+    '10年後もこの企業で働いていたいと思える？'
+  ];
+  let dwSaveTimer = null;
+
+  function readDwData() { try { return JSON.parse(localStorage.getItem(DW_KEY) || '{}'); } catch { return {}; } }
+  function writeDwData(data) { localStorage.setItem(DW_KEY, JSON.stringify(data)); }
+
+  function dwAutoSave() {
+    if (dwSaveTimer) clearTimeout(dwSaveTimer);
+    dwSaveTimer = setTimeout(() => {
+      const data = readDwData();
+      const offers = getOfferEntries();
+      offers.forEach(o => {
+        if (!data[o.id]) data[o.id] = {};
+        DW_QUESTIONS.forEach((q, qi) => {
+          const ta = document.getElementById('dw-' + o.id + '-q' + qi);
+          if (ta) data[o.id]['q' + qi] = ta.value;
+        });
+      });
+      const finalTa = document.getElementById('dw-final-memo');
+      if (finalTa) data._finalMemo = finalTa.value;
+      writeDwData(data);
+      updateDwCompletionStatus();
+    }, 600);
+  }
+
+  function updateDwCompletionStatus() {
+    const data = readDwData();
+    const offers = getOfferEntries();
+    offers.forEach(o => {
+      const compData = data[o.id] || {};
+      let filled = 0;
+      DW_QUESTIONS.forEach((q, qi) => { if ((compData['q' + qi] || '').trim()) filled++; });
+      const statusEl = document.getElementById('dw-status-' + o.id);
+      if (statusEl) {
+        const dots = statusEl.querySelectorAll('.dw-completion-dot');
+        dots.forEach((d, i) => { d.classList.toggle('done', i < filled); });
+        statusEl.querySelector('.dw-status-text').textContent = filled + '/' + DW_QUESTIONS.length + ' 完了';
+      }
+    });
+  }
+
+  function renderDecisionWorksheet(offers) {
+    const body = document.getElementById('offer-decision-body');
+    if (offers.length < 2) { body.innerHTML = '<div class="offer-no-data">内定が2社以上になると意思決定ワークシートが使えます。</div>'; return; }
+    const data = readDwData();
+    let html = '<div style="margin-bottom:1.2rem;"><div class="m-section-label" style="margin-bottom:0.3rem;">DECISION MAKING</div><div class="m-section-title" style="font-size:1rem;">意思決定ワークシート</div><p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.4rem;line-height:1.6;">各企業について振り返りの質問に答えることで、自分にとっての最適な選択を整理できます。回答は自動保存されます。</p></div>';
+    offers.forEach((o, oi) => {
+      const c = OFFER_COLORS[oi % OFFER_COLORS.length];
+      const compData = data[o.id] || {};
+      let filled = 0;
+      DW_QUESTIONS.forEach((q, qi) => { if ((compData['q' + qi] || '').trim()) filled++; });
+      html += '<div class="dw-company-card"><div class="dw-company-header" style="border-left:4px solid ' + c.border + ';"><div class="dw-company-name">' + o.company + '</div><div class="dw-completion" id="dw-status-' + o.id + '">';
+      for (let di = 0; di < DW_QUESTIONS.length; di++) { html += '<span class="dw-completion-dot' + (di < filled ? ' done' : '') + '"></span>'; }
+      html += '<span class="dw-status-text">' + filled + '/' + DW_QUESTIONS.length + ' 完了</span></div></div>';
+      DW_QUESTIONS.forEach((q, qi) => {
+        const val = compData['q' + qi] || '';
+        html += '<div class="dw-question-block"><div class="dw-question-label"><span class="dw-question-num">Q' + (qi + 1) + '</span>' + q + '</div><textarea class="dw-textarea" id="dw-' + o.id + '-q' + qi + '" placeholder="自由に書いてください..." oninput="dwAutoSave()">' + escHtmlDw(val) + '</textarea></div>';
+      });
+      html += '</div>';
+    });
+    const finalMemo = data._finalMemo || '';
+    html += '<div class="dw-final-memo"><div class="dw-final-label">総合判断メモ</div><textarea class="dw-final-textarea" id="dw-final-memo" placeholder="全ての企業を振り返って、あなたの最終的な判断や気持ちを自由に書いてください..." oninput="dwAutoSave()">' + escHtmlDw(finalMemo) + '</textarea></div>';
+    // Self-analysis comparison section
+    html += renderDwSelfAnalysis(offers);
+    body.innerHTML = html;
+  }
+
+  function escHtmlDw(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function renderDwSelfAnalysis(offers) {
+    let saData = {}; try { saData = JSON.parse(localStorage.getItem('keio_navi_self_analysis_v1') || '{}'); } catch {}
+    const saValues = saData.values || [];
+    const saStrengths = saData.strengths || [];
+    const saWeaknesses = saData.weaknesses || [];
+    const saWill = saData.will || '';
+    const saCan = saData.can || '';
+    const saMust = saData.must || '';
+    const hasSa = saValues.length > 0 || saWill || saCan || saMust || saStrengths.length > 0;
+    if (!hasSa) {
+      return '<div class="dw-sa-section"><div class="dw-sa-title">自己分析との照合</div><div class="dw-no-sa">自己分析データがまだありません。<br><a href="writing.html" style="color:var(--navy);font-weight:700;">ES・ガクチカを書くページ</a>の自己分析ワークブックで価値観やWill-Can-Mustを設定すると、ここで各企業との相性を確認できます。</div></div>';
+    }
+    const scores = readOfferScores();
+    const valueAxisMap = { '成長': 'growth', '挑戦': 'growth', '専門性': 'growth', '安定': 'salary', '効率': 'salary', 'バランス': 'balance', '自由': 'balance', '独立': 'balance', '貢献': 'purpose', '影響力': 'purpose', 'リーダーシップ': 'purpose', 'チームワーク': 'culture', '多様性': 'culture', '国際性': 'culture', '創造性': 'culture', '誠実さ': 'culture' };
+    let html = '<div class="dw-sa-section"><div class="dw-sa-title">自己分析との照合</div><div class="dw-sa-grid">';
+    // Your self-analysis summary card
+    html += '<div class="dw-sa-card"><div class="dw-sa-card-header">あなたの自己分析データ</div>';
+    if (saValues.length) { html += '<div class="dw-sa-row"><div class="dw-sa-label">価値観</div><div class="dw-sa-value"><div class="dw-sa-chips">' + saValues.map(v => '<span class="dw-sa-chip">' + v + '</span>').join('') + '</div></div></div>'; }
+    if (saStrengths.length) { html += '<div class="dw-sa-row"><div class="dw-sa-label">強み</div><div class="dw-sa-value">' + saStrengths.join('、') + '</div></div>'; }
+    if (saWeaknesses.length) { html += '<div class="dw-sa-row"><div class="dw-sa-label">弱み</div><div class="dw-sa-value">' + saWeaknesses.join('、') + '</div></div>'; }
+    if (saWill) { html += '<div class="dw-sa-row"><div class="dw-sa-label">Will</div><div class="dw-sa-value">' + escHtmlDw(saWill) + '</div></div>'; }
+    if (saCan) { html += '<div class="dw-sa-row"><div class="dw-sa-label">Can</div><div class="dw-sa-value">' + escHtmlDw(saCan) + '</div></div>'; }
+    if (saMust) { html += '<div class="dw-sa-row"><div class="dw-sa-label">Must</div><div class="dw-sa-value">' + escHtmlDw(saMust) + '</div></div>'; }
+    html += '</div>';
+    // Per-company match cards
+    offers.forEach((o, oi) => {
+      const c = OFFER_COLORS[oi % OFFER_COLORS.length];
+      const s = scores[o.id] || {};
+      let matchScore = 0, matchMax = 0;
+      saValues.forEach(v => {
+        const axis = valueAxisMap[v];
+        if (axis) { matchScore += (s[axis] || 3); matchMax += 5; }
+      });
+      let matchLevel = 'mid', matchText = '普通';
+      if (matchMax > 0) {
+        const ratio = matchScore / matchMax;
+        if (ratio >= 0.75) { matchLevel = 'high'; matchText = '高い一致度'; }
+        else if (ratio >= 0.5) { matchLevel = 'mid'; matchText = '普通'; }
+        else { matchLevel = 'low'; matchText = '要検討'; }
+      }
+      html += '<div class="dw-sa-card" style="border-left:3px solid ' + c.border + ';"><div class="dw-sa-card-header">' + o.company + ' との照合</div>';
+      if (saValues.length && matchMax > 0) {
+        html += '<div class="dw-sa-row"><div class="dw-sa-label">価値観一致</div><div class="dw-sa-value"><span class="dw-match-indicator dw-match-' + matchLevel + '">' + matchText + '（' + Math.round(matchScore / matchMax * 100) + '%）</span></div></div>';
+      }
+      if (saWill) { html += '<div class="dw-sa-row"><div class="dw-sa-label">Will</div><div class="dw-sa-value" style="font-size:0.75rem;color:var(--text-muted);">' + escHtmlDw(saWill) + '</div></div>'; }
+      const purposeScore = s.purpose || 3;
+      const growthScore = s.growth || 3;
+      html += '<div class="dw-sa-row"><div class="dw-sa-label">やりがい</div><div class="dw-sa-value"><span style="font-weight:700;color:' + (purposeScore >= 4 ? '#00703c' : purposeScore >= 3 ? '#b8940a' : 'crimson') + ';">' + purposeScore + '/5</span></div></div>';
+      html += '<div class="dw-sa-row"><div class="dw-sa-label">成長環境</div><div class="dw-sa-value"><span style="font-weight:700;color:' + (growthScore >= 4 ? '#00703c' : growthScore >= 3 ? '#b8940a' : 'crimson') + ';">' + growthScore + '/5</span></div></div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+    return html;
   }
 
   // ===== AUTH GATE + INIT =====

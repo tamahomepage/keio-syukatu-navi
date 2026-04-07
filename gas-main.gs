@@ -41,6 +41,13 @@ var SHEET_KEYS = {
   faq:          { spreadsheetId: '1hJqOds7fOxqLmau-IoHhfQLQC7_ttun-SmGZZSzF76M', sheetName: 'faq'        },
 };
 
+var READ_PUBLIC_SHEET_KEYS_ = {
+  event: true,
+  faq: true,
+  shinkan: true,
+  orientation: true
+};
+
 // ─────────────────────────────────────────────
 //  エントリーポイント
 // ─────────────────────────────────────────────
@@ -86,6 +93,9 @@ function handleRead_(payload) {
   var key    = String(payload.sheetKey || '');
   var config = SHEET_KEYS[key];
   if (!config) return { status: 'error', message: 'sheetKey が不正です: ' + key };
+  if (!READ_PUBLIC_SHEET_KEYS_[key]) {
+    getActiveSessionOrThrow_(payload.sessionToken);
+  }
 
   var sheet = getSiteSheet_(config.sheetName, false, config.spreadsheetId);
   if (!sheet) return { status: 'ok', rows: [] };
@@ -100,7 +110,8 @@ function handleRead_(payload) {
 //  action: generate — 公式HPから事実を取得し、AIが独自分析
 // ─────────────────────────────────────────────
 function handleGenerate_(payload) {
-  getActiveSessionOrThrow_(payload.sessionToken);
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  assertAiUsageAllowed_(session.userId, 'generate');
   var companyName = trimText_(payload.companyName);
   if (!companyName) return { status: 'error', message: '企業名を入力してください。' };
 
@@ -134,6 +145,8 @@ function handleGenerate_(payload) {
   }
 
   // Step 2: 公式HPからテキストを取得
+  corpUrl = normalizeSafeFetchUrl_(corpUrl);
+  recruitUrl = normalizeSafeFetchUrl_(recruitUrl);
   var corpText = '', recruitText = '';
   if (corpUrl) {
     try {
@@ -297,10 +310,52 @@ var AUTH_USER_HEADERS_ = [
   'lineName','lineQrDriveFileId','lineQrDriveUrl'
 ];
 
-var AUTH_SESSION_TTL_DAYS_ = 30;
+var AUTH_SESSION_TTL_DAYS_ = 7;
+var AUTH_LOGIN_RATE_LIMIT_ = {
+  maxAttempts: 8,
+  windowSeconds: 15 * 60,
+  message: 'ログイン試行回数が多すぎます。15分ほど待ってから再試行してください。'
+};
+var AUTH_AI_RATE_LIMIT_ = {
+  maxAttempts: 20,
+  windowSeconds: 60 * 60,
+  message: 'AI機能の利用回数が上限に達しました。1時間ほど待ってから再試行してください。'
+};
 var BOARD_SHEET_NAME_          = 'es_board';
 var BOARD_COMMENTS_SHEET_NAME_ = 'es_board_comments';
 var BOARD_MAX_POSTS_           = 50;
+
+function getAuthRateLimitKey_(action, value) {
+  return ['auth-rate', action, normalizeAuthKey_(value || 'unknown')].join(':');
+}
+
+function getAuthRateLimitCount_(action, value) {
+  var cache = CacheService.getScriptCache();
+  return parseInt(cache.get(getAuthRateLimitKey_(action, value)) || '0', 10) || 0;
+}
+
+function assertAuthRateLimit_(action, value, options) {
+  if (getAuthRateLimitCount_(action, value) >= options.maxAttempts) {
+    throw new Error(options.message);
+  }
+}
+
+function recordAuthRateLimitEvent_(action, value, options) {
+  var cache = CacheService.getScriptCache();
+  var key = getAuthRateLimitKey_(action, value);
+  var count = getAuthRateLimitCount_(action, value) + 1;
+  cache.put(key, String(count), options.windowSeconds);
+}
+
+function clearAuthRateLimit_(action, value) {
+  CacheService.getScriptCache().remove(getAuthRateLimitKey_(action, value));
+}
+
+function assertAiUsageAllowed_(userId, actionName) {
+  var rateKey = trimAuthText_(userId) + ':' + trimAuthText_(actionName || 'ai');
+  assertAuthRateLimit_('ai', rateKey, AUTH_AI_RATE_LIMIT_);
+  recordAuthRateLimitEvent_('ai', rateKey, AUTH_AI_RATE_LIMIT_);
+}
 
 function handleAuthAction_(payload) {
   if (!payload || typeof payload !== 'object') return null;
@@ -357,8 +412,9 @@ function authRegister_(payload) {
 
   var now    = new Date().toISOString();
   var userId = 'user_' + new Date().getTime().toString(36) + Utilities.getUuid().replace(/-/g,'').slice(0,6);
-  var salt   = Utilities.getUuid().replace(/-/g,'');
-  var passwordHash = sha256Hex_(salt + ':' + password);
+  var hashRecord = buildPasswordHashRecord_(password);
+  var salt   = hashRecord.salt;
+  var passwordHash = hashRecord.passwordHash;
   var lineQrAsset  = saveLineQrAsset_(userId, lineQrDataUrl, lineQrFileName, '');
 
   usersSheet.appendRow([userId, username, usernameKey, desiredIndustry, passwordHash, salt, now, now,
@@ -376,12 +432,17 @@ function authLogin_(payload) {
   var password    = trimAuthText_(payload.password);
   assertAuth_(usernameKey, 'ユーザー名を入力してください。');
   assertAuth_(password,    'パスワードを入力してください。');
+  assertAuthRateLimit_('login', usernameKey, AUTH_LOGIN_RATE_LIMIT_);
 
   var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
   var users = getSheetRecords_(usersSheet);
   var user  = users.find(function (r) { return normalizeAuthKey_(r.usernameKey || r.username) === usernameKey; });
-  assertAuth_(user, 'アカウントが見つかりません。');
-  assertAuth_(sha256Hex_(String(user.salt||'')+':'+password) === String(user.passwordHash||''), 'パスワードが正しくありません。');
+  if (!user || !verifyPasswordRecord_(password, user)) {
+    recordAuthRateLimitEvent_('login', usernameKey, AUTH_LOGIN_RATE_LIMIT_);
+    throw new Error('ログイン情報が正しくありません。');
+  }
+  maybeUpgradePasswordHash_(usersSheet, users.indexOf(user), user, password);
+  clearAuthRateLimit_('login', usernameKey);
 
   var sessionToken = createSessionForUser_(user.id);
   return { status:'ok', sessionToken, user: sanitizeUserRecord_(user), likedCompanies: getLikedCompaniesForUser_(user.id) };
@@ -448,10 +509,13 @@ function authChangePassword_(payload) {
   var idx = findRecordIndex_(users, function (r) { return r.id === session.userId; });
   assertAuth_(idx >= 0, 'アカウントが見つかりません。');
   var user = users[idx];
-  assertAuth_(sha256Hex_(String(user.salt||'')+':'+currentPassword) === String(user.passwordHash||''), '現在のパスワードが正しくありません。');
-  usersSheet.getRange(idx+2, 5).setValue(sha256Hex_(String(user.salt||'')+':'+nextPassword));
-  usersSheet.getRange(idx+2, 8).setValue(new Date().toISOString());
-  return { status:'ok' };
+  assertAuth_(verifyPasswordRecord_(currentPassword, user), '現在のパスワードが正しくありません。');
+  var nextHashRecord = buildPasswordHashRecord_(nextPassword);
+  var now = new Date().toISOString();
+  usersSheet.getRange(idx+2, 5, 1, 2).setValues([[nextHashRecord.passwordHash, nextHashRecord.salt]]);
+  usersSheet.getRange(idx+2, 8).setValue(now);
+  invalidateSessionsForUser_(session.userId, '');
+  return { status:'ok', sessionToken: createSessionForUser_(session.userId) };
 }
 
 // ── いいね保存 ─────────────────────────────────────
@@ -524,7 +588,8 @@ function addBoardComment_(payload) {
 
 // ── Claude API 呼び出し（AIツール用） ──────────────
 function callClaude_(payload) {
-  getActiveSessionOrThrow_(payload.sessionToken);
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  assertAiUsageAllowed_(session.userId, 'callClaude');
   var apiKey = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
   assertAuth_(apiKey, 'AI機能が設定されていません。管理者にお問い合わせください。');
 
@@ -603,7 +668,7 @@ function callClaude_(payload) {
     var gkStar  = input.star || {};
     assertAuth_(gkTitle, 'ガクチカのタイトルを入力してください。');
     var existingQs = trimAuthText_(input.existingQuestions || '');
-    systemPrompt = 'あなたは就活の面接官です。学生のガクチカ（学生時代に力を入れたこと）に対して、面接で実際に聞かれるような深掘り質問を10個生成してください。日本語で出力してください。質問は具体的で、学生の思考や行動の背景を引き出すものにしてください。';
+    systemPrompt = 'あなたは大手企業の採用面接官（10年以上の経験）です。学生のガクチカに対して、実際の面接で聞くような鋭い深掘り質問を10問生成してください。\n\n質問の種類を以下のようにバランスよく含めてください：\n- 動機・背景を問う質問（2問）：「なぜそれを始めたのか」「きっかけは」\n- 行動の詳細を問う質問（3問）：「具体的にどう動いたのか」「他の選択肢はなかったのか」\n- 困難・失敗を問う質問（2問）：「一番苦労したことは」「失敗した経験は」\n- 学び・成長を問う質問（2問）：「何を学んだか」「今の自分にどう活きているか」\n- 価値観・人柄を問う質問（1問）：「チームでのあなたの役割は」「周囲からどう見られていたか」\n\n各質問は具体的で、「はい/いいえ」では答えられない開放型質問にしてください。';
     userMessage = '以下のガクチカに対する深掘り質問を10個生成してください。\n\n【タイトル】'+gkTitle+'\n'
       +(gkStar.situation ? '【状況(S)】'+gkStar.situation+'\n' : '')
       +(gkStar.task ? '【課題(T)】'+gkStar.task+'\n' : '')
@@ -617,7 +682,7 @@ function callClaude_(payload) {
     var ddContext = trimAuthText_(input.context || '');
     var ddQuestion = trimAuthText_(input.question || '');
     assertAuth_(ddQuestion, '質問を入力してください。');
-    systemPrompt = 'あなたは就活の面接官であり、キャリアカウンセラーです。先ほどのガクチカ深掘り分析の続きです。学生の質問に具体的に回答してください。\n\n【先ほどの分析】\n'+ddContext;
+    systemPrompt = 'あなたは就活の面接官であり、キャリアカウンセラーです。学生のガクチカ深掘り回答を添削してください。\n\n以下の形式で添削してください：\n\n【スコア】X/5（1=不十分 2=やや不足 3=普通 4=良い 5=面接官を唸らせるレベル）\n\n【良い点】\n・具体的に何が良いか（1-2点）\n\n【改善点】\n・何が足りないか、どう改善すべきか（1-3点）\n\n【模範回答例】\nこの質問に対する理想的な回答例（200字程度）\n\n【面接官の視点】\nこの回答を聞いた面接官はどう感じるか（1-2文）\n\n上記の形式を必ず守って出力してください。\n\n【コンテキスト】\n'+ddContext;
     userMessage = ddQuestion;
 
   } else if (toolType === 'refineMotivation') {
@@ -627,6 +692,20 @@ function callClaude_(payload) {
     systemPrompt = 'あなたは就活ESの専門家です。学生の志望動機をさらにブラッシュアップしてください。日本語で回答してください。';
     userMessage  = '以下の志望動機をブラッシュアップしてください。\n\n【現在の志望動機】\n'+motivationText+'\n【文字数制限】'+refineCharLimit+'字以内\n\n以下の形式で出力してください：\n1. 📝 改善版志望動機（'+refineCharLimit+'字以内、そのまま提出できる形で）\n2. 🔄 変更点とその理由\n3. ✅ さらに改善できるポイント';
 
+  } else if (toolType === 'deepDiveExperience') {
+    var expTitle  = trimAuthText_(input.title || '');
+    var expPeriod = trimAuthText_(input.period || '');
+    var expDesc   = trimAuthText_(input.desc || '');
+    assertAuth_(expTitle, '経験のタイトルを入力してください。');
+    systemPrompt = 'あなたはキャリアカウンセラーです。学生の過去の経験について、その経験から見える価値観・強み・性格特性を引き出すための質問を8問生成してください。\n\n面接対策ではなく、自己理解が目的です。以下の観点でバランスよく：\n- 感情を問う（2問）：「その時どう感じた？」「一番嬉しかった/悔しかった瞬間は？」\n- 選択の理由を問う（2問）：「なぜそれを選んだ？」「他の選択肢はあった？」\n- 価値観を問う（2問）：「何が大事だと思った？」「譲れなかったことは？」\n- パターンを問う（2問）：「他にも似た経験がある？」「この経験と今の自分のつながりは？」\n\n質問は温かみのあるトーンで、内省を促すものにしてください。';
+    userMessage = '以下の経験について、自己理解を深めるための振り返り質問を8個生成してください。\n\n【時期】' + (expPeriod || '（未記入）') + '\n【タイトル】' + expTitle + '\n【経験の概要】' + (expDesc || '（未記入）') + '\n\n各質問を1行1つ、番号付きで出力してください（例：1. その経験を始めたきっかけは何でしたか？）。質問以外の説明は不要です。';
+
+  } else if (toolType === 'analyzeExperiences') {
+    var expData = trimAuthText_(input.experiencesText || '');
+    assertAuth_(expData, '経験データを入力してください。');
+    systemPrompt = 'あなたはキャリアカウンセラーです。学生の複数の経験とその振り返りから、以下を分析してください：\n\n1. 【価値観パターン】複数の経験に共通する価値観は何か（2-3個）\n2. 【強みパターン】繰り返し発揮されている強みは何か（2-3個）\n3. 【行動パターン】困難に直面した時の典型的な対処法\n4. 【向いている環境】どんな環境で力を発揮しやすいか\n5. 【自己分析WBへの提案】価値観・強み・Will-Can-Mustに何を書くべきか\n\n具体的な経験の引用を交えて、説得力のある分析をしてください。\n\n【重要】回答の最後に、以下の形式で提案データをJSON形式で出力してください：\n[SUGGESTIONS]{"values":["価値観1","価値観2"],"strengths":"強み1\\n強み2\\n強み3","will":"Willの提案文"}[/SUGGESTIONS]';
+    userMessage = '以下の複数の経験とその振り返りから、パターンを分析してください。\n\n' + expData;
+
   } else {
     throw new Error('不明なツールタイプです。');
   }
@@ -634,7 +713,7 @@ function callClaude_(payload) {
   var res  = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
     method: 'post', contentType: 'application/json',
     headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-    payload: JSON.stringify({ model:'claude-opus-4-6', max_tokens:2000, system:systemPrompt, messages:[{ role:'user', content:userMessage }] }),
+    payload: JSON.stringify({ model:'claude-opus-4-6', max_tokens:4096, system:systemPrompt, messages:[{ role:'user', content:userMessage }] }),
     muteHttpExceptions: true
   });
 
@@ -715,6 +794,17 @@ function createSessionForUser_(userId) {
   var expiresAt = new Date(now.getTime()+AUTH_SESSION_TTL_DAYS_*24*60*60*1000);
   sessionsSheet.appendRow([token, userId, now.toISOString(), expiresAt.toISOString(), now.toISOString(), '1']);
   return token;
+}
+
+function invalidateSessionsForUser_(userId, keepSessionToken) {
+  var sessionsSheet = getAuthSheet_(AUTH_SHEET_NAMES_.sessions);
+  var sessions = getSheetRecords_(sessionsSheet);
+  sessions.forEach(function (row, index) {
+    if (row.userId !== userId) return;
+    if (keepSessionToken && row.sessionToken === keepSessionToken) return;
+    if (String(row.active) === '0') return;
+    sessionsSheet.getRange(index + 2, 6).setValue('0');
+  });
 }
 
 function getLikedCompaniesForUser_(userId) {
@@ -817,6 +907,49 @@ function sha256Hex_(text) {
   return bytes.map(function (b) { var n = b < 0 ? b+256 : b; return ('0'+n.toString(16)).slice(-2); }).join('');
 }
 
+var PASSWORD_HASH_SCHEME_ = 'iter-sha256-v1';
+var PASSWORD_HASH_ITERATIONS_ = 120000;
+
+function hashPasswordWithIterations_(password, salt, iterations) {
+  var value = String(salt || '') + ':' + String(password || '');
+  var total = Math.max(parseInt(iterations, 10) || 0, 1);
+  for (var i = 0; i < total; i++) {
+    value = sha256Hex_(value);
+  }
+  return value;
+}
+
+function buildPasswordHashRecord_(password) {
+  var salt = Utilities.getUuid().replace(/-/g, '');
+  return {
+    salt: salt,
+    passwordHash: PASSWORD_HASH_SCHEME_ + '$' + PASSWORD_HASH_ITERATIONS_ + '$' + hashPasswordWithIterations_(password, salt, PASSWORD_HASH_ITERATIONS_)
+  };
+}
+
+function verifyPasswordRecord_(password, user) {
+  var storedHash = trimAuthText_(user && user.passwordHash);
+  var salt = trimAuthText_(user && user.salt);
+  if (storedHash.indexOf(PASSWORD_HASH_SCHEME_ + '$') === 0) {
+    var parts = storedHash.split('$');
+    if (parts.length === 3) {
+      return hashPasswordWithIterations_(password, salt, parseInt(parts[1], 10)) === parts[2];
+    }
+  }
+  return sha256Hex_(salt + ':' + password) === storedHash;
+}
+
+function maybeUpgradePasswordHash_(usersSheet, rowIndex, user, password) {
+  var storedHash = trimAuthText_(user && user.passwordHash);
+  if (storedHash.indexOf(PASSWORD_HASH_SCHEME_ + '$') === 0) return;
+  if (rowIndex < 0) return;
+
+  var nextHash = buildPasswordHashRecord_(password);
+  usersSheet.getRange(rowIndex + 2, 5, 1, 2).setValues([[nextHash.passwordHash, nextHash.salt]]);
+  user.passwordHash = nextHash.passwordHash;
+  user.salt = nextHash.salt;
+}
+
 // ─────────────────────────────────────────────
 //  選考情報自動収集（企業公式HPからAI抽出）
 // ─────────────────────────────────────────────
@@ -828,9 +961,51 @@ var BLOCKED_DOMAINS_ = [
   'offerbox.jp', 'dodacampus.jp', 'type.jp'
 ];
 
+function extractUrlHostname_(url) {
+  var raw = trimText_(url);
+  var match = raw.match(/^https?:\/\/([^\/?#]+)/i);
+  if (!match) return '';
+  var authority = String(match[1] || '');
+  if (authority.indexOf('@') !== -1) return '';
+  var host = authority.replace(/:\d+$/, '').toLowerCase();
+  if (host.charAt(0) === '[' && host.charAt(host.length - 1) === ']') {
+    host = host.slice(1, -1);
+  }
+  return host;
+}
+
+function isPrivateHost_(hostname) {
+  var host = String(hostname || '').toLowerCase();
+  if (!host) return true;
+  if (host === 'localhost' || host === '0.0.0.0' || host === '::1' || host === '::') return true;
+  if (host.endsWith('.localhost')) return true;
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+    var parts = host.split('.').map(function (part) { return parseInt(part, 10) || 0; });
+    if (parts[0] === 10 || parts[0] === 127 || parts[0] === 0) return true;
+    if (parts[0] === 169 && parts[1] === 254) return true;
+    if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
+    if (parts[0] === 192 && parts[1] === 168) return true;
+    if (parts[0] === 100 && parts[1] >= 64 && parts[1] <= 127) return true;
+    if (parts[0] === 198 && (parts[1] === 18 || parts[1] === 19)) return true;
+  }
+  if (host.indexOf(':') !== -1) {
+    if (host.indexOf('fe80:') === 0 || host.indexOf('fc') === 0 || host.indexOf('fd') === 0) return true;
+  }
+  return false;
+}
+
+function normalizeSafeFetchUrl_(url) {
+  var raw = trimText_(url);
+  if (!raw || !/^https?:\/\//i.test(raw)) return '';
+  var host = extractUrlHostname_(raw);
+  if (!host || isPrivateHost_(host)) return '';
+  return raw;
+}
+
 function isDomainBlocked_(url) {
   try {
-    var hostname = url.replace(/^https?:\/\//, '').split('/')[0].toLowerCase();
+    var hostname = extractUrlHostname_(url);
+    if (!hostname) return true;
     return BLOCKED_DOMAINS_.some(function(d) {
       return hostname === d || hostname.endsWith('.' + d);
     });
@@ -840,7 +1015,8 @@ function isDomainBlocked_(url) {
 }
 
 function handleFetchRecruitInfo_(payload) {
-  getActiveSessionOrThrow_(payload.sessionToken);
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  assertAiUsageAllowed_(session.userId, 'fetchRecruitInfo');
   var apiKey = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
   assertAuth_(apiKey, 'AI機能が設定されていません。');
 
@@ -875,6 +1051,11 @@ function handleFetchRecruitInfo_(payload) {
 
   if (!recruitUrl) {
     return { status: 'error', message: companyName + ' の公式採用ページが見つかりませんでした。URLを手動で入力してください。' };
+  }
+
+  recruitUrl = normalizeSafeFetchUrl_(recruitUrl);
+  if (!recruitUrl) {
+    return { status: 'error', message: '安全ではないURLは取得できません。企業の公式採用ページURLを入力してください。' };
   }
 
   // Step 2: ドメインチェック
@@ -1205,6 +1386,7 @@ function getUserActivityStats_(userId) {
  * 週次レポートのテキストを生成
  */
 function buildWeeklyReportText_(username, stats) {
+  var siteBaseUrl = getConfiguredSiteBaseUrl_();
   var now = new Date();
   var weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   var fmt = function (d) {
@@ -1244,10 +1426,16 @@ function buildWeeklyReportText_(username, stats) {
 
   lines.push('');
   lines.push('━━━━━━━━━━━━━━━━━━━━━━━━');
-  lines.push('慶應就活ナビ https://naotama1123.github.io/keio-syukatu-navi/');
+  lines.push('慶應就活ナビ ' + siteBaseUrl + '/');
   lines.push('※ このメールはアカウント設定で配信停止できます。');
 
   return lines.join('\n');
+}
+
+function getConfiguredSiteBaseUrl_() {
+  var siteBaseUrl = trimAuthText_(PropertiesService.getScriptProperties().getProperty('SITE_BASE_URL'));
+  assertAuth_(siteBaseUrl, 'SITE_BASE_URL が設定されていません。');
+  return siteBaseUrl.replace(/\/+$/, '');
 }
 
 /**

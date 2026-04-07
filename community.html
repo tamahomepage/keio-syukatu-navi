@@ -2,25 +2,13 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<script>
-  (function(measurementId){
-    if (!measurementId) return;
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', measurementId);
-  })('');
-</script>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>仲間を見つける ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
   :root {
     --navy: #0a1a3e;
@@ -46,6 +34,7 @@
   }
   .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--gold-light); text-decoration: none; letter-spacing: 0.05em; }
   .nav-links { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .nav-links::-webkit-scrollbar { display: none; }
   .nav-link { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.75rem; padding: 0.4rem 0.8rem; border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s; }
   .nav-link:hover { color: var(--gold-light); border-color: rgba(201,168,76,0.35); }
   .nav-link.active { color: var(--gold-light); border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.08); }
@@ -114,9 +103,120 @@
   .flash.show { display: block; }
   .flash.success { background: rgba(10,110,69,0.1); color: #0a6e45; border: 1px solid rgba(10,110,69,0.25); }
   .flash.error { background: rgba(192,0,26,0.08); color: var(--crimson); border: 1px solid rgba(192,0,26,0.2); }
+  .verification-banner {
+    display:none;
+    padding:0.9rem 1rem;
+    margin:0 0 1.2rem;
+    background:rgba(201,168,76,0.12);
+    border-left:4px solid var(--gold);
+    font-size:0.78rem;
+    color:var(--text);
+    line-height:1.8;
+  }
+  .verification-banner a {
+    color:var(--navy);
+    font-weight:700;
+  }
+  .section-lock-note {
+    display:none;
+    margin-top:0.7rem;
+    font-size:0.72rem;
+    color:var(--crimson);
+    line-height:1.7;
+  }
+  .locked-action {
+    opacity:0.58;
+    cursor:not-allowed !important;
+  }
+  .locked-action:hover {
+    opacity:0.58;
+  }
+  .inline-action-menu {
+    margin-top:0.6rem;
+  }
+  .inline-action-menu summary {
+    list-style:none;
+    cursor:pointer;
+    font-size:0.7rem;
+    font-weight:700;
+    color:var(--navy);
+  }
+  .inline-action-menu summary::-webkit-details-marker {
+    display:none;
+  }
+  .inline-actions {
+    display:flex;
+    gap:0.45rem;
+    flex-wrap:wrap;
+    margin-top:0.45rem;
+  }
+  .inline-action-btn {
+    background:none;
+    border:1px solid rgba(10,26,62,0.14);
+    color:var(--text-muted);
+    font-size:0.68rem;
+    padding:0.2rem 0.55rem;
+    font-family:'Noto Sans JP',sans-serif;
+    cursor:pointer;
+  }
+  .inline-action-btn.danger {
+    color:var(--crimson);
+    border-color:rgba(192,0,26,0.2);
+  }
 
   @media (max-width: 600px) {
-    main { padding: 4.5rem 0.8rem 2rem; }
+    nav {
+      padding: 0.9rem 1rem;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .nav-links {
+      width: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 0.15rem;
+    }
+    main { padding: 6.8rem 0.8rem 2rem; }
+    .section-header,
+    .section-body,
+    .opt-in-bar,
+    .modal-body { padding-left: 1rem; padding-right: 1rem; }
+    .filter-input,
+    .group-info,
+    .gd-info { min-width: 0; }
+    .group-actions,
+    .gd-actions,
+    .pm-card-actions,
+    .exp-card-footer { width: 100%; }
+    .inline-action-menu {
+      width: 100%;
+    }
+    .inline-action-menu summary {
+      display: block;
+      width: 100%;
+    }
+    .group-actions,
+    .gd-actions,
+    .pm-card-actions,
+    .exp-card-footer {
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    .consul-comment-form,
+    .qa-reply-form,
+    .board-comment-row { flex-direction: column; }
+    .consul-comment-form button,
+    .qa-reply-form button,
+    .board-comment-submit { width: 100%; }
+    .flash {
+      width: calc(100% - 1.6rem);
+      left: 0.8rem;
+      right: 0.8rem;
+      transform: none;
+      text-align: center;
+    }
     .member-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -141,6 +241,7 @@
   </div>
 
   <div class="flash" id="flash"></div>
+  <div class="verification-banner" id="verification-banner"></div>
 
   <!-- マッチング設定 -->
   <div class="section">
@@ -226,8 +327,9 @@
           <option value="other">その他</option>
         </select>
         <input type="text" id="new-group-desc" placeholder="説明（任意）" style="flex:1;min-width:150px;">
-        <button class="filter-btn" onclick="createNewGroup()">グループ作成</button>
+        <button class="filter-btn" id="group-create-btn" onclick="createNewGroup()">グループ作成</button>
       </div>
+      <div class="section-lock-note" id="group-lock-note">メール認証が完了すると、公開設定の変更やグループ作成・参加ができます。</div>
       <div id="group-list" class="group-list">
         <div class="empty-msg">読み込み中...</div>
       </div>
@@ -250,8 +352,10 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
   const flash = document.getElementById('flash');
+  const verificationBanner = document.getElementById('verification-banner');
+  let mutedUserIds = {};
   let flashTimer = null;
 
   function showFlash(msg, type) {
@@ -272,6 +376,149 @@
     const data = await res.json();
     if (!data || data.status !== 'ok') throw new Error((data && data.message) || 'エラーが発生しました。');
     return data;
+  }
+
+  function guardVerifiedAction(actionLabel) {
+    if (!KeioNaviAuth.ensureVerifiedUser) return true;
+    const result = KeioNaviAuth.ensureVerifiedUser(actionLabel);
+    if (result.ok) return true;
+    showFlash(result.error, 'error');
+    renderVerificationBanner(KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null);
+    return false;
+  }
+
+  function renderVerificationBanner(user) {
+    if (!verificationBanner) return;
+    if (!user || user.emailVerified) {
+      verificationBanner.style.display = 'none';
+      verificationBanner.innerHTML = '';
+      applyVerificationLocks();
+      return;
+    }
+    verificationBanner.style.display = 'block';
+    verificationBanner.innerHTML = 'メール認証がまだ完了していません。閲覧はできますが、投稿・返信・練習募集・GD参加などのコミュニティ機能は認証後に有効になります。<a href="account.html">マイページで確認メールを再送する</a>';
+    applyVerificationLocks();
+  }
+
+  async function loadMutedMembers() {
+    try {
+      const data = await callApi('readMutedMembers');
+      mutedUserIds = {};
+      (data.mutedUserIds || []).forEach(function(userId) {
+        mutedUserIds[String(userId || '')] = true;
+      });
+    } catch (e) {
+      mutedUserIds = {};
+    }
+  }
+
+  function buildInlineActionButtons(userId, displayName, contentType, contentId) {
+    const normalizedUserId = String(userId || '');
+    const muted = normalizedUserId && mutedUserIds[normalizedUserId];
+    const muteButton = normalizedUserId
+      ? `<button class="inline-action-btn" onclick="event.stopPropagation();toggleMuteMember('${escAttr(normalizedUserId)}','${escAttr(displayName || '')}')">${muted ? 'ミュート解除' : 'ミュート'}</button>`
+      : '';
+    const reportButton = contentType && contentId
+      ? `<button class="inline-action-btn danger" onclick="event.stopPropagation();reportContentAction('${escAttr(contentType)}','${escAttr(String(contentId || ''))}','${escAttr(normalizedUserId)}')">通報</button>`
+      : '';
+    if (!muteButton && !reportButton) return '';
+    return `<details class="inline-action-menu" onclick="event.stopPropagation()"><summary onclick="event.stopPropagation()">投稿オプション</summary><div class="inline-actions">${muteButton}${reportButton}</div></details>`;
+  }
+
+  function applyVerificationLocks() {
+    const user = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
+    const locked = !!(user && !user.emailVerified);
+    [
+      { buttonId: 'group-create-btn', noteId: 'group-lock-note', lockedLabel: 'グループ作成', actionLabel: 'グループ作成' },
+      { buttonId: 'consul-submit-btn', noteId: 'consul-lock-note', lockedLabel: '相談投稿', actionLabel: '相談投稿' },
+      { buttonId: 'gd-create-btn', noteId: 'gd-lock-note', lockedLabel: 'GDセッション作成', actionLabel: 'GDセッション作成' },
+      { buttonId: 'pm-open-btn', noteId: 'pm-lock-note', lockedLabel: '練習募集投稿', actionLabel: '練習募集投稿' },
+      { buttonId: 'qa-open-btn', noteId: 'qa-lock-note', lockedLabel: '質問投稿', actionLabel: '質問投稿' },
+      { buttonId: 'board-post-btn', noteId: 'board-lock-note', lockedLabel: 'ES投稿', actionLabel: 'ES投稿' },
+      { buttonId: 'exp-open-btn', noteId: 'exp-lock-note', lockedLabel: '体験記投稿', actionLabel: '体験記投稿' }
+    ].forEach(function(config) {
+      const button = document.getElementById(config.buttonId);
+      const note = document.getElementById(config.noteId);
+      if (button) {
+        if (!button.dataset.baseLabel) button.dataset.baseLabel = button.textContent.trim();
+        button.dataset.actionLabel = config.actionLabel;
+        button.dataset.locked = locked ? '1' : '0';
+        button.textContent = locked ? button.dataset.baseLabel + '（認証後）' : button.dataset.baseLabel;
+        button.classList.toggle('locked-action', locked);
+        button.setAttribute('aria-disabled', locked ? 'true' : 'false');
+        button.title = locked ? 'メール認証後に利用できます' : '';
+      }
+      if (note) note.style.display = locked ? 'block' : 'none';
+    });
+
+    const optInToggle = document.getElementById('opt-in-toggle');
+    if (optInToggle) {
+      optInToggle.disabled = locked;
+      optInToggle.style.opacity = locked ? '0.6' : '';
+      optInToggle.title = locked ? 'メール認証後に変更できます' : '';
+    }
+  }
+
+  function bindVerificationLockedButtons() {
+    ['group-create-btn', 'consul-submit-btn', 'gd-create-btn', 'pm-open-btn', 'qa-open-btn', 'board-post-btn', 'exp-open-btn'].forEach(function(id) {
+      const button = document.getElementById(id);
+      if (!button || button.dataset.lockGuardBound) return;
+      button.dataset.lockGuardBound = '1';
+      button.addEventListener('click', function(event) {
+        if (button.dataset.locked !== '1') return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        guardVerifiedAction(button.dataset.actionLabel || 'この操作');
+      }, true);
+    });
+  }
+
+  async function toggleMuteMember(userId, displayName) {
+    if (!guardVerifiedAction('ミュート')) return;
+    if (!userId) return;
+    const muted = !!mutedUserIds[userId];
+    if (!muted && !confirm((displayName || 'このユーザー') + ' をミュートしますか？このユーザーの投稿は今後表示されなくなります。')) return;
+    try {
+      if (muted) {
+        await callApi('unmuteMember', { mutedUserId: userId });
+        showFlash('ミュートを解除しました。', 'success');
+      } else {
+        await callApi('muteMember', { mutedUserId: userId });
+        showFlash('ミュートしました。', 'success');
+      }
+      await refreshCommunityFeeds();
+    } catch (e) {
+      showFlash(e.message, 'error');
+    }
+  }
+
+  async function reportContentAction(contentType, contentId, targetUserId) {
+    if (!guardVerifiedAction('通報')) return;
+    const reason = window.prompt('通報理由を入力してください。\n例: スパム / 個人情報 / 不適切表現 / 機密情報');
+    if (!reason) return;
+    const details = window.prompt('補足があれば入力してください。（任意）') || '';
+    try {
+      await callApi('reportContent', {
+        contentType,
+        contentId,
+        targetUserId,
+        reason,
+        details
+      });
+      showFlash('通報を受け付けました。運営が確認します。', 'success');
+    } catch (e) {
+      showFlash(e.message, 'error');
+    }
+  }
+
+  async function refreshCommunityFeeds() {
+    await loadMutedMembers();
+    loadConsultations();
+    loadGDSessions();
+    loadPracticeRequests();
+    loadQuestions();
+    loadBoardPosts();
+    loadExperiences();
   }
 
   function renderMemberCard(m) {
@@ -307,7 +554,7 @@
       const data = await callApi('searchMembers', { industry: industry || undefined });
       renderMemberList('industry-match-list', data.members || []);
     } catch (e) {
-      el.innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${e.message}</div>`;
+      el.innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${escHtml(e.message)}</div>`;
     }
   }
 
@@ -320,7 +567,7 @@
       const data = await callApi('searchMembers', { company: company || undefined });
       renderMemberList('company-match-list', data.members || []);
     } catch (e) {
-      el.innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${e.message}</div>`;
+      el.innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${escHtml(e.message)}</div>`;
     }
   }
 
@@ -331,12 +578,14 @@
       const data = await callApi('getGroups');
       renderGroups(data.groups || []);
     } catch (e) {
-      el.innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${e.message}</div>`;
+      el.innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${escHtml(e.message)}</div>`;
     }
   }
 
   function renderGroups(groups) {
     const el = document.getElementById('group-list');
+    const currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
+    const canJoinGroup = !!(currentUser && currentUser.emailVerified);
     if (!groups.length) {
       el.innerHTML = '<div class="empty-msg">まだグループがありません。上のフォームから作成してみましょう。</div>';
       return;
@@ -348,7 +597,9 @@
       const actions = g.isMember
         ? `<button class="btn-view" onclick="viewGroupMembers(decodeURIComponent('${groupIdArg}'),decodeURIComponent('${groupNameArg}'))">メンバー</button>
            <button class="btn-leave" onclick="leaveGroupAction(decodeURIComponent('${groupIdArg}'))">退出</button>`
-        : `<button class="btn-join" onclick="joinGroupAction(decodeURIComponent('${groupIdArg}'))">参加する</button>`;
+        : canJoinGroup
+          ? `<button class="btn-join" onclick="joinGroupAction(decodeURIComponent('${groupIdArg}'))">参加する</button>`
+          : `<button class="btn-join locked-action" onclick="event.stopPropagation();guardVerifiedAction('グループ参加')">認証後に参加</button>`;
       return `<div class="group-card">
         <div class="group-info">
           <div class="group-name">${escHtml(g.name || '')}</div>
@@ -360,6 +611,7 @@
   }
 
   async function createNewGroup() {
+    if (!guardVerifiedAction('グループ作成')) return;
     const name = document.getElementById('new-group-name').value.trim();
     if (!name) { showFlash('グループ名を入力してください。', 'error'); return; }
     try {
@@ -378,6 +630,7 @@
   }
 
   async function joinGroupAction(groupId) {
+    if (!guardVerifiedAction('グループ参加')) return;
     try {
       await callApi('joinGroup', { groupId });
       showFlash('グループに参加しました。', 'success');
@@ -406,7 +659,7 @@
       }
       document.getElementById('gm-modal-body').innerHTML = members.map(m => renderMemberCard(m)).join('');
     } catch (e) {
-      document.getElementById('gm-modal-body').innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${e.message}</div>`;
+      document.getElementById('gm-modal-body').innerHTML = `<div class="empty-msg" style="color:var(--crimson);">${escHtml(e.message)}</div>`;
     }
   }
 
@@ -418,6 +671,10 @@
   // マッチング設定
   const optInToggle = document.getElementById('opt-in-toggle');
   optInToggle.addEventListener('change', async () => {
+    if (!guardVerifiedAction('公開設定の変更')) {
+      optInToggle.checked = !optInToggle.checked;
+      return;
+    }
     try {
       await callApi('updateMatchingPrefs', { optIn: optInToggle.checked });
       showFlash(optInToggle.checked ? '公開設定をオンにしました。' : '公開設定をオフにしました。', 'success');
@@ -427,6 +684,8 @@
   // 初期化
   const user = KeioNaviAuth.requireAuth({ returnTo: 'community.html' });
   if (user) {
+    bindVerificationLockedButtons();
+    renderVerificationBanner(user);
     // 自動検索: 自分の業界と志望企業で
     if (user.desiredIndustry) {
       document.getElementById('filter-industry').value = user.desiredIndustry;
@@ -437,9 +696,7 @@
       searchByCompany();
     }
     loadGroups();
-    loadConsultations();
-    loadGDSessions();
-    loadQuestions();
+    refreshCommunityFeeds();
   }
 </script>
 
@@ -475,6 +732,13 @@
     </div>
   </div>
   <div class="section-body">
+    <div style="font-size:0.72rem;color:var(--text-muted);padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);margin-bottom:1rem;line-height:1.7;">
+      <div style="font-weight:700;color:var(--navy);margin-bottom:0.3rem;">投稿ガイドライン</div>
+      ・企業の機密情報（NDA対象の選考内容等）は投稿しないでください<br>
+      ・他の就活生の個人情報を含めないでください<br>
+      ・建設的なフィードバックを心がけてください<br>
+      ・投稿内容はメンバー全員に公開されます
+    </div>
     <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem;">
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
         <select id="consul-category" style="padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;">
@@ -488,8 +752,9 @@
         <input type="text" id="consul-title" placeholder="タイトル" style="flex:1;min-width:150px;padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;">
       </div>
       <textarea id="consul-body" placeholder="相談内容を書いてください..." style="width:100%;padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;min-height:80px;resize:vertical;"></textarea>
-      <button class="filter-btn" onclick="postConsultation()" style="align-self:flex-end;">投稿する</button>
+      <button class="filter-btn" id="consul-submit-btn" onclick="postConsultation()" style="align-self:flex-end;">投稿する</button>
     </div>
+    <div class="section-lock-note" id="consul-lock-note">メール認証が完了すると、相談投稿とコメントができます。</div>
     <div id="consul-feed">
       <div class="empty-msg">読み込み中...</div>
     </div>
@@ -523,9 +788,10 @@
         </select>
       </div>
       <div style="display:flex;gap:0.5rem;">
-        <button class="filter-btn" onclick="createGDSessionAction()" style="flex:1;">セッション作成</button>
+        <button class="filter-btn" id="gd-create-btn" onclick="createGDSessionAction()" style="flex:1;">セッション作成</button>
         <button class="filter-btn" onclick="generateGDThemeAction()" style="flex:1;background:var(--gold);color:var(--navy);">AIテーマ生成</button>
       </div>
+      <div class="section-lock-note" id="gd-lock-note">メール認証が完了すると、GDセッションの作成と参加ができます。</div>
       <div id="gd-theme-result" style="display:none;padding:0.6rem;background:white;border:1px solid rgba(201,168,76,0.3);font-size:0.8rem;line-height:1.6;color:var(--text);"></div>
     </div>
     <div id="gd-session-list">
@@ -542,7 +808,7 @@ async function loadConsultations() {
     var data = await callApi('readConsultations');
     renderConsultations(data.posts || data.consultations || []);
   } catch (e) {
-    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
@@ -565,6 +831,7 @@ function renderConsultations(posts) {
       + '\x3cdiv class="consul-post-header">\x3cspan class="consul-cat">' + escHtml(p.category || '') + '\x3c/span>\x3cspan class="consul-meta">' + author + ' | ' + dateLabel + '\x3c/span>\x3c/div>'
       + '\x3cdiv class="consul-title-text">' + title + '\x3c/div>'
       + '\x3cdiv class="consul-body">' + body + '\x3c/div>'
+      + buildInlineActionButtons(p.userId, p.displayName || '匿名', 'consultation', p.id)
       + '\x3cdiv class="consul-comments">' + commentsHtml
       + '\x3cdiv class="consul-comment-form">\x3cinput type="text" id="consul-cmt-' + escAttr(p.id || '') + '" placeholder="コメントを入力...">\x3cbutton onclick="addComment(decodeURIComponent(\'' + postIdArg + '\'))">送信\x3c/button>\x3c/div>'
       + '\x3c/div>\x3c/div>';
@@ -572,6 +839,7 @@ function renderConsultations(posts) {
 }
 
 async function postConsultation() {
+  if (!guardVerifiedAction('相談投稿')) return;
   var title = document.getElementById('consul-title').value.trim();
   var body = document.getElementById('consul-body').value.trim();
   if (!title || !body) { showFlash('タイトルと内容を入力してください。', 'error'); return; }
@@ -589,6 +857,7 @@ async function postConsultation() {
 }
 
 async function addComment(postId) {
+  if (!guardVerifiedAction('相談へのコメント')) return;
   var input = document.getElementById('consul-cmt-' + postId);
   var text = input.value.trim();
   if (!text) return;
@@ -606,13 +875,14 @@ async function loadGDSessions() {
     var data = await callApi('readGDSessions');
     renderGDSessions(data.sessions || []);
   } catch (e) {
-    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
 function renderGDSessions(sessions) {
   var el = document.getElementById('gd-session-list');
   var currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
+  var canJoin = !!(currentUser && currentUser.emailVerified);
   if (!sessions.length) {
     el.innerHTML = '\x3cdiv class="empty-msg">まだセッションがありません。作成してみましょう。\x3c/div>';
     return;
@@ -622,7 +892,9 @@ function renderGDSessions(sessions) {
     var isParticipant = !!s.isParticipant || ((s.participants || []).some(function(p) { return currentUser && p.userId === currentUser.id; }));
     var actions = isParticipant
       ? '\x3cbutton class="btn-leave" onclick="leaveGDAction(decodeURIComponent(\'' + sessionIdArg + '\'))">退出\x3c/button>'
-      : '\x3cbutton class="btn-join" onclick="joinGDAction(decodeURIComponent(\'' + sessionIdArg + '\'))">参加する\x3c/button>';
+      : (canJoin
+        ? '\x3cbutton class="btn-join" onclick="joinGDAction(decodeURIComponent(\'' + sessionIdArg + '\'))">参加する\x3c/button>'
+        : '\x3cbutton class="btn-join locked-action" onclick="event.stopPropagation();guardVerifiedAction(\'GDセッション参加\')">認証後に参加\x3c/button>');
     return '\x3cdiv class="gd-session">'
       + '\x3cdiv class="gd-info">'
       + '\x3cdiv class="gd-title-text">' + escHtml(s.title || 'GDセッション') + '\x3c/div>'
@@ -634,6 +906,7 @@ function renderGDSessions(sessions) {
 }
 
 async function createGDSessionAction() {
+  if (!guardVerifiedAction('GDセッション作成')) return;
   var title = document.getElementById('gd-title').value.trim();
   var date = document.getElementById('gd-date').value;
   var time = document.getElementById('gd-time').value;
@@ -650,6 +923,7 @@ async function createGDSessionAction() {
 }
 
 async function joinGDAction(sessionId) {
+  if (!guardVerifiedAction('GDセッション参加')) return;
   try {
     await callApi('joinGDSession', { sessionId: sessionId });
     showFlash('セッションに参加しました。', 'success');
@@ -749,7 +1023,8 @@ async function generateGDThemeAction() {
     </div>
   </div>
   <div class="section-body">
-    <button class="pm-post-btn" onclick="document.getElementById('pm-post-modal').classList.add('open')">＋ 練習相手を募集</button>
+    <button class="pm-post-btn" id="pm-open-btn" onclick="document.getElementById('pm-post-modal').classList.add('open')">＋ 練習相手を募集</button>
+    <div class="section-lock-note" id="pm-lock-note">メール認証が完了すると、募集投稿と参加ができます。</div>
     <div class="pm-filter-tabs">
       <button class="pm-filter-tab active" data-filter="すべて" onclick="filterPM(this)">すべて</button>
       <button class="pm-filter-tab" data-filter="面接練習" onclick="filterPM(this)">面接練習</button>
@@ -807,7 +1082,7 @@ async function loadPracticeRequests() {
     pmAllRequests = data.requests || [];
     renderPracticeRequests();
   } catch (e) {
-    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
@@ -838,6 +1113,8 @@ function pmInitial(name) {
 
 function renderPracticeRequests() {
   var el = document.getElementById('pm-feed');
+  var currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
+  var canJoin = !!(currentUser && currentUser.emailVerified);
   var filtered = pmAllRequests;
   if (pmCurrentFilter !== 'すべて') {
     filtered = filtered.filter(function(r) { return r.type === pmCurrentFilter; });
@@ -870,7 +1147,9 @@ function renderPracticeRequests() {
       actionsHtml += '\x3cspan class="pm-joined-badge">参加中\x3c/span>';
       actionsHtml += '\x3cbutton class="pm-cancel-btn" onclick="leavePracticeReq(\'' + escAttr(r.id) + '\')">キャンセル\x3c/button>';
     } else if (!isClosed && slotsLeft > 0) {
-      actionsHtml += '\x3cbutton class="pm-join-btn" onclick="joinPracticeReq(\'' + escAttr(r.id) + '\')">参加する\x3c/button>';
+      actionsHtml += canJoin
+        ? '\x3cbutton class="pm-join-btn" onclick="joinPracticeReq(\'' + escAttr(r.id) + '\')">参加する\x3c/button>'
+        : '\x3cbutton class="pm-join-btn locked-action" onclick="event.stopPropagation();guardVerifiedAction(\'練習募集への参加\')">認証後に参加\x3c/button>';
     }
 
     // LINE info (shown when joined)
@@ -900,6 +1179,7 @@ function renderPracticeRequests() {
         + '\x3c/div>'
         + '\x3cdiv class="pm-participant-list">' + (partHtml || '\x3cspan class="pm-participant-name">まだ参加者はいません\x3c/span>') + '\x3c/div>'
       + '\x3c/div>'
+      + buildInlineActionButtons(r.userId, r.displayName || '名前未設定', 'practice_request', r.id)
       + '\x3cdiv class="pm-card-actions">' + actionsHtml + '\x3c/div>'
       + lineHtml
     + '\x3c/div>';
@@ -907,6 +1187,7 @@ function renderPracticeRequests() {
 }
 
 async function submitPracticeRequest() {
+  if (!guardVerifiedAction('練習募集投稿')) return;
   var type     = document.getElementById('pm-new-type').value;
   var industry = document.getElementById('pm-new-industry').value.trim();
   var date     = document.getElementById('pm-new-date').value.trim();
@@ -928,6 +1209,7 @@ async function submitPracticeRequest() {
 }
 
 async function joinPracticeReq(id) {
+  if (!guardVerifiedAction('練習募集への参加')) return;
   try {
     await callApi('joinPracticeRequest', { requestId: id });
     showFlash('参加しました！募集者のLINE情報を確認してください。', 'success');
@@ -1002,6 +1284,9 @@ document.getElementById('pm-post-modal').addEventListener('click', function(e) {
 .qa-reply-count { font-size:0.72rem; color:var(--text-muted); }
 .qa-delete-btn { font-size:0.7rem; color:var(--crimson); background:none; border:1px solid rgba(192,0,26,0.2); padding:0.2rem 0.6rem; cursor:pointer; font-family:'Noto Sans JP',sans-serif; transition:opacity 0.2s; }
 .qa-delete-btn:hover { opacity:0.7; }
+.like-btn { display:inline-flex; align-items:center; gap:0.3rem; padding:0.2rem 0.7rem; border:1px solid rgba(10,26,62,0.12); background:white; font-size:0.7rem; color:var(--text-muted); cursor:pointer; font-family:'Noto Sans JP',sans-serif; transition:all 0.2s; font-weight:500; }
+.like-btn:hover { border-color:var(--gold); color:var(--navy); }
+.like-btn.liked { background:rgba(201,168,76,0.1); border-color:var(--gold); color:#7a5f10; font-weight:700; }
 .qa-expanded { display:none; margin-top:0.8rem; border-top:1px solid rgba(10,26,62,0.06); padding-top:0.8rem; }
 .qa-expanded.open { display:block; }
 .qa-full-body { font-size:0.8rem; color:var(--text); line-height:1.8; margin-bottom:0.8rem; white-space:pre-wrap; }
@@ -1040,7 +1325,8 @@ document.getElementById('pm-post-modal').addEventListener('click', function(e) {
     </div>
   </div>
   <div class="section-body">
-    <button class="qa-post-btn" onclick="document.getElementById('qa-post-modal').classList.add('open')">＋ 質問を投稿</button>
+    <button class="qa-post-btn" id="qa-open-btn" onclick="document.getElementById('qa-post-modal').classList.add('open')">＋ 質問を投稿</button>
+    <div class="section-lock-note" id="qa-lock-note">メール認証が完了すると、質問投稿・返信・ベストアンサー選択ができます。</div>
     <div class="qa-filter-tabs">
       <button class="qa-filter-tab active" data-filter="すべて" onclick="filterQA(this)">すべて</button>
       <button class="qa-filter-tab" data-filter="ES・ガクチカ" onclick="filterQA(this)">ES・ガクチカ</button>
@@ -1062,6 +1348,13 @@ document.getElementById('pm-post-modal').addEventListener('click', function(e) {
       <button class="qa-modal-close" onclick="document.getElementById('qa-post-modal').classList.remove('open')">&times;</button>
     </div>
     <div class="qa-modal-body">
+      <div style="font-size:0.72rem;color:var(--text-muted);padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);margin-bottom:1rem;line-height:1.7;">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:0.3rem;">投稿ガイドライン</div>
+        ・企業の機密情報（NDA対象の選考内容等）は投稿しないでください<br>
+        ・他の就活生の個人情報を含めないでください<br>
+        ・建設的なフィードバックを心がけてください<br>
+        ・投稿内容はメンバー全員に公開されます
+      </div>
       <label>タイトル</label>
       <input type="text" id="qa-new-title" placeholder="質問のタイトルを入力">
       <label>カテゴリ</label>
@@ -1083,6 +1376,47 @@ document.getElementById('pm-post-modal').addEventListener('click', function(e) {
 </div>
 
 <script>
+// ===== いいね/リアクション機能 =====
+function getLikeCounts() {
+  try { return JSON.parse(localStorage.getItem('keio_navi_likes_v1') || '{}'); } catch(e) { return {}; }
+}
+function getMyLikes() {
+  try { return JSON.parse(localStorage.getItem('keio_navi_my_likes_v1') || '[]'); } catch(e) { return []; }
+}
+function getLikeCount(type, id) {
+  var counts = getLikeCounts();
+  return (counts[type] && counts[type][id]) ? counts[type][id] : 0;
+}
+function hasLiked(type, id) {
+  var myLikes = getMyLikes();
+  return myLikes.indexOf(type + '_' + id) !== -1;
+}
+function toggleLike(type, id) {
+  var counts = getLikeCounts();
+  var myLikes = getMyLikes();
+  var key = type + '_' + id;
+  if (!counts[type]) counts[type] = {};
+  if (myLikes.indexOf(key) !== -1) {
+    // Unlike
+    counts[type][id] = Math.max(0, (counts[type][id] || 1) - 1);
+    myLikes = myLikes.filter(function(k) { return k !== key; });
+  } else {
+    // Like
+    counts[type][id] = (counts[type][id] || 0) + 1;
+    myLikes.push(key);
+  }
+  localStorage.setItem('keio_navi_likes_v1', JSON.stringify(counts));
+  localStorage.setItem('keio_navi_my_likes_v1', JSON.stringify(myLikes));
+  // Re-render
+  if (type === 'qa') renderQuestions();
+  if (type === 'exp') renderExperiences();
+}
+function buildLikeBtn(type, id) {
+  var count = getLikeCount(type, id);
+  var liked = hasLiked(type, id);
+  return '\x3cbutton class="like-btn' + (liked ? ' liked' : '') + '" onclick="event.stopPropagation();toggleLike(\'' + type + '\',\'' + id + '\')">\uD83D\uDC4D \u53C2\u8003\u306B\u306A\u3063\u305F (' + count + ')\x3c/button>';
+}
+
 // ===== 質問・相談掲示板 =====
 var qaAllQuestions = [];
 var qaCurrentFilter = 'すべて';
@@ -1094,7 +1428,7 @@ async function loadQuestions() {
     qaAllQuestions = data.questions || [];
     renderQuestions();
   } catch (e) {
-    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
@@ -1144,10 +1478,16 @@ function renderQuestions() {
   var myId = user ? user.id : '';
   el.innerHTML = filtered.map(function(q) {
     var repliesHtml = (q.replies || []).map(function(r) {
+      var acceptUi = q.canAcceptAnswer
+        ? (r.accepted
+          ? '\x3cspan class="inline-action-btn" style="border-color:rgba(201,168,76,0.4);color:#7a5f10;">ベストアンサー\x3c/span>'
+          : '\x3cbutton class="inline-action-btn" onclick="event.stopPropagation();acceptReply(\'' + q.id + '\',\'' + r.id + '\')">ベストアンサーにする\x3c/button>')
+        : (r.accepted ? '\x3cspan class="inline-action-btn" style="border-color:rgba(201,168,76,0.4);color:#7a5f10;">ベストアンサー\x3c/span>' : '');
       return '\x3cdiv class="qa-reply">'
         + '\x3cspan class="qa-reply-author">' + escHtml(r.displayName || '匿名') + '\x3c/span>'
         + '\x3cspan class="qa-reply-time">' + qaTimeAgo(r.createdAt) + '\x3c/span>'
         + '\x3cdiv class="qa-reply-body">' + escHtml(r.body || '') + '\x3c/div>'
+        + (acceptUi ? '\x3cdiv class="inline-actions">' + acceptUi + '\x3c/div>' : '')
         + '\x3c/div>';
     }).join('');
     var deleteBtn = (q.userId === myId) ? ' \x3cbutton class="qa-delete-btn" onclick="event.stopPropagation();deleteQuestionAction(\'' + q.id + '\')">削除\x3c/button>' : '';
@@ -1160,10 +1500,12 @@ function renderQuestions() {
       + '\x3cdiv class="qa-card-preview">' + escHtml(q.body) + '\x3c/div>'
       + '\x3cdiv class="qa-card-footer">'
       + '\x3cspan class="qa-reply-count">&#128172; ' + (q.replyCount || 0) + '件の返信\x3c/span>'
+      + buildLikeBtn('qa', q.id)
       + deleteBtn
       + '\x3c/div>'
       + '\x3cdiv class="qa-expanded">'
       + '\x3cdiv class="qa-full-body">' + escHtml(q.body) + '\x3c/div>'
+      + buildInlineActionButtons(q.userId, q.displayName || '匿名', 'qa_question', q.id)
       + repliesHtml
       + '\x3cdiv class="qa-reply-form">'
       + '\x3ctextarea id="qa-reply-' + q.id + '" placeholder="返信を入力..." onclick="event.stopPropagation();"\x3e\x3c/textarea>'
@@ -1187,6 +1529,7 @@ function toggleQAExpand(card) {
 }
 
 async function submitQuestion() {
+  if (!guardVerifiedAction('質問投稿')) return;
   var title = document.getElementById('qa-new-title').value.trim();
   var body = document.getElementById('qa-new-body').value.trim();
   var category = document.getElementById('qa-new-category').value;
@@ -1204,6 +1547,7 @@ async function submitQuestion() {
 }
 
 async function submitReply(questionId) {
+  if (!guardVerifiedAction('返信投稿')) return;
   var input = document.getElementById('qa-reply-' + questionId);
   var body = input.value.trim();
   if (!body) return;
@@ -1222,6 +1566,17 @@ async function deleteQuestionAction(questionId) {
     showFlash('質問を削除しました。', 'success');
     loadQuestions();
   } catch (e) { showFlash(e.message, 'error'); }
+}
+
+async function acceptReply(questionId, replyId) {
+  if (!guardVerifiedAction('ベストアンサー選択')) return;
+  try {
+    await callApi('acceptQuestionReply', { questionId: questionId, replyId: replyId });
+    showFlash('ベストアンサーを更新しました。', 'success');
+    loadQuestions();
+  } catch (e) {
+    showFlash(e.message, 'error');
+  }
 }
 
 document.getElementById('qa-post-modal').addEventListener('click', function(e) {
@@ -1290,6 +1645,7 @@ document.getElementById('qa-post-modal').addEventListener('click', function(e) {
       <span style="font-size:0.78rem;color:var(--text-muted);" id="board-count">読み込み中...</span>
       <button class="board-post-btn" id="board-post-btn">＋ ESを投稿する</button>
     </div>
+    <div class="section-lock-note" id="board-lock-note">メール認証が完了すると、ES投稿とコメントができます。</div>
     <div id="board-list"></div>
   </div>
 </div>
@@ -1302,6 +1658,13 @@ document.getElementById('qa-post-modal').addEventListener('click', function(e) {
       <button id="board-modal-close" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">&#10005;</button>
     </div>
     <div class="board-modal-body">
+      <div style="font-size:0.72rem;color:var(--text-muted);padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);margin-bottom:1rem;line-height:1.7;">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:0.3rem;">投稿ガイドライン</div>
+        ・企業の機密情報（NDA対象の選考内容等）は投稿しないでください<br>
+        ・他の就活生の個人情報を含めないでください<br>
+        ・建設的なフィードバックを心がけてください<br>
+        ・投稿内容はメンバー全員に公開されます
+      </div>
       <div>
         <label class="board-field-label">タイトル <span style="color:var(--crimson);">*</span></label>
         <input type="text" id="bm-company" class="board-field-input" placeholder="例：志望動機（総合商社）">
@@ -1375,6 +1738,7 @@ function renderBoardPosts(posts) {
       + '</div>'
       + '<div class="board-card-q">' + escHtml(p.question || '') + '</div>'
       + '<div class="board-card-text">' + escHtml(p.esText || p.text || '') + '</div>'
+      + buildInlineActionButtons(p.userId, p.username || '匿名', 'board_post', p.id)
       + '<div class="board-comments">'
       + '<div id="comments-' + postIdAttr + '">' + comments + '</div>'
       + '<div class="board-comment-row">'
@@ -1385,6 +1749,7 @@ function renderBoardPosts(posts) {
 }
 
 async function submitBoardComment(postId) {
+  if (!guardVerifiedAction('ESへのコメント')) return;
   var input = document.getElementById('ci-' + postId);
   var text = input.value.trim();
   if (!text) return;
@@ -1421,6 +1786,7 @@ function initBoardModal() {
       document.getElementById('board-modal').classList.remove('open');
   });
   document.getElementById('bm-submit').addEventListener('click', async function() {
+    if (!guardVerifiedAction('ES投稿')) return;
     var company = document.getElementById('bm-company').value.trim();
     var question = document.getElementById('bm-question').value.trim();
     var esText = document.getElementById('bm-text').value.trim();
@@ -1528,7 +1894,8 @@ function initBoardModal() {
     </div>
   </div>
   <div class="section-body">
-    <button class="exp-post-btn" onclick="document.getElementById('exp-post-modal').classList.add('open')">＋ 体験記を投稿</button>
+    <button class="exp-post-btn" id="exp-open-btn" onclick="document.getElementById('exp-post-modal').classList.add('open')">＋ 体験記を投稿</button>
+    <div class="section-lock-note" id="exp-lock-note">メール認証が完了すると、体験記を投稿できます。</div>
     <div class="exp-filter-tabs">
       <button class="exp-filter-tab active" data-filter="すべて" onclick="filterExp(this)">すべて</button>
       <button class="exp-filter-tab" data-filter="メーカー" onclick="filterExp(this)">メーカー</button>
@@ -1552,6 +1919,13 @@ function initBoardModal() {
       <button class="exp-modal-close" onclick="document.getElementById('exp-post-modal').classList.remove('open')">&times;</button>
     </div>
     <div class="exp-modal-body">
+      <div style="font-size:0.72rem;color:var(--text-muted);padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);margin-bottom:1rem;line-height:1.7;">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:0.3rem;">投稿ガイドライン</div>
+        ・企業の機密情報（NDA対象の選考内容等）は投稿しないでください<br>
+        ・他の就活生の個人情報を含めないでください<br>
+        ・建設的なフィードバックを心がけてください<br>
+        ・投稿内容はメンバー全員に公開されます
+      </div>
       <label>業界</label>
       <select id="exp-new-industry">
         <option value="">選択してください</option>
@@ -1620,7 +1994,7 @@ async function loadExperiences() {
     expAllStories = data.experiences || [];
     renderExperiences();
   } catch (e) {
-    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + e.message + '\x3c/div>';
+    el.innerHTML = '\x3cdiv class="empty-msg" style="color:var(--crimson);">' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
@@ -1670,10 +2044,12 @@ function renderExperiences() {
       + '\x3cdiv class="exp-full-key">' + escHtml(s.keyLearning) + '\x3c/div>'
       + '\x3cdiv class="exp-advice-label">後輩へのアドバイス\x3c/div>'
       + '\x3cdiv class="exp-advice-text">' + escHtml(s.advice) + '\x3c/div>'
+      + buildInlineActionButtons(s.userId, s.displayName || '匿名', 'experience', s.id)
       + (toolTags ? '\x3cdiv class="exp-tools-row">' + toolTags + '\x3c/div>' : '')
       + '\x3c/div>'
       + '\x3cdiv class="exp-card-footer">'
       + '\x3cspan class="exp-card-author">' + escHtml(s.displayName) + ' | ' + expTimeAgo(s.createdAt) + '\x3c/span>'
+      + buildLikeBtn('exp', s.id)
       + '\x3c/div>'
       + '\x3c/div>';
   }).join('');
@@ -1692,6 +2068,7 @@ function toggleExpExpand(card) {
 }
 
 async function submitExperience() {
+  if (!guardVerifiedAction('体験記投稿')) return;
   var industry = document.getElementById('exp-new-industry').value;
   var companyCount = document.getElementById('exp-new-companycount').value;
   var startMonth = document.getElementById('exp-new-startmonth').value;
@@ -1765,5 +2142,9 @@ document.getElementById('exp-post-modal').addEventListener('click', function(e) 
   <a href="community.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
   <a href="more.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
 </nav>
-<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
+<script>
+if (typeof bindVerificationLockedButtons === 'function') bindVerificationLockedButtons();
+if (typeof applyVerificationLocks === 'function') applyVerificationLocks();
+if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}
+</script></body>
 </html>

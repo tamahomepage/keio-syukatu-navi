@@ -2,25 +2,13 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<script>
-  (function(measurementId){
-    if (!measurementId) return;
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', measurementId);
-  })('');
-</script>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>会員ページ ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
   :root {
     --navy: #0a1a3e;
@@ -354,6 +342,149 @@
     height: 100%; background: var(--navy); transition: width 0.6s ease;
   }
   .progress-bar-fill.gold { background: var(--gold); }
+
+  /* ===== COUNTDOWN BAR ===== */
+  .countdown-bar {
+    background: var(--navy); padding: 0.7rem 1.2rem; margin-bottom: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .countdown-text {
+    font-size: 0.8rem; color: rgba(255,255,255,0.85); font-weight: 500;
+  }
+  .countdown-text .cd-num {
+    color: var(--gold); font-weight: 700; font-size: 1rem;
+  }
+  .countdown-share {
+    padding: 0.25rem 0.7rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8); font-size: 0.68rem; cursor: pointer; font-family: 'Noto Sans JP',sans-serif;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .countdown-share:hover { background: rgba(255,255,255,0.2); color: white; }
+  @media(max-width:500px) {
+    .countdown-bar { flex-direction: column; align-items: flex-start; }
+    .countdown-text { font-size: 0.75rem; }
+  }
+
+  /* ===== MISSION SECTION ===== */
+  .mission-section {
+    background: white; border: 1px solid rgba(10,26,62,0.08); border-radius: 12px;
+    margin-bottom: 1.5rem; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(10,26,62,0.06);
+  }
+  .mission-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.2rem 0.6rem; border-bottom: 1px solid rgba(10,26,62,0.06);
+  }
+  .mission-header-left {
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .mission-header-icon { font-size: 1.1rem; }
+  .mission-header-title {
+    font-family: 'Noto Serif JP', serif; font-size: 0.92rem; font-weight: 700; color: var(--navy);
+  }
+  .mission-header-count {
+    font-size: 0.75rem; color: var(--text-muted); font-weight: 600;
+  }
+  .mission-progress {
+    padding: 0.5rem 1.2rem 0.8rem;
+  }
+  .mission-progress-bar-bg {
+    height: 8px; background: rgba(10,26,62,0.06); border-radius: 4px; overflow: hidden;
+  }
+  .mission-progress-bar-fill {
+    height: 100%; background: linear-gradient(90deg, var(--gold), #e6c94a); border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+  .mission-progress-text {
+    font-size: 0.7rem; color: var(--text-muted); margin-top: 0.3rem; text-align: right;
+  }
+  .mission-list { list-style: none; padding: 0; margin: 0; }
+  .mission-item {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.7rem 1.2rem; border-top: 1px solid rgba(10,26,62,0.04);
+    transition: background 0.15s;
+  }
+  .mission-item:first-child { border-top: none; }
+  .mission-item .mi-icon {
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; flex-shrink: 0;
+  }
+  .mission-item .mi-body { flex: 1; min-width: 0; }
+  .mission-item .mi-title {
+    font-size: 0.82rem; font-weight: 600; color: var(--navy); line-height: 1.3;
+  }
+  .mission-item .mi-desc {
+    font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem;
+  }
+  .mission-item .mi-action { flex-shrink: 0; }
+  .mission-item .mi-badge {
+    font-size: 0.68rem; font-weight: 700; color: #00703c;
+    white-space: nowrap;
+  }
+  .mission-item.done .mi-title {
+    text-decoration: line-through; color: var(--text-muted);
+  }
+  .mission-item.done .mi-desc { color: rgba(10,26,62,0.25); }
+  .mission-item.current {
+    background: linear-gradient(135deg, rgba(196,166,97,0.08), rgba(196,166,97,0.03));
+    border-left: 3px solid var(--gold);
+  }
+  .mission-item.current .mi-title { color: var(--navy); }
+  .mission-item.future .mi-title { color: var(--text-muted); }
+  .mission-item.future .mi-desc { color: rgba(10,26,62,0.25); }
+  .mi-btn {
+    display: inline-flex; align-items: center; gap: 0.2rem;
+    padding: 0.3rem 0.7rem; background: var(--gold); color: white;
+    font-size: 0.7rem; font-weight: 700; border: none; border-radius: 4px;
+    cursor: pointer; text-decoration: none; white-space: nowrap;
+    font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s;
+  }
+  .mi-btn:hover { background: #b8a050; transform: translateY(-1px); }
+  .mi-manual-check {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.68rem; color: var(--text-muted); cursor: pointer;
+    background: none; border: 1px solid rgba(10,26,62,0.15); border-radius: 4px;
+    padding: 0.2rem 0.5rem; font-family: 'Noto Sans JP', sans-serif;
+    transition: all 0.15s;
+  }
+  .mi-manual-check:hover { border-color: var(--gold); color: var(--gold); }
+  .mission-toggle {
+    display: block; width: 100%; padding: 0.6rem; background: rgba(10,26,62,0.02);
+    border: none; border-top: 1px solid rgba(10,26,62,0.06);
+    font-size: 0.75rem; color: var(--text-muted); cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s;
+  }
+  .mission-toggle:hover { background: rgba(10,26,62,0.05); color: var(--navy); }
+  .mission-complete-all {
+    text-align: center; padding: 1.2rem; color: var(--gold); font-weight: 700;
+    font-size: 0.9rem; font-family: 'Noto Serif JP', serif;
+  }
+  @media(max-width:500px) {
+    .mission-item { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+    .mission-item .mi-title { font-size: 0.78rem; }
+  }
+
+  /* ===== WEEKLY ACTIVITY SUMMARY ===== */
+  .activity-summary {
+    background: white; border: 1px solid rgba(10,26,62,0.06); border-left: 4px solid var(--gold);
+    padding: 1rem 1.2rem; margin-bottom: 1.5rem;
+  }
+  .activity-summary-title {
+    font-size: 0.82rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem;
+    font-family: 'Noto Serif JP', serif;
+  }
+  .activity-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.3rem 0; font-size: 0.78rem;
+  }
+  .activity-label { color: var(--text); }
+  .activity-value { font-weight: 700; color: var(--navy); }
+  .activity-delta { font-size: 0.7rem; margin-left: 0.4rem; }
+  .activity-delta.positive { color: #00703c; }
+  .activity-delta.negative { color: var(--crimson); }
+  .activity-empty {
+    font-size: 0.78rem; color: var(--text-muted); text-align: center; padding: 0.5rem 0;
+  }
 
   /* ===== ROADMAP ===== */
   .roadmap {
@@ -1765,17 +1896,6 @@
     font-size: 0.85rem; line-height: 1.8;
   }
 </style>
-<script type="text/javascript">
-    (function(projectId){
-        if (!projectId) return;
-        window.clarity = window.clarity || function(){ (window.clarity.q = window.clarity.q || []).push(arguments); };
-        var script = document.createElement("script");
-        script.async = 1;
-        script.src = "https://www.clarity.ms/tag/" + projectId;
-        var firstScript = document.getElementsByTagName("script")[0];
-        firstScript.parentNode.insertBefore(script, firstScript);
-    })("");
-</script>
 </head>
 <body>
 
@@ -1830,11 +1950,10 @@
 <!-- MEMBERS CONTENT -->
 <div id="members-content">
 
-  <div class="members-hero">
+  <div class="members-hero" style="padding:30px 5vw 20px;">
     <div class="members-hero-inner">
-      <div class="members-badge">MEMBERS ONLY</div>
-      <h1>会員ページ</h1>
-      <p id="members-hero-copy">選考情報・限定イベント・資料・輪読会をまとめています。</p>
+      <h1 style="font-size:1.4rem; margin-bottom:0.2rem;" id="members-hero-greeting">おかえりなさい</h1>
+      <p id="members-hero-copy" style="font-size:0.8rem;">今日も就活を進めましょう。</p>
     </div>
   </div>
 
@@ -1917,6 +2036,12 @@
 
     <!-- ホームダッシュボード -->
     <div class="home-dashboard" id="home-dashboard">
+      <!-- 就活カウントダウン -->
+      <div class="countdown-bar" id="countdown-bar"></div>
+
+      <!-- ステップバイステップミッション -->
+      <div class="mission-section" id="mission-section"></div>
+
       <div class="home-dash-header">
         <div class="home-dash-label">TODAY'S ACTIONS</div>
         <div class="home-dash-title">今日やること</div>
@@ -1932,6 +2057,9 @@
         <div class="home-dash-divider"></div>
       </div>
       <div id="progress-overview"></div>
+
+      <!-- 今週のアクティビティサマリー -->
+      <div class="activity-summary" id="activity-summary"></div>
 
       <div class="home-dash-header" style="margin-top:2rem;">
         <div class="home-dash-label">ROADMAP</div>
@@ -2190,7 +2318,7 @@
   };
   const NOTICE_CSV     = ''; // ← お知らせスプシのCSV URLを貼る（列: 日付・タイトル・内容・タグ）
   const SELECTION_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSeg0-r0YzP_1sdSjvI98lNWrlwYfCsChk67fGlq3uwrQvuuFA/viewform?usp=publish-editor';
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
   const LENDING_FORM  = 'https://docs.google.com/forms/d/e/1FAIpQLScmV_ubANH5RNIHD_wEH3yakHbs5YqdegrPysSfpFo4veAg4Q/viewform'; // 列: タイトル, 著者, 状態(貸出可/貸出中), 現在の保有者
   let hasLoadedMembersContent = false;
 
@@ -2226,6 +2354,48 @@
     }).filter(Boolean).map(function(url) {
       return '<a href="' + escAttr(url) + '" target="_blank" rel="noopener noreferrer" class="modal-url" style="display:block;margin-bottom:0.3rem;">' + escHtml(url) + '</a>';
     }).join('');
+  }
+  function buildDifficultyHtml(diffKey, myVote) {
+    var keyAttr = escAttr(diffKey);
+    return '<span class="sel-difficulty" data-key="' + keyAttr + '">'
+      + [1,2,3,4,5].map(function(n) {
+          return '<span class="diff-star' + (myVote >= n ? ' filled' : '') + '" data-key="' + keyAttr + '" data-n="' + n + '">★</span>';
+        }).join('')
+      + (myVote ? '<span class="diff-voted-label">難易度' + myVote + '</span>' : '')
+      + '</span>';
+  }
+  function attachSelectionInteractions(container) {
+    if (!container) return;
+    container.querySelectorAll('.sel-note-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openModal(btn.dataset.company || '');
+      });
+    });
+    container.querySelectorAll('.sel-status-select').forEach(function(select) {
+      select.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+      select.addEventListener('change', function() {
+        updateSelStatus(select.dataset.key || '', select.value);
+      });
+    });
+    container.querySelectorAll('.diff-star').forEach(function(star) {
+      star.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var key = star.dataset.key || '';
+        var n = Number(star.dataset.n || 0);
+        if (!key || !n) return;
+        voteDifficulty(key, n, star);
+      });
+    });
+    container.querySelectorAll('[data-deadline-url]').forEach(function(chip) {
+      chip.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var url = safeHttpUrl(chip.dataset.deadlineUrl || '');
+        if (url) window.open(url, '_blank', 'noopener,noreferrer');
+      });
+    });
   }
 
   function toggleMobileMenuM() {
@@ -2356,8 +2526,10 @@
     document.getElementById('member-badge').style.display = 'inline-block';
     document.getElementById('logout-btn').style.display = 'inline-block';
     document.getElementById('member-badge').textContent = (user?.username || '会員') + ' さん';
-    const industryMsg = user?.desiredIndustry ? `【${user.desiredIndustry}】志望 ` : '';
-    document.getElementById('members-hero-copy').textContent = industryMsg + (user?.username || 'あなた') + ' さん向けに、選考情報・限定イベント・資料・輪読会をまとめています。';
+    const greeting = document.getElementById('members-hero-greeting');
+    if (greeting) greeting.textContent = (user?.username || 'あなた') + ' さん、おかえりなさい';
+    const industryMsg = user?.desiredIndustry ? '【' + user.desiredIndustry + '】志望 — ' : '';
+    document.getElementById('members-hero-copy').textContent = industryMsg + '今日も就活を進めましょう。';
     if (!hasLoadedMembersContent) {
       hasLoadedMembersContent = true;
       initWizard();
@@ -2382,9 +2554,10 @@
   // GASプロキシ経由でスプシを読み込む
   async function fetchViaGAS(sheetKey) {
     if (!GAS_PROXY_URL) throw new Error('GAS_PROXY_URLが設定されていません');
+    const sessionToken = typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
     const res = await fetch(GAS_PROXY_URL, {
       method: 'POST',
-      body: JSON.stringify({ action: 'read', sheetKey }),
+      body: JSON.stringify(sessionToken ? { action: 'read', sheetKey, sessionToken } : { action: 'read', sheetKey }),
       redirect: 'follow',
     });
     const data = await res.json();
@@ -2484,7 +2657,7 @@
     try {
       selectionRows = SELECTION_KEY ? (await fetchViaGAS(SELECTION_KEY)) : sample;
     } catch(err) {
-      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${err.message}</div>`;
+      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${escHtml(err.message)}</div>`;
       console.error('SELECTION_KEY:', err); return;
     }
     if (!selectionRows.length) { el.innerHTML = `<div class="m-empty">選考情報はまだ登録されていません。<br>あなたが最初の一件を共有しましょう！<br><a class="m-empty-cta" href="${SELECTION_FORM}" target="_blank" rel="noopener">選考情報を投稿する →</a></div>`; return; }
@@ -2589,12 +2762,13 @@
       const diff = Math.ceil((d - today) / (1000*60*60*24));
       const daysLabel = diff === 0 ? '今日' : `残${diff}日`;
       const isToday = diff === 0;
-      const hasLink = r[3]?.startsWith('http');
-      return `<span class="deadline-chip" ${hasLink ? `onclick="window.open('${r[3]}','_blank')"` : ''}>
-        ${r[0]}
-        <span class="deadline-chip-days ${isToday ? 'today' : ''}">${daysLabel}</span>
+      const linkUrl = safeHttpUrl(r[3]);
+      return `<span class="deadline-chip"${linkUrl ? ` data-deadline-url="${escAttr(linkUrl)}"` : ''}>
+        ${escHtml(r[0] || '')}
+        <span class="deadline-chip-days ${isToday ? 'today' : ''}">${escHtml(daysLabel)}</span>
       </span>`;
     }).join('');
+    attachSelectionInteractions(listEl);
   }
 
   function renderSelection() {
@@ -2650,14 +2824,15 @@
         <span>選考名</span><span>締切</span><span>タグ</span><span>資料</span>
       </div>` +
       pageRows.map(r => {
+        const companyLabel = escHtml(r[0] || '–');
         const tagClass = r[2]?.includes('本選考') ? 'tag-honsen' : 'tag-intern';
-        const hasLink = r[3]?.startsWith('http');
+        const linkUrl = safeHttpUrl(r[3]);
         const normD1 = normalizeDate(r[1]);
         const d = normD1 ? new Date(normD1.replace(/\//g,'-')) : null;
         const diff = d ? Math.ceil((d - today) / (1000*60*60*24)) : 999;
         const urgent = diff >= 0 && diff <= 7;
         const deadlineLabel = normD1 ? (urgent ? `⚠ ${normD1}（残${diff}日）` : normD1) : '未定';
-        const featureTag = (r[5] && r[5] !== 'なし') ? ` <span style="font-size:0.68rem;color:var(--crimson);margin-left:0.3rem;">${r[5]}</span>` : '';
+        const featureTag = (r[5] && r[5] !== 'なし') ? ` <span style="font-size:0.68rem;color:var(--crimson);margin-left:0.3rem;">${escHtml(r[5])}</span>` : '';
         // 企業名から「（...）」を除いてノート検索
         const companyNameClean = (r[0]||'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').trim();
         const selNote = findNote(companyNameClean);
@@ -2666,28 +2841,25 @@
         const currentStatus = getSelStatus(statusKey);
         const statusCls = STATUS_OPTIONS.find(o => o.value === currentStatus)?.cls || '';
         const statusOptions = STATUS_OPTIONS.map(o =>
-          `<option value="${o.value}" ${currentStatus === o.value ? 'selected' : ''}>${o.label}</option>`
+          `<option value="${escAttr(o.value)}" ${currentStatus === o.value ? 'selected' : ''}>${escHtml(o.label)}</option>`
         ).join('');
         const diffKey = companyNameClean;
         const myVote = getDifficultyVote(diffKey);
-        const diffHtml = `<span class="sel-difficulty" data-key="${diffKey.replace(/"/g,'&quot;')}">${[1,2,3,4,5].map(n=>`<span class="diff-star${myVote>=n?' filled':''}" data-n="${n}" onclick="voteDifficulty('${diffKey.replace(/'/g,"\\'").replace(/"/g,'&quot;')}',${n},this)">★</span>`).join('')}${myVote?`<span class="diff-voted-label">難易度${myVote}</span>`:''}</span>`;
+        const diffHtml = buildDifficultyHtml(diffKey, myVote);
         return `<div class="selection-row">
           <div>
-            <div class="sel-company">${r[0]||'–'}${isLiked ? '<span style="font-size:0.66rem; margin-left:0.45rem; color:var(--crimson); font-weight:700;">♥ 気になる企業</span>' : ''}${diffHtml}</div>
-            <div class="sel-type">${r[4] ? `<span style="font-size:0.68rem;color:var(--gold);">${r[4]}</span>` : ''}${featureTag}</div>
-            <select class="sel-status-select ${statusCls}" data-key="${statusKey.replace(/"/g,'&quot;')}" onchange="updateSelStatus('${statusKey.replace(/'/g,"\\'")}', this.value)" onclick="event.stopPropagation()">${statusOptions}</select>
+            <div class="sel-company">${companyLabel}${isLiked ? '<span style="font-size:0.66rem; margin-left:0.45rem; color:var(--crimson); font-weight:700;">♥ 気になる企業</span>' : ''}${diffHtml}</div>
+            <div class="sel-type">${r[4] ? `<span style="font-size:0.68rem;color:var(--gold);">${escHtml(r[4])}</span>` : ''}${featureTag}</div>
+            <select class="sel-status-select ${statusCls}" data-key="${escAttr(statusKey)}">${statusOptions}</select>
           </div>
-          <div class="sel-deadline ${urgent ? 'urgent' : ''}">${deadlineLabel}</div>
-          <div><span class="sel-tag ${tagClass}">${r[2]||'–'}</span></div>
+          <div class="sel-deadline ${urgent ? 'urgent' : ''}">${escHtml(deadlineLabel)}</div>
+          <div><span class="sel-tag ${tagClass}">${escHtml(r[2] || '–')}</span></div>
           <div style="display:flex;flex-direction:column;gap:0.4rem;align-items:flex-start;">
-            ${hasLink ? `<a href="${r[3]}" target="_blank" class="sel-link">開く →</a>` : '–'}
+            ${linkUrl ? `<a href="${escAttr(linkUrl)}" target="_blank" rel="noopener noreferrer" class="sel-link">開く →</a>` : '–'}
+            ${selNote ? `<button class="sel-note-btn" data-company="${escAttr(companyNameClean)}" style="font-size:0.68rem;padding:0.2rem 0.6rem;background:rgba(10,26,62,0.07);border:1px solid rgba(10,26,62,0.15);color:var(--navy);cursor:pointer;font-family:'Noto Sans JP',sans-serif;font-weight:600;letter-spacing:0.04em;white-space:nowrap;">企業ノート</button>` : ''}
           </div>
         </div>`;
       }).join('');
-
-    el.querySelectorAll('.sel-note-btn').forEach(btn => {
-      btn.addEventListener('click', e => { e.stopPropagation(); openModal(btn.dataset.company); });
-    });
 
     // ページネーションUI
     if (totalPages > 1) {
@@ -2706,6 +2878,7 @@
         </div>
       </div>`;
     }
+    attachSelectionInteractions(el);
   }
 
   function goSelectionPage(page) {
@@ -2743,14 +2916,14 @@
     const el = document.getElementById('event-list');
     const note = document.getElementById('event-note');
     const sample = [
-      ['2025/06/05', '14:00〜16:00', '〇〇商事 会社説明会', 'オンライン', '〇〇商事', 'https://example.com', '田中', '2025/06/03'],
+      ['2025/06/05', '14:00〜16:00', '〇〇商事 会社説明会', 'オンライン', '〇〇商事', '', '田中', '2025/06/03'],
       ['2025/06/12', '10:00〜12:00', '△△銀行 インターン説明会', 'オフライン（三田）', '△△銀行', '', '', '2025/06/10'],
-      ['2025/06/20', '18:00〜20:00', '□□テック エンジニア交流会', 'オンライン', '□□テック', 'https://example.com', '鈴木', ''],
+      ['2025/06/20', '18:00〜20:00', '□□テック エンジニア交流会', 'オンライン', '□□テック', '', '鈴木', ''],
     ];
     try {
       eventRows = EVENT_KEY ? (await fetchViaGAS(EVENT_KEY)) : sample;
     } catch(err) {
-      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${err.message}</div>`;
+      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${escHtml(err.message)}</div>`;
       console.error('EVENT_KEY:', err); return;
     }
     if (!eventRows.length) { el.innerHTML = '<div class="m-empty">現在予定されているイベントはありません。<br>LINEコミュニティで最新情報を確認してください。</div>'; return; }
@@ -2791,36 +2964,34 @@
         const timeStr = r[1] ? r[1] : '時間未定';
         const normDeadline = r[7] ? (() => { const s = String(r[7]).trim(); if (s.match(/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/)) return s; const p = new Date(s); return isNaN(p) ? '' : `${p.getFullYear()}/${String(p.getMonth()+1).padStart(2,'0')}/${String(p.getDate()).padStart(2,'0')}`; })() : '';
         const isPast = normDeadline ? new Date(normDeadline.replace(/\//g,'-')) < today : false;
-        const hasLink = r[5]?.startsWith('http');
+        const linkUrl = safeHttpUrl(r[5]);
         const hasBenefit = r[6] && r[6].trim() !== '' && r[6].trim() !== 'なし';
-        const isOnline = (r[3] || '').includes('オンライン');
-
-        const noteExists = findNote(r[4]);
-        const escapedCompany = (r[4]||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
-        return `<div class="event-row ${noteExists ? 'has-note' : ''}" style="${isPast ? 'opacity:0.45;' : ''}" ${noteExists ? `data-open-modal="${escapedCompany}"` : ''}>
+        const noteCompany = r[4] || '';
+        const noteExists = findNote(noteCompany);
+        return `<div class="event-row ${noteExists ? 'has-note' : ''}" style="${isPast ? 'opacity:0.45;' : ''}" ${noteExists ? `data-open-modal="${escAttr(noteCompany)}"` : ''}>
           <div class="event-date-block">
-            <div class="event-date-main">${dateStr}</div>
-            <div class="event-date-time">${r[1] || ''}</div>
+            <div class="event-date-main">${escHtml(dateStr)}</div>
+            <div class="event-date-time">${escHtml(timeStr)}</div>
           </div>
           <div>
-            <div class="event-name">${r[2] || '–'}</div>
+            <div class="event-name">${escHtml(r[2] || '–')}</div>
             <div class="event-meta">
-              ${r[4] ? `<span class="event-meta-item">・${r[4]}</span>` : ''}
-              ${r[3] ? `<span class="event-meta-item">・${r[3]}</span>` : ''}
+              ${r[4] ? `<span class="event-meta-item">・${escHtml(r[4])}</span>` : ''}
+              ${r[3] ? `<span class="event-meta-item">・${escHtml(r[3])}</span>` : ''}
               ${(() => {
                 if (!normDeadline) return '';
                 const dl = new Date(normDeadline.replace(/\//g,'-'));
                 const diff = Math.ceil((dl - today) / (1000*60*60*24));
                 if (diff < 0) return `<span class="event-meta-item" style="color:var(--text-muted);">締切済み</span>`;
-                if (diff <= 3) return `<span class="event-meta-item" style="color:var(--crimson);font-weight:700;">⚠ 締切 ${normDeadline}（残${diff}日）</span>`;
-                return `<span class="event-meta-item">📅 締切 ${normDeadline}</span>`;
+                if (diff <= 3) return `<span class="event-meta-item" style="color:var(--crimson);font-weight:700;">⚠ 締切 ${escHtml(normDeadline)}（残${diff}日）</span>`;
+                return `<span class="event-meta-item">📅 締切 ${escHtml(normDeadline)}</span>`;
               })()}
             </div>
           </div>
           <div class="event-actions">
-            ${hasBenefit ? `<span class="event-benefit">🎁 ${r[6].trim()}さん紹介特典あり</span>` : ''}
-            ${hasLink
-              ? `<a href="${r[5]}" target="_blank" class="event-apply-btn">申し込む →</a>`
+            ${hasBenefit ? `<span class="event-benefit">🎁 ${escHtml(r[6].trim())}さん紹介特典あり</span>` : ''}
+            ${linkUrl
+              ? `<a href="${escAttr(linkUrl)}" target="_blank" rel="noopener noreferrer" class="event-apply-btn">申し込む →</a>`
               : `<span class="event-apply-btn no-link">リンクなし</span>`}
           </div>
         </div>`;
@@ -2849,7 +3020,7 @@
     try {
       rows = PRIORITY_KEY ? (await fetchViaGAS(PRIORITY_KEY)) : sample;
     } catch(err) {
-      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${err.message}</div>`;
+      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${escHtml(err.message)}</div>`;
       console.error('PRIORITY_KEY:', err); return;
     }
     if (!rows.length) { el.innerHTML = '<div class="m-empty">現在の先行案内はありません。</div>'; return; }
@@ -2863,7 +3034,7 @@
       const dayStyle = isUndated ? 'font-family:\'Noto Sans JP\',sans-serif;font-size:0.85rem;font-weight:700;color:var(--text-muted);' : '';
       return `<div class="priority-row">
         <div><div class="priority-date-month">${month}</div><div class="priority-date-num" style="${dayStyle}">${day}</div><div style="font-size:0.65rem;color:var(--text-muted)">${wd}</div></div>
-        <div><div class="priority-title">${r[1]||'–'}</div><div class="priority-meta">${r[2]||''}</div></div>
+        <div><div class="priority-title">${escHtml(r[1] || '–')}</div><div class="priority-meta">${escHtml(r[2] || '')}</div></div>
         <div><span class="priority-badge">先行案内</span></div>
       </div>`;
     }).join('');
@@ -2883,19 +3054,19 @@
     try {
       rows = FILES_KEY ? (await fetchViaGAS(FILES_KEY)) : sample;
     } catch(err) {
-      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${err.message}</div>`;
+      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${escHtml(err.message)}</div>`;
       console.error('FILES_KEY:', err); return;
     }
     if (!rows.length) { el.innerHTML = '<div class="m-empty" style="grid-column:1/-1;">限定資料はまだ準備中です。<br>LINEコミュニティで配布情報をお知らせします。</div>'; return; }
     el.innerHTML = rows.map(r => {
-      const hasLink = r[2]?.startsWith('http');
-      return `<${hasLink ? `a href="${r[2]}" target="_blank"` : 'div'} class="file-card">
+      const fileUrl = safeHttpUrl(r[2]);
+      return `<${fileUrl ? `a href="${escAttr(fileUrl)}" target="_blank" rel="noopener noreferrer"` : 'div'} class="file-card">
         <div class="file-icon">📄</div>
-        <div class="file-name">${r[0]||'–'}</div>
-        <div class="file-meta">${r[1]||''}</div>
-        <div class="file-meta" style="margin-top:auto;">${r[3]||''}</div>
-        ${hasLink ? '<div class="file-link">開く →</div>' : '<div class="file-link" style="color:var(--text-muted)">準備中</div>'}
-      </${hasLink ? 'a' : 'div'}>`;
+        <div class="file-name">${escHtml(r[0] || '–')}</div>
+        <div class="file-meta">${escHtml(r[1] || '')}</div>
+        <div class="file-meta" style="margin-top:auto;">${escHtml(r[3] || '')}</div>
+        ${fileUrl ? '<div class="file-link">開く →</div>' : '<div class="file-link" style="color:var(--text-muted)">準備中</div>'}
+      </${fileUrl ? 'a' : 'div'}>`;
     }).join('');
 
   }
@@ -2914,21 +3085,22 @@
     try {
       rows = BOOKS_KEY ? (await fetchViaGAS(BOOKS_KEY)) : sample;
     } catch(err) {
-      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${err.message}</div>`;
+      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ 読み込みエラー: ${escHtml(err.message)}</div>`;
       console.error('BOOKS_KEY:', err); return;
     }
     if (!rows.length) { el.innerHTML = '<div class="m-empty" style="grid-column:1/-1;">現在貸出可能な本はありません。<br>LINEコミュニティで輪読会の情報をご確認ください。</div>'; return; }
     el.innerHTML = rows.map(r => {
-      const available = !r[2] || r[2].includes('可') || r[2].toLowerCase().includes('available');
+      const statusText = String(r[2] || '–');
+      const available = !r[2] || statusText.includes('可') || statusText.toLowerCase().includes('available');
       const formUrl = LENDING_FORM + '?usp=pp_url&entry.title=' + encodeURIComponent(r[0]||'');
       return `<div class="book-card">
-        <div class="book-title">${r[0]||'–'}</div>
-        <div class="book-author">${r[1]||''}</div>
-        <span class="book-status ${available ? 'book-available' : 'book-lending'}">${r[2]||'–'}</span>
-        ${!available && r[3] ? `<div class="book-holder">保有: ${r[3]}</div>` : ''}
+        <div class="book-title">${escHtml(r[0] || '–')}</div>
+        <div class="book-author">${escHtml(r[1] || '')}</div>
+        <span class="book-status ${available ? 'book-available' : 'book-lending'}">${escHtml(statusText)}</span>
+        ${!available && r[3] ? `<div class="book-holder">保有: ${escHtml(r[3])}</div>` : ''}
         <div style="margin-top:1rem;">
           ${available
-            ? `<a href="${formUrl}" target="_blank" class="book-apply-btn">貸出申請する →</a>`
+            ? `<a href="${escAttr(formUrl)}" target="_blank" rel="noopener noreferrer" class="book-apply-btn">貸出申請する →</a>`
             : `<span class="book-apply-btn disabled">貸出中</span>`
           }
         </div>
@@ -3176,7 +3348,7 @@
       </div>`;
 
     } catch(err) {
-      body.innerHTML = `<div class="modal-no-data" style="color:var(--crimson);">⚠ 生成エラー: ${err.message}</div>`;
+      body.innerHTML = `<div class="modal-no-data" style="color:var(--crimson);">⚠ 生成エラー: ${escHtml(err.message)}</div>`;
     }
   }
 
@@ -3522,8 +3694,153 @@
 
   var _dashStats = null;
 
+  // ===== ステップバイステップミッション =====
+  var MISSIONS = [
+    {id:'m01', title:'ガクチカを1つ書こう', desc:'STAR法でエピソードを整理', link:'writing.html', manual:false},
+    {id:'m02', title:'自己分析ワークブックに記入', desc:'価値観と強み・弱みを整理', link:'writing.html', manual:false},
+    {id:'m03', title:'ESを1つ下書き', desc:'ガクチカをもとにESを書く', link:'writing.html', manual:false},
+    {id:'m04', title:'AIにES添削してもらう', desc:'書いたESをAIに見てもらおう', link:'writing.html', manual:false},
+    {id:'m05', title:'ガクチカを深掘りする', desc:'深掘り質問10問に回答する', link:'writing.html', manual:false},
+    {id:'m06', title:'面接ノートに企業を1つ追加', desc:'面接対策を始めよう', link:'interview-page.html', manual:false},
+    {id:'m07', title:'選考を1つ登録', desc:'選考管理で締切を管理', link:'pipeline.html', manual:false},
+    {id:'m08', title:'Q&A掲示板に投稿or回答', desc:'コミュニティに参加しよう', link:'community.html', manual:true},
+    {id:'m09', title:'志望動機をAIで作成', desc:'志望動機ビルダーを使ってみよう', link:'writing.html', manual:true},
+    {id:'m10', title:'他己分析リンクを送る', desc:'友人にあなたの強みを聞こう', link:'peer-feedback.html', manual:true}
+  ];
+
+  function checkMissionComplete(m) {
+    var manualData = {};
+    try { manualData = JSON.parse(localStorage.getItem('keio_navi_missions_v1') || '{}'); } catch(e) {}
+    if (manualData[m.id]) return true;
+    var s = _dashStats ? _dashStats.stats : null;
+    switch(m.id) {
+      case 'm01':
+        if (s && s.gkCount > 0) return true;
+        try { var gk = localStorage.getItem('keio_navi_gakuchika'); if (gk) { var d = JSON.parse(gk); if (Array.isArray(d) && d.length > 0) return true; } } catch(e) {}
+        return false;
+      case 'm02':
+        try { var sa = JSON.parse(localStorage.getItem('keio_navi_self_analysis_v1') || '{}'); return Object.keys(sa).length > 0 && Object.values(sa).some(function(v){ return v && v.toString().trim() !== ''; }); } catch(e) { return false; }
+      case 'm03':
+        if (s && s.esCount > 0) return true;
+        return false;
+      case 'm04':
+        return !!localStorage.getItem('keio_navi_ai_consent_v1');
+      case 'm05':
+        try { var dd = JSON.parse(localStorage.getItem('keio_navi_gk_deepdive_v1') || '[]'); return Array.isArray(dd) ? dd.length > 0 : Object.keys(dd).length > 0; } catch(e) { return false; }
+      case 'm06':
+        try { var ip = JSON.parse(localStorage.getItem('keio_navi_interview_prep_v1') || '{"companies":[]}'); return (ip.companies || []).length > 0; } catch(e) { return false; }
+      case 'm07':
+        try { var pr = JSON.parse(localStorage.getItem('keio_navi_progress_v1') || '[]'); return Array.isArray(pr) ? pr.length > 0 : false; } catch(e) { return false; }
+      case 'm08':
+        return !!localStorage.getItem('keio_navi_mission_m08_v1');
+      case 'm09':
+        return !!localStorage.getItem('keio_navi_mission_m09_v1');
+      case 'm10':
+        return !!localStorage.getItem('keio_navi_mission_m10_v1');
+      default:
+        return false;
+    }
+  }
+
+  function toggleManualMission(missionId) {
+    var manualData = {};
+    try { manualData = JSON.parse(localStorage.getItem('keio_navi_missions_v1') || '{}'); } catch(e) {}
+    if (manualData[missionId]) {
+      delete manualData[missionId];
+    } else {
+      manualData[missionId] = new Date().toISOString();
+    }
+    localStorage.setItem('keio_navi_missions_v1', JSON.stringify(manualData));
+    renderMissions();
+  }
+
+  var _missionExpanded = false;
+
+  function toggleMissionExpand() {
+    _missionExpanded = !_missionExpanded;
+    renderMissions();
+  }
+
+  function renderMissions() {
+    var el = document.getElementById('mission-section');
+    if (!el) return;
+
+    var doneCount = 0;
+    var total = MISSIONS.length;
+    var statuses = [];
+    var firstIncomplete = -1;
+
+    MISSIONS.forEach(function(m, i) {
+      var done = checkMissionComplete(m);
+      if (done) doneCount++;
+      statuses.push(done);
+      if (!done && firstIncomplete === -1) firstIncomplete = i;
+    });
+
+    var pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+    if (doneCount === total) {
+      el.innerHTML = '<div class="mission-header"><div class="mission-header-left">'
+        + '<span class="mission-header-icon">\uD83C\uDFAF</span>'
+        + '<span class="mission-header-title">\u30DF\u30C3\u30B7\u30E7\u30F3</span>'
+        + '</div><span class="mission-header-count">' + doneCount + '/' + total + ' \u5B8C\u4E86</span></div>'
+        + '<div class="mission-complete-all">\uD83C\uDF89 \u5168\u30DF\u30C3\u30B7\u30E7\u30F3\u30AF\u30EA\u30A2\uFF01\u304A\u898B\u4E8B\u3067\u3059\uFF01</div>';
+      return;
+    }
+
+    var html = '<div class="mission-header"><div class="mission-header-left">'
+      + '<span class="mission-header-icon">\uD83C\uDFAF</span>'
+      + '<span class="mission-header-title">\u30DF\u30C3\u30B7\u30E7\u30F3</span>'
+      + '</div><span class="mission-header-count">' + doneCount + '/' + total + ' \u5B8C\u4E86</span></div>'
+      + '<div class="mission-progress">'
+      + '<div class="mission-progress-bar-bg"><div class="mission-progress-bar-fill" style="width:' + pct + '%"></div></div>'
+      + '<div class="mission-progress-text">' + pct + '%</div>'
+      + '</div>'
+      + '<ul class="mission-list">';
+
+    var visibleCount = _missionExpanded ? total : 5;
+
+    MISSIONS.forEach(function(m, i) {
+      if (i >= visibleCount) return;
+      var done = statuses[i];
+      var isCurrent = (i === firstIncomplete);
+      var cls = done ? 'done' : (isCurrent ? 'current' : 'future');
+
+      html += '<li class="mission-item ' + cls + '">';
+      html += '<span class="mi-icon">' + (done ? '\u2705' : (isCurrent ? '\u27A1\uFE0F' : '\u25CB')) + '</span>';
+      html += '<div class="mi-body">';
+      html += '<div class="mi-title">' + m.title + '</div>';
+      html += '<div class="mi-desc">' + m.desc + '</div>';
+      html += '</div>';
+      html += '<div class="mi-action">';
+      if (done) {
+        html += '<span class="mi-badge">\u5B8C\u4E86\uFF01</span>';
+      } else if (isCurrent) {
+        html += '<a href="' + m.link + '" class="mi-btn">\u3084\u308B \u2192</a>';
+      }
+      if (!done && m.manual) {
+        html += ' <button class="mi-manual-check" onclick="toggleManualMission(\'' + m.id + '\')">\u5B8C\u4E86\u306B\u3059\u308B</button>';
+      }
+      if (done && m.manual) {
+        html += ' <button class="mi-manual-check" onclick="toggleManualMission(\'' + m.id + '\')">\u53D6\u6D88</button>';
+      }
+      html += '</div></li>';
+    });
+
+    html += '</ul>';
+
+    if (total > 5) {
+      html += '<button class="mission-toggle" onclick="toggleMissionExpand()">'
+        + (_missionExpanded ? '\u9589\u3058\u308B' : '\u3059\u3079\u3066\u8868\u793A\uFF08' + total + '\u4EF6\uFF09')
+        + '</button>';
+    }
+
+    el.innerHTML = html;
+  }
+
   function renderHomeDashboard(stats) {
     if (stats) _dashStats = stats;
+    renderMissions();
     renderActionCards();
     renderProgressOverview();
     renderRoadmap();
@@ -3632,6 +3949,137 @@
         + '</div>';
     }).join('') + '</div>';
   }
+
+  // ===== 就活カウントダウン =====
+  function renderCountdown() {
+    var el = document.getElementById('countdown-bar');
+    if (!el) return;
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth(); // 0-indexed
+    // 本選考解禁: March 1st of next year if after March, else this year
+    var marchTarget = new Date(month >= 2 ? year + 1 : year, 2, 1); // month 2 = March
+    var isPastMarch = (month >= 2 && month <= 5); // March-June = 本選考期間中
+    var countdownText = '';
+    if (isPastMarch && now.getFullYear() === marchTarget.getFullYear() - 1) {
+      // After March of current year, counting down to next March
+      var diffDays = Math.ceil((marchTarget - now) / (1000 * 60 * 60 * 24));
+      countdownText = '\uD83D\uDCC5 \u672C\u9078\u8003\u89E3\u7981\u307E\u3067 \u3042\u3068 <span class="cd-num">' + diffDays + '</span>\u65E5';
+    } else if (month >= 2 && month <= 5) {
+      countdownText = '\uD83D\uDCC5 <span class="cd-num">\u672C\u9078\u8003\u671F\u9593\u4E2D</span>';
+    } else {
+      var diffDays = Math.ceil((marchTarget - now) / (1000 * 60 * 60 * 24));
+      countdownText = '\uD83D\uDCC5 \u672C\u9078\u8003\u89E3\u7981\u307E\u3067 \u3042\u3068 <span class="cd-num">' + diffDays + '</span>\u65E5';
+    }
+    // 就活開始からの日数
+    var startDateStr = localStorage.getItem('keio_navi_start_date_v1');
+    var daysStartText = '';
+    if (!startDateStr) {
+      // Try to infer from wizard or account creation
+      var wizardDone = localStorage.getItem('keio_navi_wizard_done_v1');
+      if (wizardDone) {
+        startDateStr = new Date().toISOString().slice(0, 10);
+        localStorage.setItem('keio_navi_start_date_v1', startDateStr);
+      }
+    }
+    if (startDateStr) {
+      var startDate = new Date(startDateStr);
+      var daysSinceStart = Math.floor((now - startDate) / (1000 * 60 * 60 * 24)) + 1;
+      daysStartText = ' | \u5C31\u6D3B\u958B\u59CB\u304B\u3089 <span class="cd-num">' + daysSinceStart + '</span>\u65E5\u76EE';
+    } else {
+      daysStartText = ' | \u5C31\u6D3B\u958B\u59CB\u304B\u3089 <span class="cd-num">\u672A\u8A2D\u5B9A</span>';
+    }
+    // X share button
+    var dayNum = startDateStr ? (Math.floor((now - new Date(startDateStr)) / (1000 * 60 * 60 * 24)) + 1) : 0;
+    var shareText = dayNum > 0 ? encodeURIComponent('\u5C31\u6D3B' + dayNum + '\u65E5\u76EE\uFF01 #\u5C31\u6D3B #\u5C31\u6D3B\u30CA\u30D3') : '';
+    var shareBtn = shareText ? ' <button class="countdown-share" onclick="window.open(\'https://twitter.com/intent/tweet?text=' + shareText + '\',\'_blank\',\'width=550,height=420\')">X\u3067\u30B7\u30A7\u30A2</button>' : '';
+    el.innerHTML = '<span class="countdown-text">' + countdownText + daysStartText + '</span>' + shareBtn;
+  }
+  renderCountdown();
+
+  // ===== 今週のアクティビティサマリー =====
+  function renderActivitySummary() {
+    var el = document.getElementById('activity-summary');
+    if (!el) return;
+    var now = new Date();
+    var dayOfWeek = now.getDay(); // 0=Sun
+    var mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    var thisMonday = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
+    var lastMonday = new Date(thisMonday.getTime() - 7 * 24 * 60 * 60 * 1000);
+    var lastSunday = new Date(thisMonday.getTime() - 1);
+
+    function countInWeek(key, startDate, endDate) {
+      try {
+        var raw = localStorage.getItem(key);
+        if (!raw) return 0;
+        var data = JSON.parse(raw);
+        var count = 0;
+        if (Array.isArray(data)) {
+          data.forEach(function(item) {
+            var ts = item.updatedAt || item.createdAt || item.date || item.timestamp || '';
+            if (ts) {
+              var d = new Date(ts);
+              if (d >= startDate && d <= endDate) count++;
+            }
+          });
+        } else if (typeof data === 'object') {
+          Object.keys(data).forEach(function(k) {
+            var item = data[k];
+            if (item && typeof item === 'object') {
+              var ts = item.updatedAt || item.createdAt || item.date || item.timestamp || '';
+              if (ts) {
+                var d = new Date(ts);
+                if (d >= startDate && d <= endDate) count++;
+              }
+            }
+          });
+        }
+        return count;
+      } catch(e) { return 0; }
+    }
+
+    function countArrayLength(key) {
+      try {
+        var raw = localStorage.getItem(key);
+        if (!raw) return 0;
+        var data = JSON.parse(raw);
+        if (Array.isArray(data)) return data.length;
+        if (typeof data === 'object') return Object.keys(data).length;
+        return 0;
+      } catch(e) { return 0; }
+    }
+
+    var endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    var esThisWeek = countInWeek('keio_navi_es_bank_v1', thisMonday, endOfToday);
+    var esLastWeek = countInWeek('keio_navi_es_bank_v1', lastMonday, lastSunday);
+    var ipThisWeek = countInWeek('keio_navi_interview_prep_v1', thisMonday, endOfToday);
+    var ipLastWeek = countInWeek('keio_navi_interview_prep_v1', lastMonday, lastSunday);
+    var gkThisWeek = countInWeek('keio_navi_gk_deepdive_v1', thisMonday, endOfToday);
+    var gkLastWeek = countInWeek('keio_navi_gk_deepdive_v1', lastMonday, lastSunday);
+    var prThisWeek = countInWeek('keio_navi_progress_v1', thisMonday, endOfToday);
+    var prLastWeek = countInWeek('keio_navi_progress_v1', lastMonday, lastSunday);
+
+    var hasAny = esThisWeek > 0 || ipThisWeek > 0 || gkThisWeek > 0 || prThisWeek > 0;
+
+    function deltaHtml(thisW, lastW) {
+      var diff = thisW - lastW;
+      if (diff > 0) return '<span class="activity-delta positive">(\u5148\u9031\u6BD4 +' + diff + ')</span>';
+      if (diff < 0) return '<span class="activity-delta negative">(\u5148\u9031\u6BD4 ' + diff + ')</span>';
+      return '';
+    }
+
+    var html = '<div class="activity-summary-title">\uD83D\uDCCA \u4ECA\u9031\u306E\u3042\u306A\u305F</div>';
+    if (!hasAny) {
+      html += '<div class="activity-empty">\u4ECA\u9031\u306F\u307E\u3060\u6D3B\u52D5\u304C\u3042\u308A\u307E\u305B\u3093\u3002\u59CB\u3081\u307E\u3057\u3087\u3046\uFF01</div>';
+    } else {
+      html += '<div class="activity-row"><span class="activity-label">ES\u4FDD\u5B58</span><span class="activity-value">' + esThisWeek + '\u672C ' + deltaHtml(esThisWeek, esLastWeek) + '</span></div>';
+      html += '<div class="activity-row"><span class="activity-label">\u9762\u63A5\u7DF4\u7FD2</span><span class="activity-value">' + ipThisWeek + '\u554F\u56DE\u7B54 ' + deltaHtml(ipThisWeek, ipLastWeek) + '</span></div>';
+      html += '<div class="activity-row"><span class="activity-label">\u30AC\u30AF\u30C1\u30AB\u6DF1\u6398\u308A</span><span class="activity-value">' + gkThisWeek + '\u554F\u8FFD\u52A0 ' + deltaHtml(gkThisWeek, gkLastWeek) + '</span></div>';
+      html += '<div class="activity-row"><span class="activity-label">\u9078\u8003\u7BA1\u7406</span><span class="activity-value">' + prThisWeek + '\u793E\u8FFD\u52A0 ' + deltaHtml(prThisWeek, prLastWeek) + '</span></div>';
+    }
+    el.innerHTML = html;
+  }
+  renderActivitySummary();
 
   // ===== ロードマップ =====
 
@@ -3915,12 +4363,12 @@
     document.getElementById('cl-progress-text').textContent = `${count} / ${CL_TOTAL} 完了（${pct}%）`;
     document.getElementById('checklist-body').innerHTML = CL_GROUPS.map(g =>
       `<div class="checklist-group">
-        <div class="checklist-group-title">${g.title}</div>
+        <div class="checklist-group-title">${escHtml(g.title || '')}</div>
         ${g.items.map(item => {
           const done = checked.includes(item.id);
-          return `<div class="checklist-item" onclick="toggleCheck('${item.id}')">
+          return `<div class="checklist-item" onclick="toggleCheck('${escJsString(item.id || '')}')">
             <div class="checklist-box${done?' checked':''}"></div>
-            <span class="checklist-text${done?' checked':''}">${item.text}</span>
+            <span class="checklist-text${done?' checked':''}">${escHtml(item.text || '')}</span>
           </div>`;
         }).join('')}
       </div>`
@@ -5278,7 +5726,8 @@
       groups[e.company].push(e);
     });
     const user = KeioNaviAuth.getCurrentUser();
-    let html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ES保管庫 - ${user ? user.displayName : ''}</title>
+    const userDisplayName = escHtml(user ? user.displayName : '');
+    let html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ES保管庫 - ${userDisplayName}</title>
       <style>
         @page { margin: 20mm; }
         body { font-family: 'Noto Sans JP', 'Hiragino Sans', sans-serif; color: #1a1a2e; font-size: 11pt; line-height: 1.8; }
@@ -5292,16 +5741,16 @@
       </style></head><body>
       <button onclick="window.print()" style="position:fixed;top:10px;right:10px;padding:8px 20px;background:#0a1a3e;color:white;border:none;cursor:pointer;font-size:12px;z-index:99;">PDF保存 / 印刷</button>
       <h1>ES保管庫</h1>`;
-    if (user) html += `<p class="meta">${user.displayName} | 出力日: ${new Date().toLocaleDateString('ja-JP')}</p>`;
+    if (user) html += `<p class="meta">${userDisplayName} | 出力日: ${escHtml(new Date().toLocaleDateString('ja-JP'))}</p>`;
 
     let first = true;
     Object.keys(groups).forEach(company => {
       if (!first) html += '<div class="page-break"></div>';
       first = false;
-      html += `<h2>${company}</h2>`;
+      html += `<h2>${escHtml(company)}</h2>`;
       groups[company].forEach(entry => {
         entry.questions.forEach(q => {
-          html += `<div class="question">${q.question || '設問'}</div><div class="answer">${(q.answer || '').replace(/\x3c/g, '\x26lt;')}</div>`;
+          html += `<div class="question">${escHtml(q.question || '設問')}</div><div class="answer">${escHtml(q.answer || '')}</div>`;
         });
       });
     });
@@ -5314,7 +5763,8 @@
   function exportGakuchikaToPdf() {
     if (!gakuchikaEntries.length) { alert('ガクチカが保存されていません。'); return; }
     const user = KeioNaviAuth.getCurrentUser();
-    let html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ガクチカ保管庫 - ${user ? user.displayName : ''}</title>
+    const userDisplayName = escHtml(user ? user.displayName : '');
+    let html = `<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>ガクチカ保管庫 - ${userDisplayName}</title>
       <style>
         @page { margin: 20mm; }
         body { font-family: 'Noto Sans JP', 'Hiragino Sans', sans-serif; color: #1a1a2e; font-size: 11pt; line-height: 1.8; }
@@ -5328,12 +5778,12 @@
       </style></head><body>
       <button onclick="window.print()" style="position:fixed;top:10px;right:10px;padding:8px 20px;background:#0a1a3e;color:white;border:none;cursor:pointer;font-size:12px;z-index:99;">PDF保存 / 印刷</button>
       <h1>ガクチカ保管庫</h1>`;
-    if (user) html += `<p class="meta">${user.displayName} | 出力日: ${new Date().toLocaleDateString('ja-JP')}</p>`;
+    if (user) html += `<p class="meta">${userDisplayName} | 出力日: ${escHtml(new Date().toLocaleDateString('ja-JP'))}</p>`;
 
     gakuchikaEntries.forEach((entry, i) => {
       if (i > 0) html += '<div class="page-break"></div>';
-      html += `<h2>${entry.title || 'ガクチカ ' + (i + 1)}</h2>`;
-      if (entry.category) html += `<p class="meta">カテゴリ: ${entry.category}</p>`;
+      html += `<h2>${escHtml(entry.title || 'ガクチカ ' + (i + 1))}</h2>`;
+      if (entry.category) html += `<p class="meta">カテゴリ: ${escHtml(entry.category)}</p>`;
       const starFields = [
         { key: 'situation', label: 'Situation（状況）' },
         { key: 'task', label: 'Task（課題）' },
@@ -5342,11 +5792,11 @@
       ];
       starFields.forEach(f => {
         if (entry[f.key]) {
-          html += `<div class="label">${f.label}</div><div class="content">${(entry[f.key] || '').replace(/\x3c/g, '\x26lt;')}</div>`;
+          html += `<div class="label">${escHtml(f.label)}</div><div class="content">${escHtml(entry[f.key] || '')}</div>`;
         }
       });
       if (entry.fullText) {
-        html += `<div class="label">本文</div><div class="content">${entry.fullText.replace(/\x3c/g, '\x26lt;')}</div>`;
+        html += `<div class="label">本文</div><div class="content">${escHtml(entry.fullText)}</div>`;
       }
     });
     html += '\x3c/body>\x3c/html>';
@@ -5356,7 +5806,7 @@
   }
 
   // ===== AI就活サポートツール =====
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
 
   // ── GAS認証API 共通呼び出し ──────────────────────────────────────────────
   async function callAuthApi(action, extraPayload) {
@@ -5384,7 +5834,7 @@
       esBankEntries = data.entries || [];
       renderEsBank();
     } catch(e) {
-      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ ${e.message}</div>`;
+      el.innerHTML = `<div class="m-empty" style="color:var(--crimson);">⚠ ${escHtml(e.message)}</div>`;
     }
   }
 
@@ -5404,21 +5854,21 @@
       <div class="es-bank-company">
         <button class="es-bank-company-header" onclick="toggleEsCompany(this)">
           <div>
-            <div class="es-bank-company-name">${company}</div>
-            <div class="es-bank-company-meta">${entries.length}件の設問 ${entries[0].industry ? '・' + entries[0].industry : ''}</div>
+            <div class="es-bank-company-name">${escHtml(company)}</div>
+            <div class="es-bank-company-meta">${entries.length}件の設問 ${entries[0].industry ? '・' + escHtml(entries[0].industry) : ''}</div>
           </div>
           <span class="es-bank-company-arrow">▼</span>
         </button>
         <div class="es-bank-company-body">
           ${entries.map(e => `
             <div class="es-bank-entry">
-              ${e.question ? `<div class="es-bank-question">📌 ${e.question}</div>` : ''}
-              <div class="es-bank-text" onclick="this.classList.toggle('expanded')">${e.esText}</div>
+              ${e.question ? `<div class="es-bank-question">📌 ${escHtml(e.question)}</div>` : ''}
+              <div class="es-bank-text" onclick="this.classList.toggle('expanded')">${escHtml(e.esText || '')}</div>
               <div class="es-bank-entry-footer">
                 ${resultBadge(e.result)}
-                <button class="es-bank-btn" onclick="openEsViewModal('${e.id}')">閲覧</button>
-                <button class="es-bank-btn primary" onclick="openEsBankModal('${e.id}')">編集</button>
-                <button class="es-bank-btn" onclick="deleteEsBankEntry('${e.id}')">削除</button>
+                <button class="es-bank-btn" onclick="openEsViewModal('${escJsString(e.id || '')}')">閲覧</button>
+                <button class="es-bank-btn primary" onclick="openEsBankModal('${escJsString(e.id || '')}')">編集</button>
+                <button class="es-bank-btn" onclick="deleteEsBankEntry('${escJsString(e.id || '')}')">削除</button>
               </div>
             </div>
           `).join('')}
@@ -5430,7 +5880,7 @@
   function resultBadge(result) {
     if (result === '通過')   return '<span class="es-bank-result pass">通過</span>';
     if (result === '不通過') return '<span class="es-bank-result fail">不通過</span>';
-    return result ? `<span class="es-bank-result pending">${result}</span>` : '';
+    return result ? `<span class="es-bank-result pending">${escHtml(result)}</span>` : '';
   }
 
   function toggleEsCompany(btn) {
@@ -5515,7 +5965,7 @@
       gakuchikaEntries = data.entries || [];
       renderGakuchika();
     } catch(e) {
-      el.innerHTML = `<div class="gk-empty" style="color:var(--crimson);">⚠ ${e.message}</div>`;
+      el.innerHTML = `<div class="gk-empty" style="color:var(--crimson);">⚠ ${escHtml(e.message)}</div>`;
     }
   }
 
@@ -5528,15 +5978,15 @@
     el.innerHTML = `<div class="gk-list">${gakuchikaEntries.map(g => `
       <div class="gk-card">
         <div class="gk-card-header">
-          <div class="gk-card-title">${g.title || '（タイトルなし）'}</div>
-          ${g.category ? `<span class="gk-card-category">${g.category}</span>` : ''}
+          <div class="gk-card-title">${escHtml(g.title || '（タイトルなし）')}</div>
+          ${g.category ? `<span class="gk-card-category">${escHtml(g.category)}</span>` : ''}
         </div>
-        <div class="gk-card-body" onclick="this.classList.toggle('expanded')">${g.action || g.situation || g.appeal || '（詳細未入力）'}</div>
+        <div class="gk-card-body" onclick="this.classList.toggle('expanded')">${escHtml(g.action || g.situation || g.appeal || '（詳細未入力）')}</div>
         <div class="gk-card-footer">
-          <button class="gk-btn" onclick="openGkViewModal('${g.id}')">閲覧</button>
-          <button class="gk-btn primary" onclick="openGakuchikaModal('${g.id}')">編集</button>
-          <button class="gk-btn" onclick="deleteGakuchikaEntry('${g.id}')">削除</button>
-          <button class="gk-btn accent" onclick="openGkGenModalWithEntry('${g.id}')">ESを生成</button>
+          <button class="gk-btn" onclick="openGkViewModal('${escJsString(g.id || '')}')">閲覧</button>
+          <button class="gk-btn primary" onclick="openGakuchikaModal('${escJsString(g.id || '')}')">編集</button>
+          <button class="gk-btn" onclick="deleteGakuchikaEntry('${escJsString(g.id || '')}')">削除</button>
+          <button class="gk-btn accent" onclick="openGkGenModalWithEntry('${escJsString(g.id || '')}')">ESを生成</button>
         </div>
       </div>
     `).join('')}</div>`;
@@ -5552,8 +6002,8 @@
     const starEl = document.getElementById('gk-view-star-sections');
     starEl.innerHTML = Object.entries(GK_STAR_LABELS).filter(([k]) => g[k]).map(([k, label]) => `
       <div class="es-view-section">
-        <div class="es-view-label">${label}</div>
-        <div class="es-view-memo">${g[k]}</div>
+        <div class="es-view-label">${escHtml(label)}</div>
+        <div class="es-view-memo">${escHtml(g[k])}</div>
       </div>
     `).join('');
     const appealSection = document.getElementById('gk-view-appeal-section');
@@ -5667,11 +6117,11 @@
       return;
     }
     el.innerHTML = gakuchikaEntries.map(g => `
-      <div class="gk-gen-item${gkGenSelected.has(g.id) ? ' selected' : ''}" onclick="toggleGkGenItem('${g.id}', this)">
+      <div class="gk-gen-item${gkGenSelected.has(g.id) ? ' selected' : ''}" onclick="toggleGkGenItem('${escJsString(g.id || '')}', this)">
         <div class="gk-gen-item-check">✓</div>
         <div>
-          <div style="font-weight:600;font-size:0.85rem;color:var(--navy);">${g.title || '（タイトルなし）'}</div>
-          ${g.category ? `<div style="font-size:0.72rem;color:var(--text-muted);">${g.category}</div>` : ''}
+          <div style="font-weight:600;font-size:0.85rem;color:var(--navy);">${escHtml(g.title || '（タイトルなし）')}</div>
+          ${g.category ? `<div style="font-size:0.72rem;color:var(--text-muted);">${escHtml(g.category)}</div>` : ''}
         </div>
       </div>
     `).join('');
@@ -5781,8 +6231,8 @@
     const chips = ipDb.companies.map(c => {
       const qs = ipGetQsByCompany(c.id);
       const ready = qs.filter(q => q.ready).length;
-      return `<button class="ip-company-chip${c.id === ipCurrentCompanyId ? ' active' : ''}" onclick="ipSelectCompany('${c.id}')">
-        ${c.name}<span class="ip-company-chip-badge">${ready}/${qs.length}</span>
+      return `<button class="ip-company-chip${c.id === ipCurrentCompanyId ? ' active' : ''}" onclick="ipSelectCompany('${escJsString(c.id || '')}')">
+        ${escHtml(c.name || '')}<span class="ip-company-chip-badge">${ready}/${qs.length}</span>
       </button>`;
     }).join('');
     el.innerHTML = chips + `<button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">＋ テーマを追加</button>`;
@@ -5805,16 +6255,18 @@
       const readyCount = allQs.filter(q => q.ready).length;
       const pct = allQs.length ? Math.round(readyCount / allQs.length * 100) : 0;
       const isActive = c.id === ipCurrentCompanyId;
+      const companyIdAttr = escAttr(c.id || '');
+      const companyIdJs = escJsString(c.id || '');
 
-      return `<div class="ip-company-panel${isActive ? ' active' : ''}" id="ip-panel-${c.id}">
+      return `<div class="ip-company-panel${isActive ? ' active' : ''}" id="ip-panel-${companyIdAttr}">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">
           <div style="font-size:0.75rem;color:var(--text-muted);">
-            ${c.industry ? c.industry + (c.position ? ' · ' + c.position : '') : (c.position || '')}
-            ${c.status ? ' &nbsp;|&nbsp; <strong style=color:var(--navy)>' + c.status + '</strong>' : ''}
+            ${c.industry ? escHtml(c.industry) + (c.position ? ' · ' + escHtml(c.position) : '') : escHtml(c.position || '')}
+            ${c.status ? ' &nbsp;|&nbsp; <strong style=color:var(--navy)>' + escHtml(c.status) + '</strong>' : ''}
           </div>
           <div style="display:flex;gap:0.4rem;">
-            <button class="es-bank-btn primary" onclick="ipOpenEditCompany('${c.id}')">編集</button>
-            <button class="es-bank-btn" onclick="ipDeleteCompany('${c.id}')">削除</button>
+            <button class="es-bank-btn primary" onclick="ipOpenEditCompany('${companyIdJs}')">編集</button>
+            <button class="es-bank-btn" onclick="ipDeleteCompany('${companyIdJs}')">削除</button>
           </div>
         </div>
         <div class="ip-progress-row">
@@ -5823,32 +6275,32 @@
           <span style="font-size:0.73rem;">${pct}%</span>
         </div>
         <div class="ip-tabs">
-          <button class="ip-tab-btn active" data-iptab="ip-t-gk-${c.id}" onclick="ipSwitchTab(this)">ガクチカ深掘り<span class="ip-tab-count">${gkQs.length}</span></button>
-          <button class="ip-tab-btn" data-iptab="ip-t-std-${c.id}" onclick="ipSwitchTab(this)">定番質問<span class="ip-tab-count">${stdQs.length}</span></button>
-          <button class="ip-tab-btn" data-iptab="ip-t-cus-${c.id}" onclick="ipSwitchTab(this)">カスタム<span class="ip-tab-count">${cusQs.length}</span></button>
+          <button class="ip-tab-btn active" data-iptab="ip-t-gk-${companyIdAttr}" onclick="ipSwitchTab(this)">ガクチカ深掘り<span class="ip-tab-count">${gkQs.length}</span></button>
+          <button class="ip-tab-btn" data-iptab="ip-t-std-${companyIdAttr}" onclick="ipSwitchTab(this)">定番質問<span class="ip-tab-count">${stdQs.length}</span></button>
+          <button class="ip-tab-btn" data-iptab="ip-t-cus-${companyIdAttr}" onclick="ipSwitchTab(this)">カスタム<span class="ip-tab-count">${cusQs.length}</span></button>
         </div>
-        <div class="ip-tab-panel active" id="ip-t-gk-${c.id}">
+        <div class="ip-tab-panel active" id="ip-t-gk-${companyIdAttr}">
           <div class="ip-gk-box">
             <div class="ip-gk-box-title">ガクチカを入力 → 深掘り質問を自動生成</div>
             <div class="ip-gk-hint">「なぜ」「具体的に」「困難は」など面接官が実際に聞く深掘り質問を10〜12問生成します。</div>
-            <textarea class="ai-textarea" id="ip-gk-input-${c.id}" placeholder="ガクチカを貼り付けてください..." style="min-height:110px;"></textarea>
-            <button class="ai-submit-btn" id="ip-gen-btn-${c.id}" onclick="ipGenerateQuestions('${c.id}')" style="margin-top:0.6rem;padding:0.65rem;">✦ 深掘り質問を生成する</button>
-            <div class="ai-error-msg" id="ip-gen-err-${c.id}"></div>
+            <textarea class="ai-textarea" id="ip-gk-input-${companyIdAttr}" placeholder="ガクチカを貼り付けてください..." style="min-height:110px;"></textarea>
+            <button class="ai-submit-btn" id="ip-gen-btn-${companyIdAttr}" onclick="ipGenerateQuestions('${companyIdJs}')" style="margin-top:0.6rem;padding:0.65rem;">✦ 深掘り質問を生成する</button>
+            <div class="ai-error-msg" id="ip-gen-err-${companyIdAttr}"></div>
           </div>
-          <div class="ip-qa-list" id="ip-gk-list-${c.id}">
+          <div class="ip-qa-list" id="ip-gk-list-${companyIdAttr}">
             ${gkQs.length ? gkQs.map(q => ipRenderQaCard(q)).join('') : '<div style="text-align:center;padding:1rem;font-size:0.8rem;color:var(--text-muted);">まだ質問がありません。ガクチカを入力して生成してください。</div>'}
           </div>
         </div>
-        <div class="ip-tab-panel" id="ip-t-std-${c.id}">
-          <div class="ip-qa-list" id="ip-std-list-${c.id}">
+        <div class="ip-tab-panel" id="ip-t-std-${companyIdAttr}">
+          <div class="ip-qa-list" id="ip-std-list-${companyIdAttr}">
             ${stdQs.map(q => ipRenderQaCard(q)).join('')}
           </div>
         </div>
-        <div class="ip-tab-panel" id="ip-t-cus-${c.id}">
-          <div class="ip-qa-list" id="ip-cus-list-${c.id}">
+        <div class="ip-tab-panel" id="ip-t-cus-${companyIdAttr}">
+          <div class="ip-qa-list" id="ip-cus-list-${companyIdAttr}">
             ${cusQs.length ? cusQs.map(q => ipRenderQaCard(q)).join('') : '<div style="text-align:center;padding:1rem;font-size:0.8rem;color:var(--text-muted);">まだカスタム質問がありません。</div>'}
           </div>
-          <button class="ip-add-q-btn" onclick="ipOpenAddCq('${c.id}')">＋ 質問を追加する</button>
+          <button class="ip-add-q-btn" onclick="ipOpenAddCq('${companyIdJs}')">＋ 質問を追加する</button>
         </div>
       </div>`;
     }).join('');
@@ -5864,25 +6316,27 @@
 
   function ipRenderQaCard(q) {
     const catKey = (q.category || '').replace(/[・\s]/g, '');
-    return `<div class="ip-qa-card${q.ready ? ' ready' : ''}" id="ip-card-${q.id}">
-      <div class="ip-qa-card-hdr" onclick="ipToggleCard('${q.id}')">
-        <span class="ip-qa-cat ${catKey}">${q.category || '質問'}</span>
-        <span class="ip-qa-question">${q.question}</span>
+    const qIdAttr = escAttr(q.id || '');
+    const qIdJs = escJsString(q.id || '');
+    return `<div class="ip-qa-card${q.ready ? ' ready' : ''}" id="ip-card-${qIdAttr}">
+      <div class="ip-qa-card-hdr" onclick="ipToggleCard('${qIdJs}')">
+        <span class="ip-qa-cat ${escAttr(catKey)}">${escHtml(q.category || '質問')}</span>
+        <span class="ip-qa-question">${escHtml(q.question || '')}</span>
         ${q.ready ? '<span class="ip-qa-ready-icon">✓</span>' : ''}
       </div>
-      <div class="ip-qa-body${q.answer ? ' open' : ''}" id="ip-body-${q.id}">
+      <div class="ip-qa-body${q.answer ? ' open' : ''}" id="ip-body-${qIdAttr}">
         <div class="ip-qa-sub-label">回答メモ（面接本番で話す内容）</div>
         <div class="ip-qa-answer-wrap">
-          <textarea class="ip-qa-answer" id="ip-ans-${q.id}" oninput="ipUpdateCharCount('${q.id}')" placeholder="ここに回答をメモしましょう...">${q.answer || ''}</textarea>
-          <div class="ip-qa-charcount" id="ip-cc-${q.id}">${(q.answer||'').length}字</div>
+          <textarea class="ip-qa-answer" id="ip-ans-${qIdAttr}" oninput="ipUpdateCharCount('${qIdJs}')" placeholder="ここに回答をメモしましょう...">${escHtml(q.answer || '')}</textarea>
+          <div class="ip-qa-charcount" id="ip-cc-${qIdAttr}">${(q.answer||'').length}字</div>
         </div>
         <div class="ip-qa-actions">
-          <button class="ip-qa-save-btn" onclick="ipSaveAnswer('${q.id}')">保存</button>
-          <button class="ip-qa-ai-btn" id="ip-ai-btn-${q.id}" onclick="ipEvaluateAnswer('${q.id}')">✦ AI添削</button>
-          <button class="ip-qa-ready-btn${q.ready ? ' on' : ''}" onclick="ipToggleReady('${q.id}')">${q.ready ? '✓ 準備完了' : '準備完了にする'}</button>
-          <button class="ip-qa-del-btn" onclick="ipDeleteQuestion('${q.id}')">✕</button>
+          <button class="ip-qa-save-btn" onclick="ipSaveAnswer('${qIdJs}')">保存</button>
+          <button class="ip-qa-ai-btn" id="ip-ai-btn-${qIdAttr}" onclick="ipEvaluateAnswer('${qIdJs}')">✦ AI添削</button>
+          <button class="ip-qa-ready-btn${q.ready ? ' on' : ''}" onclick="ipToggleReady('${qIdJs}')">${q.ready ? '✓ 準備完了' : '準備完了にする'}</button>
+          <button class="ip-qa-del-btn" onclick="ipDeleteQuestion('${qIdJs}')">✕</button>
         </div>
-        <div class="ip-qa-feedback${q.aiFeedback ? ' show' : ''}" id="ip-fb-${q.id}">${q.aiFeedback || ''}</div>
+        <div class="ip-qa-feedback${q.aiFeedback ? ' show' : ''}" id="ip-fb-${qIdAttr}">${escHtml(q.aiFeedback || '')}</div>
       </div>
     </div>`;
   }
@@ -6114,10 +6568,10 @@
     }
     el.innerHTML = gakuchikaEntries.map(g => `
       <label style="display:flex;align-items:center;gap:0.55rem;cursor:pointer;padding:0.3rem 0.2rem;font-size:0.82rem;">
-        <input type="checkbox" ${jsGkSelected.has(g.id) ? 'checked' : ''} onchange="toggleJsGkItem('${g.id}', this)" style="cursor:pointer;">
+        <input type="checkbox" ${jsGkSelected.has(g.id) ? 'checked' : ''} onchange="toggleJsGkItem('${escJsString(g.id || '')}', this)" style="cursor:pointer;">
         <span>
-          <strong style="color:var(--navy);">${g.title || '（タイトルなし）'}</strong>
-          ${g.category ? `<span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.4rem;">${g.category}</span>` : ''}
+          <strong style="color:var(--navy);">${escHtml(g.title || '（タイトルなし）')}</strong>
+          ${g.category ? `<span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.4rem;">${escHtml(g.category)}</span>` : ''}
         </span>
       </label>
     `).join('');

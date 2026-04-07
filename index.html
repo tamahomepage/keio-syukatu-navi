@@ -2,2045 +2,1407 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<script>
-  (function(measurementId){
-    if (!measurementId) return;
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', measurementId);
-  })('');
-</script>
-<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>慶應就活ナビ</title>
-<meta name="description" content="就活を、ひとりで戦わない。情報・機会・経験を持ち寄り、互いの可能性を広げる慶應生のための就活支援コミュニティです。">
-
-<!-- Microsoft Clarity（ヒートマップ計測）
-     導入手順: https://clarity.microsoft.com でプロジェクト作成 → トラッキングコードを以下に貼る -->
-<script type="text/javascript">
-    (function(projectId){
-        if (!projectId) return;
-        window.clarity = window.clarity || function(){ (window.clarity.q = window.clarity.q || []).push(arguments); };
-        var script = document.createElement("script");
-        script.async = 1;
-        script.src = "https://www.clarity.ms/tag/" + projectId;
-        var firstScript = document.getElementsByTagName("script")[0];
-        firstScript.parentNode.insertBefore(script, firstScript);
-    })("");
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow">
+<title>就活ナビ - 就活、一人で抱えていませんか？</title>
+<meta name="description" content="AIが添削し、仲間が支え、全部ここで完結する。就活プラットフォーム。ES添削・面接対策・選考管理をワンストップで。">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a1a3e">
 
 <!-- OGP -->
-<meta property="og:title" content="慶應就活ナビ">
-<meta property="og:description" content="就活を、ひとりで戦わない。情報・機会・経験を持ち寄り、互いの可能性を広げる慶應生のための就活支援コミュニティです。">
+<meta property="og:title" content="就活ナビ - 就活、一人で抱えていませんか？">
+<meta property="og:description" content="AIが添削し、仲間が支え、全部ここで完結する。就活プラットフォーム。">
 <meta property="og:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
 <meta property="og:url" content="https://naotama1123.github.io/keio-syukatu-navi/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="慶應就活ナビ">
+<meta property="og:site_name" content="就活ナビ">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="慶應就活ナビ">
-<meta name="twitter:description" content="就活を、ひとりで戦わない。情報・機会・経験を持ち寄り、互いの可能性を広げる慶應生のための就活支援コミュニティです。">
+<meta name="twitter:title" content="就活ナビ - 就活、一人で抱えていませんか？">
+<meta name="twitter:description" content="AIが添削し、仲間が支え、全部ここで完結する。就活プラットフォーム。">
 <meta name="twitter:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --navy: #0a1a3e;
-    --navy-light: #142254;
-    --crimson: #c0001a;
-    --crimson-light: #e8001f;
-    --gold: #c9a84c;
-    --gold-light: #e8c96c;
-    --cream: #faf7f2;
-    --gray: #f4f1ec;
-    --text: #1a1a2e;
-    --text-muted: #6b6b7e;
-    --white: #ffffff;
-  }
+/* ===== VARIABLES ===== */
+:root {
+  --navy: #0a1a3e;
+  --navy-light: #142254;
+  --crimson: #c0001a;
+  --crimson-hover: #a00016;
+  --gold: #c9a84c;
+  --gold-light: #e8c96c;
+  --cream: #faf7f2;
+  --gray: #f4f1ec;
+  --text: #1a1a2e;
+  --text-muted: #6b6b7e;
+  --white: #ffffff;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* ===== RESET ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.8;
+}
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
 
-  html { scroll-behavior: smooth; }
+/* ===== NAV ===== */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5vw;
+  height: 64px;
+  background: rgba(10, 26, 62, 0.97);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  color: var(--gold-light);
+  letter-spacing: 0.04em;
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+.nav-links a {
+  color: rgba(255,255,255,0.75);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--gold-light); }
 
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--cream);
-    color: var(--text);
-    overflow-x: hidden;
-  }
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  /* ===== NAV ===== */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 5vw;
-    height: 68px;
-    background: rgba(10, 26, 62, 0.96);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(201, 168, 76, 0.25);
-  }
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 64px; left: 0; right: 0;
+  background: rgba(10, 26, 62, 0.98);
+  backdrop-filter: blur(14px);
+  padding: 1.5rem 5vw;
+  z-index: 999;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+}
+.mobile-menu.active { display: block; }
+.mobile-menu a {
+  display: block;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  letter-spacing: 0.04em;
+}
 
-  .nav-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.05rem;
-    color: var(--gold-light);
-    letter-spacing: 0.04em;
-    text-decoration: none;
-  }
+/* ===== SECTION UTILITIES ===== */
+.section-padding { padding: 5rem 5vw; }
+.section-padding-lg { padding: 6rem 5vw; }
+.container { max-width: 1100px; margin: 0 auto; }
+.section-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.6rem;
+}
+.section-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+.section-title--white { color: var(--white); }
+.section-sub {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  line-height: 1.9;
+}
 
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: all 0.25s;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.btn-crimson {
+  background: var(--crimson);
+  color: var(--white);
+  border-color: var(--crimson);
+}
+.btn-crimson:hover {
+  background: var(--crimson-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(192,0,26,0.3);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--white);
+  border-color: rgba(255,255,255,0.4);
+}
+.btn-ghost:hover {
+  border-color: var(--white);
+  background: rgba(255,255,255,0.08);
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--navy);
+  border-color: var(--gold);
+}
+.btn-gold:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201,168,76,0.35);
+}
+.btn-ghost-white {
+  background: transparent;
+  color: var(--white);
+  border-color: rgba(255,255,255,0.5);
+}
+.btn-ghost-white:hover {
+  border-color: var(--white);
+  background: rgba(255,255,255,0.1);
+}
 
-  .nav-links a {
-    color: rgba(255,255,255,0.8);
-    text-decoration: none;
-    font-size: 0.82rem;
-    letter-spacing: 0.08em;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background:
+    linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 60%, #1a2d5e 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 5vw 4rem;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,0.03) 59px, rgba(255,255,255,0.03) 60px),
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.03) 59px, rgba(255,255,255,0.03) 60px);
+  pointer-events: none;
+}
+.hero-inner {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+.hero-text { flex: 1; min-width: 0; }
+.hero-badge {
+  display: inline-block;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold-light);
+  font-size: 0.72rem;
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.35;
+  margin-bottom: 1.2rem;
+}
+.hero-sub {
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  color: rgba(255,255,255,0.7);
+  line-height: 1.9;
+  margin-bottom: 2.2rem;
+  max-width: 480px;
+}
+.hero-disclaimer {
+  max-width: 560px;
+  margin: -0.4rem 0 1.6rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(201,168,76,0.35);
+  background: rgba(255,255,255,0.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.hero-disclaimer-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--gold-light);
+  margin-bottom: 0.35rem;
+}
+.hero-disclaimer p {
+  font-size: 0.8rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.88);
+}
+.hero-ctas {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
 
-  .nav-links a:hover { color: var(--gold-light); }
+/* Device Mockup */
+.hero-mockup {
+  flex: 0 0 380px;
+  display: flex;
+  justify-content: center;
+}
+.device-frame {
+  width: 320px;
+  background: #111827;
+  border-radius: 24px;
+  padding: 12px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+  position: relative;
+}
+.device-notch {
+  width: 100px;
+  height: 24px;
+  background: #111827;
+  border-radius: 0 0 14px 14px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+.device-screen {
+  background: var(--cream);
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 420px;
+}
+.mock-header {
+  background: var(--navy);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mock-header-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.mock-header-text {
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.06em;
+}
+.mock-body { padding: 12px; }
+.mock-greeting {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.mock-cards { display: flex; flex-direction: column; gap: 8px; }
+.mock-card {
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mock-card-icon {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+.mock-card-text { flex: 1; min-width: 0; }
+.mock-card-title {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 2px;
+}
+.mock-card-desc {
+  font-size: 0.48rem;
+  color: var(--text-muted);
+}
+.mock-progress {
+  margin-top: 12px;
+  padding: 10px;
+  background: var(--white);
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.mock-progress-label {
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.mock-progress-bar {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.mock-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+.mock-progress-fill--1 { width: 65%; background: linear-gradient(90deg, var(--crimson), #e8001f); }
+.mock-progress-fill--2 { width: 40%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+.mock-progress-fill--3 { width: 80%; background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+.mock-roadmap {
+  margin-top: 12px;
+  padding: 10px;
+  background: var(--white);
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.mock-roadmap-label {
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.mock-roadmap-steps {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.mock-roadmap-step {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+}
+.mock-roadmap-step--done { background: var(--crimson); }
+.mock-roadmap-step--current { background: var(--gold); }
+.mock-roadmap-step--todo { background: #e5e7eb; }
 
-  .nav-cta {
-    background: var(--crimson);
-    color: white !important;
-    padding: 0.5rem 1.2rem;
-    border-radius: 2px;
-    font-size: 0.8rem !important;
-    transition: background 0.2s !important;
-  }
-  .nav-cta:hover { background: var(--crimson-light) !important; color: white !important; }
+/* ===== PROBLEMS ===== */
+.problems { background: var(--cream); }
+.problems-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+.problem-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  border-top: 4px solid var(--gold);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.problem-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+.problem-before {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+  line-height: 1.7;
+}
+.problem-before .emoji { font-size: 1.3rem; display: block; margin-bottom: 0.5rem; }
+.problem-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.8rem 0;
+  color: var(--gold);
+  font-size: 1.2rem;
+}
+.problem-after {
+  font-size: 0.9rem;
+  color: var(--navy);
+  font-weight: 700;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.problem-after .emoji { font-size: 1.3rem; display: block; margin-bottom: 0.5rem; }
+.problem-link {
+  font-size: 0.78rem;
+  color: var(--crimson);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.problem-link:hover { color: var(--crimson-hover); }
 
-  /* ===== HERO ===== */
-  .hero {
-    min-height: 100vh;
-    background: var(--navy);
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    padding: 120px 5vw 80px;
-    isolation: isolate;
-  }
+/* ===== DEMO ===== */
+.demo { background: var(--gray); }
+.demo-feature {
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+  margin-bottom: 4rem;
+}
+.demo-feature:last-child { margin-bottom: 0; }
+.demo-feature--reverse { flex-direction: row-reverse; }
+.demo-desc { flex: 1; }
+.demo-desc h3 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 0.8rem;
+}
+.demo-desc p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.9;
+}
+.demo-mock {
+  flex: 0 0 420px;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+.demo-mock-titlebar {
+  background: var(--navy);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.demo-mock-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.demo-mock-dot--r { background: #ef4444; }
+.demo-mock-dot--y { background: #f59e0b; }
+.demo-mock-dot--g { background: #22c55e; }
+.demo-mock-body { padding: 20px; }
 
-  .hero-bg-pattern {
-    position: absolute;
-    inset: 0;
-    background-image:
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 60px,
-        rgba(201,168,76,0.04) 60px,
-        rgba(201,168,76,0.04) 61px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 60px,
-        rgba(201,168,76,0.04) 60px,
-        rgba(201,168,76,0.04) 61px
-      );
-  }
+/* Rubric Mock */
+.rubric-scores { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.rubric-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+}
+.rubric-label {
+  width: 56px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.rubric-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.rubric-bar-fill { height: 100%; border-radius: 4px; }
+.rubric-score {
+  width: 28px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--navy);
+  font-size: 0.72rem;
+}
+.rubric-overall {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px;
+  background: var(--cream);
+  border-radius: 8px;
+}
+.rubric-circle {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 4px solid var(--crimson);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--crimson);
+}
+.rubric-comment {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 200px;
+}
 
-  .hero-accent {
-    position: absolute;
-    top: 0; right: 0;
-    width: 45vw;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(192,0,26,0.12) 0%, transparent 60%);
-    clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
-  }
+/* QA Mock */
+.qa-cards { display: flex; flex-direction: column; gap: 10px; }
+.qa-card {
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--cream);
+}
+.qa-q {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.qa-badge {
+  background: var(--crimson);
+  color: white;
+  font-size: 0.52rem;
+  padding: 1px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+.qa-a {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  border-top: 1px dashed rgba(0,0,0,0.1);
+  padding-top: 6px;
+  margin-top: 4px;
+  min-height: 24px;
+  line-height: 1.5;
+}
 
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: 1px solid rgba(201,168,76,0.5);
-    padding: 0.35rem 1rem;
-    border-radius: 2px;
-    font-size: 0.72rem;
-    color: var(--gold);
-    letter-spacing: 0.15em;
-    font-weight: 500;
-    margin-bottom: 2rem;
-    animation: fadeUp 0.7s ease forwards;
-    opacity: 0;
-    animation-delay: 0.2s;
-  }
+/* Kanban Mock */
+.kanban-cols {
+  display: flex;
+  gap: 6px;
+}
+.kanban-col {
+  flex: 1;
+  min-width: 0;
+}
+.kanban-col-header {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 6px 2px;
+  background: var(--cream);
+  border-radius: 6px 6px 0 0;
+  letter-spacing: 0.02em;
+}
+.kanban-col-body {
+  background: var(--cream);
+  border-radius: 0 0 6px 6px;
+  padding: 4px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.kanban-card {
+  background: var(--white);
+  border-radius: 4px;
+  padding: 6px;
+  font-size: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border-left: 3px solid;
+}
+.kanban-card--blue { border-color: #3b82f6; }
+.kanban-card--green { border-color: #22c55e; }
+.kanban-card--orange { border-color: #f59e0b; }
+.kanban-card--red { border-color: var(--crimson); }
+.kanban-card--purple { border-color: #8b5cf6; }
+.kanban-card-name {
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 2px;
+}
+.kanban-card-date {
+  color: var(--text-muted);
+  font-size: 0.45rem;
+}
 
-  .hero-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--crimson);
-  }
+/* ===== STATS ===== */
+.stats {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  text-align: center;
+}
+.stats-grid {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  margin-top: 2rem;
+}
+.stat-item {}
+.stat-number {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+}
+.stat-unit {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.9rem;
+  color: var(--gold);
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.65);
+  margin-top: 0.5rem;
+}
 
-  .hero-title {
-    font-family: 'Noto Serif JP', serif;
-    font-size: clamp(2.8rem, 6vw, 5rem);
-    color: var(--white);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.7s ease forwards;
-    opacity: 0;
-    animation-delay: 0.35s;
-  }
+/* ===== FEATURES GRID ===== */
+.features { background: var(--cream); }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+.feature-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 1.8rem 1.4rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+}
+.feature-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+}
+.feature-card h3 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 0.5rem;
+}
+.feature-card p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
 
-  .hero-title span {
-    color: var(--gold-light);
-    position: relative;
-  }
+/* ===== CTA ===== */
+.final-cta {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  text-align: center;
+}
+.final-cta h2 {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.8rem;
+}
+.final-cta-sub {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 2rem;
+}
+.final-cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
 
-  .hero-title span::after {
-    content: '';
-    position: absolute;
-    bottom: -4px; left: 0; right: 0;
-    height: 2px;
-    background: var(--crimson);
-  }
+/* ===== FAQ ===== */
+.faq { background: var(--cream); }
+.faq-list {
+  max-width: 720px;
+  margin: 2rem auto 0;
+}
+.faq-item {
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.faq-question {
+  width: 100%;
+  padding: 1.2rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: left;
+  line-height: 1.6;
+}
+.faq-question::after {
+  content: '+';
+  font-size: 1.3rem;
+  color: var(--gold);
+  flex-shrink: 0;
+  margin-left: 1rem;
+  transition: transform 0.3s;
+  font-weight: 300;
+}
+.faq-item.active .faq-question::after {
+  content: '-';
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+}
+.faq-item.active .faq-answer {
+  max-height: 200px;
+}
+.faq-answer p {
+  padding: 0 0 1.2rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.9;
+}
 
-  .hero-sub {
-    font-size: 1.05rem;
-    color: rgba(255,255,255,0.65);
-    line-height: 1.9;
-    max-width: 520px;
-    margin-bottom: 2.8rem;
-    font-weight: 300;
-    animation: fadeUp 0.7s ease forwards;
-    opacity: 0;
-    animation-delay: 0.5s;
-  }
+/* ===== FOOTER ===== */
+.footer {
+  background: var(--navy);
+  padding: 3rem 5vw 2rem;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.footer-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--gold-light);
+  margin-bottom: 0.5rem;
+}
+.footer-tagline {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.7;
+}
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--gold-light); }
+.footer-bottom {
+  text-align: center;
+}
+.footer-copy {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.3);
+}
+.footer-note {
+  max-width: 760px;
+  margin-bottom: 0.7rem;
+  font-size: 0.72rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.62);
+}
 
-  .hero-buttons {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    animation: fadeUp 0.7s ease forwards;
-    opacity: 0;
-    animation-delay: 0.65s;
-  }
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
 
-  .btn-primary {
-    background: var(--crimson);
-    color: white;
-    padding: 0.9rem 2.2rem;
-    border: none;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.25s;
-    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
-  }
-
-  .btn-primary:hover {
-    background: var(--crimson-light);
-    transform: translateY(-2px);
-  }
-
-  .btn-outline {
-    border: 1px solid rgba(255,255,255,0.35);
-    color: rgba(255,255,255,0.85);
-    padding: 0.9rem 2.2rem;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 400;
-    letter-spacing: 0.06em;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.25s;
-  }
-
-  .btn-outline:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-
-  .hero-account-card {
-    margin-top: 1.6rem;
-    display: grid;
-    gap: 1rem;
-    padding: 1.15rem 1.2rem;
-    max-width: 640px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(201,168,76,0.16);
-    backdrop-filter: blur(8px);
-  }
-
-  .hero-account-label {
-    font-size: 0.68rem;
-    color: var(--gold);
-    letter-spacing: 0.18em;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-  }
-
-  .hero-account-text {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.62);
-    line-height: 1.8;
-  }
-
-  .hero-account-actions {
-    display: flex;
-    gap: 0.7rem;
-    flex-wrap: wrap;
-  }
-
-  .hero-account-btn {
-    display: inline-block;
-    text-decoration: none;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    padding: 0.8rem 1.2rem;
-    border: 1px solid rgba(255,255,255,0.16);
-    color: rgba(255,255,255,0.86);
-    transition: all 0.2s;
-  }
-
-  .hero-account-btn:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-
-  .hero-account-btn.primary {
-    background: rgba(201,168,76,0.12);
-    border-color: rgba(201,168,76,0.3);
-    color: var(--gold-light);
-  }
-
-  .hero-account-btn.primary:hover {
-    background: rgba(201,168,76,0.2);
-    color: var(--gold-light);
-  }
-
-  .hero-stats {
-    display: flex;
+  .hero-inner {
+    flex-direction: column;
+    text-align: center;
     gap: 3rem;
-    margin: 2rem 0 2.5rem;
-    animation: fadeUp 0.7s ease forwards;
-    opacity: 0;
-    animation-delay: 0.8s;
   }
+  .hero-sub { margin-left: auto; margin-right: auto; }
+  .hero-disclaimer { margin-left: auto; margin-right: auto; text-align: left; }
+  .hero-ctas { justify-content: center; }
+  .hero-mockup { flex: none; }
 
-  .stat-item {
-    text-align: center;
+  .problems-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+  .demo-feature,
+  .demo-feature--reverse { flex-direction: column; }
+  .demo-mock { flex: none; width: 100%; max-width: 420px; }
+
+  .stats-grid { flex-direction: column; gap: 2.5rem; }
+
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .footer-top { flex-direction: column; align-items: center; text-align: center; }
+}
+
+@media (max-width: 600px) {
+  .section-padding { padding: 3.5rem 5vw; }
+  .section-padding-lg { padding: 4rem 5vw; }
+
+  .hero { padding: 5rem 5vw 3rem; min-height: auto; }
+  .hero h1 { font-size: 1.6rem; }
+  .hero-ctas { flex-direction: column; align-items: center; }
+  .hero-ctas .btn { width: 100%; justify-content: center; max-width: 280px; }
+  .hero-disclaimer {
+    padding: 0.9rem 0.95rem;
+    margin-bottom: 1.4rem;
   }
-
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.2rem;
-    color: var(--gold-light);
-    display: block;
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 0.7rem;
-    color: rgba(255,255,255,0.5);
-    margin-top: 0.4rem;
-    letter-spacing: 0.1em;
-  }
-
-  .stat-divider {
-    width: 1px;
-    background: rgba(255,255,255,0.12);
-  }
-
-  /* ===== SCROLL INDICATOR ===== */
-  .scroll-indicator {
-    position: absolute;
-    bottom: 30px; left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    color: rgba(255,255,255,0.3);
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    animation: bounce 2s infinite;
-  }
-
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
-  }
-
-  /* ===== SECTION COMMON ===== */
-  section { position: relative; }
-
-  .section-label {
-    font-size: 0.68rem;
-    letter-spacing: 0.2em;
-    color: var(--crimson);
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 0.8rem;
-  }
-
-  .section-title {
-    font-family: 'Noto Serif JP', serif;
-    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-    color: var(--navy);
-    line-height: 1.35;
-    margin-bottom: 1.2rem;
-  }
-
-  .section-desc {
-    color: var(--text-muted);
-    line-height: 1.95;
-    font-size: 0.95rem;
-    font-weight: 300;
-  }
-
-  /* ===== MISSION ===== */
-  .mission {
-    padding: 120px 5vw;
-    background: var(--cream);
-  }
-
-  .mission-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8vw;
-    align-items: center;
-  }
-
-  .mission-visual {
-    position: relative;
-  }
-
-  .mission-card {
-    background: var(--navy);
-    padding: 3rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .mission-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--crimson), var(--gold));
-  }
-
-  .mission-card-quote {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 1.4rem;
-    color: var(--white);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-  }
-
-  .mission-card-quote span { color: var(--gold-light); }
-
-  .mission-card-sub {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.5);
-    line-height: 1.9;
-    font-weight: 300;
-  }
-
-  .mission-deco {
-    position: absolute;
-    bottom: -20px; right: -20px;
-    width: 120px; height: 120px;
-    border: 2px solid rgba(201,168,76,0.2);
-    transform: rotate(15deg);
-  }
-
-  /* ===== ACTIVITIES ===== */
-  .activities {
-    padding: 120px 5vw;
-    background: var(--gray);
-  }
-
-  .activities-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .activities-header {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: end;
-    margin-bottom: 5rem;
-  }
-
-  .activities-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5px;
-    background: rgba(10,26,62,0.08);
-  }
-
-  .activity-card {
-    background: var(--white);
-    padding: 2.5rem 2rem;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: default;
-  }
-
-  .activity-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 60px rgba(10,26,62,0.12);
-    z-index: 1;
-  }
-
-  .activity-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 0;
-    background: var(--crimson);
-    transition: height 0.3s;
-  }
-
-  .activity-card:hover::after { height: 3px; }
-
-  .activity-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.5rem;
-    color: rgba(10,26,62,0.18);
-    line-height: 1;
-    margin-bottom: 1.2rem;
-    transition: color 0.3s;
-  }
-
-  .activity-card:hover .activity-num {
-    color: rgba(192,0,26,0.22);
-  }
-
-  .activity-icon {
-    width: 44px; height: 44px;
-    background: var(--navy);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.2rem;
-    font-size: 1.2rem;
-    transition: background 0.3s;
-  }
-
-  .activity-card:hover .activity-icon {
-    background: var(--crimson);
-  }
-
-  .activity-title {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 1.05rem;
-    color: var(--navy);
-    margin-bottom: 0.8rem;
-    font-weight: 700;
-  }
-
-  .activity-desc {
-    font-size: 0.83rem;
-    color: var(--text-muted);
-    line-height: 1.85;
-    font-weight: 300;
-  }
-
-  .activity-badge {
-    position: absolute;
-    top: 1.5rem; right: 1.5rem;
-    font-size: 0.6rem;
-    background: rgba(201,168,76,0.15);
-    color: var(--gold);
-    padding: 0.2rem 0.6rem;
-    letter-spacing: 0.1em;
-    font-weight: 600;
-  }
-
-  /* ===== JOIN ===== */
-  .join {
-    padding: 120px 5vw;
-    background: var(--navy);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .join-bg {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(192,0,26,0.15) 0%, transparent 70%);
-  }
-
-  .join-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: center;
-    position: relative;
-  }
-
-  .join .section-title { color: var(--white); }
-  .join .section-desc { color: rgba(255,255,255,0.55); }
-
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .faq-item {
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding: 1.4rem 0;
-    cursor: pointer;
-  }
-
-  .faq-item:last-child {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .faq-q {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .faq-q-text {
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.85);
-    font-weight: 500;
-  }
-
-  .faq-toggle {
-    width: 24px; height: 24px;
-    border: 1px solid rgba(255,255,255,0.25);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
-    color: var(--gold);
-    flex-shrink: 0;
-    transition: all 0.2s;
-  }
-
-  .faq-a {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.45);
-    line-height: 1.85;
-    margin-top: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.35s ease;
-    font-weight: 300;
-  }
-
-  .faq-item.open .faq-a {
-    margin-top: 0.8rem;
-    max-height: 200px;
-  }
-
-  .faq-item.open .faq-toggle {
-    background: var(--crimson);
-    border-color: var(--crimson);
-    transform: rotate(45deg);
-  }
-
-  /* ===== GREETING ===== */
-  .greeting {
-    padding: 120px 5vw;
-    background: var(--navy);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .greeting::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 50% 70% at 10% 50%, rgba(192,0,26,0.1) 0%, transparent 70%);
-  }
-
-  .greeting-inner {
-    max-width: 800px;
-  }
-
-  .greeting-text {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 0.97rem;
-    color: rgba(255,255,255,0.75);
-    line-height: 2.1;
-    font-weight: 400;
-    border: none;
-    margin: 1.8rem 0 2.5rem;
-    padding: 0;
-  }
-
-  .greeting-sig {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-  }
-
-  .greeting-sig-line {
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
-    flex-shrink: 0;
-  }
-
-  .greeting-name {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 1.1rem;
-    color: var(--white);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-  }
-
-  .greeting-role {
+  .hero-disclaimer p {
     font-size: 0.75rem;
-    color: rgba(255,255,255,0.4);
-    margin-top: 0.25rem;
-    letter-spacing: 0.06em;
   }
 
-  .greeting-deco {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: 1px solid rgba(201,168,76,0.2);
-    padding: 3.5rem 2.5rem;
-    position: relative;
-  }
-
-  .greeting-deco::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 40px; height: 40px;
-    border-top: 2px solid var(--crimson);
-    border-left: 2px solid var(--crimson);
-  }
-
-  .greeting-deco::after {
-    content: '';
-    position: absolute;
-    bottom: 0; right: 0;
-    width: 40px; height: 40px;
-    border-bottom: 2px solid var(--crimson);
-    border-right: 2px solid var(--crimson);
-  }
-
-  .greeting-quote-mark {
-    font-family: 'Playfair Display', serif;
-    font-size: 7rem;
-    color: rgba(201,168,76,0.2);
-    line-height: 0.7;
-    margin-bottom: 1.5rem;
-  }
-
-  .greeting-quote-sub {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 1rem;
-    color: rgba(255,255,255,0.6);
-    line-height: 2;
-  }
-
-  @media (max-width: 900px) {
-    .greeting-inner { grid-template-columns: 1fr; gap: 3rem; }
-    .greeting-deco { display: none; }
-  }
-
-  /* ===== CTA ===== */
-  .cta-section {
-    padding: 100px 5vw;
-    background: var(--cream);
-    text-align: center;
-  }
-
-  .cta-inner {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  .cta-title {
-    font-family: 'Noto Serif JP', serif;
-    font-size: clamp(1.8rem, 3vw, 2.5rem);
-    color: var(--navy);
-    line-height: 1.5;
-    margin-bottom: 1.2rem;
-  }
-
-  .cta-sub {
-    color: var(--text-muted);
-    line-height: 1.9;
-    font-size: 0.92rem;
-    margin-bottom: 2.5rem;
-    font-weight: 300;
-  }
-
-  .cta-btn {
-    background: var(--navy);
-    color: white;
-    padding: 1.1rem 3rem;
-    border: none;
-    cursor: pointer;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--crimson);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-  }
-
-  .cta-btn:hover::before { transform: scaleX(1); }
-  .cta-btn span { position: relative; z-index: 1; }
-
-  /* ===== FOOTER ===== */
-  footer {
-    background: #060e20;
-    padding: 4rem 5vw 2.5rem;
-    border-top: 1px solid rgba(201,168,76,0.15);
-    position: relative;
-  }
-
-  .footer-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .footer-top {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 4rem;
-    margin-bottom: 3rem;
-  }
-
-  .footer-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    color: var(--gold-light);
-    display: block;
-    margin-bottom: 0.8rem;
-  }
-
-  .footer-tagline {
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.35);
-    line-height: 1.8;
-  }
-
-  .footer-nav {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-  }
-
-  .footer-nav-group h4 {
-    font-size: 0.65rem;
-    color: var(--gold);
-    letter-spacing: 0.18em;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-  }
-
-  .footer-nav-group ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-
-  .footer-nav-group a {
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.45);
-    text-decoration: none;
-    transition: color 0.2s;
-    letter-spacing: 0.03em;
-  }
-
-  .footer-nav-group a:hover { color: var(--gold-light); }
-
-  .footer-bottom {
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.8rem;
-  }
-
-  .footer-copy {
-    font-size: 0.72rem;
-    color: rgba(255,255,255,0.2);
-    letter-spacing: 0.05em;
-  }
-
-  .footer-note {
-    font-size: 0.68rem;
-    color: rgba(255,255,255,0.18);
-  }
-
-  @media (max-width: 768px) {
-    .footer-top { grid-template-columns: 1fr; gap: 2rem; }
-    .footer-nav { grid-template-columns: 1fr 1fr; }
-  }
-
-  /* ===== CONTACT ===== */
-  .contact-section {
-    padding: 120px 5vw;
-    background: var(--gray);
-  }
-  .contact-inner {
-    max-width: 640px;
-    margin: 0 auto;
-  }
-  .contact-form {
-    background: var(--white);
-    padding: 2.5rem;
-    border-top: 3px solid var(--navy);
-  }
-  .contact-field { margin-bottom: 1.5rem; }
-  .contact-label {
-    display: block;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--navy);
-    letter-spacing: 0.05em;
-    margin-bottom: 0.6rem;
-  }
-  .required {
-    font-size: 0.68rem;
-    background: var(--crimson);
-    color: white;
-    padding: 0.1rem 0.4rem;
-    margin-left: 0.4rem;
-    vertical-align: middle;
-  }
-  .contact-textarea {
-    width: 100%;
-    padding: 0.9rem 1rem;
-    border: 1px solid rgba(10,26,62,0.15);
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 0.9rem;
-    color: var(--text);
-    background: var(--cream);
-    resize: vertical;
-    outline: none;
-    transition: border-color 0.2s;
-    line-height: 1.8;
-  }
-  .contact-textarea:focus { border-color: var(--navy); }
-  .contact-actions { text-align: right; }
-  .contact-btn {
-    background: var(--navy);
-    color: white;
-    border: none;
-    padding: 0.85rem 2.2rem;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .contact-btn:hover { background: var(--crimson); }
-  .contact-btn:disabled { background: rgba(10,26,62,0.3); cursor: not-allowed; }
-  .contact-note {
-    margin-top: 1rem;
-    font-size: 0.82rem;
-    text-align: center;
-    min-height: 1.2em;
-  }
-  .contact-note.success { color: #00703c; }
-  .contact-note.error { color: var(--crimson); }
-
-  /* ===== HAMBURGER ===== */
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-  }
-  .hamburger span {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background: rgba(255,255,255,0.8);
-    transition: all 0.3s;
-  }
-  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    top: 68px; left: 0; right: 0;
-    background: rgba(10,26,62,0.98);
-    backdrop-filter: blur(12px);
-    z-index: 99;
-    flex-direction: column;
-    padding: 1.5rem 6vw 2rem;
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-  }
-  .mobile-menu.open { display: flex; }
-  .mobile-menu a {
-    color: rgba(255,255,255,0.75);
-    text-decoration: none;
-    font-size: 0.95rem;
-    padding: 0.9rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    letter-spacing: 0.04em;
-    transition: color 0.2s;
-  }
-  .mobile-menu a:hover { color: var(--gold-light); }
-  .mobile-menu-members {
-    color: var(--gold-light) !important;
-    font-weight: 500;
-  }
-  .mobile-menu-cta {
-    margin-top: 1rem;
-    background: var(--crimson) !important;
-    color: white !important;
-    text-align: center;
-    padding: 0.9rem !important;
-    border: none !important;
-    font-weight: 500;
-  }
-
-  @media (max-width: 900px) {
-    .hamburger { display: flex; }
-  }
-
-  /* ===== ANIMATIONS ===== */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(8px); }
-  }
-
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ===== EVENTS ===== */
-  .events {
-    padding: 120px 5vw;
-    background: var(--cream);
-  }
-  .events-inner { max-width: 1200px; margin: 0 auto; }
-  .events-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 3.5rem;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-  .events-filter { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .filter-btn {
-    padding: 0.4rem 1rem;
-    font-size: 0.75rem;
-    font-family: 'Noto Sans JP', sans-serif;
-    letter-spacing: 0.06em;
-    font-weight: 500;
-    border: 1px solid rgba(10,26,62,0.2);
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .filter-btn.active, .filter-btn:hover { background: var(--navy); border-color: var(--navy); color: white; }
-  .filter-btn.members-f.active, .filter-btn.members-f:hover { background: var(--gold); border-color: var(--gold); color: var(--navy); }
-  .events-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
-  .event-row {
-    display: grid;
-    grid-template-columns: 110px 1fr auto auto;
-    align-items: center;
-    gap: 2rem;
-    padding: 1.6rem 2rem;
-    background: var(--white);
-    transition: background 0.2s;
-  }
-  .event-row:hover { background: #f8f5f0; }
-  .event-row.members { border-left: 3px solid var(--gold); }
-  .event-date-block { text-align: center; }
-  .event-month { font-size: 0.68rem; letter-spacing: 0.12em; color: var(--crimson); font-weight: 700; text-transform: uppercase; }
-  .event-day { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--navy); line-height: 1; margin: 0.1rem 0; } .event-day.undated { font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
-  .event-weekday { font-size: 0.68rem; color: var(--text-muted); }
-  .event-title-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem; flex-wrap: wrap; }
-  .event-title { font-family: 'Noto Serif JP', serif; font-size: 1rem; color: var(--navy); font-weight: 700; }
-  .members-badge {
-    font-size: 0.6rem;
-    background: rgba(201,168,76,0.15);
-    color: #8a6d1a;
-    padding: 0.15rem 0.5rem;
-    letter-spacing: 0.1em;
-    font-weight: 700;
-    border: 1px solid rgba(201,168,76,0.3);
-  }
-  .event-meta { font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 1.2rem; flex-wrap: wrap; }
-  .event-status { padding: 0.3rem 0.8rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; white-space: nowrap; }
-  .status-open { background: rgba(0,160,80,0.1); color: #00703c; border: 1px solid rgba(0,160,80,0.25); }
-  .status-soon { background: rgba(201,168,76,0.15); color: #8a6d1a; border: 1px solid rgba(201,168,76,0.3); }
-  .status-closed { background: rgba(10,26,62,0.07); color: var(--text-muted); border: 1px solid rgba(10,26,62,0.12); }
-  .event-link {
-    display: inline-block;
-    padding: 0.5rem 1.2rem;
-    background: var(--navy);
-    color: white;
-    font-size: 0.75rem;
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    font-weight: 500;
-    transition: background 0.2s;
-    white-space: nowrap;
-  }
-  .event-link:hover { background: var(--crimson); }
-  .event-link.no-link { background: rgba(10,26,62,0.08); color: var(--text-muted); pointer-events: none; }
-  .events-loading { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.88rem; background: var(--white); }
-  .events-empty { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.88rem; background: var(--white); }
-  .sheet-note { margin-top: 1.2rem; text-align: right; font-size: 0.72rem; color: rgba(10,26,62,0.3); letter-spacing: 0.05em; }
-  @media (max-width: 760px) {
-    .event-row { grid-template-columns: 70px 1fr; }
-    .event-row > :nth-child(3), .event-row > :nth-child(4) { grid-column: 2; }
-  }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 900px) {
-    .mission-inner,
-    .activities-header,
-    .join-inner {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-    }
-
-    .activities-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .hero-stats {
-      position: static;
-      margin-top: 3rem;
-      justify-content: flex-start;
-    }
-
-    .nav-links { display: none; }
-  }
-
-  @media (max-width: 600px) {
-    .activities-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .hero {
-      padding: 100px 6vw 100px;
-    }
-
-    .hero-title {
-      font-size: 2.4rem;
-      line-height: 1.3;
-    }
-
-    .hero-sub {
-      font-size: 0.92rem;
-    }
-
-    .hero-stats {
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-
-    .stat-divider { display: none; }
-
-    .stat-num {
-      font-size: 1.6rem;
-    }
-
-    .hero-buttons {
-      flex-direction: column;
-    }
-
-    .btn-primary, .btn-outline {
-      text-align: center;
-    }
-
-    .event-row {
-      grid-template-columns: 60px 1fr;
-      gap: 1rem;
-      padding: 1.2rem;
-    }
-
-    .event-row > :nth-child(3),
-    .event-row > :nth-child(4) {
-      grid-column: 2;
-    }
-
-    .event-day { font-size: 1.6rem; }
-
-    .mission-card { padding: 2rem; }
-    .mission-card-quote { font-size: 1.1rem; }
-
-    .greeting-inner { grid-template-columns: 1fr; }
-
-    .section-title { font-size: 1.6rem; }
-    .hero-account-card { padding: 1rem; }
-  }
-
-  /* ===== TIMELINE ===== */
-  .timeline-section {
-    padding: 120px 5vw;
-    background: var(--cream);
-  }
-
-  .timeline-inner {
-    max-width: 860px;
-    margin: 0 auto;
-  }
-
-  .timeline-list {
-    position: relative;
-    padding-left: 0;
-  }
-
-  .timeline-list::before {
-    content: '';
-    position: absolute;
-    left: 120px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, var(--crimson), rgba(192,0,26,0.1));
-  }
-
-  .timeline-item {
-    display: grid;
-    grid-template-columns: 120px 28px 1fr;
-    align-items: flex-start;
-    gap: 0 0;
-    margin-bottom: 2.8rem;
-    position: relative;
-  }
-
-  .timeline-month {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--navy);
-    padding-top: 0.15rem;
-    text-align: right;
-    padding-right: 1.2rem;
-    white-space: nowrap;
-    letter-spacing: 0.02em;
-  }
-
-  .timeline-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--white);
-    border: 2px solid var(--crimson);
-    margin-top: 0.25rem;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 1;
-    justify-self: center;
-  }
-
-  .timeline-dot--highlight {
-    background: var(--crimson);
-    box-shadow: 0 0 0 4px rgba(192,0,26,0.18);
-    width: 16px;
-    height: 16px;
-  }
-
-  .timeline-content {
-    padding-left: 1.6rem;
-    padding-bottom: 0.5rem;
-  }
-
-  .timeline-content h3 {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 0.45rem;
-    line-height: 1.5;
-  }
-
-  .timeline-content p {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    line-height: 1.8;
-  }
-
-  .timeline-footer {
-    margin-top: 4rem;
-    text-align: center;
-  }
-
-  .timeline-support-text {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 1.05rem;
-    color: var(--navy);
-    margin-bottom: 1.8rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-  }
-
-  .timeline-cta-btn {
-    display: inline-block;
-    background: var(--crimson);
-    color: var(--white);
-    text-decoration: none;
-    padding: 0.85rem 2.8rem;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    border-radius: 2px;
-    transition: background 0.2s, transform 0.2s;
-  }
-
-  .timeline-cta-btn:hover {
-    background: var(--crimson-light);
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 680px) {
-    .timeline-list::before {
-      left: 72px;
-    }
-    .timeline-item {
-      grid-template-columns: 72px 24px 1fr;
-    }
-    .timeline-month {
-      font-size: 0.78rem;
-      padding-right: 0.8rem;
-    }
-    .timeline-content {
-      padding-left: 1rem;
-    }
-    .timeline-content h3 {
-      font-size: 0.95rem;
-    }
-  }
-
-  @media (max-width: 420px) {
-    .timeline-section {
-      padding: 80px 4vw;
-    }
-    .timeline-list::before {
-      left: 60px;
-    }
-    .timeline-item {
-      grid-template-columns: 60px 22px 1fr;
-    }
-    .timeline-month {
-      font-size: 0.72rem;
-      padding-right: 0.6rem;
-    }
-  }
+  .hero-mockup { display: none; }
+  .device-frame { width: 260px; }
+
+  .features-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .feature-card { padding: 1.2rem 1rem; }
+  .feature-card h3 { font-size: 0.85rem; }
+  .feature-card p { font-size: 0.72rem; }
+
+  .final-cta-buttons { flex-direction: column; align-items: center; }
+  .final-cta-buttons .btn { width: 100%; max-width: 280px; justify-content: center; }
+
+  .footer-links { justify-content: center; }
+}
+
+/* ===== REVEAL ANIMATION ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="index.html" class="nav-logo">慶應就活ナビ</a><span style="font-size:0.55rem;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.2);padding:0.1rem 0.4rem;margin-left:0.5rem;letter-spacing:0.05em;vertical-align:middle;">非公式・学生有志</span>
+<!-- ===== NAV ===== -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">就活ナビ</a>
   <ul class="nav-links">
-    <li><a href="orientation.html" style="color:var(--gold-light);">新入生の方へ</a></li>
-    <li><a href="#mission">ミッション</a></li>
-    <li><a href="#activities">サイト機能</a></li>
-    <li><a href="#events">イベント</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="blog.html" style="color:rgba(255,255,255,0.7);">就活コラム</a></li>
-    <li><a href="industry-guide.html" style="color:rgba(255,255,255,0.7);">業界研究ガイド</a></li>
-    <li><a href="quiz.html" style="color:rgba(255,255,255,0.7);">準備度チェック</a></li>
-    <li><a href="glossary.html" style="color:rgba(255,255,255,0.7);">用語集</a></li>
-    <li id="members-nav-item" style="display:none;"><a href="members.html" style="color:rgba(255,255,255,0.7);">会員ページ</a></li>
-    <li><a href="account.html" id="account-nav-link" style="color:rgba(255,255,255,0.7);">ログイン</a></li>
-    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="nav-cta" target="_blank" rel="noopener">LINE参加申請</a></li>
+    <li><a href="blog.html">ブログ</a></li>
+    <li><a href="industry-guide.html">業界研究</a></li>
+    <li><a href="quiz.html">準備度チェック</a></li>
+    <li><a href="account.html">ログイン</a></li>
   </ul>
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+  <button class="hamburger" onclick="this.classList.toggle('active');document.getElementById('mobileMenu').classList.toggle('active')" aria-label="メニュー">
     <span></span><span></span><span></span>
   </button>
 </nav>
-
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobile-menu">
-  <a href="orientation.html" style="color:var(--gold-light); font-weight:700;">新入生の方へ</a>
-  <a href="#mission" onclick="closeMenu()">ミッション</a>
-  <a href="#activities" onclick="closeMenu()">サイト機能</a>
-  <a href="#events" onclick="closeMenu()">イベント</a>
-  <a href="#faq" onclick="closeMenu()">FAQ</a>
-  <a href="blog.html" onclick="closeMenu()">就活コラム</a>
-  <a href="industry-guide.html" onclick="closeMenu()">業界研究ガイド</a>
-  <a href="quiz.html" onclick="closeMenu()">準備度チェック</a>
-  <a href="#contact" onclick="closeMenu()">お問い合わせ</a>
-  <a href="members.html" id="mobile-members-link" onclick="closeMenu()" style="display:none;">会員ページ</a>
-  <a href="account.html" id="mobile-account-link" onclick="closeMenu()">ログイン / 会員登録</a>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="mobile-menu-cta" target="_blank" rel="noopener">LINE参加申請</a>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="blog.html">ブログ</a>
+  <a href="industry-guide.html">業界研究</a>
+  <a href="quiz.html">準備度チェック</a>
+  <a href="account.html">ログイン</a>
 </div>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-bg-pattern"></div>
-  <div class="hero-accent"></div>
-  <div style="position:relative; max-width:1200px; margin:0 auto; width:100%;">
-    <div class="hero-badge">KEIO UNIVERSITY · 就活支援コミュニティ</div>
-    <h1 class="hero-title">
-      就活を、<br>
-      <span>ひとりで</span>戦わない。
-    </h1>
-    <p class="hero-sub">
-      情報・機会・経験を持ち寄り、互いの可能性を広げる。<br>
-      慶應生のための就活支援コミュニティです。
-    </p>
-    <div style="display:inline-block;font-size:0.68rem;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.2);padding:0.3rem 0.8rem;margin-top:0.8rem;letter-spacing:0.06em;">本サイトは慶應義塾大学非公式です。有志の学生が運営しています。</div>
-    <div class="hero-buttons">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener">LINEコミュニティに参加する</a>
-      <a href="account.html" class="btn-outline">HP会員登録（無料）</a>
+<!-- ===== SECTION 1: HERO ===== -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">就活を、ワンストップで。</div>
+      <h1>就活、一人で<br>抱えていませんか？</h1>
+      <p class="hero-sub">AIが添削し、仲間が支え、全部ここで完結する。<br>就活プラットフォーム。</p>
+      <div class="hero-disclaimer" aria-label="サイト運営に関する重要なお知らせ">
+        <div class="hero-disclaimer-label">IMPORTANT NOTICE</div>
+        <p>本サイトは慶應義塾大学、各学部、大学公認団体の公式サイトではありません。学生有志が運営する非公式の就活支援サービスです。</p>
+      </div>
+      <div class="hero-ctas">
+        <a href="account.html?mode=signup" class="btn btn-crimson">無料で始める &rarr;</a>
+        <a href="quiz.html" class="btn btn-ghost">まずは準備度チェック &rarr;</a>
+      </div>
     </div>
-    <p style="margin-top:1.2rem; font-size:0.78rem; color:rgba(255,255,255,0.45); line-height:1.8;">
-      まずはLINEコミュニティへ。HP会員登録は参加後でもOK。どちらも無料です。
-    </p>
-    <div class="hero-stats" style="animation: fadeUp 0.7s ease forwards; opacity:0; animation-delay:0.8s;">
+    <div class="hero-mockup">
+      <div class="device-frame">
+        <div class="device-notch"></div>
+        <div class="device-screen">
+          <div class="mock-header">
+            <div class="mock-header-dot"></div>
+            <div class="mock-header-text">就活ナビ Dashboard</div>
+          </div>
+          <div class="mock-body">
+            <div class="mock-greeting">こんにちは！今日のやること</div>
+            <div class="mock-cards">
+              <div class="mock-card" style="background:rgba(192,0,26,0.06);">
+                <div class="mock-card-icon" style="background:var(--crimson);color:white;">ES</div>
+                <div class="mock-card-text">
+                  <div class="mock-card-title">ES添削を受ける</div>
+                  <div class="mock-card-desc">志望動機をAIが5軸で評価</div>
+                </div>
+              </div>
+              <div class="mock-card" style="background:rgba(201,168,76,0.08);">
+                <div class="mock-card-icon" style="background:var(--gold);color:white;">面</div>
+                <div class="mock-card-text">
+                  <div class="mock-card-title">面接練習</div>
+                  <div class="mock-card-desc">深掘り質問に挑戦しよう</div>
+                </div>
+              </div>
+              <div class="mock-card" style="background:rgba(14,165,233,0.06);">
+                <div class="mock-card-icon" style="background:#0ea5e9;color:white;">分</div>
+                <div class="mock-card-text">
+                  <div class="mock-card-title">自己分析ワーク</div>
+                  <div class="mock-card-desc">Will-Can-Mustを整理</div>
+                </div>
+              </div>
+            </div>
+            <div class="mock-progress">
+              <div class="mock-progress-label">準備進捗</div>
+              <div class="mock-progress-bar"><div class="mock-progress-fill mock-progress-fill--1"></div></div>
+              <div class="mock-progress-bar"><div class="mock-progress-fill mock-progress-fill--2"></div></div>
+              <div class="mock-progress-bar"><div class="mock-progress-fill mock-progress-fill--3"></div></div>
+            </div>
+            <div class="mock-roadmap">
+              <div class="mock-roadmap-label">ロードマップ</div>
+              <div class="mock-roadmap-steps">
+                <div class="mock-roadmap-step mock-roadmap-step--done"></div>
+                <div class="mock-roadmap-step mock-roadmap-step--done"></div>
+                <div class="mock-roadmap-step mock-roadmap-step--current"></div>
+                <div class="mock-roadmap-step mock-roadmap-step--todo"></div>
+                <div class="mock-roadmap-step mock-roadmap-step--todo"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2: PROBLEMS ===== -->
+<section class="problems section-padding" id="problems">
+  <div class="container">
+    <div class="section-label">PROBLEMS</div>
+    <h2 class="section-title reveal">こんな悩み、ありませんか？</h2>
+    <div class="problems-grid">
+      <div class="problem-card reveal">
+        <div class="problem-before">
+          <span class="emoji">&#x1F630;</span>
+          「ESが書けない...」
+        </div>
+        <div class="problem-arrow">&darr;</div>
+        <div class="problem-after">
+          <span class="emoji">&#x1F916;</span>
+          AIが構成チェック＋添削。志望動機も一緒に作れる
+        </div>
+        <a href="writing.html" class="problem-link">ES添削AIを見る &rarr;</a>
+      </div>
+      <div class="problem-card reveal" style="transition-delay:0.1s;">
+        <div class="problem-before">
+          <span class="emoji">&#x1F630;</span>
+          「面接が怖い...」
+        </div>
+        <div class="problem-arrow">&darr;</div>
+        <div class="problem-after">
+          <span class="emoji">&#x1F3A4;</span>
+          AI模擬面接で何度でも練習。深掘り質問を自動生成
+        </div>
+        <a href="interview-page.html" class="problem-link">面接対策を見る &rarr;</a>
+      </div>
+      <div class="problem-card reveal" style="transition-delay:0.2s;">
+        <div class="problem-before">
+          <span class="emoji">&#x1F630;</span>
+          「何から始めれば...」
+        </div>
+        <div class="problem-arrow">&darr;</div>
+        <div class="problem-after">
+          <span class="emoji">&#x1F4CB;</span>
+          あなたのフェーズに合わせて、今やるべきことを提示
+        </div>
+        <a href="quiz.html" class="problem-link">準備度チェックを受ける &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 3: DEMO ===== -->
+<section class="demo section-padding-lg" id="demo">
+  <div class="container">
+    <div class="section-label">FEATURES</div>
+    <h2 class="section-title reveal">就活ナビでできること</h2>
+
+    <!-- Feature 1: ES添削AI -->
+    <div class="demo-feature reveal">
+      <div class="demo-desc">
+        <h3>ES添削AI</h3>
+        <p>ESを貼り付けるだけ。構成・具体性・論理性・表現力・説得力の5軸で評価。改善案もその場で提示。</p>
+      </div>
+      <div class="demo-mock">
+        <div class="demo-mock-titlebar">
+          <div class="demo-mock-dot demo-mock-dot--r"></div>
+          <div class="demo-mock-dot demo-mock-dot--y"></div>
+          <div class="demo-mock-dot demo-mock-dot--g"></div>
+        </div>
+        <div class="demo-mock-body">
+          <div class="rubric-scores">
+            <div class="rubric-row">
+              <span class="rubric-label">構成</span>
+              <div class="rubric-bar-bg"><div class="rubric-bar-fill" style="width:82%;background:var(--crimson);"></div></div>
+              <span class="rubric-score">82</span>
+            </div>
+            <div class="rubric-row">
+              <span class="rubric-label">具体性</span>
+              <div class="rubric-bar-bg"><div class="rubric-bar-fill" style="width:68%;background:#f59e0b;"></div></div>
+              <span class="rubric-score">68</span>
+            </div>
+            <div class="rubric-row">
+              <span class="rubric-label">論理性</span>
+              <div class="rubric-bar-bg"><div class="rubric-bar-fill" style="width:75%;background:var(--gold);"></div></div>
+              <span class="rubric-score">75</span>
+            </div>
+            <div class="rubric-row">
+              <span class="rubric-label">表現力</span>
+              <div class="rubric-bar-bg"><div class="rubric-bar-fill" style="width:90%;background:#22c55e;"></div></div>
+              <span class="rubric-score">90</span>
+            </div>
+            <div class="rubric-row">
+              <span class="rubric-label">説得力</span>
+              <div class="rubric-bar-bg"><div class="rubric-bar-fill" style="width:72%;background:#3b82f6;"></div></div>
+              <span class="rubric-score">72</span>
+            </div>
+          </div>
+          <div class="rubric-overall">
+            <div class="rubric-circle">77</div>
+            <div class="rubric-comment">具体性を高めるために、数値やエピソードの詳細を追加しましょう。全体の流れは良好です。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 2: ガクチカ深掘り -->
+    <div class="demo-feature demo-feature--reverse reveal">
+      <div class="demo-desc">
+        <h3>ガクチカ深掘り</h3>
+        <p>面接で聞かれる深掘り質問を10問自動生成。回答を書いてAIに添削してもらえる。</p>
+      </div>
+      <div class="demo-mock">
+        <div class="demo-mock-titlebar">
+          <div class="demo-mock-dot demo-mock-dot--r"></div>
+          <div class="demo-mock-dot demo-mock-dot--y"></div>
+          <div class="demo-mock-dot demo-mock-dot--g"></div>
+        </div>
+        <div class="demo-mock-body">
+          <div class="qa-cards">
+            <div class="qa-card">
+              <div class="qa-q"><span class="qa-badge">Q1</span> そのチームでなぜリーダーを務めたのですか？</div>
+              <div class="qa-a">当初はメンバーでしたが、議論が停滞した際に...</div>
+            </div>
+            <div class="qa-card">
+              <div class="qa-q"><span class="qa-badge">Q2</span> 困難だった点を具体的に教えてください</div>
+              <div class="qa-a">メンバー間の意見対立が最大の壁でした。特に...</div>
+            </div>
+            <div class="qa-card">
+              <div class="qa-q"><span class="qa-badge">Q3</span> その経験で得た学びは何ですか？</div>
+              <div class="qa-a" style="color:rgba(0,0,0,0.25);font-style:italic;">回答を入力...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 3: 選考カンバン -->
+    <div class="demo-feature reveal">
+      <div class="demo-desc">
+        <h3>選考カンバン</h3>
+        <p>企業ごとの選考状況をカンバンボードで一元管理。締切リマインドも自動。</p>
+      </div>
+      <div class="demo-mock">
+        <div class="demo-mock-titlebar">
+          <div class="demo-mock-dot demo-mock-dot--r"></div>
+          <div class="demo-mock-dot demo-mock-dot--y"></div>
+          <div class="demo-mock-dot demo-mock-dot--g"></div>
+        </div>
+        <div class="demo-mock-body">
+          <div class="kanban-cols">
+            <div class="kanban-col">
+              <div class="kanban-col-header">未応募</div>
+              <div class="kanban-col-body">
+                <div class="kanban-card kanban-card--blue">
+                  <div class="kanban-card-name">A商事</div>
+                  <div class="kanban-card-date">4/15締切</div>
+                </div>
+                <div class="kanban-card kanban-card--green">
+                  <div class="kanban-card-name">B銀行</div>
+                  <div class="kanban-card-date">4/20締切</div>
+                </div>
+              </div>
+            </div>
+            <div class="kanban-col">
+              <div class="kanban-col-header">ES</div>
+              <div class="kanban-col-body">
+                <div class="kanban-card kanban-card--orange">
+                  <div class="kanban-card-name">Cテック</div>
+                  <div class="kanban-card-date">提出済</div>
+                </div>
+              </div>
+            </div>
+            <div class="kanban-col">
+              <div class="kanban-col-header">一次</div>
+              <div class="kanban-col-body">
+                <div class="kanban-card kanban-card--red">
+                  <div class="kanban-card-name">D保険</div>
+                  <div class="kanban-card-date">4/10面接</div>
+                </div>
+              </div>
+            </div>
+            <div class="kanban-col">
+              <div class="kanban-col-header">二次</div>
+              <div class="kanban-col-body">
+                <div class="kanban-card kanban-card--purple">
+                  <div class="kanban-card-name">Eコンサル</div>
+                  <div class="kanban-card-date">結果待ち</div>
+                </div>
+              </div>
+            </div>
+            <div class="kanban-col">
+              <div class="kanban-col-header">最終</div>
+              <div class="kanban-col-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 4: STATS ===== -->
+<section class="stats section-padding" id="stats">
+  <div class="container">
+    <div class="stats-grid reveal">
       <div class="stat-item">
-        <span class="stat-num">52</span>
-        <div class="stat-label">メンバー数</div>
+        <div class="stat-number">8<span class="stat-unit">種</span></div>
+        <div class="stat-label">のAIツール</div>
       </div>
-      <div class="stat-divider"></div>
       <div class="stat-item">
-        <span class="stat-num">全学部</span>
-        <div class="stat-label">対象</div>
+        <div class="stat-number">25<span class="stat-unit">+</span></div>
+        <div class="stat-label">の機能</div>
       </div>
-    </div>
-    <p style="margin-top:1.5rem; font-size:0.72rem; color:rgba(255,255,255,0.35); letter-spacing:0.05em; line-height:1.8;">
-      ※大学公式ではありません。有志の学生による非営利団体です。
-    </p>
-  </div>
-  <div class="scroll-indicator">
-    <div class="scroll-line"></div>
-    SCROLL
-  </div>
-</section>
-
-<!-- MISSION -->
-<section class="mission" id="mission">
-  <div class="mission-inner">
-    <div class="reveal">
-      <div class="section-label">Our Mission</div>
-      <h2 class="section-title">就活という戦いを、<br>ともに越えていく</h2>
-      <p class="section-desc" style="margin-bottom:1.5rem;">
-        就活は個人戦になりがちです。しかし、情報・機会・経験を共有することで、より良い意思決定が可能になると私たちは考えています。
-      </p>
-      <p class="section-desc">
-        慶應就活ナビは、単なる情報共有の場ではなく、就活という長期的なプロセスを支え合うためのコミュニティです。参加者同士が互いに支え合いながら、納得のいく進路選択を行える環境を整えることを目指しています。
-      </p>
-    </div>
-    <div class="mission-visual reveal" style="transition-delay:0.15s;">
-      <div class="mission-card">
-        <p class="mission-card-quote">
-          「知らなかった」による<br>
-          <span>機会損失をなくす</span>こと。<br>
-          それが私たちの出発点。
-        </p>
-        <p class="mission-card-sub">
-          選考情報、イベント情報、業界の知識——<br>
-          ひとりで集めるには限界があります。だからこそ、<br>
-          コミュニティの力を最大限に活かします。
-        </p>
-        <div class="mission-deco"></div>
+      <div class="stat-item">
+        <div class="stat-number">1<span class="stat-unit">分</span></div>
+        <div class="stat-label">で準備度診断</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ACTIVITIES -->
-<section class="activities" id="activities">
-  <div class="activities-inner">
-    <div class="activities-header">
-      <div class="reveal">
-        <div class="section-label">Activities</div>
-        <h2 class="section-title">サイトの<br>主な機能</h2>
+<!-- ===== SECTION 5: FEATURES GRID ===== -->
+<section class="features section-padding" id="features">
+  <div class="container">
+    <div class="section-label">ALL FEATURES</div>
+    <h2 class="section-title reveal">すべての機能</h2>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">&#x270D;&#xFE0F;</div>
+        <h3>自己分析ワークブック</h3>
+        <p>価値観・強み弱み・Will-Can-Mustを段階的に整理</p>
       </div>
-      <div class="reveal" style="transition-delay:0.1s;">
-        <p class="section-desc">
-          ES作成、面接対策、仲間づくりまで。就活の全フェーズをAIとコミュニティの力でサポートします。
-        </p>
+      <div class="feature-card reveal" style="transition-delay:0.05s;">
+        <div class="feature-icon">&#x1F4DD;</div>
+        <h3>ES添削AI</h3>
+        <p>5軸ルーブリック評価＋改善提案</p>
       </div>
-    </div>
-
-    <div class="activities-grid">
-      <div class="activity-card reveal">
-        <div class="activity-num">01</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-        <h3 class="activity-title">就活進捗トラッカー</h3>
-        <p class="activity-desc">就活の進捗を「未応募→ES提出→面接→内定」まで一元管理。締切カレンダーで重要な日程を見逃しません。</p>
+      <div class="feature-card reveal" style="transition-delay:0.1s;">
+        <div class="feature-icon">&#x1F3A4;</div>
+        <h3>面接対策</h3>
+        <p>深掘り質問生成＋AI模擬面接＋GD練習FB</p>
       </div>
-      <div class="activity-card reveal" style="transition-delay:0.1s;">
-        <div class="activity-num">02</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-        <h3 class="activity-title">就活情報共有</h3>
-        <p class="activity-desc">業界ごとの選考フローや就活ノウハウを整理。メンバーで情報を持ち寄り、クイズ形式で知識を定着させます。</p>
+      <div class="feature-card reveal" style="transition-delay:0.15s;">
+        <div class="feature-icon">&#x1F4CB;</div>
+        <h3>選考管理</h3>
+        <p>カンバンボード＋締切カレンダー</p>
       </div>
-      <div class="activity-card reveal" style="transition-delay:0.2s;">
-        <div class="activity-num">03</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-        <h3 class="activity-title">ES・ガクチカ保管庫</h3>
-        <p class="activity-desc">ESとガクチカをSTAR法で整理・保存。AIによるES添削・自動生成・PDF出力まで。面接対策ノートとも連携します。</p>
+      <div class="feature-card reveal" style="transition-delay:0.2s;">
+        <div class="feature-icon">&#x1F465;</div>
+        <h3>コミュニティ</h3>
+        <p>Q&amp;A掲示板＋体験記＋面接練習マッチング</p>
       </div>
-      <div class="activity-card reveal" style="transition-delay:0.1s;">
-        <div class="activity-num">04</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <h3 class="activity-title">面接対策AI</h3>
-        <p class="activity-desc">深掘り質問をAIが自動生成。回答を書いてAIに添削してもらい、面接チェックリストで準備状況を可視化できます。</p>
+      <div class="feature-card reveal" style="transition-delay:0.25s;">
+        <div class="feature-icon">&#x1F3ED;</div>
+        <h3>業界研究</h3>
+        <p>10業界ガイド＋デベロッパー体験ゲーム</p>
       </div>
-      <div class="activity-card reveal" style="transition-delay:0.2s;">
-        <div class="activity-num">05</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <h3 class="activity-title">コミュニティ</h3>
-        <p class="activity-desc">同じ業界を志望する仲間を検索してつながれます。グループ機能で情報交換。選考情報やES添削を掲示板で共有。</p>
+      <div class="feature-card reveal" style="transition-delay:0.3s;">
+        <div class="feature-icon">&#x1F3AF;</div>
+        <h3>内定サポート</h3>
+        <p>レーダーチャート比較＋報告カード生成</p>
       </div>
-      <div class="activity-card reveal" style="transition-delay:0.3s;">
-        <div class="activity-num">06</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-        <h3 class="activity-title">選考情報共有</h3>
-        <p class="activity-desc">選考締切や選考フローをメンバーで共有。気になる情報をブックマークして、自分の就活スケジュールを管理できます。</p>
-      </div>
-      <div class="activity-card reveal" style="transition-delay:0.1s;">
-        <div class="activity-num">07</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
-        <h3 class="activity-title">就活用語集</h3>
-        <p class="activity-desc">ES、GD、ケース面接、フェルミ推定など40語以上を収録。カテゴリ別・検索付きで、就活初心者でも迷わず理解できます。</p>
-      </div>
-      <div class="activity-card reveal" style="transition-delay:0.2s;">
-        <div class="activity-num">08</div>
-        <div class="activity-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
-        <h3 class="activity-title">輪読会</h3>
-        <p class="activity-desc">業界研究本・ビジネス書を共同購入し、メンバーで共有。貸出状況をサイトで管理。コスパ最大の学びの場です。</p>
+      <div class="feature-card reveal" style="transition-delay:0.35s;">
+        <div class="feature-icon">&#x1F50D;</div>
+        <h3>準備度チェック</h3>
+        <p>8問で就活準備度を診断＋弱点分析</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TIMELINE -->
-<section class="timeline-section" id="timeline">
-  <div class="timeline-inner">
-    <div class="reveal" style="text-align:center; margin-bottom:3.5rem;">
-      <div class="section-label">TIMELINE</div>
-      <h2 class="section-title">就活スケジュール</h2>
-    </div>
-    <div class="timeline-list">
-      <div class="timeline-item reveal">
-        <div class="timeline-month">6〜8月</div>
-        <div class="timeline-dot"></div>
-        <div class="timeline-content">
-          <h3>夏インターン選考 / 自己分析スタート</h3>
-          <p>サマーインターンのエントリーが本格化。自己分析を早めにスタートし、ESや面接対策の基盤をつくる時期。</p>
-        </div>
-      </div>
-      <div class="timeline-item reveal" style="transition-delay:0.05s;">
-        <div class="timeline-month">9〜10月</div>
-        <div class="timeline-dot"></div>
-        <div class="timeline-content">
-          <h3>秋インターン / 業界研究・OB訪問</h3>
-          <p>秋冬インターンの選考が始まり、本選考を見据えた業界研究・OB訪問が重要に。視野を広げる絶好の機会。</p>
-        </div>
-      </div>
-      <div class="timeline-item reveal" style="transition-delay:0.1s;">
-        <div class="timeline-month">11〜12月</div>
-        <div class="timeline-dot"></div>
-        <div class="timeline-content">
-          <h3>冬インターン / 本選考に向けたES対策</h3>
-          <p>冬インターンへの参加と並行し、本選考を意識したESの磨き込みを開始。仲間との添削・フィードバックが効果的。</p>
-        </div>
-      </div>
-      <div class="timeline-item reveal" style="transition-delay:0.15s;">
-        <div class="timeline-month">1〜2月</div>
-        <div class="timeline-dot"></div>
-        <div class="timeline-content">
-          <h3>早期選考 / 志望業界の絞り込み</h3>
-          <p>一部企業の早期選考が本格化。インターン参加実績を活かし、志望業界・企業を絞り込んでいく時期。</p>
-        </div>
-      </div>
-      <div class="timeline-item reveal" style="transition-delay:0.2s;">
-        <div class="timeline-month">3月</div>
-        <div class="timeline-dot timeline-dot--highlight"></div>
-        <div class="timeline-content">
-          <h3>本選考エントリー解禁</h3>
-          <p>3月1日に経団連ルールによる本選考エントリーが解禁。準備が整った状態で一斉スタートを切ろう。</p>
-        </div>
-      </div>
-      <div class="timeline-item reveal" style="transition-delay:0.25s;">
-        <div class="timeline-month">4〜6月</div>
-        <div class="timeline-dot"></div>
-        <div class="timeline-content">
-          <h3>面接ラッシュ・内定</h3>
-          <p>企業の面接が集中する最大の山場。模擬面接・GDで培った実力を本番に発揮し、内定獲得を目指す。</p>
-        </div>
-      </div>
-    </div>
-    <div class="timeline-footer reveal">
-      <p class="timeline-support-text">慶應就活ナビでは、この全プロセスをサポートします。</p>
-      <a href="account.html" class="timeline-cta-btn">会員登録はこちら</a>
+<!-- ===== SECTION 6: FINAL CTA ===== -->
+<section class="final-cta section-padding-lg" id="cta">
+  <div class="container">
+    <h2 class="reveal">まずは1分、準備度チェックから</h2>
+    <p class="final-cta-sub reveal">登録不要で今すぐ始められます</p>
+    <div class="final-cta-buttons reveal">
+      <a href="quiz.html" class="btn btn-gold">準備度チェックを受ける &rarr;</a>
+      <a href="account.html?mode=signup" class="btn btn-ghost-white">無料で登録する &rarr;</a>
     </div>
   </div>
 </section>
 
-<!-- EVENTS -->
-<section class="events" id="events">
-  <div class="events-inner">
-    <div class="events-header reveal">
-      <div>
-        <div class="section-label">Events</div>
-        <h2 class="section-title">イベント予定</h2>
+<!-- ===== SECTION 7: FAQ ===== -->
+<section class="faq section-padding" id="faq">
+  <div class="container">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title reveal">よくある質問</h2>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-question">費用はかかりますか？</button>
+        <div class="faq-answer"><p>完全無料です。</p></div>
       </div>
-      <div class="events-filter">
-        <button class="filter-btn active" data-filter="all">すべて</button>
-        <button class="filter-btn" data-filter="open">募集中</button>
-        <button class="filter-btn members-f" data-filter="members">会員限定</button>
+      <div class="faq-item reveal">
+        <button class="faq-question">誰でも使えますか？</button>
+        <div class="faq-answer"><p>どなたでもご利用いただけます。</p></div>
       </div>
-    </div>
-    <div class="events-list" id="events-list">
-      <div class="events-loading">📅 イベント情報を読み込み中...</div>
-    </div>
-    <p class="sheet-note" id="sheet-note"></p>
-  </div>
-</section>
-
-<!-- FAQ / JOIN -->
-<section class="join" id="faq">
-  <div class="join-bg"></div>
-  <div class="join-inner">
-    <div class="reveal">
-      <div class="section-label" style="color:var(--gold);">FAQ</div>
-      <h2 class="section-title">よくある質問</h2>
-      <p class="section-desc" style="margin-bottom:2rem;">
-        参加を検討している方から寄せられるご質問をまとめました。
-      </p>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener">LINEコミュニティ参加を申請する</a>
-    </div>
-    <div class="faq-list reveal" id="faq-list" style="transition-delay:0.15s;">
-      <div class="events-loading">💬 FAQ を読み込み中...</div>
-    </div>
-  </div>
-</section>
-
-<!-- GREETING -->
-<section class="greeting" id="greeting">
-  <div class="greeting-inner">
-    <div class="greeting-content reveal">
-      <div class="section-label" style="color:var(--gold);">Message</div>
-      <h2 class="section-title" style="color:var(--white);">代表挨拶</h2>
-      <blockquote class="greeting-text">
-        慶應就活ナビは、立ち上げ当初の手探りの日々を経て、単なる就活情報の共有にとどまらない場へと少しずつ成長してきました。共通の目標を持つ仲間同士が、互いに刺激し合いながら就活を乗り切る——そのコミュニティとしての形が、徐々に鮮明になってきたと感じています。
-        <br><br>
-        就職活動は、ともすれば孤独になりがちです。だからこそ私たちは、サークルのように横のつながりを大切にしながら、「一人で戦わない就活」を実現するコミュニティを目指していきます。引き続き、よろしくお願いいたします。
-      </blockquote>
-      <div class="greeting-sig">
-        <div class="greeting-sig-line"></div>
-        <div>
-          <div class="greeting-name">たま</div>
-          <div class="greeting-role">代表 ／ 経済学部2年</div>
-        </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">非公式のサービスですか？</button>
+        <div class="faq-answer"><p>はい。学生有志が運営する非公式サービスです。慶應義塾大学、各学部、大学公認団体の公式サイトではありません。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">データは安全ですか？</button>
+        <div class="faq-answer"><p>Googleサーバーで暗号化保存。パスワードはSHA256ハッシュ化。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">どのくらい時間がかかりますか？</button>
+        <div class="faq-answer"><p>1日10分から始められます。</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">退会できますか？</button>
+        <div class="faq-answer"><p>アカウント設定からいつでも削除できます。</p></div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- CTA -->
-<section class="cta-section" id="join">
-    <div class="cta-inner reveal">
-      <div class="section-label" style="text-align:center;">Join Us</div>
-      <h2 class="cta-title">一緒に就活を、<br>切り拓いていこう。</h2>
-    <p class="cta-sub">
-      LINEコミュニティへの参加が活動の中心です。<br>
-      HP会員登録は無料・1分で完了します。
-    </p>
-    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="cta-btn" target="_blank" rel="noopener" style="background:var(--crimson);"><span>LINEコミュニティに参加する →</span></a>
-      <a href="account.html" class="cta-btn" style="background:var(--navy); border:1px solid rgba(201,168,76,0.3);"><span>HP会員登録（無料）</span></a>
-    </div>
-    <p style="margin-top:1.2rem; font-size:0.75rem; color:var(--text-muted);">どちらも無料。まずはLINEコミュニティへどうぞ。</p>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="contact-section" id="contact">
-  <div class="contact-inner">
-    <div class="reveal" style="text-align:center; margin-bottom:3rem;">
-      <div class="section-label">Contact</div>
-      <h2 class="section-title">お問い合わせ</h2>
-      <p class="section-desc">ご質問・ご要望はこちらからお気軽にどうぞ。</p>
-    </div>
-    <div class="reveal">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdawYFU8D5V-2BeMdsdlNbWNwMWWHqUaggniqYEUzkKkulO8g/viewform?embedded=true" width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0" style="border:none; background:white;">読み込んでいます…</iframe>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
   <div class="footer-inner">
     <div class="footer-top">
       <div>
-        <span class="footer-logo">慶應就活ナビ</span>
-        <p class="footer-tagline">就活を、ひとりで戦わない。<br>慶應生のための就活支援コミュニティ。</p>
+        <div class="footer-brand">就活ナビ</div>
+        <div class="footer-tagline">就活を、ワンストップで。</div>
       </div>
-      <div class="footer-nav">
-        <div class="footer-nav-group">
-          <h4>コンテンツ</h4>
-          <ul>
-            <li><a href="#mission">ミッション</a></li>
-            <li><a href="#activities">サイト機能</a></li>
-            <li><a href="#events">イベント</a></li>
-            <li><a href="#faq">FAQ</a></li>
-          </ul>
-        </div>
-        <div class="footer-nav-group">
-          <h4>機能</h4>
-          <ul>
-            <li><a href="members.html">会員ページ</a></li>
-            <li><a href="interview-page.html">面接対策ノート</a></li>
-            <li><a href="blog.html">就活コラム</a></li>
-            <li><a href="industry-guide.html">業界研究ガイド</a></li>
-            <li><a href="quiz.html">準備度チェック</a></li>
-            <li><a href="account.html">ログイン / 会員登録</a></li>
-          </ul>
-        </div>
-        <div class="footer-nav-group">
-          <h4>参加する</h4>
-          <ul>
-            <li><a href="orientation.html">新入生の方へ</a></li>
-            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" target="_blank" rel="noopener">LINE参加申請</a></li>
-            <li><a href="#contact">お問い合わせ</a></li>
-          </ul>
-        </div>
+      <div class="footer-links">
+        <a href="blog.html">ブログ</a>
+        <a href="industry-guide.html">業界研究</a>
+        <a href="quiz.html">準備度チェック</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" target="_blank" rel="noopener">参加フォーム</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="terms.html">利用規約</a>
+        <a href="account.html">アカウント</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <div style="margin-bottom:0.5rem;"><a href="privacy.html" style="color:rgba(255,255,255,0.4);font-size:0.7rem;text-decoration:underline;">プライバシーポリシー</a></div>
-      <div class="footer-copy">© 2026 慶應就活ナビ. All rights reserved.</div>
-      <div style="font-size:0.62rem;color:rgba(255,255,255,0.3);margin-top:0.6rem;line-height:1.7;max-width:600px;margin-left:auto;margin-right:auto;">本サイトは慶應義塾大学の公式サービスではありません。有志の学生による非営利の情報共有コミュニティです。掲載されている企業情報はAIによる独自分析または公式HP等の公開情報に基づくものであり、各企業の公式見解ではありません。正確な情報は各企業の公式サイトをご確認ください。</div>
-      <div class="footer-note">※大学公式ではありません。有志の学生による非営利団体です。</div>
+      <p class="footer-note">本サイトは学生有志による非公式の就活支援サービスです。慶應義塾大学および大学公認団体の公式見解や公式発表を示すものではありません。</p>
+      <p class="footer-copy">&copy; 2025 就活ナビ All rights reserved.</p>
     </div>
   </div>
 </footer>
 
-<script src="auth.js"></script>
+<!-- ===== SCRIPTS ===== -->
 <script>
-  // ===== EVENTS FROM GOOGLE SHEETS =====
-  const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1ASykgCNJirBmB76yqxQ4H0jrpqK8vXbx2izLSdHo1To/export?format=csv&gid=0'; // ← ここにGoogle スプレッドシートの公開CSVURLを貼る
-  // 公開手順: スプレッドシート → ファイル → 共有 → ウェブに公開 → CSV → URLをコピー
-
-  const WEEKDAYS = ['日','月','火','水','木','金','土'];
-
-  function parseDate(str) {
-    if (!str) return null;
-    const d = new Date(str.replace(/\//g, '-'));
-    return isNaN(d) ? null : d;
-  }
-
-  function formatMonth(d) {
-    return d.toLocaleDateString('ja-JP', { month: 'short' });
-  }
-
-  function statusClass(s) {
-    if (!s) return 'status-soon';
-    if (s.includes('募集中') || s.toLowerCase().includes('open')) return 'status-open';
-    if (s.includes('締切') || s.includes('終了') || s.toLowerCase().includes('closed')) return 'status-closed';
-    return 'status-soon';
-  }
-
-  function renderEvents(rows, filter) {
-    const container = document.getElementById('events-list');
-    let filtered = rows.filter(r => {
-      if (filter === 'open') return statusClass(r.status) === 'status-open';
-      if (filter === 'members') return r.members === 'TRUE' || r.members === 'true' || r.members === '1' || r.members === 'はい';
-      return true;
-    });
-
-    if (filtered.length === 0) {
-      container.innerHTML = '<div class="events-empty">現在表示できるイベントはありません。</div>';
-      return;
-    }
-
-    container.innerHTML = filtered.map(r => {
-      const d = parseDate(r.date);
-      const isUndated = !r.date || r.date === '日付未定' || r.date === 'TBD' || r.date === '未定';
-      const monthStr = isUndated ? '日付' : (d ? d.toLocaleDateString('ja-JP',{month:'short'}) : '–');
-      const dayStr = isUndated ? '未定' : (d ? d.getDate() : '–');
-      const wdStr = isUndated ? '' : (d ? WEEKDAYS[d.getDay()] : '');
-      const isMembers = r.members === 'TRUE' || r.members === 'true' || r.members === '1' || r.members === 'はい';
-      const sc = statusClass(r.status);
-      const hasLink = r.link && r.link.startsWith('http');
-
-      return `
-        <div class="event-row ${isMembers ? 'members' : ''}" data-status="${sc}" data-members="${isMembers}">
-          <div class="event-date-block">
-            <div class="event-month">${monthStr}</div>
-            <div class="event-day ${isUndated ? 'undated' : ''}">${dayStr}</div>
-            <div class="event-weekday">${wdStr ? wdStr + '曜日' : ''}</div>
-          </div>
-          <div class="event-info">
-            <div class="event-title-row">
-              <span class="event-title">${r.title || '(タイトルなし)'}</span>
-              ${isMembers ? '<span class="members-badge">会員限定</span>' : ''}
-            </div>
-            <div class="event-meta">
-              ${r.place ? `<span>📍 ${r.place}</span>` : ''}
-              ${r.note ? `<span>📝 ${r.note}</span>` : ''}
-            </div>
-          </div>
-          <div class="event-status ${sc}">${r.status || '近日公開'}</div>
-          <a href="${hasLink ? r.link : '#'}" class="event-link ${hasLink ? '' : 'no-link'}" ${hasLink ? 'target="_blank" rel="noopener"' : ''}>
-            ${hasLink ? '申し込む →' : '準備中'}
-          </a>
-        </div>
-      `;
-    }).join('');
-  }
-
-  let cachedEventRows = [];
-
-  async function loadEvents() {
-    const container = document.getElementById('events-list');
-    const note = document.getElementById('sheet-note');
-
-    if (!SHEET_CSV_URL) {
-      // サンプルデータで表示
-      const sample = [
-        { date: '2025/06/10', title: '模擬面接会 vol.1', place: 'オンライン', note: '事前申込必須', status: '募集中', link: '', members: 'FALSE' },
-        { date: '2025/06/22', title: '交流会', place: '三田キャンパス', note: '自由参加', status: '近日公開', link: '', members: 'FALSE' },
-        { date: '2025/07/05', title: 'GD練習会（会員限定）', place: '日吉キャンパス', note: '少人数制', status: '募集中', link: '', members: 'TRUE' },
-      ];
-      cachedEventRows = sample;
-      renderEvents(sample, 'all');
-      note.textContent = '※ スプレッドシートURLが未設定のため、サンプルデータを表示しています';
-      return;
-    }
-
-    try {
-      const res = await fetch(SHEET_CSV_URL);
-      const text = await res.text();
-      const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g,'')));
-      // 1行目はヘッダーとしてスキップ
-      const headers = lines[0]; // date, title, place, note, status, link, members
-      const rows = lines.slice(1).map(cols => ({
-        date: cols[0], title: cols[1], place: cols[2],
-        note: cols[3], status: cols[4], link: cols[5], members: cols[6]
-      })).filter(r => r.title && r.title !== 'タイトル' && r.title !== 'タイトルを入力' && r.date !== '日付');
-
-      cachedEventRows = rows;
-      renderEvents(rows, 'all');
-      note.textContent = '最終更新: ' + new Date().toLocaleDateString('ja-JP');
-    } catch(e) {
-      container.innerHTML = '<div class="events-empty">イベント情報の読み込みに失敗しました。</div>';
-    }
-  }
-
-  loadEvents();
-
-  // Filter buttons — キャッシュから再描画（毎回APIを叩かない）
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderEvents(cachedEventRows, btn.dataset.filter);
-    });
+// FAQ Accordion
+document.querySelectorAll('.faq-question').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var item = this.parentElement;
+    var wasActive = item.classList.contains('active');
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(function(el){ el.classList.remove('active'); });
+    // Toggle current
+    if (!wasActive) item.classList.add('active');
   });
+});
 
-  // ===== HAMBURGER MENU =====
-  function toggleMenu() {
-    document.getElementById('hamburger').classList.toggle('open');
-    document.getElementById('mobile-menu').classList.toggle('open');
-  }
-  function closeMenu() {
-    document.getElementById('hamburger').classList.remove('open');
-    document.getElementById('mobile-menu').classList.remove('open');
-  }
-
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
-
-  // ===== FAQ FROM GOOGLE SHEETS =====
-  const FAQ_CSV_URL = 'https://docs.google.com/spreadsheets/d/1hJqOds7fOxqLmau-IoHhfQLQC7_ttun-SmGZZSzF76M/export?format=csv&gid=0'; // ← FAQシートの公開CSVURLを貼る（列: 質問, 回答）
-
-  const FAQ_SAMPLE = [
-    { q: '参加費はかかりますか？', a: '参加費は無料です。慶應義塾大学の学生であればどなたでもご参加いただけます。' },
-    { q: 'どの学部・学年でも参加できますか？', a: '全学部・全キャンパスの学生を対象としています。就活を意識し始めた学年であればいつでも歓迎します。' },
-    { q: '活動にはすべて参加しないといけませんか？', a: '強制参加のイベントはありません。自分のスケジュールや興味に合わせて自由に選んでいただけます。' },
-    { q: '就活が始まったばかりでも大丈夫ですか？', a: 'もちろんです。まだ業界も絞れていない段階からのご参加を歓迎します。早い段階からの情報収集が、納得のいく就活への近道です。' },
-    { q: 'どのように参加しますか？', a: 'まずHPで会員登録してください。LINEコミュニティへの参加が必要な場合は、別の参加申請フォームからご登録いただく形です。' },
-  ];
-
-  function renderFAQ(items) {
-    const container = document.getElementById('faq-list');
-    if (!items.length) {
-      container.innerHTML = '<div class="events-empty">FAQはまだありません。</div>';
-      return;
+// Scroll Reveal
+var revealElements = document.querySelectorAll('.reveal');
+var revealObserver = new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
     }
-    container.innerHTML = items.map(item => `
-      <div class="faq-item">
-        <div class="faq-q">
-          <span class="faq-q-text">${item.q}</span>
-          <div class="faq-toggle">+</div>
-        </div>
-        <div class="faq-a">${item.a}</div>
-      </div>
-    `).join('');
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+revealElements.forEach(function(el){ revealObserver.observe(el); });
 
-    // Accordion
-    container.querySelectorAll('.faq-item').forEach(faqItem => {
-      faqItem.querySelector('.faq-q').addEventListener('click', () => {
-        const isOpen = faqItem.classList.contains('open');
-        container.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-        if (!isOpen) faqItem.classList.add('open');
-      });
-    });
-  }
-
-  async function loadFAQ() {
-    const container = document.getElementById('faq-list');
-    if (!FAQ_CSV_URL) {
-      renderFAQ(FAQ_SAMPLE);
-      return;
-    }
-    try {
-      const res = await fetch(FAQ_CSV_URL);
-      const text = await res.text();
-      const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g, '')));
-      const items = lines.slice(1).map(cols => ({ q: cols[0], a: cols[1] })).filter(r => r.q && r.a && r.q !== '質問');
-      renderFAQ(items);
-    } catch(e) {
-      renderFAQ(FAQ_SAMPLE);
-    }
-  }
-
-  loadFAQ();
-
-  function renderAccountEntry() {
-    if (typeof KeioNaviAuth === 'undefined') return;
-
-    const user = KeioNaviAuth.getCurrentUser();
-    const navLink = document.getElementById('account-nav-link');
-    const mobileLink = document.getElementById('mobile-account-link');
-    const membersNavItem = document.getElementById('members-nav-item');
-    const mobileMembersLink = document.getElementById('mobile-members-link');
-
-    if (!navLink || !mobileLink) return;
-
-    if (!user) {
-      navLink.textContent = 'ログイン';
-      navLink.href = 'account.html';
-      mobileLink.textContent = 'ログイン / 会員登録';
-      mobileLink.href = 'account.html';
-      if (membersNavItem) membersNavItem.style.display = 'none';
-      if (mobileMembersLink) mobileMembersLink.style.display = 'none';
-      return;
-    }
-
-    navLink.textContent = user.username + ' さん';
-    navLink.href = 'account.html';
-    mobileLink.textContent = user.username + ' さんのマイページ';
-    mobileLink.href = 'account.html';
-    if (membersNavItem) membersNavItem.style.display = '';
-    if (mobileMembersLink) mobileMembersLink.style.display = '';
-  }
-
-  renderAccountEntry();
-
-  // ===== カウントアップアニメーション =====
-  function animateCounter(el, end, duration) {
-    const start = performance.now();
-    function step(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      // easeOut
-      const ease = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.round(ease * end);
-      if (progress < 1) requestAnimationFrame(step);
-      else el.textContent = end;
-    }
-    requestAnimationFrame(step);
-  }
-
-  const statNums = document.querySelectorAll('.stat-num');
-  const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const raw = el.textContent.trim();
-        const num = parseInt(raw.replace(/[^0-9]/g, ''), 10);
-        if (!isNaN(num) && num > 0) animateCounter(el, num, 1200);
-        counterObserver.unobserve(el);
-      }
-    });
-  }, { threshold: 0.5 });
-  statNums.forEach(el => counterObserver.observe(el));
+// Close mobile menu on link click
+document.querySelectorAll('#mobileMenu a').forEach(function(link){
+  link.addEventListener('click', function(){
+    document.getElementById('mobileMenu').classList.remove('active');
+    document.querySelector('.hamburger').classList.remove('active');
+  });
+});
 </script>
-<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
+
+</body>
 </html>

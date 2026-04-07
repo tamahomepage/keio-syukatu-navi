@@ -13,7 +13,9 @@
 var AUTH_SHEET_NAMES_ = {
   users: 'auth_users',
   sessions: 'auth_sessions',
-  liked: 'auth_liked'
+  liked: 'auth_liked',
+  emailVerifications: 'auth_email_verifications',
+  audit: 'auth_audit_log'
 };
 
 var AUTH_USER_HEADERS_ = [
@@ -32,13 +34,19 @@ var AUTH_USER_HEADERS_ = [
   'lineQrDriveFileId',
   'lineQrDriveUrl',
   'displayName',
-  'referralCode'
+  'referralCode',
+  'lineNotifyToken',
+  'emailVerified',
+  'emailVerifiedAt'
 ];
 
-var AUTH_SESSION_TTL_DAYS_ = 30;
+var AUTH_SESSION_TTL_DAYS_ = 7;
+var EMAIL_VERIFICATION_TOKEN_TTL_HOURS_ = 72;
+var AUTH_AUDIT_HEADERS_ = ['timestamp', 'action', 'status', 'userId', 'emailKey', 'sessionRef', 'detail'];
+var AUTH_EMAIL_VERIFICATION_HEADERS_ = ['verificationToken', 'userId', 'email', 'emailKey', 'createdAt', 'expiresAt', 'used'];
 
 function handleAuthAction_(payload) {
-  if (!payload || typeof payload !== 'object' || !String(payload.action || '').match(/^(auth|writeBoardPost|readBoardPosts|addBoardComment|callClaude|writeES|readMyES|deleteES|writeGakuchika|readMyGakuchika|deleteGakuchika|readMyIPData|writeIPCompany|deleteIPCompany|writeIPQuestion|deleteIPQuestion|replaceIPGakuchikaQuestions|readMyProgress|writeProgress|deleteProgress|searchMembers|getGroups|joinGroup|leaveGroup|createGroup|getGroupMembers|updateMatchingPrefs|sendWeeklyDigest|readQuestions|postQuestion|postReply|deleteQuestion|postExperience|readExperiences|readGdFeedback|writeGdFeedback|deleteGdFeedback|postPracticeRequest|readPracticeRequests|joinPracticeRequest|leavePracticeRequest|closePracticeRequest|deletePracticeRequest)/)) {
+  if (!payload || typeof payload !== 'object' || !String(payload.action || '').match(/^(auth|writeBoardPost|readBoardPosts|addBoardComment|callClaude|writeES|readMyES|deleteES|writeGakuchika|readMyGakuchika|deleteGakuchika|readMyIPData|writeIPCompany|deleteIPCompany|writeIPQuestion|deleteIPQuestion|replaceIPGakuchikaQuestions|readMyProgress|writeProgress|deleteProgress|writeSelfPR|readMySelfPR|deleteSelfPR|searchMembers|getGroups|joinGroup|leaveGroup|createGroup|getGroupMembers|updateMatchingPrefs|writeTimeline|readTimeline|getMyStats|writeInterviewReview|readMyInterviewReviews|deleteInterviewReview|writeConsultation|readConsultations|addConsultationComment|createGDSession|readGDSessions|joinGDSession|leaveGDSession|generateGDTheme|writeOBVisit|readMyOBVisits|deleteOBVisit|shareOBInfo|readSharedOBInfo|readPassedES|submitNPS|readNPSSummary|sendWeeklyDigest|writeSelectionExperience|readSelectionExperiences|getAdminStats|getModerationQueue|resolveModerationReport|getAuthAuditLog|reportContent|readMutedMembers|muteMember|unmuteMember|acceptQuestionReply|authSaveLineNotifyToken|sendWeeklyDigestLine|readQuestions|postQuestion|postReply|deleteQuestion|postExperience|readExperiences|readGdFeedback|writeGdFeedback|deleteGdFeedback|postPracticeRequest|readPracticeRequests|joinPracticeRequest|leavePracticeRequest|closePracticeRequest|deletePracticeRequest)/)) {
     return null;
   }
 
@@ -58,15 +66,28 @@ function handleAuthAction_(payload) {
         return jsonResponse_(authSetLikedCompanies_(payload));
       case 'authDeleteAccount':
         return jsonResponse_(authDeleteAccount_(payload));
+      case 'authVerifyEmail':
+        return jsonResponse_(authVerifyEmail_(payload));
+      case 'authResendVerificationEmail':
+        return jsonResponse_(authResendVerificationEmail_(payload));
       case 'authRequestPasswordReset':
         return jsonResponse_(authRequestPasswordReset_(payload));
       case 'authResetPassword':
         return jsonResponse_(authResetPassword_(payload));
       case 'authGetReferralInfo':
         return jsonResponse_(authGetReferralInfo_(payload));
+      case 'authListSessions':
+        return jsonResponse_(authListSessions_(payload));
+      case 'authRevokeSession':
+        return jsonResponse_(authRevokeSession_(payload));
+      case 'authRevokeOtherSessions':
+        return jsonResponse_(authRevokeOtherSessions_(payload));
       case 'readMyProgress':  return jsonResponse_(readMyProgress_(payload));
       case 'writeProgress':   return jsonResponse_(writeProgress_(payload));
       case 'deleteProgress':  return jsonResponse_(deleteProgress_(payload));
+      case 'writeSelfPR':     return jsonResponse_(writeSelfPR_(payload));
+      case 'readMySelfPR':    return jsonResponse_(readMySelfPR_(payload));
+      case 'deleteSelfPR':    return jsonResponse_(deleteSelfPR_(payload));
       case 'searchMembers':       return jsonResponse_(searchMembers_(payload));
       case 'getGroups':           return jsonResponse_(getGroups_(payload));
       case 'joinGroup':           return jsonResponse_(joinGroup_(payload));
@@ -90,7 +111,42 @@ function handleAuthAction_(payload) {
       case 'writeIPQuestion':            return jsonResponse_(writeIPQuestion_(payload));
       case 'deleteIPQuestion':           return jsonResponse_(deleteIPQuestion_(payload));
       case 'replaceIPGakuchikaQuestions': return jsonResponse_(replaceIPGakuchikaQuestions_(payload));
+      case 'writeTimeline':  return jsonResponse_(writeTimeline_(payload));
+      case 'readTimeline':   return jsonResponse_(readTimeline_(payload));
+      case 'getMyStats':     return jsonResponse_(getMyStats_(payload));
+      case 'writeInterviewReview':    return jsonResponse_(writeInterviewReview_(payload));
+      case 'readMyInterviewReviews':  return jsonResponse_(readMyInterviewReviews_(payload));
+      case 'deleteInterviewReview':   return jsonResponse_(deleteInterviewReview_(payload));
+      case 'writeConsultation':       return jsonResponse_(writeConsultation_(payload));
+      case 'readConsultations':       return jsonResponse_(readConsultations_(payload));
+      case 'addConsultationComment':  return jsonResponse_(addConsultationComment_(payload));
+      case 'createGDSession':   return jsonResponse_(createGDSession_(payload));
+      case 'readGDSessions':    return jsonResponse_(readGDSessions_(payload));
+      case 'joinGDSession':     return jsonResponse_(joinGDSession_(payload));
+      case 'leaveGDSession':    return jsonResponse_(leaveGDSession_(payload));
+      case 'generateGDTheme':   return jsonResponse_(generateGDTheme_(payload));
+      case 'writeOBVisit':       return jsonResponse_(writeOBVisit_(payload));
+      case 'readMyOBVisits':     return jsonResponse_(readMyOBVisits_(payload));
+      case 'deleteOBVisit':      return jsonResponse_(deleteOBVisit_(payload));
+      case 'shareOBInfo':        return jsonResponse_(shareOBInfo_(payload));
+      case 'readSharedOBInfo':   return jsonResponse_(readSharedOBInfo_(payload));
+      case 'readPassedES':       return jsonResponse_(readPassedES_(payload));
+      case 'submitNPS':          return jsonResponse_(submitNPS_(payload));
+      case 'readNPSSummary':     return jsonResponse_(readNPSSummary_(payload));
       case 'sendWeeklyDigest':   return jsonResponse_(sendWeeklyDigest_(payload));
+      case 'writeSelectionExperience': return jsonResponse_(writeSelectionExperience_(payload));
+      case 'readSelectionExperiences': return jsonResponse_(readSelectionExperiences_(payload));
+      case 'getAdminStats':            return jsonResponse_(getAdminStats_(payload));
+      case 'getModerationQueue':       return jsonResponse_(getModerationQueue_(payload));
+      case 'resolveModerationReport':  return jsonResponse_(resolveModerationReport_(payload));
+      case 'getAuthAuditLog':          return jsonResponse_(getAuthAuditLog_(payload));
+      case 'reportContent':            return jsonResponse_(reportContent_(payload));
+      case 'readMutedMembers':         return jsonResponse_(readMutedMembers_(payload));
+      case 'muteMember':               return jsonResponse_(muteMember_(payload));
+      case 'unmuteMember':             return jsonResponse_(unmuteMember_(payload));
+      case 'acceptQuestionReply':      return jsonResponse_(acceptQuestionReply_(payload));
+      case 'authSaveLineNotifyToken':   return jsonResponse_(authSaveLineNotifyToken_(payload));
+      case 'sendWeeklyDigestLine':      return jsonResponse_(sendWeeklyDigestLineAction_(payload));
       case 'readQuestions':      return jsonResponse_(readQuestions_(payload));
       case 'postQuestion':       return jsonResponse_(postQuestion_(payload));
       case 'postReply':          return jsonResponse_(postReply_(payload));
@@ -110,6 +166,14 @@ function handleAuthAction_(payload) {
         return null;
     }
   } catch (error) {
+    if (payload && /^auth/.test(trimAuthText_(payload.action))) {
+      recordAuthAudit_(payload.action, 'error', {
+        userId: trimAuthText_(payload.userId),
+        emailKey: normalizeAuthKey_(payload.emailKey || payload.email || payload.username),
+        sessionToken: trimAuthText_(payload.sessionToken),
+        detail: error && error.message ? error.message : 'auth_error'
+      });
+    }
     return jsonResponse_({
       status: 'error',
       message: error && error.message ? error.message : '認証処理でエラーが発生しました。'
@@ -153,8 +217,9 @@ function authRegister_(payload) {
 
   var now = new Date().toISOString();
   var userId = 'user_' + new Date().getTime().toString(36) + Utilities.getUuid().replace(/-/g, '').slice(0, 6);
-  var salt = Utilities.getUuid().replace(/-/g, '');
-  var passwordHash = sha256Hex_(salt + ':' + password);
+  var hashRecord = buildPasswordHashRecord_(password);
+  var salt = hashRecord.salt;
+  var passwordHash = hashRecord.passwordHash;
   var lineQrAsset = saveLineQrAsset_(userId, lineQrDataUrl, lineQrFileName, '');
   var referralCode = 'ref_' + userId.slice(-6);
 
@@ -174,7 +239,10 @@ function authRegister_(payload) {
     lineQrAsset.fileId,
     lineQrAsset.url,
     displayName,
-    referralCode
+    referralCode,
+    '',
+    '0',
+    ''
   ]);
 
   // 紹介コード処理
@@ -183,7 +251,47 @@ function authRegister_(payload) {
   }
 
   saveLikedCompaniesForUser_(userId, []);
-  var sessionToken = createSessionForUser_(userId);
+  var sessionToken = createSessionForUser_(userId, payload.userAgent);
+
+  try {
+    sendEmailVerificationEmail_({
+      id: userId,
+      email: email,
+      emailKey: emailKey,
+      displayName: displayName
+    });
+  } catch (error) {}
+
+  recordAuthAudit_('authRegister', 'ok', {
+    userId: userId,
+    emailKey: emailKey,
+    sessionToken: sessionToken
+  });
+
+  // ウェルカムメール送信
+  try {
+    MailApp.sendEmail({
+      to: email,
+      subject: '【慶應就活ナビ】ようこそ！最初にやること3つ',
+      htmlBody: '<div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:24px;color:#1a1a2e;">'
+        + '<h1 style="color:#0a1a3e;font-size:1.3rem;">ようこそ、' + displayName + ' さん！</h1>'
+        + '<p style="line-height:1.8;">慶應就活ナビへの登録ありがとうございます。まずはこの3つから始めましょう。</p>'
+        + '<div style="margin:24px 0;padding:16px;background:#f7f3ed;border-left:4px solid #c9a84c;">'
+        + '<p style="margin:0 0 12px;font-weight:700;color:#0a1a3e;">Step 1: ガクチカを1つ書いてみよう</p>'
+        + '<p style="margin:0 0 4px;font-size:0.9em;color:#555;">STAR法でエピソードを整理すると、ESや面接でそのまま使えます。</p>'
+        + '</div>'
+        + '<div style="margin:24px 0;padding:16px;background:#f7f3ed;border-left:4px solid #c9a84c;">'
+        + '<p style="margin:0 0 12px;font-weight:700;color:#0a1a3e;">Step 2: ESをAIに添削してもらおう</p>'
+        + '<p style="margin:0 0 4px;font-size:0.9em;color:#555;">AIが構成・具体性・表現力の観点でフィードバックしてくれます。何度でも無料。</p>'
+        + '</div>'
+        + '<div style="margin:24px 0;padding:16px;background:#f7f3ed;border-left:4px solid #c9a84c;">'
+        + '<p style="margin:0 0 12px;font-weight:700;color:#0a1a3e;">Step 3: 仲間とつながろう</p>'
+        + '<p style="margin:0 0 4px;font-size:0.9em;color:#555;">コミュニティで就活仲間を見つけて、情報交換しましょう。</p>'
+        + '</div>'
+        + '<p style="margin-top:24px;font-size:0.85em;color:#888;">就活を、ひとりで戦わない。— 慶應就活ナビ</p>'
+        + '</div>'
+    });
+  } catch (e) { /* メール送信失敗しても登録は成功させる */ }
 
   return {
     status: 'ok',
@@ -202,7 +310,10 @@ function authRegister_(payload) {
       lineName: lineName,
       lineQrDriveFileId: lineQrAsset.fileId,
       lineQrDriveUrl: lineQrAsset.url,
-      referralCode: referralCode
+      referralCode: referralCode,
+      lineNotifyToken: '',
+      emailVerified: '0',
+      emailVerifiedAt: ''
     }),
     likedCompanies: []
   };
@@ -222,19 +333,19 @@ function authLogin_(payload) {
   var user = users.find(function (row) {
     return normalizeAuthKey_(row.emailKey || row.email || row.usernameKey || row.username) === emailKey;
   });
-  if (!user) {
+  if (!user || !verifyPasswordRecord_(password, user)) {
     recordAuthRateLimitFailure_('login', emailKey, AUTH_LOGIN_RATE_LIMIT_);
-    throw new Error('アカウントが見つかりません。');
+    throw new Error('ログイン情報が正しくありません。');
   }
-
-  var expectedHash = sha256Hex_(String(user.salt || '') + ':' + password);
-  if (expectedHash !== String(user.passwordHash || '')) {
-    recordAuthRateLimitFailure_('login', emailKey, AUTH_LOGIN_RATE_LIMIT_);
-    throw new Error('パスワードが正しくありません。');
-  }
+  maybeUpgradePasswordHash_(usersSheet, users.indexOf(user), user, password);
   clearAuthRateLimit_('login', emailKey);
 
-  var sessionToken = createSessionForUser_(user.id);
+  var sessionToken = createSessionForUser_(user.id, payload.userAgent);
+  recordAuthAudit_('authLogin', 'ok', {
+    userId: trimAuthText_(user.id),
+    emailKey: emailKey,
+    sessionToken: sessionToken
+  });
   return {
     status: 'ok',
     sessionToken: sessionToken,
@@ -248,10 +359,20 @@ var AUTH_LOGIN_RATE_LIMIT_ = {
   windowSeconds: 15 * 60,
   message: 'ログイン試行回数が多すぎます。15分ほど待ってから再試行してください。'
 };
+var AUTH_AI_RATE_LIMIT_ = {
+  maxAttempts: 20,
+  windowSeconds: 60 * 60,
+  message: 'AI機能の利用回数が上限に達しました。1時間ほど待ってから再試行してください。'
+};
 var AUTH_RESET_RATE_LIMIT_ = {
   maxAttempts: 5,
   windowSeconds: 15 * 60,
   message: 'パスワードリセット要求が多すぎます。15分ほど待ってから再試行してください。'
+};
+var AUTH_EMAIL_VERIFICATION_RATE_LIMIT_ = {
+  maxAttempts: 5,
+  windowSeconds: 60 * 60,
+  message: '確認メールの再送回数が多すぎます。しばらく待ってから再試行してください。'
 };
 
 function getAuthRateLimitKey_(action, value) {
@@ -276,6 +397,10 @@ function recordAuthRateLimitFailure_(action, value, options) {
   cache.put(key, String(count), options.windowSeconds);
 }
 
+function recordAuthRateLimitEvent_(action, value, options) {
+  recordAuthRateLimitFailure_(action, value, options);
+}
+
 function clearAuthRateLimit_(action, value) {
   CacheService.getScriptCache().remove(getAuthRateLimitKey_(action, value));
 }
@@ -294,6 +419,10 @@ function authLogout_(payload) {
   if (rowIndex >= 0) {
     sessionsSheet.getRange(rowIndex + 2, 6).setValue('0');
   }
+
+  recordAuthAudit_('authLogout', 'ok', {
+    sessionToken: sessionToken
+  });
 
   return { status: 'ok' };
 }
@@ -387,13 +516,21 @@ function authChangePassword_(payload) {
   assertAuth_(currentIndex >= 0, 'アカウントが見つかりません。');
 
   var user = users[currentIndex];
-  var currentHash = sha256Hex_(String(user.salt || '') + ':' + currentPassword);
-  assertAuth_(currentHash === String(user.passwordHash || ''), '現在のパスワードが正しくありません。');
+  assertAuth_(verifyPasswordRecord_(currentPassword, user), '現在のパスワードが正しくありません。');
 
-  usersSheet.getRange(currentIndex + 2, 5).setValue(sha256Hex_(String(user.salt || '') + ':' + nextPassword));
-  usersSheet.getRange(currentIndex + 2, 8).setValue(new Date().toISOString());
+  var nextHashRecord = buildPasswordHashRecord_(nextPassword);
+  var updatedAt = new Date().toISOString();
+  usersSheet.getRange(currentIndex + 2, 5, 1, 2).setValues([[nextHashRecord.passwordHash, nextHashRecord.salt]]);
+  usersSheet.getRange(currentIndex + 2, 8).setValue(updatedAt);
 
-  return { status: 'ok' };
+  invalidateSessionsForUser_(session.userId, '');
+
+  var nextSessionToken = createSessionForUser_(session.userId, payload.userAgent);
+  recordAuthAudit_('authChangePassword', 'ok', {
+    userId: session.userId,
+    sessionToken: nextSessionToken
+  });
+  return { status: 'ok', sessionToken: nextSessionToken };
 }
 
 function authDeleteAccount_(payload) {
@@ -412,8 +549,7 @@ function authDeleteAccount_(payload) {
   assertAuth_(userIndex >= 0, 'アカウントが見つかりません。');
 
   var user = users[userIndex];
-  var expectedHash = sha256Hex_(String(user.salt || '') + ':' + password);
-  assertAuth_(expectedHash === String(user.passwordHash || ''), 'パスワードが正しくありません。');
+  assertAuth_(verifyPasswordRecord_(password, user), 'パスワードが正しくありません。');
 
   // LINE QRファイル削除
   var lineQrFileId = trimAuthText_(user.lineQrDriveFileId);
@@ -513,6 +649,13 @@ function authDeleteAccount_(payload) {
     });
   }
 
+  cleanupAuthRecordsForUser_(spreadsheet, session.userId, normalizeAuthKey_(user.emailKey || user.email));
+  recordAuthAudit_('authDeleteAccount', 'ok', {
+    userId: session.userId,
+    sessionToken: session.sessionToken,
+    detail: 'account_deleted'
+  });
+
   return { status: 'ok', message: 'アカウントを削除しました。ご利用ありがとうございました。' };
 }
 
@@ -593,7 +736,31 @@ function requireAdminSession_(payload) {
   return { session: session, user: user };
 }
 
-function createSessionForUser_(userId) {
+function getVerifiedUserForSessionToken_(sessionToken) {
+  var session = getActiveSessionOrThrow_(sessionToken);
+  var user = getAuthUserById_(session.userId);
+  assertAuth_(user, 'アカウントが見つかりません。');
+  assertAuth_(isEmailVerifiedRecord_(user), 'メールアドレスの確認後に利用できます。');
+  return { session: session, user: user };
+}
+
+function getVerifiedActionContext_(payload, actionLabel) {
+  var session = getActiveSessionOrThrow_(payload && payload.sessionToken);
+  var user = getAuthUserById_(session.userId);
+  assertAuth_(user, 'アカウントが見つかりません。');
+  assertAuth_(isEmailVerifiedRecord_(user), trimAuthText_(actionLabel || 'この操作') + 'はメールアドレス確認後に利用できます。');
+  return { session: session, user: user };
+}
+
+function assertAiUsageAllowedForSession_(sessionToken, actionName) {
+  var context = getVerifiedUserForSessionToken_(sessionToken);
+  var rateKey = trimAuthText_(context.user.id) + ':' + trimAuthText_(actionName || 'ai');
+  assertAuthRateLimit_('ai', rateKey, AUTH_AI_RATE_LIMIT_);
+  recordAuthRateLimitEvent_('ai', rateKey, AUTH_AI_RATE_LIMIT_);
+  return context;
+}
+
+function createSessionForUser_(userId, userAgent) {
   var sessionsSheet = getAuthSheet_(AUTH_SHEET_NAMES_.sessions);
   var sessionToken = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, '');
   var now = new Date();
@@ -605,10 +772,22 @@ function createSessionForUser_(userId) {
     now.toISOString(),
     expiresAt.toISOString(),
     now.toISOString(),
-    '1'
+    '1',
+    trimUserAgent_(userAgent)
   ]);
 
   return sessionToken;
+}
+
+function invalidateSessionsForUser_(userId, keepSessionToken) {
+  var sessionsSheet = getAuthSheet_(AUTH_SHEET_NAMES_.sessions);
+  var sessions = getSheetRecords_(sessionsSheet);
+  sessions.forEach(function (row, index) {
+    if (row.userId !== userId) return;
+    if (keepSessionToken && row.sessionToken === keepSessionToken) return;
+    if (String(row.active) === '0') return;
+    sessionsSheet.getRange(index + 2, 6).setValue('0');
+  });
 }
 
 function getLikedCompaniesForUser_(userId) {
@@ -662,6 +841,8 @@ function sanitizeUserRecord_(record) {
     lineQrUrl: lineQrUrl,
     hasLineQr: !!lineQrUrl,
     referralCode: trimAuthText_(record.referralCode),
+    emailVerified: isEmailVerifiedRecord_(record),
+    emailVerifiedAt: trimAuthText_(record.emailVerifiedAt),
     createdAt: trimAuthText_(record.createdAt),
     updatedAt: trimAuthText_(record.updatedAt)
   };
@@ -676,7 +857,8 @@ function ensureAuthSheets_() {
     'createdAt',
     'expiresAt',
     'lastSeenAt',
-    'active'
+    'active',
+    'userAgent'
   ]);
 
   ensureSheet_(AUTH_SHEET_NAMES_.liked, [
@@ -684,6 +866,9 @@ function ensureAuthSheets_() {
     'likedCompaniesJson',
     'updatedAt'
   ]);
+
+  ensureSheet_(AUTH_SHEET_NAMES_.emailVerifications, AUTH_EMAIL_VERIFICATION_HEADERS_);
+  ensureSheet_(AUTH_SHEET_NAMES_.audit, AUTH_AUDIT_HEADERS_);
 }
 
 function ensureSheet_(name, headers) {
@@ -825,10 +1010,472 @@ function sha256Hex_(text) {
   }).join('');
 }
 
+var PASSWORD_HASH_SCHEME_ = 'iter-sha256-v1';
+var PASSWORD_HASH_ITERATIONS_ = 120000;
+
+function hashPasswordWithIterations_(password, salt, iterations) {
+  var value = String(salt || '') + ':' + String(password || '');
+  var total = Math.max(parseInt(iterations, 10) || 0, 1);
+  for (var i = 0; i < total; i++) {
+    value = sha256Hex_(value);
+  }
+  return value;
+}
+
+function buildPasswordHashRecord_(password) {
+  var salt = Utilities.getUuid().replace(/-/g, '');
+  return {
+    salt: salt,
+    passwordHash: PASSWORD_HASH_SCHEME_ + '$' + PASSWORD_HASH_ITERATIONS_ + '$' + hashPasswordWithIterations_(password, salt, PASSWORD_HASH_ITERATIONS_)
+  };
+}
+
+function verifyPasswordRecord_(password, user) {
+  var storedHash = trimAuthText_(user && user.passwordHash);
+  var salt = trimAuthText_(user && user.salt);
+  if (storedHash.indexOf(PASSWORD_HASH_SCHEME_ + '$') === 0) {
+    var parts = storedHash.split('$');
+    if (parts.length === 3) {
+      return hashPasswordWithIterations_(password, salt, parseInt(parts[1], 10)) === parts[2];
+    }
+  }
+  return sha256Hex_(salt + ':' + password) === storedHash;
+}
+
+function maybeUpgradePasswordHash_(usersSheet, rowIndex, user, password) {
+  var storedHash = trimAuthText_(user && user.passwordHash);
+  if (storedHash.indexOf(PASSWORD_HASH_SCHEME_ + '$') === 0) return;
+  if (rowIndex < 0) return;
+
+  var nextHash = buildPasswordHashRecord_(password);
+  usersSheet.getRange(rowIndex + 2, 5, 1, 2).setValues([[nextHash.passwordHash, nextHash.salt]]);
+  user.passwordHash = nextHash.passwordHash;
+  user.salt = nextHash.salt;
+}
+
+function trimUserAgent_(value) {
+  return trimAuthText_(value).slice(0, 400);
+}
+
+function isEmailVerifiedRecord_(record) {
+  var verifiedFlag = trimAuthText_(record && record.emailVerified).toLowerCase();
+  var verifiedAt = trimAuthText_(record && record.emailVerifiedAt);
+  if (!verifiedFlag && !verifiedAt) return true;
+  return verifiedFlag === '1' || verifiedFlag === 'true';
+}
+
+function getSessionReference_(sessionToken) {
+  var token = trimAuthText_(sessionToken);
+  if (!token) return '';
+  return sha256Hex_('session-ref:' + token).slice(0, 24);
+}
+
+function recordAuthAudit_(action, status, meta) {
+  try {
+    ensureSheet_(AUTH_SHEET_NAMES_.audit, AUTH_AUDIT_HEADERS_);
+    getAuthSheet_(AUTH_SHEET_NAMES_.audit).appendRow([
+      new Date().toISOString(),
+      trimAuthText_(action).slice(0, 80),
+      trimAuthText_(status).slice(0, 24),
+      trimAuthText_(meta && meta.userId),
+      normalizeAuthKey_((meta && meta.emailKey) || ''),
+      getSessionReference_(meta && meta.sessionToken),
+      trimAuthText_(meta && meta.detail).slice(0, 500)
+    ]);
+  } catch (error) {}
+}
+
+function createEmailVerificationToken_(user) {
+  ensureSheet_(AUTH_SHEET_NAMES_.emailVerifications, AUTH_EMAIL_VERIFICATION_HEADERS_);
+  var sheet = getAuthSheet_(AUTH_SHEET_NAMES_.emailVerifications);
+  var rows = getSheetRecords_(sheet);
+  rows.forEach(function (row, index) {
+    if (row.userId !== trimAuthText_(user.id)) return;
+    if (String(row.used) === 'true') return;
+    sheet.getRange(index + 2, 7).setValue('true');
+  });
+
+  var token = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, '');
+  var now = new Date();
+  var expiresAt = new Date(now.getTime() + EMAIL_VERIFICATION_TOKEN_TTL_HOURS_ * 60 * 60 * 1000);
+  sheet.appendRow([
+    token,
+    trimAuthText_(user.id),
+    trimAuthText_(user.email),
+    normalizeAuthKey_(user.emailKey || user.email),
+    now.toISOString(),
+    expiresAt.toISOString(),
+    'false'
+  ]);
+  return token;
+}
+
+function sendEmailVerificationEmail_(user) {
+  var email = trimAuthText_(user && user.email);
+  assertAuth_(email, '確認メールの送信先が見つかりません。');
+
+  var token = createEmailVerificationToken_(user);
+  var verifyUrl = getConfiguredSiteBaseUrl_() + '/account.html?mode=verify&token=' + token;
+  var displayName = trimAuthText_(user && user.displayName) || email.split('@')[0] || '会員';
+
+  MailApp.sendEmail({
+    to: email,
+    subject: '【慶應就活ナビ】メールアドレスの確認',
+    htmlBody: '<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;">'
+      + '<h2 style="color:#0a1a3e;">メールアドレスの確認</h2>'
+      + '<p>' + displayName + ' さん、登録ありがとうございます。以下のボタンからメールアドレスを確認してください。</p>'
+      + '<p style="margin:24px 0;"><a href="' + verifyUrl + '" style="display:inline-block;padding:12px 28px;background:#0a1a3e;color:#fff;text-decoration:none;font-weight:bold;border-radius:4px;">メールアドレスを確認する</a></p>'
+      + '<p style="font-size:0.85em;color:#666;">このリンクは' + EMAIL_VERIFICATION_TOKEN_TTL_HOURS_ + '時間有効です。心当たりがない場合はこのメールを無視してください。</p>'
+      + '</div>'
+  });
+}
+
+function getUserSessions_(userId, currentSessionToken) {
+  var sessionsSheet = getAuthSheet_(AUTH_SHEET_NAMES_.sessions);
+  var rows = getSheetRecords_(sessionsSheet);
+  var now = new Date();
+  var items = [];
+
+  rows.forEach(function (row, index) {
+    if (row.userId !== userId) return;
+    var expiresAt = new Date(row.expiresAt);
+    var expired = isNaN(expiresAt.getTime()) || expiresAt.getTime() <= now.getTime();
+    if (expired && String(row.active) !== '0') {
+      sessionsSheet.getRange(index + 2, 6).setValue('0');
+    }
+    if (String(row.active) === '0' || expired) return;
+    items.push({
+      sessionRef: getSessionReference_(row.sessionToken),
+      createdAt: trimAuthText_(row.createdAt),
+      expiresAt: trimAuthText_(row.expiresAt),
+      lastSeenAt: trimAuthText_(row.lastSeenAt),
+      userAgent: trimUserAgent_(row.userAgent),
+      current: trimAuthText_(row.sessionToken) === trimAuthText_(currentSessionToken)
+    });
+  });
+
+  items.sort(function (left, right) {
+    if (left.current && !right.current) return -1;
+    if (!left.current && right.current) return 1;
+    return new Date(right.lastSeenAt || right.createdAt || 0).getTime() - new Date(left.lastSeenAt || left.createdAt || 0).getTime();
+  });
+
+  return items;
+}
+
+function cleanupAuthRecordsForUser_(spreadsheet, userId, emailKey) {
+  [
+    { name: RESET_SHEET_NAME_, userIdHeader: 'userId' },
+    { name: AUTH_SHEET_NAMES_.emailVerifications, userIdHeader: 'userId' }
+  ].forEach(function (entry) {
+    var sheet = spreadsheet.getSheetByName(entry.name);
+    if (!sheet) return;
+    var rows = getSheetRecords_(sheet);
+    for (var i = rows.length - 1; i >= 0; i--) {
+      if (trimAuthText_(rows[i][entry.userIdHeader]) === trimAuthText_(userId)) {
+        sheet.deleteRow(i + 2);
+      }
+    }
+  });
+
+  var auditSheet = spreadsheet.getSheetByName(AUTH_SHEET_NAMES_.audit);
+  if (auditSheet) {
+    var auditRows = getSheetRecords_(auditSheet);
+    for (var ai = auditRows.length - 1; ai >= 0; ai--) {
+      if (trimAuthText_(auditRows[ai].userId) === trimAuthText_(userId) ||
+          normalizeAuthKey_(auditRows[ai].emailKey) === normalizeAuthKey_(emailKey)) {
+        auditSheet.deleteRow(ai + 2);
+      }
+    }
+  }
+}
+
+function getConfiguredSiteBaseUrl_() {
+  var siteBaseUrl = trimAuthText_(PropertiesService.getScriptProperties().getProperty('SITE_BASE_URL'));
+  assertAuth_(siteBaseUrl, 'SITE_BASE_URL が設定されていません。');
+  return siteBaseUrl.replace(/\/+$/, '');
+}
+
 function jsonResponse_(payload) {
   return ContentService
     .createTextOutput(JSON.stringify(payload))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ── モデレーション / ミュート ────────────────────────────────────────────────
+
+var MODERATION_REPORTS_SHEET_NAME_ = 'moderation_reports';
+var MODERATION_CONTENT_STATE_SHEET_NAME_ = 'moderation_content_state';
+var MODERATION_MUTES_SHEET_NAME_ = 'member_mutes';
+var MODERATION_REPORT_HEADERS_ = ['id', 'reporterUserId', 'contentType', 'contentId', 'targetUserId', 'reason', 'details', 'status', 'resolution', 'resolvedBy', 'resolvedAt', 'createdAt'];
+var MODERATION_CONTENT_STATE_HEADERS_ = ['contentType', 'contentId', 'state', 'note', 'updatedBy', 'updatedAt'];
+var MODERATION_MUTES_HEADERS_ = ['userId', 'mutedUserId', 'createdAt', 'active'];
+var MODERATION_REPORTABLE_TYPES_ = ['board_post', 'consultation', 'qa_question', 'experience', 'practice_request'];
+
+function ensureModerationSheets_() {
+  ensureSheet_(MODERATION_REPORTS_SHEET_NAME_, MODERATION_REPORT_HEADERS_);
+  ensureSheet_(MODERATION_CONTENT_STATE_SHEET_NAME_, MODERATION_CONTENT_STATE_HEADERS_);
+  ensureSheet_(MODERATION_MUTES_SHEET_NAME_, MODERATION_MUTES_HEADERS_);
+}
+
+function readMutedUserIdsForUser_(userId) {
+  ensureModerationSheets_();
+  var rows = getSheetRecords_(getAuthSheet_(MODERATION_MUTES_SHEET_NAME_));
+  var map = {};
+  rows.forEach(function (row) {
+    if (trimAuthText_(row.userId) !== trimAuthText_(userId)) return;
+    var mutedUserId = trimAuthText_(row.mutedUserId);
+    if (!mutedUserId) return;
+    if (String(row.active) === '0' || String(row.active).toLowerCase() === 'false') {
+      delete map[mutedUserId];
+      return;
+    }
+    map[mutedUserId] = true;
+  });
+  return map;
+}
+
+function getContentStateMap_(contentType) {
+  ensureModerationSheets_();
+  var rows = getSheetRecords_(getAuthSheet_(MODERATION_CONTENT_STATE_SHEET_NAME_));
+  var map = {};
+  rows.forEach(function (row) {
+    if (trimAuthText_(row.contentType) !== trimAuthText_(contentType)) return;
+    var contentId = trimAuthText_(row.contentId);
+    if (!contentId) return;
+    map[contentId] = trimAuthText_(row.state || 'visible') || 'visible';
+  });
+  return map;
+}
+
+function isContentHidden_(stateMap, contentId) {
+  return trimAuthText_(stateMap && stateMap[trimAuthText_(contentId)]) === 'hidden';
+}
+
+function setContentState_(contentType, contentId, state, note, adminUserId) {
+  ensureModerationSheets_();
+  var sheet = getAuthSheet_(MODERATION_CONTENT_STATE_SHEET_NAME_);
+  var rows = getSheetRecords_(sheet);
+  var type = trimAuthText_(contentType);
+  var id = trimAuthText_(contentId);
+  if (!type || !id) return;
+  var now = new Date().toISOString();
+  var idx = findRecordIndex_(rows, function (row) {
+    return trimAuthText_(row.contentType) === type && trimAuthText_(row.contentId) === id;
+  });
+  if (idx >= 0) {
+    sheet.getRange(idx + 2, 3, 1, 4).setValues([[trimAuthText_(state || 'visible'), trimAuthText_(note), trimAuthText_(adminUserId), now]]);
+    return;
+  }
+  sheet.appendRow([type, id, trimAuthText_(state || 'visible'), trimAuthText_(note), trimAuthText_(adminUserId), now]);
+}
+
+function reportContent_(payload) {
+  var context = getVerifiedActionContext_(payload, '通報');
+  ensureModerationSheets_();
+
+  var contentType = trimAuthText_(payload.contentType);
+  var contentId = trimAuthText_(payload.contentId);
+  var reason = trimAuthText_(payload.reason);
+  var details = trimAuthText_(payload.details);
+  var targetUserId = trimAuthText_(payload.targetUserId);
+
+  assertAuth_(MODERATION_REPORTABLE_TYPES_.indexOf(contentType) >= 0, '通報対象の種類が不正です。');
+  assertAuth_(contentId, '通報対象を指定してください。');
+  assertAuth_(reason, '通報理由を入力してください。');
+
+  var sheet = getAuthSheet_(MODERATION_REPORTS_SHEET_NAME_);
+  var rows = getSheetRecords_(sheet);
+  var duplicate = rows.find(function (row) {
+    return trimAuthText_(row.reporterUserId) === trimAuthText_(context.session.userId) &&
+      trimAuthText_(row.contentType) === contentType &&
+      trimAuthText_(row.contentId) === contentId &&
+      trimAuthText_(row.status || 'open') === 'open';
+  });
+  if (duplicate) {
+    return { status: 'ok', id: trimAuthText_(duplicate.id), alreadyReported: true };
+  }
+
+  var id = 'rep_' + new Date().getTime().toString(36) + Utilities.getUuid().replace(/-/g, '').slice(0, 6);
+  var now = new Date().toISOString();
+  sheet.appendRow([id, context.session.userId, contentType, contentId, targetUserId, reason, details, 'open', '', '', '', now]);
+
+  recordAuthAudit_('reportContent', 'ok', {
+    userId: context.session.userId,
+    sessionToken: context.session.sessionToken,
+    detail: contentType + ':' + contentId
+  });
+
+  return { status: 'ok', id: id };
+}
+
+function readMutedMembers_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  return {
+    status: 'ok',
+    mutedUserIds: Object.keys(readMutedUserIdsForUser_(session.userId))
+  };
+}
+
+function muteMember_(payload) {
+  var context = getVerifiedActionContext_(payload, 'ミュート');
+  ensureModerationSheets_();
+
+  var mutedUserId = trimAuthText_(payload.mutedUserId);
+  assertAuth_(mutedUserId, 'ミュートする相手を指定してください。');
+  assertAuth_(mutedUserId !== trimAuthText_(context.session.userId), '自分自身はミュートできません。');
+
+  var sheet = getAuthSheet_(MODERATION_MUTES_SHEET_NAME_);
+  var rows = getSheetRecords_(sheet);
+  var idx = findRecordIndex_(rows, function (row) {
+    return trimAuthText_(row.userId) === trimAuthText_(context.session.userId) &&
+      trimAuthText_(row.mutedUserId) === mutedUserId;
+  });
+  var now = new Date().toISOString();
+  if (idx >= 0) {
+    sheet.getRange(idx + 2, 3, 1, 2).setValues([[now, '1']]);
+  } else {
+    sheet.appendRow([context.session.userId, mutedUserId, now, '1']);
+  }
+  return { status: 'ok', mutedUserId: mutedUserId };
+}
+
+function unmuteMember_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  ensureModerationSheets_();
+
+  var mutedUserId = trimAuthText_(payload.mutedUserId);
+  assertAuth_(mutedUserId, 'ミュート解除する相手を指定してください。');
+
+  var sheet = getAuthSheet_(MODERATION_MUTES_SHEET_NAME_);
+  var rows = getSheetRecords_(sheet);
+  rows.forEach(function (row, index) {
+    if (trimAuthText_(row.userId) !== trimAuthText_(session.userId)) return;
+    if (trimAuthText_(row.mutedUserId) !== mutedUserId) return;
+    sheet.getRange(index + 2, 4).setValue('0');
+  });
+  return { status: 'ok', mutedUserId: mutedUserId };
+}
+
+function getModerationQueue_(payload) {
+  var admin = requireAdminSession_(payload);
+  ensureModerationSheets_();
+
+  var reports = getSheetRecords_(getAuthSheet_(MODERATION_REPORTS_SHEET_NAME_));
+  var users = getSheetRecords_(getAuthSheet_(AUTH_SHEET_NAMES_.users));
+  var stateRows = getSheetRecords_(getAuthSheet_(MODERATION_CONTENT_STATE_SHEET_NAME_));
+  var userMap = {};
+  var contentStateMap = {};
+  users.forEach(function (user) {
+    userMap[trimAuthText_(user.id)] = trimAuthText_(user.displayName || user.username || user.email);
+  });
+  stateRows.forEach(function (row) {
+    var contentType = trimAuthText_(row.contentType);
+    var contentId = trimAuthText_(row.contentId);
+    if (!contentType || !contentId) return;
+    contentStateMap[contentType + '::' + contentId] = trimAuthText_(row.state || 'visible') || 'visible';
+  });
+
+  reports.sort(function (a, b) {
+    return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+  });
+
+  var queue = reports.slice(0, 200).map(function (row) {
+    return {
+      id: trimAuthText_(row.id),
+      reporterUserId: trimAuthText_(row.reporterUserId),
+      reporterName: userMap[trimAuthText_(row.reporterUserId)] || '不明',
+      contentType: trimAuthText_(row.contentType),
+      contentId: trimAuthText_(row.contentId),
+      targetUserId: trimAuthText_(row.targetUserId),
+      targetUserName: userMap[trimAuthText_(row.targetUserId)] || '',
+      reason: trimAuthText_(row.reason),
+      details: trimAuthText_(row.details),
+      status: trimAuthText_(row.status || 'open'),
+      resolution: trimAuthText_(row.resolution),
+      resolvedBy: trimAuthText_(row.resolvedBy),
+      resolvedAt: trimAuthText_(row.resolvedAt),
+      createdAt: trimAuthText_(row.createdAt),
+      contentState: contentStateMap[trimAuthText_(row.contentType) + '::' + trimAuthText_(row.contentId)] || 'visible'
+    };
+  });
+
+  var hiddenCount = stateRows.filter(function (row) { return trimAuthText_(row.state) === 'hidden'; }).length;
+
+  recordAuthAudit_('getModerationQueue', 'ok', {
+    userId: admin.session.userId,
+    sessionToken: admin.session.sessionToken,
+    detail: 'reports=' + queue.length
+  });
+
+  return {
+    status: 'ok',
+    reports: queue,
+    summary: {
+      openCount: queue.filter(function (row) { return row.status === 'open'; }).length,
+      hiddenCount: hiddenCount
+    }
+  };
+}
+
+function resolveModerationReport_(payload) {
+  var admin = requireAdminSession_(payload);
+  ensureModerationSheets_();
+
+  var reportId = trimAuthText_(payload.reportId);
+  var resolution = trimAuthText_(payload.resolution);
+  var note = trimAuthText_(payload.note);
+
+  assertAuth_(reportId, '通報IDを指定してください。');
+  assertAuth_(resolution, '対応内容を指定してください。');
+
+  var reportsSheet = getAuthSheet_(MODERATION_REPORTS_SHEET_NAME_);
+  var reports = getSheetRecords_(reportsSheet);
+  var idx = findRecordIndex_(reports, function (row) {
+    return trimAuthText_(row.id) === reportId;
+  });
+  assertAuth_(idx >= 0, '通報が見つかりません。');
+
+  var report = reports[idx];
+  var now = new Date().toISOString();
+  reportsSheet.getRange(idx + 2, 8, 1, 4).setValues([['resolved', resolution, admin.session.userId, now]]);
+
+  if (resolution === 'hidden') {
+    setContentState_(report.contentType, report.contentId, 'hidden', note, admin.session.userId);
+  } else if (resolution === 'restored') {
+    setContentState_(report.contentType, report.contentId, 'visible', note, admin.session.userId);
+  }
+
+  recordAuthAudit_('resolveModerationReport', 'ok', {
+    userId: admin.session.userId,
+    sessionToken: admin.session.sessionToken,
+    detail: reportId + ':' + resolution
+  });
+
+  return { status: 'ok', resolution: resolution };
+}
+
+function getAuthAuditLog_(payload) {
+  var admin = requireAdminSession_(payload);
+  ensureSheet_(AUTH_SHEET_NAMES_.audit, AUTH_AUDIT_HEADERS_);
+  var rows = getSheetRecords_(getAuthSheet_(AUTH_SHEET_NAMES_.audit));
+  rows.sort(function (a, b) {
+    return new Date(b.timestamp || 0).getTime() - new Date(a.timestamp || 0).getTime();
+  });
+  return {
+    status: 'ok',
+    entries: rows.slice(0, 80).map(function (row) {
+      return {
+        timestamp: trimAuthText_(row.timestamp),
+        action: trimAuthText_(row.action),
+        status: trimAuthText_(row.status),
+        userId: trimAuthText_(row.userId),
+        emailKey: trimAuthText_(row.emailKey),
+        sessionRef: trimAuthText_(row.sessionRef),
+        detail: trimAuthText_(row.detail)
+      };
+    })
+  };
 }
 
 // ── ES添削掲示板 ────────────────────────────────────────────────────────────
@@ -838,7 +1485,8 @@ var BOARD_COMMENTS_SHEET_NAME_ = 'es_board_comments';
 var BOARD_MAX_POSTS_           = 50;
 
 function writeBoardPost_(payload) {
-  var session  = getActiveSessionOrThrow_(payload.sessionToken);
+  var context  = getVerifiedActionContext_(payload, 'ES投稿');
+  var session  = context.session;
   var company  = trimAuthText_(payload.company);
   var question = trimAuthText_(payload.question);
   var esText   = trimAuthText_(payload.esText);
@@ -867,7 +1515,7 @@ function writeBoardPost_(payload) {
 }
 
 function readBoardPosts_(payload) {
-  getActiveSessionOrThrow_(payload.sessionToken);
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
 
   var spreadsheet = getAuthSpreadsheet_();
   var sheet = spreadsheet.getSheetByName(BOARD_SHEET_NAME_);
@@ -875,9 +1523,14 @@ function readBoardPosts_(payload) {
 
   var posts = getSheetRecords_(sheet);
   if (!posts.length) return { status: 'ok', posts: [] };
+  var hiddenMap = getContentStateMap_('board_post');
+  var mutedUserIds = readMutedUserIdsForUser_(session.userId);
 
   posts.sort(function (a, b) {
     return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+  });
+  posts = posts.filter(function (post) {
+    return !isContentHidden_(hiddenMap, post.id) && !mutedUserIds[trimAuthText_(post.userId)];
   });
   posts = posts.slice(0, BOARD_MAX_POSTS_);
 
@@ -888,6 +1541,9 @@ function readBoardPosts_(payload) {
     var comments = allComments.filter(function (c) { return c.postId === post.id; });
     comments.sort(function (a, b) {
       return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
+    });
+    comments = comments.filter(function (comment) {
+      return !mutedUserIds[trimAuthText_(comment.userId)];
     });
     return {
       id:        trimAuthText_(post.id),
@@ -914,7 +1570,8 @@ function readBoardPosts_(payload) {
 }
 
 function addBoardComment_(payload) {
-  var session     = getActiveSessionOrThrow_(payload.sessionToken);
+  var context     = getVerifiedActionContext_(payload, 'ESへのコメント');
+  var session     = context.session;
   var postId      = trimAuthText_(payload.postId);
   var commentText = trimAuthText_(payload.commentText);
 
@@ -940,10 +1597,40 @@ function addBoardComment_(payload) {
   return { status: 'ok' };
 }
 
+// ── Claude API リトライ付き呼び出し ────────────────────────────────────────
+
+function fetchClaudeWithRetry_(apiKey, requestBody, maxRetries) {
+  var retries = maxRetries || 3;
+  for (var attempt = 0; attempt < retries; attempt++) {
+    var response = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      payload: JSON.stringify(requestBody),
+      muteHttpExceptions: true
+    });
+    var code = response.getResponseCode();
+    if (code === 200) return response;
+    if (code === 529 || code === 503 || code === 429) {
+      // Overloaded / Service Unavailable / Rate Limited → リトライ
+      if (attempt < retries - 1) {
+        Utilities.sleep((attempt + 1) * 3000); // 3秒、6秒、9秒と増やす
+        continue;
+      }
+    }
+    // リトライ不可のエラー or 最後のリトライ
+    var errBody = {};
+    try { errBody = JSON.parse(response.getContentText()); } catch(e) {}
+    var errMsg = (errBody.error && errBody.error.message) ? errBody.error.message : ('HTTP ' + code);
+    throw new Error('AI処理に失敗しました: ' + errMsg);
+  }
+  throw new Error('AI処理に失敗しました: リトライ上限に達しました。');
+}
+
 // ── Claude API 呼び出し ────────────────────────────────────────────────────
 
 function callClaude_(payload) {
-  getActiveSessionOrThrow_(payload.sessionToken);
+  assertAiUsageAllowedForSession_(payload.sessionToken, 'callClaude');
 
   var apiKey = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
   assertAuth_(apiKey, 'AI機能が設定されていません。管理者にお問い合わせください。');
@@ -961,8 +1648,9 @@ function callClaude_(payload) {
 
     var limitNote = charLimit > 0 ? '\n【字数制限】' + charLimit + '字（現在' + esText.length + '字）' : '';
     var limitGuide = charLimit > 0 ? '\n6. 📏 字数制限への適合（' + charLimit + '字制限に対して過不足がないか、削る/増やすべき箇所の提案）' : '';
-    systemPrompt = 'あなたは新卒就職活動のプロフェッショナルなESコーチです。慶應義塾大学の学生のESを丁寧に添削してください。フィードバックは日本語で、具体的かつ建設的に行ってください。';
-    userMessage  = '【企業名】' + (company || '（未記入）') + '\n【設問】' + (question || '（未記入）') + limitNote + '\n\n【ES内容】\n' + esText + '\n\n以下の観点で詳しく添削してください：\n1. 📌 構成・論理性（PREP法など）\n2. 💡 具体性・エピソードの説得力\n3. 🎯 企業・設問への適合性\n4. ✍️ 表現・文章力\n5. 🔧 改善提案（修正例を示す）' + limitGuide + '\n\n最後に総合評価（S/A/B/C）と一言コメントをつけてください。';
+    var limitStrict = charLimit > 0 ? '\n\n⚠️ 最重要ルール: 改善版ESは必ず' + charLimit + '字以内に収めてください。1字でも超えてはいけません。字数制限は' + charLimit + '字です。改善版を書いた後、必ず文字数を数え直して' + charLimit + '字以内であることを確認してください。超えている場合は削って調整してください。' : '';
+    systemPrompt = 'あなたは新卒就職活動のプロフェッショナルなESコーチです。学生のESを丁寧に添削してください。フィードバックは日本語で、具体的かつ建設的に行ってください。' + (charLimit > 0 ? '改善版ESを提示する場合、必ず' + charLimit + '字以内に収めてください。字数超過は絶対に避けてください。' : '');
+    userMessage  = '【企業名】' + (company || '（未記入）') + '\n【設問】' + (question || '（未記入）') + limitNote + '\n\n【ES内容】\n' + esText + '\n\n以下の観点で詳しく添削してください：\n1. 📌 構成・論理性（PREP法など）\n2. 💡 具体性・エピソードの説得力\n3. 🎯 企業・設問への適合性\n4. ✍️ 表現・文章力\n5. 🔧 改善提案（修正例を示す）' + limitGuide + '\n\n最後に総合評価（S/A/B/C）と一言コメントをつけてください。' + limitStrict;
 
   } else if (toolType === 'interviewCoach') {
     var intQuestion = trimAuthText_(input.question);
@@ -993,9 +1681,9 @@ function callClaude_(payload) {
       return '【設問' + (i + 1) + '】' + (trimAuthText_(e.question) || '（設問未記入）') + limitNote + '\n\n' + trimAuthText_(e.esText);
     }).join('\n\n---\n\n');
 
-    systemPrompt = 'あなたは新卒就職活動のプロフェッショナルなESコーチです。慶應義塾大学の学生の複数のES設問を総合的に添削してください。各設問の個別評価に加え、複数設問を通じた一貫性・多面性も評価してください。日本語で回答してください。\n\n【重要】回答の最初に、以下の形式でルーブリック評価スコア（各1〜5の整数）をJSON形式で出力してください。必ずこの形式で始めてください：\n[SCORES]{"structure":X,"specificity":X,"logic":X,"expression":X,"persuasion":X}[/SCORES]\n\n各スコアの基準：\n- structure（構成）: 1=構成が不明確 2=やや整理不足 3=基本的な構成はある 4=論理的で分かりやすい 5=完璧な構成\n- specificity（具体性）: 1=抽象的すぎる 2=具体性が不足 3=一部具体的 4=エピソードが具体的 5=非常に具体的で説得力大\n- logic（論理性）: 1=論理破綻 2=やや飛躍がある 3=概ね論理的 4=論理的で一貫性あり 5=完璧な論理展開\n- expression（表現力）: 1=表現が稚拙 2=やや単調 3=標準的 4=表現が豊か 5=非常に洗練された表現\n- persuasion（説得力）: 1=説得力なし 2=やや弱い 3=一定の説得力 4=説得力がある 5=非常に説得力が高い';
+    systemPrompt = 'あなたは新卒就職活動のプロフェッショナルなESコーチです。学生の複数のES設問を総合的に添削してください。各設問の個別評価に加え、複数設問を通じた一貫性・多面性も評価してください。日本語で回答してください。重要: 改善版ESを提示する場合、各設問の字数制限を必ず守ってください。1字でも超えてはいけません。\n\n【重要】回答の最初に、以下の形式でルーブリック評価スコア（各1〜5の整数）をJSON形式で出力してください。必ずこの形式で始めてください：\n[SCORES]{"structure":X,"specificity":X,"logic":X,"expression":X,"persuasion":X}[/SCORES]\n\n各スコアの基準：\n- structure（構成）: 1=構成が不明確 2=やや整理不足 3=基本的な構成はある 4=論理的で分かりやすい 5=完璧な構成\n- specificity（具体性）: 1=抽象的すぎる 2=具体性が不足 3=一部具体的 4=エピソードが具体的 5=非常に具体的で説得力大\n- logic（論理性）: 1=論理破綻 2=やや飛躍がある 3=概ね論理的 4=論理的で一貫性あり 5=完璧な論理展開\n- expression（表現力）: 1=表現が稚拙 2=やや単調 3=標準的 4=表現が豊か 5=非常に洗練された表現\n- persuasion（説得力）: 1=説得力なし 2=やや弱い 3=一定の説得力 4=説得力がある 5=非常に説得力が高い';
     userMessage  = '【企業名】' + (trimAuthText_(input.company) || '（未記入）') + '\n\n' + esListText + '\n\n' +
-      '最初に [SCORES]{"structure":X,"specificity":X,"logic":X,"expression":X,"persuasion":X}[/SCORES] の形式でルーブリックスコア（各1〜5）を出力し、その後に以下を評価してください。\n\n# 評価してください\n\n## ① 各設問の個別評価\n各設問について以下を評価：\n- 構成・論理性（PREP法など）\n- 具体性・エピソードの説得力\n- 字数制限が指定されている場合は字数への適合性（削る/増やすべき箇所の提案）\n- 改善提案（修正例を含む）\n\n## ② 複数設問の総合評価\n1. 🔗 **一貫性** — 自己PR・強みのテーマにブレがないか\n2. 🌐 **多面性** — 異なる強み・経験を引き出せているか\n3. 🎯 **企業適合性** — 全体を通じて志望企業への熱意・適性が伝わるか\n4. ✅ **総合評価（S/A/B/C）と優先改善ポイント**';
+      '最初に [SCORES]{"structure":X,"specificity":X,"logic":X,"expression":X,"persuasion":X}[/SCORES] の形式でルーブリックスコア（各1〜5）を出力し、その後に以下を評価してください。\n\n# 評価してください\n\n## ① 各設問の個別評価\n各設問について以下を評価：\n- 構成・論理性（PREP法など）\n- 具体性・エピソードの説得力\n- 字数制限が指定されている場合は字数への適合性（削る/増やすべき箇所の提案）\n- 改善提案（修正例を含む）\n- ⚠️ 改善版ESは必ず指定字数以内に収めること。超過厳禁。\n\n## ② 複数設問の総合評価\n1. 🔗 **一貫性** — 自己PR・強みのテーマにブレがないか\n2. 🌐 **多面性** — 異なる強み・経験を引き出せているか\n3. 🎯 **企業適合性** — 全体を通じて志望企業への熱意・適性が伝わるか\n4. ✅ **総合評価（S/A/B/C）と優先改善ポイント**';
 
   } else if (toolType === 'generateEsFromGakuchika') {
     var gItems = Array.isArray(input.gakuchika) ? input.gakuchika : (input.gakuchika ? [input.gakuchika] : []);
@@ -1016,9 +1704,9 @@ function callClaude_(payload) {
       return (gItems.length > 1 ? '＜エピソード' + (i + 1) + '＞\n' : '') + parts.join('\n');
     }).join('\n\n');
 
-    var genLimitNote = genLimit > 0 ? '字数制限は' + genLimit + '字以内です。必ずこの字数内に収めてください。' : '字数制限は特に指定されていません。';
+    var genLimitNote = genLimit > 0 ? '字数制限は' + genLimit + '字以内です。1字でも超えてはいけません。生成後に必ず文字数を数え直して' + genLimit + '字以内であることを確認してください。超えていたら削って調整してください。' : '字数制限は特に指定されていません。';
 
-    systemPrompt = 'あなたは新卒就職活動のプロフェッショナルなESコーチです。慶應義塾大学の学生がメモしたガクチカ（学生時代に力を入れたこと）の情報をもとに、指定された企業・設問に最適化したESを作成してください。日本語で回答してください。';
+    systemPrompt = 'あなたは新卒就職活動のプロフェッショナルなESコーチです。学生がメモしたガクチカ（学生時代に力を入れたこと）の情報をもとに、指定された設問に最適化したESを作成してください。日本語で回答してください。' + (genLimit > 0 ? '生成するESは必ず' + genLimit + '字以内に収めてください。字数超過は絶対に避けてください。' : '');
     userMessage  = '# ガクチカ情報\n\n' + gakuchikaText +
       '\n\n# ES作成条件\n' +
       '【志望企業】' + (genCompany || '（未指定）') + '\n' +
@@ -1146,28 +1834,8 @@ function callClaude_(payload) {
     messages:   [{ role: 'user', content: userMessage }]
   };
 
-  var response = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
-    method:           'post',
-    contentType:      'application/json',
-    headers: {
-      'x-api-key':          apiKey,
-      'anthropic-version':  '2023-06-01'
-    },
-    payload:          JSON.stringify(requestBody),
-    muteHttpExceptions: true
-  });
-
-  var code = response.getResponseCode();
-  var body = response.getContentText();
-
-  if (code !== 200) {
-    var errData = {};
-    try { errData = JSON.parse(body); } catch (e) {}
-    var errMsg = (errData.error && errData.error.message) ? errData.error.message : ('HTTP ' + code);
-    throw new Error('AI処理に失敗しました: ' + errMsg);
-  }
-
-  var data = JSON.parse(body);
+  var response = fetchClaudeWithRetry_(apiKey, requestBody, 3);
+  var data = JSON.parse(response.getContentText());
   var resultText = '';
   if (data.content && data.content.length) {
     data.content.forEach(function (block) {
@@ -1531,6 +2199,169 @@ function replaceIPGakuchikaQuestions_(payload) {
   return { status: 'ok', ids: ids };
 }
 
+function authVerifyEmail_(payload) {
+  ensureAuthSheets_();
+
+  var verificationToken = trimAuthText_(payload.verificationToken || payload.token);
+  assertAuth_(verificationToken, '確認トークンが必要です。');
+
+  var sheet = getAuthSheet_(AUTH_SHEET_NAMES_.emailVerifications);
+  var rows = getSheetRecords_(sheet);
+  var now = new Date();
+  var tokenIndex = findRecordIndex_(rows, function (row) {
+    return row.verificationToken === verificationToken && String(row.used) !== 'true';
+  });
+  assertAuth_(tokenIndex >= 0, '確認リンクが無効または期限切れです。');
+
+  var tokenRecord = rows[tokenIndex];
+  var expiresAt = new Date(tokenRecord.expiresAt);
+  assertAuth_(!isNaN(expiresAt.getTime()) && expiresAt.getTime() > now.getTime(), '確認リンクの有効期限が切れています。');
+
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users = getSheetRecords_(usersSheet);
+  var userIndex = findRecordIndex_(users, function (row) {
+    return row.id === tokenRecord.userId;
+  });
+  assertAuth_(userIndex >= 0, 'アカウントが見つかりません。');
+
+  var verifiedAt = now.toISOString();
+  var verifiedCol = AUTH_USER_HEADERS_.indexOf('emailVerified') + 1;
+  var verifiedAtCol = AUTH_USER_HEADERS_.indexOf('emailVerifiedAt') + 1;
+  sheet.getRange(tokenIndex + 2, 7).setValue('true');
+  usersSheet.getRange(userIndex + 2, verifiedCol).setValue('1');
+  usersSheet.getRange(userIndex + 2, verifiedAtCol).setValue(verifiedAt);
+
+  var user = users[userIndex];
+  user.emailVerified = '1';
+  user.emailVerifiedAt = verifiedAt;
+
+  recordAuthAudit_('authVerifyEmail', 'ok', {
+    userId: trimAuthText_(user.id),
+    emailKey: trimAuthText_(user.emailKey || user.email),
+    sessionToken: trimAuthText_(payload.sessionToken)
+  });
+
+  return {
+    status: 'ok',
+    message: 'メールアドレスを確認しました。',
+    user: sanitizeUserRecord_(user)
+  };
+}
+
+function authResendVerificationEmail_(payload) {
+  ensureAuthSheets_();
+
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users = getSheetRecords_(usersSheet);
+  var user = users.find(function (row) {
+    return row.id === session.userId;
+  });
+  assertAuth_(user, 'アカウントが見つかりません。');
+
+  if (isEmailVerifiedRecord_(user)) {
+    return {
+      status: 'ok',
+      message: 'メールアドレスはすでに確認済みです。',
+      user: sanitizeUserRecord_(user)
+    };
+  }
+
+  var emailKey = normalizeAuthKey_(user.emailKey || user.email);
+  assertAuthRateLimit_('verify-email', emailKey, AUTH_EMAIL_VERIFICATION_RATE_LIMIT_);
+  recordAuthRateLimitFailure_('verify-email', emailKey, AUTH_EMAIL_VERIFICATION_RATE_LIMIT_);
+  sendEmailVerificationEmail_(user);
+  recordAuthAudit_('authResendVerificationEmail', 'ok', {
+    userId: trimAuthText_(user.id),
+    emailKey: emailKey,
+    sessionToken: session.sessionToken
+  });
+
+  return {
+    status: 'ok',
+    message: '確認メールを再送しました。メールをご確認ください。',
+    user: sanitizeUserRecord_(user)
+  };
+}
+
+function authListSessions_(payload) {
+  ensureAuthSheets_();
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var sessions = getUserSessions_(session.userId, session.sessionToken);
+
+  recordAuthAudit_('authListSessions', 'ok', {
+    userId: session.userId,
+    sessionToken: session.sessionToken,
+    detail: 'count=' + sessions.length
+  });
+
+  return {
+    status: 'ok',
+    currentSessionRef: getSessionReference_(session.sessionToken),
+    sessions: sessions
+  };
+}
+
+function authRevokeSession_(payload) {
+  ensureAuthSheets_();
+
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var sessionRef = trimAuthText_(payload.sessionRef);
+  assertAuth_(sessionRef, 'セッションを指定してください。');
+
+  var sessionsSheet = getAuthSheet_(AUTH_SHEET_NAMES_.sessions);
+  var rows = getSheetRecords_(sessionsSheet);
+  var targetIndex = findRecordIndex_(rows, function (row) {
+    return row.userId === session.userId &&
+      getSessionReference_(row.sessionToken) === sessionRef &&
+      String(row.active) !== '0';
+  });
+  assertAuth_(targetIndex >= 0, '対象のセッションが見つかりません。');
+
+  var target = rows[targetIndex];
+  sessionsSheet.getRange(targetIndex + 2, 6).setValue('0');
+  var currentRevoked = trimAuthText_(target.sessionToken) === trimAuthText_(session.sessionToken);
+
+  recordAuthAudit_('authRevokeSession', 'ok', {
+    userId: session.userId,
+    sessionToken: session.sessionToken,
+    detail: 'target=' + sessionRef
+  });
+
+  return {
+    status: 'ok',
+    currentRevoked: currentRevoked
+  };
+}
+
+function authRevokeOtherSessions_(payload) {
+  ensureAuthSheets_();
+
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var sessionsSheet = getAuthSheet_(AUTH_SHEET_NAMES_.sessions);
+  var rows = getSheetRecords_(sessionsSheet);
+  var revokedCount = 0;
+
+  rows.forEach(function (row, index) {
+    if (row.userId !== session.userId) return;
+    if (trimAuthText_(row.sessionToken) === trimAuthText_(session.sessionToken)) return;
+    if (String(row.active) === '0') return;
+    sessionsSheet.getRange(index + 2, 6).setValue('0');
+    revokedCount += 1;
+  });
+
+  recordAuthAudit_('authRevokeOtherSessions', 'ok', {
+    userId: session.userId,
+    sessionToken: session.sessionToken,
+    detail: 'count=' + revokedCount
+  });
+
+  return {
+    status: 'ok',
+    revokedCount: revokedCount
+  };
+}
+
 // ── パスワードリセット ─────────────────────────────────────────────────────
 
 var RESET_SHEET_NAME_ = 'auth_password_resets';
@@ -1552,6 +2383,10 @@ function authRequestPasswordReset_(payload) {
 
   // ユーザーが存在しなくてもセキュリティ上同じレスポンスを返す
   if (!user) {
+    recordAuthAudit_('authRequestPasswordReset', 'ok', {
+      emailKey: emailKey,
+      detail: 'user_not_found'
+    });
     return { status: 'ok', message: '登録されているメールアドレスであれば、リセット用のメールを送信しました。' };
   }
 
@@ -1569,7 +2404,7 @@ function authRequestPasswordReset_(payload) {
   sheet.appendRow([resetToken, user.id, now.toISOString(), expiresAt.toISOString(), 'false']);
 
   // メール送信
-  var resetUrl = 'https://naotama1123.github.io/keio-syukatu-navi/account.html?mode=reset&token=' + resetToken;
+  var resetUrl = getConfiguredSiteBaseUrl_() + '/account.html?mode=reset&token=' + resetToken;
   var userEmail = trimAuthText_(user.email || user.username);
   try {
     MailApp.sendEmail({
@@ -1585,6 +2420,11 @@ function authRequestPasswordReset_(payload) {
   } catch (e) {
     // メール送信失敗してもトークンは作成済み
   }
+
+  recordAuthAudit_('authRequestPasswordReset', 'ok', {
+    userId: trimAuthText_(user.id),
+    emailKey: emailKey
+  });
 
   return { status: 'ok', message: '登録されているメールアドレスであれば、リセット用のメールを送信しました。' };
 }
@@ -1622,8 +2462,8 @@ function authResetPassword_(payload) {
   assertAuth_(userIndex >= 0, 'アカウントが見つかりません。');
 
   var user = users[userIndex];
-  var newHash = sha256Hex_(String(user.salt || '') + ':' + newPassword);
-  usersSheet.getRange(userIndex + 2, 5).setValue(newHash);
+  var nextHashRecord = buildPasswordHashRecord_(newPassword);
+  usersSheet.getRange(userIndex + 2, 5, 1, 2).setValues([[nextHashRecord.passwordHash, nextHashRecord.salt]]);
   usersSheet.getRange(userIndex + 2, 8).setValue(now.toISOString());
 
   // 既存セッションを全て無効化
@@ -1633,6 +2473,11 @@ function authResetPassword_(payload) {
     if (row.userId === tokenRecord.userId && String(row.active) !== '0') {
       sessionsSheet.getRange(i + 2, 6).setValue('0');
     }
+  });
+
+  recordAuthAudit_('authResetPassword', 'ok', {
+    userId: trimAuthText_(user.id),
+    emailKey: trimAuthText_(user.emailKey || user.email)
   });
 
   return { status: 'ok', message: 'パスワードをリセットしました。新しいパスワードでログインしてください。' };
@@ -1783,6 +2628,92 @@ function deleteProgress_(payload) {
   return { status: 'ok' };
 }
 
+// ── 自己PR保管庫 ───────────────────────────────────────────────────────────
+
+var SELFPR_SHEET_NAME_ = 'selfpr_bank';
+var SELFPR_HEADERS_ = ['id','userId','title','point1','reason','example','point2','fullText','targetIndustry','memo','createdAt','updatedAt'];
+
+function writeSelfPR_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var pr = payload.selfPR || {};
+  var now = new Date().toISOString();
+  var id = trimAuthText_(pr.id);
+
+  var ss = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(SELFPR_SHEET_NAME_);
+  if (!sheet) { sheet = ss.insertSheet(SELFPR_SHEET_NAME_); sheet.appendRow(SELFPR_HEADERS_); }
+
+  if (id) {
+    var data = sheet.getDataRange().getValues();
+    var hdr = data[0];
+    var idCol = hdr.indexOf('id');
+    var uidCol = hdr.indexOf('userId');
+    for (var i = 1; i < data.length; i++) {
+      if (String(data[i][idCol]) === id && String(data[i][uidCol]) === session.userId) {
+        SELFPR_HEADERS_.forEach(function(h, c) {
+          if (h === 'id' || h === 'userId' || h === 'createdAt') return;
+          if (h === 'updatedAt') { sheet.getRange(i + 1, c + 1).setValue(now); return; }
+          if (pr[h] !== undefined) sheet.getRange(i + 1, c + 1).setValue(trimAuthText_(pr[h]));
+        });
+        return { status: 'ok', id: id };
+      }
+    }
+    throw new Error('自己PRが見つかりません。');
+  }
+
+  var newId = 'pr_' + now.replace(/\D/g, '').slice(0, 14) + '_' + Math.floor(Math.random() * 10000);
+  var row = SELFPR_HEADERS_.map(function(h) {
+    if (h === 'id') return newId;
+    if (h === 'userId') return session.userId;
+    if (h === 'createdAt') return now;
+    if (h === 'updatedAt') return now;
+    return trimAuthText_(pr[h] || '');
+  });
+  sheet.appendRow(row);
+  return { status: 'ok', id: newId };
+}
+
+function readMySelfPR_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var ss = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(SELFPR_SHEET_NAME_);
+  if (!sheet) return { status: 'ok', entries: [] };
+
+  var data = sheet.getDataRange().getValues();
+  var hdr = data[0];
+  var uidCol = hdr.indexOf('userId');
+  var entries = [];
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][uidCol]) !== session.userId) continue;
+    var entry = {};
+    hdr.forEach(function(h, c) { entry[h] = String(data[i][c] || ''); });
+    entries.push(entry);
+  }
+  return { status: 'ok', entries: entries };
+}
+
+function deleteSelfPR_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var id = trimAuthText_(payload.id);
+  if (!id) throw new Error('IDが指定されていません。');
+
+  var ss = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(SELFPR_SHEET_NAME_);
+  if (!sheet) throw new Error('自己PRが見つかりません。');
+
+  var data = sheet.getDataRange().getValues();
+  var hdr = data[0];
+  var idCol = hdr.indexOf('id');
+  var uidCol = hdr.indexOf('userId');
+  for (var i = data.length - 1; i >= 1; i--) {
+    if (String(data[i][idCol]) === id && String(data[i][uidCol]) === session.userId) {
+      sheet.deleteRow(i + 1);
+      return { status: 'ok' };
+    }
+  }
+  throw new Error('自己PRが見つかりません。');
+}
+
 // ── メンバーマッチング・グループ ───────────────────────────────────────────
 
 var GROUPS_SHEET_NAME_ = 'member_groups';
@@ -1879,7 +2810,8 @@ function getGroups_(payload) {
 }
 
 function createGroup_(payload) {
-  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var context = getVerifiedActionContext_(payload, 'グループ作成');
+  var session = context.session;
   ensureMatchingSheets_();
 
   var name = trimAuthText_(payload.name);
@@ -1906,7 +2838,8 @@ function createGroup_(payload) {
 }
 
 function joinGroup_(payload) {
-  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var context = getVerifiedActionContext_(payload, 'グループ参加');
+  var session = context.session;
   ensureMatchingSheets_();
 
   var groupId = trimAuthText_(payload.groupId);
@@ -1982,7 +2915,8 @@ function getGroupMembers_(payload) {
 }
 
 function updateMatchingPrefs_(payload) {
-  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var context = getVerifiedActionContext_(payload, '公開設定の変更');
+  var session = context.session;
   ensureMatchingSheets_();
 
   var optIn = payload.optIn === true || payload.optIn === 'true';
@@ -2002,12 +2936,833 @@ function updateMatchingPrefs_(payload) {
   return { status: 'ok', optIn: optIn };
 }
 
+// ── #今日の就活 Timeline ──
+
+function writeTimeline_(payload) {
+  var context = getVerifiedActionContext_(payload, '#今日の就活投稿');
+  var session = context.session;
+  var text = trimAuthText_(payload.text);
+  assertAuth_(text, '投稿内容を入力してください。');
+  assertAuth_(text.length <= 140, '140字以内で入力してください。');
+
+  // Get user's display name
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users = getSheetRecords_(usersSheet);
+  var user = users.find(function(r) { return r.id === session.userId; });
+  var displayName = user ? trimAuthText_(user.displayName || user.username) : '';
+
+  var ss = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName('activity_timeline');
+  if (!sheet) { sheet = ss.insertSheet('activity_timeline'); sheet.appendRow(['id','userId','displayName','text','createdAt']); }
+
+  var now = new Date().toISOString();
+  var id = 'tl_' + now.replace(/\D/g,'').slice(0,14) + '_' + Math.floor(Math.random()*10000);
+  sheet.appendRow([id, session.userId, displayName, text, now]);
+
+  return { status: 'ok', id: id };
+}
+
+function readTimeline_(payload) {
+  getActiveSessionOrThrow_(payload.sessionToken);
+  var ss = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName('activity_timeline');
+  if (!sheet) return { status: 'ok', entries: [] };
+
+  var rows = getSheetRecords_(sheet);
+  rows.sort(function(a,b) { return new Date(b.createdAt||0) - new Date(a.createdAt||0); });
+  var recent = rows.slice(0, 50);
+
+  return {
+    status: 'ok',
+    entries: recent.map(function(r) {
+      return {
+        id: trimAuthText_(r.id),
+        displayName: trimAuthText_(r.displayName),
+        text: trimAuthText_(r.text),
+        createdAt: trimAuthText_(r.createdAt)
+      };
+    })
+  };
+}
+
+// ── Gamification / Stats ──
+
+function getMyStats_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var uid = session.userId;
+  var ss = getAuthSpreadsheet_();
+
+  var esCount = 0, gkCount = 0, boardCount = 0, ipCount = 0, prCount = 0, timelineCount = 0;
+
+  // Count ES entries
+  var esSheet = ss.getSheetByName('es_bank');
+  if (esSheet) { esCount = getSheetRecords_(esSheet).filter(function(r){return r.userId===uid;}).length; }
+
+  // Count Gakuchika
+  var gkSheet = ss.getSheetByName('gakuchika_bank');
+  if (gkSheet) { gkCount = getSheetRecords_(gkSheet).filter(function(r){return r.userId===uid;}).length; }
+
+  // Count board posts
+  var boardSheet = ss.getSheetByName('es_board');
+  if (boardSheet) { boardCount = getSheetRecords_(boardSheet).filter(function(r){return r.userId===uid;}).length; }
+
+  // Count interview prep questions answered
+  var ipSheet = ss.getSheetByName('ip_questions');
+  if (ipSheet) { ipCount = getSheetRecords_(ipSheet).filter(function(r){return r.userId===uid && trimAuthText_(r.answer);}).length; }
+
+  // Count self PRs
+  var prSheet = ss.getSheetByName('selfpr_bank');
+  if (prSheet) { prCount = getSheetRecords_(prSheet).filter(function(r){return r.userId===uid;}).length; }
+
+  // Count timeline posts
+  var tlSheet = ss.getSheetByName('activity_timeline');
+  if (tlSheet) { timelineCount = getSheetRecords_(tlSheet).filter(function(r){return r.userId===uid;}).length; }
+
+  var points = esCount * 10 + gkCount * 10 + boardCount * 15 + ipCount * 5 + prCount * 10 + timelineCount * 2;
+
+  var badges = [];
+  if (esCount >= 1) badges.push('ES初投稿');
+  if (esCount >= 5) badges.push('ES5件達成');
+  if (esCount >= 10) badges.push('ESマスター');
+  if (gkCount >= 1) badges.push('ガクチカ初登録');
+  if (gkCount >= 3) badges.push('ガクチカ3件');
+  if (boardCount >= 1) badges.push('掲示板デビュー');
+  if (boardCount >= 5) badges.push('掲示板常連');
+  if (ipCount >= 10) badges.push('面接準備10問');
+  if (ipCount >= 30) badges.push('面接マスター');
+  if (prCount >= 1) badges.push('自己PR完成');
+  if (timelineCount >= 5) badges.push('毎日就活');
+  if (points >= 100) badges.push('100pt達成');
+  if (points >= 300) badges.push('300pt達成');
+
+  return {
+    status: 'ok',
+    stats: { esCount:esCount, gkCount:gkCount, boardCount:boardCount, ipCount:ipCount, prCount:prCount, timelineCount:timelineCount },
+    points: points,
+    badges: badges
+  };
+}
+
+// ── 面接振り返りノート ─────────────────────────────────────────────────────────
+
+var INTERVIEW_REVIEW_SHEET_NAME_ = 'interview_reviews';
+var INTERVIEW_REVIEW_HEADERS_    = ['id','userId','date','company','interviewType','questionsAsked','myAnswers','reflection','improvement','rating','createdAt','updatedAt'];
+
+function getOrCreateInterviewReviewSheet_() {
+  var ss    = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(INTERVIEW_REVIEW_SHEET_NAME_);
+  if (!sheet) {
+    sheet = ss.insertSheet(INTERVIEW_REVIEW_SHEET_NAME_);
+    sheet.appendRow(INTERVIEW_REVIEW_HEADERS_);
+  }
+  return sheet;
+}
+
+function writeInterviewReview_(payload) {
+  var session       = getActiveSessionOrThrow_(payload.sessionToken);
+  var review        = payload.review || {};
+  var id            = trimAuthText_(review.id);
+  var date          = trimAuthText_(review.date);
+  var company       = trimAuthText_(review.company);
+  var interviewType = trimAuthText_(review.interviewType);
+  var questionsAsked = trimAuthText_(review.questionsAsked);
+  var myAnswers     = trimAuthText_(review.myAnswers);
+  var reflection    = trimAuthText_(review.reflection);
+  var improvement   = trimAuthText_(review.improvement);
+  var rating        = trimAuthText_(review.rating);
+
+  assertAuth_(company,  '企業名を入力してください。');
+  assertAuth_(reflection, '振り返り内容を入力してください。');
+
+  var sheet = getOrCreateInterviewReviewSheet_();
+  var now   = new Date().toISOString();
+
+  if (id) {
+    var rows = getSheetRecords_(sheet);
+    var idx  = findRecordIndex_(rows, function(r) { return String(r.id) === id && String(r.userId) === session.userId; });
+    assertAuth_(idx >= 0, '振り返りが見つかりません。');
+    sheet.getRange(idx + 2, 3, 1, 10).setValues([[date, company, interviewType, questionsAsked, myAnswers, reflection, improvement, rating, rows[idx].createdAt, now]]);
+    return { status: 'ok', id: id };
+  }
+
+  var newId = 'ir_' + new Date().getTime().toString(36) + Utilities.getUuid().replace(/-/g, '').slice(0, 6);
+  sheet.appendRow([newId, session.userId, date, company, interviewType, questionsAsked, myAnswers, reflection, improvement, rating, now, now]);
+  return { status: 'ok', id: newId };
+}
+
+function readMyInterviewReviews_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var sheet   = getOrCreateInterviewReviewSheet_();
+  var rows    = getSheetRecords_(sheet);
+  var mine    = rows.filter(function(r) { return String(r.userId) === session.userId; });
+
+  return {
+    status: 'ok',
+    entries: mine.map(function(r) {
+      return {
+        id:             trimAuthText_(r.id),
+        date:           trimAuthText_(r.date),
+        company:        trimAuthText_(r.company),
+        interviewType:  trimAuthText_(r.interviewType),
+        questionsAsked: trimAuthText_(r.questionsAsked),
+        myAnswers:      trimAuthText_(r.myAnswers),
+        reflection:     trimAuthText_(r.reflection),
+        improvement:    trimAuthText_(r.improvement),
+        rating:         trimAuthText_(r.rating),
+        createdAt:      trimAuthText_(r.createdAt),
+        updatedAt:      trimAuthText_(r.updatedAt)
+      };
+    })
+  };
+}
+
+function deleteInterviewReview_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var id      = trimAuthText_(payload.id);
+  assertAuth_(id, 'IDが指定されていません。');
+
+  var sheet = getOrCreateInterviewReviewSheet_();
+  var rows  = getSheetRecords_(sheet);
+  var idx   = findRecordIndex_(rows, function(r) { return String(r.id) === id && String(r.userId) === session.userId; });
+  assertAuth_(idx >= 0, '振り返りが見つかりません。');
+  sheet.deleteRow(idx + 2);
+  return { status: 'ok' };
+}
+
+// ── 就活相談掲示板 ─────────────────────────────────────────────────────────────
+
+var CONSULTATION_SHEET_NAME_          = 'consultation_board';
+var CONSULTATION_COMMENTS_SHEET_NAME_ = 'consultation_comments';
+var CONSULTATION_MAX_POSTS_           = 50;
+var CONSULTATION_CATEGORIES_          = ['業界選び','ES・書類','面接','内定・承諾','メンタル','その他'];
+
+function writeConsultation_(payload) {
+  var context     = getVerifiedActionContext_(payload, '相談投稿');
+  var session     = context.session;
+  var category    = trimAuthText_(payload.category);
+  var title       = trimAuthText_(payload.title);
+  var text        = trimAuthText_(payload.text || payload.body);
+
+  assertAuth_(title, 'タイトルを入力してください。');
+  assertAuth_(text,  '相談内容を入力してください。');
+  if (CONSULTATION_CATEGORIES_.indexOf(category) < 0) category = 'その他';
+
+  var spreadsheet = getAuthSpreadsheet_();
+  var sheet = spreadsheet.getSheetByName(CONSULTATION_SHEET_NAME_);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(CONSULTATION_SHEET_NAME_);
+    sheet.appendRow(['id','userId','displayName','category','title','text','createdAt']);
+  }
+
+  var now        = new Date().toISOString();
+  var id         = now.replace(/\D/g, '').slice(0, 14) + '_' + Utilities.getUuid().replace(/-/g, '').slice(0, 8);
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users      = getSheetRecords_(usersSheet);
+  var userRecord = users.find(function (row) { return row.id === session.userId; });
+  var displayName = userRecord ? trimAuthText_(userRecord.displayName || userRecord.username) : '';
+
+  sheet.appendRow([id, session.userId, displayName, category, title, text, now]);
+
+  return { status: 'ok', id: id };
+}
+
+function readConsultations_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+
+  var spreadsheet = getAuthSpreadsheet_();
+  var sheet = spreadsheet.getSheetByName(CONSULTATION_SHEET_NAME_);
+  if (!sheet) return { status: 'ok', posts: [] };
+
+  var posts = getSheetRecords_(sheet);
+  if (!posts.length) return { status: 'ok', posts: [] };
+  var hiddenMap = getContentStateMap_('consultation');
+  var mutedUserIds = readMutedUserIdsForUser_(session.userId);
+
+  posts.sort(function (a, b) {
+    return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+  });
+  posts = posts.filter(function (post) {
+    return !isContentHidden_(hiddenMap, post.id) && !mutedUserIds[trimAuthText_(post.userId)];
+  });
+  posts = posts.slice(0, CONSULTATION_MAX_POSTS_);
+
+  var commentsSheet = spreadsheet.getSheetByName(CONSULTATION_COMMENTS_SHEET_NAME_);
+  var allComments   = commentsSheet ? getSheetRecords_(commentsSheet) : [];
+
+  var result = posts.map(function (post) {
+    var comments = allComments.filter(function (c) { return c.postId === post.id; });
+    comments.sort(function (a, b) {
+      return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
+    });
+    comments = comments.filter(function (comment) {
+      return !mutedUserIds[trimAuthText_(comment.userId)];
+    });
+    return {
+      id:          trimAuthText_(post.id),
+      userId:      trimAuthText_(post.userId),
+      displayName: trimAuthText_(post.displayName),
+      category:    trimAuthText_(post.category),
+      title:       trimAuthText_(post.title),
+      text:        trimAuthText_(post.text),
+      createdAt:   trimAuthText_(post.createdAt),
+      comments:    comments.map(function (c) {
+        return {
+          id:          trimAuthText_(c.id),
+          postId:      trimAuthText_(c.postId),
+          userId:      trimAuthText_(c.userId),
+          displayName: trimAuthText_(c.displayName),
+          text:        trimAuthText_(c.text),
+          createdAt:   trimAuthText_(c.createdAt)
+        };
+      })
+    };
+  });
+
+  return { status: 'ok', posts: result };
+}
+
+function addConsultationComment_(payload) {
+  var context = getVerifiedActionContext_(payload, '相談へのコメント');
+  var session = context.session;
+  var postId  = trimAuthText_(payload.postId);
+  var text    = trimAuthText_(payload.text);
+
+  assertAuth_(postId, 'postIdが指定されていません。');
+  assertAuth_(text,   'コメントを入力してください。');
+
+  var spreadsheet = getAuthSpreadsheet_();
+  var sheet = spreadsheet.getSheetByName(CONSULTATION_COMMENTS_SHEET_NAME_);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(CONSULTATION_COMMENTS_SHEET_NAME_);
+    sheet.appendRow(['id','postId','userId','displayName','text','createdAt']);
+  }
+
+  var now        = new Date().toISOString();
+  var id         = now.replace(/\D/g, '').slice(0, 14) + '_' + Utilities.getUuid().replace(/-/g, '').slice(0, 8);
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users      = getSheetRecords_(usersSheet);
+  var userRecord = users.find(function (row) { return row.id === session.userId; });
+  var displayName = userRecord ? trimAuthText_(userRecord.displayName || userRecord.username) : '';
+
+  sheet.appendRow([id, postId, session.userId, displayName, text, now]);
+
+  return { status: 'ok' };
+}
+
+// ── GD練習マッチング ───────────────────────────────────────────────────────────
+
+var GD_SESSIONS_SHEET_NAME_      = 'gd_sessions';
+var GD_PARTICIPANTS_SHEET_NAME_  = 'gd_participants';
+var GD_SESSIONS_HEADERS_         = ['id','creatorId','creatorName','title','scheduledDate','scheduledTime','maxParticipants','meetUrl','aiTheme','status','createdAt'];
+var GD_PARTICIPANTS_HEADERS_     = ['sessionId','userId','displayName','joinedAt'];
+
+function getOrCreateGDSessionsSheet_() {
+  var ss    = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(GD_SESSIONS_SHEET_NAME_);
+  if (!sheet) {
+    sheet = ss.insertSheet(GD_SESSIONS_SHEET_NAME_);
+    sheet.appendRow(GD_SESSIONS_HEADERS_);
+  }
+  return sheet;
+}
+
+function getOrCreateGDParticipantsSheet_() {
+  var ss    = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(GD_PARTICIPANTS_SHEET_NAME_);
+  if (!sheet) {
+    sheet = ss.insertSheet(GD_PARTICIPANTS_SHEET_NAME_);
+    sheet.appendRow(GD_PARTICIPANTS_HEADERS_);
+  }
+  return sheet;
+}
+
+function createGDSession_(payload) {
+  var context         = getVerifiedActionContext_(payload, 'GDセッション作成');
+  var session         = context.session;
+  var title           = trimAuthText_(payload.title);
+  var scheduledDate   = trimAuthText_(payload.scheduledDate || payload.date);
+  var scheduledTime   = trimAuthText_(payload.scheduledTime || payload.time);
+  var maxParticipants = trimAuthText_(payload.maxParticipants) || '6';
+  var meetUrl         = trimAuthText_(payload.meetUrl);
+
+  assertAuth_(title,         'タイトルを入力してください。');
+  assertAuth_(scheduledDate, '日付を入力してください。');
+  assertAuth_(scheduledTime, '時間を入力してください。');
+
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users      = getSheetRecords_(usersSheet);
+  var userRecord = users.find(function (row) { return row.id === session.userId; });
+  var creatorName = userRecord ? trimAuthText_(userRecord.displayName || userRecord.username) : '';
+
+  var sheet = getOrCreateGDSessionsSheet_();
+  var now   = new Date().toISOString();
+  var id    = 'gd_' + new Date().getTime().toString(36) + Utilities.getUuid().replace(/-/g, '').slice(0, 6);
+
+  sheet.appendRow([id, session.userId, creatorName, title, scheduledDate, scheduledTime, maxParticipants, meetUrl, '', 'open', now]);
+
+  // Creator auto-joins the session
+  var pSheet = getOrCreateGDParticipantsSheet_();
+  pSheet.appendRow([id, session.userId, creatorName, now]);
+
+  return { status: 'ok', id: id };
+}
+
+function readGDSessions_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var mutedUserIds = readMutedUserIdsForUser_(session.userId);
+
+  var sessionsSheet = getOrCreateGDSessionsSheet_();
+  var sessions      = getSheetRecords_(sessionsSheet);
+
+  // Filter to open sessions and sort by scheduled date
+  sessions = sessions.filter(function(s) {
+    return s.status === 'open' && !mutedUserIds[trimAuthText_(s.creatorId)];
+  });
+  sessions.sort(function(a, b) {
+    var da = (a.scheduledDate || '') + (a.scheduledTime || '');
+    var db = (b.scheduledDate || '') + (b.scheduledTime || '');
+    return da > db ? 1 : da < db ? -1 : 0;
+  });
+
+  var pSheet          = getOrCreateGDParticipantsSheet_();
+  var allParticipants = getSheetRecords_(pSheet);
+
+  var result = sessions.map(function(s) {
+    var participants = allParticipants.filter(function(p) { return p.sessionId === s.id; });
+    participants = participants.filter(function (participant) {
+      return !mutedUserIds[trimAuthText_(participant.userId)];
+    });
+    var isParticipant = participants.some(function (p) { return trimAuthText_(p.userId) === session.userId; });
+    var canViewMeetUrl = isParticipant || trimAuthText_(s.creatorId) === session.userId;
+    return {
+      id:              trimAuthText_(s.id),
+      creatorId:       trimAuthText_(s.creatorId),
+      creatorName:     trimAuthText_(s.creatorName),
+      title:           trimAuthText_(s.title),
+      scheduledDate:   trimAuthText_(s.scheduledDate),
+      scheduledTime:   trimAuthText_(s.scheduledTime),
+      maxParticipants: trimAuthText_(s.maxParticipants),
+      meetUrl:         canViewMeetUrl ? trimAuthText_(s.meetUrl) : '',
+      aiTheme:         trimAuthText_(s.aiTheme),
+      status:          trimAuthText_(s.status),
+      createdAt:       trimAuthText_(s.createdAt),
+      canViewMeetUrl:  canViewMeetUrl,
+      isParticipant:   isParticipant,
+      participantCount: participants.length,
+      participants:    participants.map(function(p) {
+        return { userId: trimAuthText_(p.userId), displayName: trimAuthText_(p.displayName), joinedAt: trimAuthText_(p.joinedAt) };
+      })
+    };
+  });
+
+  return { status: 'ok', sessions: result };
+}
+
+function joinGDSession_(payload) {
+  var context   = getVerifiedActionContext_(payload, 'GDセッション参加');
+  var session   = context.session;
+  var sessionId = trimAuthText_(payload.sessionId);
+  assertAuth_(sessionId, 'セッションIDが指定されていません。');
+
+  var sessionsSheet = getOrCreateGDSessionsSheet_();
+  var sessions      = getSheetRecords_(sessionsSheet);
+  var gdSession     = sessions.find(function(s) { return String(s.id) === sessionId; });
+  assertAuth_(gdSession, 'セッションが見つかりません。');
+  assertAuth_(gdSession.status === 'open', 'このセッションは締め切られています。');
+
+  var pSheet       = getOrCreateGDParticipantsSheet_();
+  var participants = getSheetRecords_(pSheet);
+  var already      = participants.find(function(p) { return p.sessionId === sessionId && p.userId === session.userId; });
+  if (already) return { status: 'ok', message: '既に参加しています。' };
+
+  var currentCount = participants.filter(function(p) { return p.sessionId === sessionId; }).length;
+  var max          = parseInt(gdSession.maxParticipants) || 6;
+  assertAuth_(currentCount < max, '定員に達しています。');
+
+  var usersSheet  = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users       = getSheetRecords_(usersSheet);
+  var userRecord  = users.find(function(row) { return row.id === session.userId; });
+  var displayName = userRecord ? trimAuthText_(userRecord.displayName || userRecord.username) : '';
+
+  var now = new Date().toISOString();
+  pSheet.appendRow([sessionId, session.userId, displayName, now]);
+
+  return { status: 'ok' };
+}
+
+function leaveGDSession_(payload) {
+  var session   = getActiveSessionOrThrow_(payload.sessionToken);
+  var sessionId = trimAuthText_(payload.sessionId);
+  assertAuth_(sessionId, 'セッションIDが指定されていません。');
+
+  var pSheet       = getOrCreateGDParticipantsSheet_();
+  var participants = getSheetRecords_(pSheet);
+  var idx          = findRecordIndex_(participants, function(p) { return p.sessionId === sessionId && p.userId === session.userId; });
+  assertAuth_(idx >= 0, 'このセッションに参加していません。');
+  pSheet.deleteRow(idx + 2);
+
+  return { status: 'ok' };
+}
+
+function generateGDTheme_(payload) {
+  assertAiUsageAllowedForSession_(payload.sessionToken, 'generateGDTheme');
+  var apiKey = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
+  assertAuth_(apiKey, 'AI機能が設定されていません。');
+
+  var resp = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+    method:'post', contentType:'application/json',
+    headers:{'x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+    payload:JSON.stringify({
+      model:'claude-sonnet-4-20250514', max_tokens:300,
+      system:'就活のグループディスカッション練習用のテーマを1つ提案してください。テーマと簡単な背景説明を日本語で返してください。',
+      messages:[{role:'user',content:'GDのテーマを1つ提案してください。'}]
+    }),
+    muteHttpExceptions:true
+  });
+
+  var text = '';
+  if (resp.getResponseCode() === 200) {
+    (JSON.parse(resp.getContentText()).content||[]).forEach(function(b){if(b.type==='text')text+=b.text;});
+  }
+  return { status:'ok', theme: text || 'テーマの生成に失敗しました。' };
+}
+
+// ── OB訪問対策 ──────────────────────────────────────────────────────────────
+
+var OB_VISIT_SHEET_NAME_ = 'ob_visits';
+var OB_VISIT_HEADERS_    = ['id','userId','company','obName','obDepartment','visitDate','status','prepQuestions','prepNotes','reviewNotes','impressions','nextActions','rating','createdAt','updatedAt'];
+
+function getOrCreateOBVisitSheet_() {
+  var ss    = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(OB_VISIT_SHEET_NAME_);
+  if (!sheet) {
+    sheet = ss.insertSheet(OB_VISIT_SHEET_NAME_);
+    sheet.appendRow(OB_VISIT_HEADERS_);
+  }
+  return sheet;
+}
+
+function writeOBVisit_(payload) {
+  var session       = getActiveSessionOrThrow_(payload.sessionToken);
+  var visit         = payload.visit || {};
+  var id            = trimAuthText_(visit.id);
+  var company       = trimAuthText_(visit.company);
+  var obName        = trimAuthText_(visit.obName);
+  var obDepartment  = trimAuthText_(visit.obDepartment);
+  var visitDate     = trimAuthText_(visit.visitDate);
+  var status        = trimAuthText_(visit.status);
+  var prepQuestions = trimAuthText_(visit.prepQuestions);
+  var prepNotes     = trimAuthText_(visit.prepNotes);
+  var reviewNotes   = trimAuthText_(visit.reviewNotes);
+  var impressions   = trimAuthText_(visit.impressions);
+  var nextActions   = trimAuthText_(visit.nextActions);
+  var rating        = trimAuthText_(visit.rating);
+
+  assertAuth_(company, '企業名（テーマ）を入力してください。');
+  if (['planned','completed'].indexOf(status) < 0) status = 'planned';
+
+  var sheet = getOrCreateOBVisitSheet_();
+  var now   = new Date().toISOString();
+
+  if (id) {
+    var rows = getSheetRecords_(sheet);
+    var idx  = findRecordIndex_(rows, function(r) { return String(r.id) === id && String(r.userId) === session.userId; });
+    assertAuth_(idx >= 0, 'OB訪問記録が見つかりません。');
+    sheet.getRange(idx + 2, 3, 1, 13).setValues([[company, obName, obDepartment, visitDate, status, prepQuestions, prepNotes, reviewNotes, impressions, nextActions, rating, rows[idx].createdAt, now]]);
+    return { status: 'ok', id: id };
+  }
+
+  var newId = 'ob_' + new Date().getTime().toString(36) + Utilities.getUuid().replace(/-/g, '').slice(0, 6);
+  sheet.appendRow([newId, session.userId, company, obName, obDepartment, visitDate, status, prepQuestions, prepNotes, reviewNotes, impressions, nextActions, rating, now, now]);
+  return { status: 'ok', id: newId };
+}
+
+function readMyOBVisits_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var sheet   = getOrCreateOBVisitSheet_();
+  var rows    = getSheetRecords_(sheet);
+  var mine    = rows.filter(function(r) { return String(r.userId) === session.userId; });
+
+  return {
+    status: 'ok',
+    entries: mine.map(function(r) {
+      return {
+        id:            trimAuthText_(r.id),
+        company:       trimAuthText_(r.company),
+        obName:        trimAuthText_(r.obName),
+        obDepartment:  trimAuthText_(r.obDepartment),
+        visitDate:     trimAuthText_(r.visitDate),
+        status:        trimAuthText_(r.status),
+        prepQuestions: trimAuthText_(r.prepQuestions),
+        prepNotes:     trimAuthText_(r.prepNotes),
+        reviewNotes:   trimAuthText_(r.reviewNotes),
+        impressions:   trimAuthText_(r.impressions),
+        nextActions:   trimAuthText_(r.nextActions),
+        rating:        trimAuthText_(r.rating),
+        createdAt:     trimAuthText_(r.createdAt),
+        updatedAt:     trimAuthText_(r.updatedAt)
+      };
+    })
+  };
+}
+
+function deleteOBVisit_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var id      = trimAuthText_(payload.id);
+  assertAuth_(id, 'IDが指定されていません。');
+
+  var sheet = getOrCreateOBVisitSheet_();
+  var rows  = getSheetRecords_(sheet);
+  var idx   = findRecordIndex_(rows, function(r) { return String(r.id) === id && String(r.userId) === session.userId; });
+  assertAuth_(idx >= 0, 'OB訪問記録が見つかりません。');
+  sheet.deleteRow(idx + 2);
+  return { status: 'ok' };
+}
+
+// ── OB訪問 匿名共有 ─────────────────────────────────────────────────────────
+
+var SHARED_OB_SHEET_NAME_ = 'shared_ob_info';
+var SHARED_OB_HEADERS_    = ['id','industry','department','yearsOfExp','keyInsights','tips','sharedAt'];
+
+function getOrCreateSharedOBSheet_() {
+  var ss    = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(SHARED_OB_SHEET_NAME_);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHARED_OB_SHEET_NAME_);
+    sheet.appendRow(SHARED_OB_HEADERS_);
+  }
+  return sheet;
+}
+
+function shareOBInfo_(payload) {
+  getActiveSessionOrThrow_(payload.sessionToken);
+  var info        = payload.info || {};
+  var industry    = trimAuthText_(info.industry);
+  var department  = trimAuthText_(info.department);
+  var yearsOfExp  = trimAuthText_(info.yearsOfExp);
+  var keyInsights = trimAuthText_(info.keyInsights);
+  var tips        = trimAuthText_(info.tips);
+
+  assertAuth_(industry || department || keyInsights, '共有する情報を入力してください。');
+
+  var sheet = getOrCreateSharedOBSheet_();
+  var now   = new Date().toISOString();
+  var newId = 'sob_' + new Date().getTime().toString(36) + Utilities.getUuid().replace(/-/g, '').slice(0, 6);
+  sheet.appendRow([newId, industry, department, yearsOfExp, keyInsights, tips, now]);
+  return { status: 'ok', id: newId };
+}
+
+function readSharedOBInfo_(payload) {
+  getActiveSessionOrThrow_(payload.sessionToken);
+  var sheet = getOrCreateSharedOBSheet_();
+  var rows  = getSheetRecords_(sheet);
+
+  return {
+    status: 'ok',
+    entries: rows.map(function(r) {
+      return {
+        id:          trimAuthText_(r.id),
+        industry:    trimAuthText_(r.industry),
+        department:  trimAuthText_(r.department),
+        yearsOfExp:  trimAuthText_(r.yearsOfExp),
+        keyInsights: trimAuthText_(r.keyInsights),
+        tips:        trimAuthText_(r.tips),
+        sharedAt:    trimAuthText_(r.sharedAt)
+      };
+    })
+  };
+}
+
+// ── 通過ES閲覧 ──────────────────────────────────────────────────────────────
+
+function readPassedES_(payload) {
+  getActiveSessionOrThrow_(payload.sessionToken);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('es_bank');
+  if (!sheet) return { status: 'ok', entries: [] };
+
+  var rows = getSheetRecords_(sheet);
+  var passed = rows.filter(function(r) {
+    var result = String(r.result || '');
+    return result.indexOf('通過') >= 0 || result.indexOf('合格') >= 0;
+  });
+
+  return {
+    status: 'ok',
+    entries: passed.map(function(r) {
+      return {
+        id:       trimAuthText_(r.id),
+        company:  trimAuthText_(r.company),
+        industry: trimAuthText_(r.industry),
+        question: trimAuthText_(r.question),
+        esText:   trimAuthText_(r.esText),
+        result:   trimAuthText_(r.result)
+      };
+    })
+  };
+}
+
+// ── NPS計測 ──────────────────────────────────────────────────────────────────
+
+var NPS_SHEET_NAME_ = 'nps_responses';
+var NPS_HEADERS_    = ['id', 'userId', 'score', 'comment', 'createdAt'];
+
+function getOrCreateNPSSheet_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(NPS_SHEET_NAME_);
+  if (!sheet) {
+    sheet = ss.insertSheet(NPS_SHEET_NAME_);
+    sheet.appendRow(NPS_HEADERS_);
+  }
+  return sheet;
+}
+
+function submitNPS_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var score   = parseInt(payload.score, 10);
+  if (isNaN(score) || score < 0 || score > 10) {
+    throw new Error('スコアは0〜10の整数で入力してください。');
+  }
+  var comment = trimAuthText_(payload.comment || '');
+  var sheet   = getOrCreateNPSSheet_();
+  var newId   = 'nps_' + new Date().getTime().toString(36) + Utilities.getUuid().replace(/-/g, '').slice(0, 6);
+  sheet.appendRow([newId, session.userId, score, comment, new Date().toISOString()]);
+  return { status: 'ok', id: newId };
+}
+
+function readNPSSummary_(payload) {
+  requireAdminSession_(payload);
+  var sheet = getOrCreateNPSSheet_();
+  var rows  = getSheetRecords_(sheet);
+  if (!rows.length) return { status: 'ok', average: 0, count: 0 };
+  var total = 0;
+  rows.forEach(function(r) { total += parseInt(r.score, 10) || 0; });
+  return {
+    status: 'ok',
+    average: Math.round((total / rows.length) * 10) / 10,
+    count: rows.length
+  };
+}
+
+// ── LINE Notify ──────────────────────────────────────────────────────────
+
+function sendLineNotify_(token, message) {
+  if (!token) return false;
+  try {
+    var resp = UrlFetchApp.fetch('https://notify-api.line.me/api/notify', {
+      method: 'post',
+      headers: { 'Authorization': 'Bearer ' + token },
+      payload: { message: message },
+      muteHttpExceptions: true
+    });
+    return resp.getResponseCode() === 200;
+  } catch (e) {
+    return false;
+  }
+}
+
+function sendLineNotifyToUser_(userId, message) {
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users = getSheetRecords_(usersSheet);
+  var user = users.find(function(r) { return r.id === userId; });
+  if (!user) return false;
+  var token = trimAuthText_(user.lineNotifyToken);
+  return sendLineNotify_(token, message);
+}
+
+function sendLineNotifyToAll_(message) {
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users = getSheetRecords_(usersSheet);
+  var sent = 0;
+  users.forEach(function(user) {
+    var token = trimAuthText_(user.lineNotifyToken);
+    if (token && sendLineNotify_(token, message)) sent++;
+  });
+  return sent;
+}
+
+// LINE Notifyトークン保存（プロフィール更新時に使う）
+function authSaveLineNotifyToken_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var token = trimAuthText_(payload.lineNotifyToken);
+
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users = getSheetRecords_(usersSheet);
+  var idx = findRecordIndex_(users, function(r) { return r.id === session.userId; });
+  assertAuth_(idx >= 0, 'アカウントが見つかりません。');
+
+  // lineNotifyTokenカラムの位置を探す
+  var headers = usersSheet.getRange(1, 1, 1, usersSheet.getLastColumn()).getValues()[0];
+  var tokenCol = headers.indexOf('lineNotifyToken');
+  if (tokenCol >= 0) {
+    usersSheet.getRange(idx + 2, tokenCol + 1).setValue(token);
+  }
+
+  // トークンが有効か検証
+  if (token) {
+    var valid = sendLineNotify_(token, '\n【慶應就活ナビ】LINE通知の設定が完了しました！');
+    if (!valid) {
+      return { status: 'error', message: 'LINE Notifyトークンが無効です。もう一度発行してください。' };
+    }
+  }
+
+  return { status: 'ok', message: token ? 'LINE通知を有効にしました。' : 'LINE通知を無効にしました。' };
+}
+
+// 掲示板にコメントがついた時の通知
+function notifyBoardComment_(postUserId, commenterName, postTitle) {
+  sendLineNotifyToUser_(postUserId, '\n【就活ナビ】あなたの投稿にコメントがつきました\n投稿者: ' + commenterName + '\n内容: ' + postTitle);
+}
+
+// 週次ダイジェストのLINE版
+function sendWeeklyDigestLine_() {
+  var ss = getAuthSpreadsheet_();
+  var now = new Date();
+  var weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  var boardCount = 0, consultCount = 0, tlCount = 0;
+
+  var boardSheet = ss.getSheetByName('es_board');
+  if (boardSheet) {
+    boardCount = getSheetRecords_(boardSheet).filter(function(r) {
+      return new Date(r.createdAt) > weekAgo;
+    }).length;
+  }
+
+  var consultSheet = ss.getSheetByName('consultation_board');
+  if (consultSheet) {
+    consultCount = getSheetRecords_(consultSheet).filter(function(r) {
+      return new Date(r.createdAt) > weekAgo;
+    }).length;
+  }
+
+  var tlSheet = ss.getSheetByName('activity_timeline');
+  if (tlSheet) {
+    tlCount = getSheetRecords_(tlSheet).filter(function(r) {
+      return new Date(r.createdAt) > weekAgo;
+    }).length;
+  }
+
+  var message = '\n📊 今週の就活ナビ\n'
+    + '・ES添削掲示板: ' + boardCount + '件の新規投稿\n'
+    + '・相談掲示板: ' + consultCount + '件\n'
+    + '・タイムライン: ' + tlCount + '件の投稿\n'
+    + '\n今すぐチェック →';
+
+  return sendLineNotifyToAll_(message);
+}
+
 /* ===== 週次ダイジェストメール ===== */
 
 function sendWeeklyDigest_(payload) {
   requireAdminSession_(payload);
   var result = sendWeeklyDigest();
   return { status: 'ok', sent: result };
+}
+
+function sendWeeklyDigestLineAction_(payload) {
+  requireAdminSession_(payload);
+  return { status: 'ok', sent: sendWeeklyDigestLine_() };
 }
 
 /**
@@ -2020,6 +3775,7 @@ function sendWeeklyDigest() {
   var sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
   var sentCount = 0;
 
+  // 各シートから過去7日間のデータをカウント
   var newBoardPosts = countRecentRows_('es_board', sevenDaysAgo);
   var newConsultations = countRecentRows_('consultations', sevenDaysAgo);
   var activeTimeline = countRecentRows_('timeline', sevenDaysAgo);
@@ -2029,7 +3785,7 @@ function sendWeeklyDigest() {
     if (!email || !validateEmail_(email)) return;
 
     var displayName = trimAuthText_(user.displayName) || 'メンバー';
-    var siteUrl = 'https://naotama1123.github.io/keio-syukatu-navi/public/members.html';
+    var siteUrl = getConfiguredSiteBaseUrl_() + '/members.html';
 
     var htmlBody = '\x3c!DOCTYPE html\x3e\x3chtml\x3e\x3chead\x3e\x3cmeta charset="UTF-8"\x3e\x3c/head\x3e\x3cbody style="font-family:sans-serif;background:#faf7f2;padding:20px;"\x3e'
       + '\x3cdiv style="max-width:500px;margin:0 auto;background:white;border-radius:8px;overflow:hidden;"\x3e'
@@ -2079,12 +3835,118 @@ function countRecentRows_(sheetName, sinceIso) {
   return count;
 }
 
+// ── 選考体験記 ──
+var SEL_EXP_SHEET_ = 'selection_experiences';
+var SEL_EXP_HEADERS_ = ['id','userId','displayName','stage','questions','atmosphere','tips','result','createdAt'];
+
+function writeSelectionExperience_(payload) {
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var text = trimAuthText_(payload.stage);
+  assertAuth_(text, '選考段階を選択してください。');
+
+  var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
+  var users = getSheetRecords_(usersSheet);
+  var user = users.find(function(r){return r.id===session.userId;});
+  var displayName = user ? trimAuthText_(user.displayName||user.username) : '匿名';
+
+  var ss = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(SEL_EXP_SHEET_);
+  if(!sheet){sheet=ss.insertSheet(SEL_EXP_SHEET_);sheet.appendRow(SEL_EXP_HEADERS_);}
+
+  var now = new Date().toISOString();
+  var id = 'sexp_'+now.replace(/\D/g,'').slice(0,14)+'_'+Math.floor(Math.random()*10000);
+  sheet.appendRow([id,session.userId,displayName,
+    trimAuthText_(payload.stage),trimAuthText_(payload.questions),
+    trimAuthText_(payload.atmosphere),trimAuthText_(payload.tips),
+    trimAuthText_(payload.result),now]);
+  return {status:'ok',id:id};
+}
+
+function readSelectionExperiences_(payload) {
+  getActiveSessionOrThrow_(payload.sessionToken);
+  var ss = getAuthSpreadsheet_();
+  var sheet = ss.getSheetByName(SEL_EXP_SHEET_);
+  if(!sheet) return {status:'ok',entries:[]};
+  var rows = getSheetRecords_(sheet);
+  rows.sort(function(a,b){return new Date(b.createdAt||0)-new Date(a.createdAt||0);});
+  return {status:'ok',entries:rows.slice(0,30).map(function(r){
+    return {id:trimAuthText_(r.id),displayName:trimAuthText_(r.displayName),
+      stage:trimAuthText_(r.stage),questions:trimAuthText_(r.questions),
+      atmosphere:trimAuthText_(r.atmosphere),tips:trimAuthText_(r.tips),
+      result:trimAuthText_(r.result),createdAt:trimAuthText_(r.createdAt)};
+  })};
+}
+
+// ── 管理者ダッシュボード ──
+function getAdminStats_(payload) {
+  requireAdminSession_(payload);
+  ensureModerationSheets_();
+  var ss = getAuthSpreadsheet_();
+  var userCount = 0, esCount = 0, gkCount = 0, boardCount = 0, tlCount = 0, npsAvg = 0, npsCount = 0;
+  var unverifiedUserCount = 0, activeSessionCount = 0, pendingReportCount = 0, hiddenContentCount = 0;
+
+  var usersSheet = ss.getSheetByName('auth_users');
+  if(usersSheet) {
+    var users = getSheetRecords_(usersSheet);
+    userCount = users.length;
+    unverifiedUserCount = users.filter(function (user) {
+      return !isEmailVerifiedRecord_(user);
+    }).length;
+  }
+  var esSheet = ss.getSheetByName('es_bank');
+  if(esSheet) esCount = Math.max(0, esSheet.getLastRow()-1);
+  var gkSheet = ss.getSheetByName('gakuchika_bank');
+  if(gkSheet) gkCount = Math.max(0, gkSheet.getLastRow()-1);
+  var boardSheet = ss.getSheetByName('es_board');
+  if(boardSheet) boardCount = Math.max(0, boardSheet.getLastRow()-1);
+  var tlSheet = ss.getSheetByName('activity_timeline');
+  if(tlSheet) tlCount = Math.max(0, tlSheet.getLastRow()-1);
+
+  var npsSheet = ss.getSheetByName('nps_responses');
+  if(npsSheet) {
+    var npsRows = getSheetRecords_(npsSheet);
+    npsCount = npsRows.length;
+    if(npsCount>0) {
+      var total = npsRows.reduce(function(s,r){return s+parseInt(r.score||0);},0);
+      npsAvg = Math.round(total/npsCount*10)/10;
+    }
+  }
+
+  var sessionsSheet = ss.getSheetByName(AUTH_SHEET_NAMES_.sessions);
+  if (sessionsSheet) {
+    activeSessionCount = getSheetRecords_(sessionsSheet).filter(function (row) {
+      return String(row.active) !== '0' && new Date(row.expiresAt || 0).getTime() > Date.now();
+    }).length;
+  }
+
+  pendingReportCount = getSheetRecords_(getAuthSheet_(MODERATION_REPORTS_SHEET_NAME_)).filter(function (row) {
+    return trimAuthText_(row.status || 'open') === 'open';
+  }).length;
+  hiddenContentCount = getSheetRecords_(getAuthSheet_(MODERATION_CONTENT_STATE_SHEET_NAME_)).filter(function (row) {
+    return trimAuthText_(row.state) === 'hidden';
+  }).length;
+
+  return {status:'ok',stats:{
+    userCount:userCount,
+    esCount:esCount,
+    gkCount:gkCount,
+    boardCount:boardCount,
+    tlCount:tlCount,
+    npsAvg:npsAvg,
+    npsCount:npsCount,
+    unverifiedUserCount:unverifiedUserCount,
+    activeSessionCount:activeSessionCount,
+    pendingReportCount:pendingReportCount,
+    hiddenContentCount:hiddenContentCount
+  }};
+}
+
 // ── 質問・相談掲示板 (Q&A Board) ──────────────────────────────────────────────
 
 var QA_BOARD_SHEET_NAME_    = 'qa_board';
 var QA_BOARD_MAX_POSTS_     = 100;
 var QA_BOARD_CATEGORIES_    = ['ES・ガクチカ','面接','企業研究','その他'];
-var QA_BOARD_HEADERS_       = ['id','userId','displayName','title','body','category','anonymous','createdAt','replies'];
+var QA_BOARD_HEADERS_       = ['id','userId','displayName','title','body','category','anonymous','createdAt','replies','acceptedReplyId'];
 
 function getOrCreateQABoardSheet_() {
   var ss    = getAuthSpreadsheet_();
@@ -2097,7 +3959,8 @@ function getOrCreateQABoardSheet_() {
 }
 
 function postQuestion_(payload) {
-  var session  = getActiveSessionOrThrow_(payload.sessionToken);
+  var context  = getVerifiedActionContext_(payload, '質問投稿');
+  var session  = context.session;
   var title    = trimAuthText_(payload.title);
   var body     = trimAuthText_(payload.body);
   var category = trimAuthText_(payload.category);
@@ -2116,13 +3979,13 @@ function postQuestion_(payload) {
   var userRecord = users.find(function (row) { return row.id === session.userId; });
   var displayName = userRecord ? trimAuthText_(userRecord.displayName || userRecord.username) : '';
 
-  sheet.appendRow([id, session.userId, displayName, title, body, category, anonymous ? 'true' : 'false', now, '[]']);
+  sheet.appendRow([id, session.userId, displayName, title, body, category, anonymous ? 'true' : 'false', now, '[]', '']);
 
   return { status: 'ok', id: id };
 }
 
 function readQuestions_(payload) {
-  getActiveSessionOrThrow_(payload.sessionToken);
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
 
   var ss    = getAuthSpreadsheet_();
   var sheet = ss.getSheetByName(QA_BOARD_SHEET_NAME_);
@@ -2130,15 +3993,30 @@ function readQuestions_(payload) {
 
   var posts = getSheetRecords_(sheet);
   if (!posts.length) return { status: 'ok', questions: [] };
+  var hiddenMap = getContentStateMap_('qa_question');
+  var mutedUserIds = readMutedUserIdsForUser_(session.userId);
 
   posts.sort(function (a, b) {
     return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+  });
+  posts = posts.filter(function (post) {
+    return !isContentHidden_(hiddenMap, post.id) && !mutedUserIds[trimAuthText_(post.userId)];
   });
   posts = posts.slice(0, QA_BOARD_MAX_POSTS_);
 
   var result = posts.map(function (post) {
     var replies = [];
     try { replies = JSON.parse(post.replies || '[]'); } catch (e) { replies = []; }
+    replies = replies.filter(function (reply) {
+      return !mutedUserIds[trimAuthText_(reply.userId)];
+    });
+    var acceptedReplyId = trimAuthText_(post.acceptedReplyId);
+    replies.sort(function (a, b) {
+      var aAccepted = trimAuthText_(a.id) === acceptedReplyId ? 0 : 1;
+      var bAccepted = trimAuthText_(b.id) === acceptedReplyId ? 0 : 1;
+      if (aAccepted !== bAccepted) return aAccepted - bAccepted;
+      return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
+    });
     var isAnon = String(post.anonymous) === 'true';
     return {
       id:          trimAuthText_(post.id),
@@ -2149,8 +4027,19 @@ function readQuestions_(payload) {
       category:    trimAuthText_(post.category),
       anonymous:   isAnon,
       createdAt:   trimAuthText_(post.createdAt),
+      acceptedReplyId: acceptedReplyId,
+      canAcceptAnswer: trimAuthText_(post.userId) === trimAuthText_(session.userId),
       replyCount:  replies.length,
-      replies:     replies
+      replies:     replies.map(function (reply) {
+        return {
+          id: trimAuthText_(reply.id),
+          userId: trimAuthText_(reply.userId),
+          displayName: trimAuthText_(reply.displayName),
+          body: trimAuthText_(reply.body),
+          createdAt: trimAuthText_(reply.createdAt),
+          accepted: trimAuthText_(reply.id) === acceptedReplyId
+        };
+      })
     };
   });
 
@@ -2158,7 +4047,8 @@ function readQuestions_(payload) {
 }
 
 function postReply_(payload) {
-  var session    = getActiveSessionOrThrow_(payload.sessionToken);
+  var context    = getVerifiedActionContext_(payload, '返信投稿');
+  var session    = context.session;
   var questionId = trimAuthText_(payload.questionId);
   var body       = trimAuthText_(payload.body);
 
@@ -2182,13 +4072,39 @@ function postReply_(payload) {
   try { replies = JSON.parse(rows[idx].replies || '[]'); } catch (e) { replies = []; }
   replies.push({ id: replyId, userId: session.userId, displayName: displayName, body: body, createdAt: now });
 
-  // replies column index (9th column = index 9)
+  // replies column index
   var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
   var repliesCol = headers.indexOf('replies') + 1;
   if (repliesCol < 1) repliesCol = 9;
   sheet.getRange(idx + 2, repliesCol).setValue(JSON.stringify(replies));
 
   return { status: 'ok' };
+}
+
+function acceptQuestionReply_(payload) {
+  var context = getVerifiedActionContext_(payload, 'ベストアンサー選択');
+  var questionId = trimAuthText_(payload.questionId);
+  var replyId = trimAuthText_(payload.replyId);
+  assertAuth_(questionId, '質問IDが指定されていません。');
+  assertAuth_(replyId, '返信IDが指定されていません。');
+
+  var sheet = getOrCreateQABoardSheet_();
+  var rows = getSheetRecords_(sheet);
+  var idx = findRecordIndex_(rows, function (row) { return trimAuthText_(row.id) === questionId; });
+  assertAuth_(idx >= 0, '質問が見つかりませんでした。');
+  assertAuth_(trimAuthText_(rows[idx].userId) === trimAuthText_(context.session.userId), '自分の質問のみ操作できます。');
+
+  var replies = [];
+  try { replies = JSON.parse(rows[idx].replies || '[]'); } catch (error) { replies = []; }
+  var exists = replies.some(function (reply) { return trimAuthText_(reply.id) === replyId; });
+  assertAuth_(exists, '返信が見つかりませんでした。');
+
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var acceptedCol = headers.indexOf('acceptedReplyId') + 1;
+  if (acceptedCol < 1) acceptedCol = 10;
+  var nextReplyId = trimAuthText_(rows[idx].acceptedReplyId) === replyId ? '' : replyId;
+  sheet.getRange(idx + 2, acceptedCol).setValue(nextReplyId);
+  return { status: 'ok', acceptedReplyId: nextReplyId };
 }
 
 function deleteQuestion_(payload) {
@@ -2227,7 +4143,8 @@ function getOrCreateExpSheet_() {
 }
 
 function postExperience_(payload) {
-  var session      = getActiveSessionOrThrow_(payload.sessionToken);
+  var context      = getVerifiedActionContext_(payload, '体験記投稿');
+  var session      = context.session;
   var industry     = trimAuthText_(payload.industry);
   var companyCount = parseInt(payload.companyCount, 10) || 0;
   var startMonth   = trimAuthText_(payload.startMonth);
@@ -2262,7 +4179,7 @@ function postExperience_(payload) {
 }
 
 function readExperiences_(payload) {
-  getActiveSessionOrThrow_(payload.sessionToken);
+  var session = getActiveSessionOrThrow_(payload.sessionToken);
 
   var ss    = getAuthSpreadsheet_();
   var sheet = ss.getSheetByName(EXP_SHEET_NAME_);
@@ -2270,9 +4187,14 @@ function readExperiences_(payload) {
 
   var rows = getSheetRecords_(sheet);
   if (!rows.length) return { status: 'ok', experiences: [] };
+  var hiddenMap = getContentStateMap_('experience');
+  var mutedUserIds = readMutedUserIdsForUser_(session.userId);
 
   rows.sort(function (a, b) {
     return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+  });
+  rows = rows.filter(function (row) {
+    return !isContentHidden_(hiddenMap, row.id) && !mutedUserIds[trimAuthText_(row.userId)];
   });
   rows = rows.slice(0, EXP_MAX_STORIES_);
 
@@ -2326,7 +4248,6 @@ function writeGdFeedback_(payload) {
   var now = new Date().toISOString();
 
   if (entry.id) {
-    // 更新
     var data = sheet.getDataRange().getValues();
     for (var i = 1; i < data.length; i++) {
       if (data[i][0] === entry.id && data[i][1] === user.userId) {
@@ -2340,7 +4261,6 @@ function writeGdFeedback_(payload) {
     }
     throw new Error('エントリーが見つかりません。');
   } else {
-    // 新規
     var id = Utilities.getUuid();
     sheet.appendRow([
       id, user.userId, entry.date || '', entry.theme, entry.role || '',
@@ -2409,7 +4329,8 @@ function getOrCreatePMSheet_() {
 }
 
 function postPracticeRequest_(payload) {
-  var session       = getActiveSessionOrThrow_(payload.sessionToken);
+  var context       = getVerifiedActionContext_(payload, '練習募集投稿');
+  var session       = context.session;
   var type          = trimAuthText_(payload.type);
   var industry      = trimAuthText_(payload.industry);
   var preferredDate = trimAuthText_(payload.preferredDate);
@@ -2438,6 +4359,8 @@ function postPracticeRequest_(payload) {
 
 function readPracticeRequests_(payload) {
   var session = getActiveSessionOrThrow_(payload.sessionToken);
+  var hiddenMap = getContentStateMap_('practice_request');
+  var mutedUserIds = readMutedUserIdsForUser_(session.userId);
 
   var ss    = getAuthSpreadsheet_();
   var sheet = ss.getSheetByName(PM_SHEET_NAME_);
@@ -2445,6 +4368,9 @@ function readPracticeRequests_(payload) {
 
   var rows = getSheetRecords_(sheet);
   if (!rows.length) return { status: 'ok', requests: [] };
+  rows = rows.filter(function (row) {
+    return !isContentHidden_(hiddenMap, row.id) && !mutedUserIds[trimAuthText_(row.userId)];
+  });
 
   // Look up user lineName map for participants
   var usersSheet = getAuthSheet_(AUTH_SHEET_NAMES_.users);
@@ -2466,6 +4392,9 @@ function readPracticeRequests_(payload) {
   var result = rows.map(function (row) {
     var participants = [];
     try { participants = JSON.parse(row.participants || '[]'); } catch (e) { participants = []; }
+    participants = participants.filter(function (participant) {
+      return !mutedUserIds[trimAuthText_(participant.userId)];
+    });
 
     var isParticipant = participants.some(function (p) { return p.userId === session.userId; });
     var creatorInfo   = userMap[row.userId] || {};
@@ -2498,7 +4427,8 @@ function readPracticeRequests_(payload) {
 }
 
 function joinPracticeRequest_(payload) {
-  var session   = getActiveSessionOrThrow_(payload.sessionToken);
+  var context   = getVerifiedActionContext_(payload, '練習募集への参加');
+  var session   = context.session;
   var requestId = trimAuthText_(payload.requestId);
   assertAuth_(requestId, '募集IDが指定されていません。');
 

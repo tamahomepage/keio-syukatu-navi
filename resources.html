@@ -2,25 +2,13 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<script>
-  (function(measurementId){
-    if (!measurementId) return;
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', measurementId);
-  })('');
-</script>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>リソース ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
   :root {
     --navy: #0a1a3e;
@@ -359,13 +347,35 @@
   const PRIORITY_KEY  = 'priority';
   const FILES_KEY     = 'files';
   const BOOKS_KEY     = 'books';
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
   const LENDING_FORM  = 'https://docs.google.com/forms/d/e/1FAIpQLScmV_ubANH5RNIHD_wEH3yakHbs5YqdegrPysSfpFo4veAg4Q/viewform';
 
   // ===== Auth & Nav =====
   function logout() {
     KeioNaviAuth.logout();
     location.reload();
+  }
+
+  function escHtml(value) {
+    var div = document.createElement('div');
+    div.textContent = value == null ? '' : String(value);
+    return div.innerHTML;
+  }
+
+  function escAttr(value) {
+    return escHtml(value).replace(/'/g, '&#39;');
+  }
+
+  function safeHttpUrl(value) {
+    var raw = String(value || '').trim();
+    if (!raw) return '';
+    try {
+      var url = new URL(raw, window.location.href);
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+      return url.href;
+    } catch (error) {
+      return '';
+    }
   }
 
   function toggleMobileMenuM() {
@@ -387,9 +397,10 @@
   // ===== GAS Fetch =====
   async function fetchViaGAS(sheetKey) {
     if (!GAS_PROXY_URL) throw new Error('GAS_PROXY_URLが設定されていません');
+    var sessionToken = typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
     var res = await fetch(GAS_PROXY_URL, {
       method: 'POST',
-      body: JSON.stringify({ action: 'read', sheetKey: sheetKey }),
+      body: JSON.stringify(sessionToken ? { action: 'read', sheetKey: sheetKey, sessionToken: sessionToken } : { action: 'read', sheetKey: sheetKey }),
       redirect: 'follow',
     });
     var data = await res.json();
@@ -410,7 +421,7 @@
     try {
       rows = PRIORITY_KEY ? (await fetchViaGAS(PRIORITY_KEY)) : sample;
     } catch(err) {
-      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 読み込みエラー: ' + err.message + '</div>';
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 読み込みエラー: ' + escHtml(err.message) + '</div>';
       console.error('PRIORITY_KEY:', err); return;
     }
     if (!rows.length) { el.innerHTML = '<div class="m-empty">現在の先行案内はありません。</div>'; return; }
@@ -422,8 +433,8 @@
       var day = isUndated ? '未定' : (d && !isNaN(d) ? d.getDate() : '\u2013');
       var wd = (!isUndated && d && !isNaN(d)) ? WEEKDAYS[d.getDay()] + '曜' : '';
       var dayStyle = isUndated ? "font-family:'Noto Sans JP',sans-serif;font-size:0.85rem;font-weight:700;color:var(--text-muted);" : '';
-      var title = (r[1]||'\u2013').replace(/\x3c/g,'&lt;');
-      var meta = (r[2]||'').replace(/\x3c/g,'&lt;');
+      var title = escHtml(r[1] || '\u2013');
+      var meta = escHtml(r[2] || '');
       return '<div class="priority-row">'
         + '<div><div class="priority-date-month">' + month + '</div><div class="priority-date-num" style="' + dayStyle + '">' + day + '</div><div style="font-size:0.65rem;color:var(--text-muted)">' + wd + '</div></div>'
         + '<div><div class="priority-title">' + title + '</div><div class="priority-meta">' + meta + '</div></div>'
@@ -445,17 +456,18 @@
     try {
       rows = FILES_KEY ? (await fetchViaGAS(FILES_KEY)) : sample;
     } catch(err) {
-      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 読み込みエラー: ' + err.message + '</div>';
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 読み込みエラー: ' + escHtml(err.message) + '</div>';
       console.error('FILES_KEY:', err); return;
     }
     if (!rows.length) { el.innerHTML = '<div class="m-empty" style="grid-column:1/-1;">限定資料はまだ準備中です。<br>LINEコミュニティで配布情報をお知らせします。</div>'; return; }
     el.innerHTML = rows.map(function(r) {
-      var hasLink = r[2] && r[2].indexOf('http') === 0;
-      var name = (r[0]||'\u2013').replace(/\x3c/g,'&lt;');
-      var desc = (r[1]||'').replace(/\x3c/g,'&lt;');
-      var date = (r[3]||'').replace(/\x3c/g,'&lt;');
+      var fileUrl = safeHttpUrl(r[2]);
+      var hasLink = !!fileUrl;
+      var name = escHtml(r[0] || '\u2013');
+      var desc = escHtml(r[1] || '');
+      var date = escHtml(r[3] || '');
       if (hasLink) {
-        return '<a href="' + r[2] + '" target="_blank" class="file-card">'
+        return '<a href="' + escAttr(fileUrl) + '" target="_blank" rel="noopener noreferrer" class="file-card">'
           + '<div class="file-icon">\ud83d\udcc4</div>'
           + '<div class="file-name">' + name + '</div>'
           + '<div class="file-meta">' + desc + '</div>'
@@ -488,7 +500,7 @@
     try {
       rows = BOOKS_KEY ? (await fetchViaGAS(BOOKS_KEY)) : sample;
     } catch(err) {
-      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 読み込みエラー: ' + err.message + '</div>';
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26a0 読み込みエラー: ' + escHtml(err.message) + '</div>';
       console.error('BOOKS_KEY:', err); return;
     }
     if (!rows.length) { el.innerHTML = '<div class="m-empty" style="grid-column:1/-1;">現在貸出可能な本はありません。<br>LINEコミュニティで輪読会の情報をご確認ください。</div>'; return; }
@@ -506,7 +518,7 @@
         + (!available && holder ? '<div class="book-holder" style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">保有: ' + holder + '</div>' : '')
         + '<div style="margin-top:1rem;">'
         + (available
-          ? '<a href="' + formUrl + '" target="_blank" class="book-apply-btn">貸出申請する \u2192</a>'
+          ? '<a href="' + escAttr(formUrl) + '" target="_blank" rel="noopener noreferrer" class="book-apply-btn">貸出申請する \u2192</a>'
           : '<span class="book-apply-btn disabled">貸出中</span>')
         + '</div>'
         + '</div>';

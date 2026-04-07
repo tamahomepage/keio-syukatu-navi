@@ -1,10 +1,30 @@
 (function () {
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
   const SESSION_TOKEN_KEY = 'keio_navi_session_token_v1';
   const USER_CACHE_KEY = 'keio_navi_current_user_cache_v1';
   const LIKED_CACHE_KEY = 'keio_navi_liked_cache_v1';
   const REDIRECT_KEY = 'keio_navi_redirect_after_login_v1';
   const LEGACY_LIKED_KEY = 'keio_navi_liked_v2';
+  const LOCAL_BACKUP_DEFINITIONS = [
+    { key: 'keio_navi_progress_v1', label: '選考進捗' },
+    { key: 'keio_navi_research_notes_v1', label: '企業研究ノート' },
+    { key: 'keio_navi_checklist_v1', label: 'チェックリスト' },
+    { key: 'keio_navi_interview_prep_v1', label: '面接対策ノート' },
+    { key: 'keio_navi_gd_feedback_v1', label: 'GDフィードバック' },
+    { key: 'keio_navi_offer_compare_v1', label: '内定比較' },
+    { key: 'keio_navi_self_analysis_v1', label: '自己分析' },
+    { key: 'keio_navi_self_pr_v1', label: '自己PR' },
+    { key: 'keio_navi_gk_deepdive_v1', label: 'ガクチカ深掘り' },
+    { key: 'keio_navi_es_bank_v1', label: 'ES保管庫' },
+    { key: 'keio_navi_stage_v1', label: '就活ステージ' },
+    { key: 'keio_navi_wizard_done_v1', label: '初回セットアップ' },
+    { key: 'keio_navi_sel_status_v1', label: '選考ステータス' },
+    { key: 'keio_navi_memo_v1', label: '企業メモ' },
+    { key: 'keio_navi_difficulty_v1', label: '苦手分析' },
+    { key: 'keio_navi_past_exams_v1', label: '過去問メモ' },
+    { key: 'keio_navi_ai_consent_v1', label: 'AI利用設定' },
+    { key: 'keio_navi_notification_prefs_v1', label: '通知設定' },
+  ];
 
   let likedSyncQueue = Promise.resolve();
 
@@ -53,12 +73,62 @@
     return fileName + window.location.search + window.location.hash;
   }
 
+  function readSessionCacheRaw(key) {
+    const current = sessionStorage.getItem(key);
+    if (current !== null) return current;
+
+    const legacy = localStorage.getItem(key);
+    if (legacy === null) return null;
+
+    sessionStorage.setItem(key, legacy);
+    localStorage.removeItem(key);
+    return legacy;
+  }
+
+  function readSessionCacheJSON(key, fallback) {
+    try {
+      const raw = readSessionCacheRaw(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function writeSessionCacheJSON(key, value) {
+    sessionStorage.setItem(key, JSON.stringify(value));
+    localStorage.removeItem(key);
+  }
+
+  function sanitizeReturnTo(url) {
+    const raw = trimText(url);
+    if (!raw) return '';
+    if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(raw) || raw.startsWith('//')) return '';
+
+    try {
+      const normalized = new URL(raw, window.location.origin + '/');
+      if (normalized.origin !== window.location.origin) return '';
+
+      const path = normalized.pathname || '/';
+      if (path !== '/' && !path.endsWith('.html')) return '';
+
+      const relativePath = path === '/' ? 'index.html' : path.replace(/^\/+/, '');
+      return relativePath + normalized.search + normalized.hash;
+    } catch (error) {
+      return '';
+    }
+  }
+
   function setReturnTo(url) {
-    if (url) sessionStorage.setItem(REDIRECT_KEY, url);
+    const safeUrl = sanitizeReturnTo(url);
+    if (safeUrl) {
+      sessionStorage.setItem(REDIRECT_KEY, safeUrl);
+      return;
+    }
+    sessionStorage.removeItem(REDIRECT_KEY);
   }
 
   function getStoredReturnTo() {
-    return sessionStorage.getItem(REDIRECT_KEY) || '';
+    return sanitizeReturnTo(sessionStorage.getItem(REDIRECT_KEY) || '');
   }
 
   function consumeReturnTo() {
@@ -68,17 +138,23 @@
   }
 
   function getSessionToken() {
-    return localStorage.getItem(SESSION_TOKEN_KEY) || '';
+    return readSessionCacheRaw(SESSION_TOKEN_KEY) || '';
   }
 
   function setSessionToken(token) {
-    localStorage.setItem(SESSION_TOKEN_KEY, token);
+    if (token) {
+      sessionStorage.setItem(SESSION_TOKEN_KEY, token);
+    } else {
+      sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    }
+    localStorage.removeItem(SESSION_TOKEN_KEY);
   }
 
   function clearSessionCache() {
-    localStorage.removeItem(SESSION_TOKEN_KEY);
-    localStorage.removeItem(USER_CACHE_KEY);
-    localStorage.removeItem(LIKED_CACHE_KEY);
+    [SESSION_TOKEN_KEY, USER_CACHE_KEY, LIKED_CACHE_KEY].forEach(key => {
+      sessionStorage.removeItem(key);
+      localStorage.removeItem(key);
+    });
   }
 
   function normalizeUser(user) {
@@ -110,6 +186,8 @@
       lineQrUrl,
       hasLineQr,
       referralCode: trimText(user.referralCode),
+      emailVerified: user.emailVerified === true || user.emailVerified === 'true' || user.emailVerified === '1',
+      emailVerifiedAt: trimText(user.emailVerifiedAt),
       createdAt: user.createdAt || '',
       updatedAt: user.updatedAt || '',
       sessionToken: trimText(user.sessionToken) || getSessionToken(),
@@ -162,17 +240,17 @@
   }
 
   function getCurrentUser() {
-    return normalizeUser(readJSON(USER_CACHE_KEY, null));
+    return normalizeUser(readSessionCacheJSON(USER_CACHE_KEY, null));
   }
 
   function getLikedCompanies() {
-    const cached = normalizeLikedCompanies(readJSON(LIKED_CACHE_KEY, []));
+    const cached = normalizeLikedCompanies(readSessionCacheJSON(LIKED_CACHE_KEY, []));
     if (cached.length) return cached;
 
     const legacyLiked = normalizeLikedCompanies(readJSON(LEGACY_LIKED_KEY, []));
     if (!legacyLiked.length) return [];
 
-    writeJSON(LIKED_CACHE_KEY, legacyLiked);
+    writeSessionCacheJSON(LIKED_CACHE_KEY, legacyLiked);
     localStorage.removeItem(LEGACY_LIKED_KEY);
     scheduleLikedSync(legacyLiked);
     return legacyLiked;
@@ -180,8 +258,8 @@
 
   function setCachedSession(sessionToken, user, likedCompanies) {
     setSessionToken(sessionToken);
-    writeJSON(USER_CACHE_KEY, normalizeUser(user));
-    writeJSON(LIKED_CACHE_KEY, normalizeLikedCompanies(likedCompanies));
+    writeSessionCacheJSON(USER_CACHE_KEY, normalizeUser(user));
+    writeSessionCacheJSON(LIKED_CACHE_KEY, normalizeLikedCompanies(likedCompanies));
     localStorage.removeItem(LEGACY_LIKED_KEY);
   }
 
@@ -190,13 +268,16 @@
       throw new Error('GAS_PROXY_URL が設定されていません。');
     }
 
+    const requestPayload = Object.assign({
+      userAgent: navigator.userAgent || '',
+    }, payload || {});
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 30000);
     let response;
     try {
       response = await fetch(GAS_PROXY_URL, {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: JSON.stringify(requestPayload),
         redirect: 'follow',
         signal: controller.signal,
       });
@@ -248,7 +329,7 @@
     likedSyncQueue = likedSyncQueue
       .then(() => postToGas({ action: 'authSetLikedCompanies', sessionToken, likedCompanies: payload }))
       .then(data => {
-        if (data.likedCompanies) writeJSON(LIKED_CACHE_KEY, normalizeLikedCompanies(data.likedCompanies));
+        if (data.likedCompanies) writeSessionCacheJSON(LIKED_CACHE_KEY, normalizeLikedCompanies(data.likedCompanies));
       })
       .catch(error => {
         console.warn('liked sync failed', error);
@@ -345,7 +426,7 @@
         lineQrFileName: profile.lineQrFileName,
       });
 
-      writeJSON(USER_CACHE_KEY, normalizeUser(result.user));
+      writeSessionCacheJSON(USER_CACHE_KEY, normalizeUser(result.user));
       return { ok: true, user: getCurrentUser() };
     } catch (serverError) {
       return { ok: false, error: serverError.message };
@@ -366,12 +447,13 @@
     }
 
     try {
-      await postToGas({
+      const result = await postToGas({
         action: 'authChangePassword',
         sessionToken,
         currentPassword: oldPassword,
         nextPassword: newPassword,
       });
+      if (result && result.sessionToken) setSessionToken(result.sessionToken);
       return { ok: true };
     } catch (serverError) {
       return { ok: false, error: serverError.message };
@@ -395,7 +477,8 @@
 
   function setLikedCompanies(items) {
     const normalized = normalizeLikedCompanies(items);
-    writeJSON(LIKED_CACHE_KEY, normalized);
+    writeSessionCacheJSON(LIKED_CACHE_KEY, normalized);
+    localStorage.removeItem(LEGACY_LIKED_KEY);
     scheduleLikedSync(normalized);
   }
 
@@ -453,6 +536,87 @@
     }
   }
 
+  async function resendVerificationEmail() {
+    const sessionToken = getSessionToken();
+    const currentUser = getCurrentUser();
+    if (!sessionToken || !currentUser) return { ok: false, error: 'ログインが必要です。' };
+
+    try {
+      const result = await postToGas({ action: 'authResendVerificationEmail', sessionToken });
+      const nextUser = normalizeUser(result.user);
+      if (nextUser && currentUser.id === nextUser.id) {
+        writeSessionCacheJSON(USER_CACHE_KEY, nextUser);
+      }
+      return { ok: true, message: result.message, user: getCurrentUser() || nextUser };
+    } catch (serverError) {
+      return { ok: false, error: serverError.message };
+    }
+  }
+
+  async function verifyEmail(verificationToken) {
+    const token = trimText(verificationToken);
+    if (!token) return { ok: false, error: '確認トークンが必要です。' };
+
+    try {
+      const result = await postToGas({
+        action: 'authVerifyEmail',
+        verificationToken: token,
+        sessionToken: getSessionToken(),
+      });
+      const currentUser = getCurrentUser();
+      const nextUser = normalizeUser(result.user);
+      if (nextUser && currentUser && currentUser.id === nextUser.id) {
+        writeSessionCacheJSON(USER_CACHE_KEY, nextUser);
+      }
+      return { ok: true, message: result.message, user: nextUser };
+    } catch (serverError) {
+      return { ok: false, error: serverError.message };
+    }
+  }
+
+  async function listSessions() {
+    const sessionToken = getSessionToken();
+    if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
+
+    try {
+      const result = await postToGas({ action: 'authListSessions', sessionToken });
+      return {
+        ok: true,
+        currentSessionRef: trimText(result.currentSessionRef),
+        sessions: Array.isArray(result.sessions) ? result.sessions : [],
+      };
+    } catch (serverError) {
+      return { ok: false, error: serverError.message };
+    }
+  }
+
+  async function revokeSession(sessionRef) {
+    const sessionToken = getSessionToken();
+    const ref = trimText(sessionRef);
+    if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
+    if (!ref) return { ok: false, error: 'ログアウトする端末を選択してください。' };
+
+    try {
+      const result = await postToGas({ action: 'authRevokeSession', sessionToken, sessionRef: ref });
+      if (result.currentRevoked) clearSessionCache();
+      return { ok: true, currentRevoked: Boolean(result.currentRevoked) };
+    } catch (serverError) {
+      return { ok: false, error: serverError.message };
+    }
+  }
+
+  async function revokeOtherSessions() {
+    const sessionToken = getSessionToken();
+    if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
+
+    try {
+      const result = await postToGas({ action: 'authRevokeOtherSessions', sessionToken });
+      return { ok: true, revokedCount: Number(result.revokedCount) || 0 };
+    } catch (serverError) {
+      return { ok: false, error: serverError.message };
+    }
+  }
+
   async function readMyProgress() {
     const sessionToken = getSessionToken();
     if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
@@ -481,7 +645,7 @@
   }
 
   function getRedirectTarget(explicitReturnTo) {
-    return explicitReturnTo || getStoredReturnTo() || 'account.html';
+    return sanitizeReturnTo(explicitReturnTo) || getStoredReturnTo() || 'account.html';
   }
 
   function requireAuth(options) {
@@ -498,6 +662,22 @@
     }
 
     return null;
+  }
+
+  function ensureVerifiedUser(actionLabel) {
+    const user = getCurrentUser();
+    if (!user) {
+      return { ok: false, error: 'ログインが必要です。' };
+    }
+    if (user.emailVerified) {
+      return { ok: true, user };
+    }
+    const label = trimText(actionLabel);
+    return {
+      ok: false,
+      error: (label ? label + 'には' : 'この操作には') + 'メール認証が必要です。マイページで確認メールを再送できます。',
+      user,
+    };
   }
 
   function formatDate(dateString) {
@@ -699,6 +879,112 @@
     writeJSON(NOTIFICATION_SENT_KEY, sentMap);
   }
 
+  function readLocalBackupValue(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw === null || raw === '') return null;
+      return JSON.parse(raw);
+    } catch (error) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw === null || raw === '' ? null : raw;
+      } catch (storageError) {
+        return null;
+      }
+    }
+  }
+
+  function summarizeBackupValue(value) {
+    if (Array.isArray(value)) return value.length;
+    if (value && typeof value === 'object') return Object.keys(value).length;
+    if (typeof value === 'string') return trimText(value) ? 1 : 0;
+    return value == null ? 0 : 1;
+  }
+
+  function getLocalBackupSummary() {
+    return LOCAL_BACKUP_DEFINITIONS.map(entry => {
+      const value = readLocalBackupValue(entry.key);
+      return {
+        key: entry.key,
+        label: entry.label,
+        present: value !== null,
+        count: summarizeBackupValue(value),
+      };
+    }).filter(entry => entry.present);
+  }
+
+  function createLocalBackupSnapshot() {
+    const items = {};
+    LOCAL_BACKUP_DEFINITIONS.forEach(entry => {
+      const value = readLocalBackupValue(entry.key);
+      if (value !== null) items[entry.key] = value;
+    });
+    return {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      exportedBy: (getCurrentUser() && getCurrentUser().email) || '',
+      items,
+    };
+  }
+
+  function downloadLocalBackup() {
+    try {
+      const snapshot = createLocalBackupSnapshot();
+      const filename = 'keio-navi-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+      const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      return { ok: true, filename, itemCount: Object.keys(snapshot.items).length };
+    } catch (error) {
+      return { ok: false, error: error && error.message ? error.message : 'バックアップの書き出しに失敗しました。' };
+    }
+  }
+
+  async function restoreLocalBackup(file) {
+    if (!file || typeof file.text !== 'function') {
+      return { ok: false, error: 'バックアップファイルを選択してください。' };
+    }
+
+    try {
+      const raw = await file.text();
+      const parsed = JSON.parse(raw);
+      const items = parsed && parsed.items && typeof parsed.items === 'object' ? parsed.items : null;
+      if (!items) {
+        return { ok: false, error: 'バックアップファイルの形式が正しくありません。' };
+      }
+
+      const allowedKeys = {};
+      LOCAL_BACKUP_DEFINITIONS.forEach(entry => {
+        allowedKeys[entry.key] = true;
+      });
+
+      const restoredKeys = [];
+      Object.keys(items).forEach(key => {
+        if (!allowedKeys[key]) return;
+        localStorage.setItem(key, JSON.stringify(items[key]));
+        restoredKeys.push(key);
+      });
+
+      if (!restoredKeys.length) {
+        return { ok: false, error: '復元できる端末保存データが見つかりませんでした。' };
+      }
+
+      window.dispatchEvent(new CustomEvent('keio-navi-local-data-restored', {
+        detail: { keys: restoredKeys.slice() }
+      }));
+
+      return { ok: true, restoredKeys };
+    } catch (error) {
+      return { ok: false, error: 'バックアップファイルを読み込めませんでした。' };
+    }
+  }
+
   window.KeioNaviAuth = {
     createAccount,
     login,
@@ -709,9 +995,14 @@
     updateCurrentUser,
     changePassword,
     deleteAccount,
+    resendVerificationEmail,
+    verifyEmail,
     requestPasswordReset,
     resetPassword,
     getReferralInfo,
+    listSessions,
+    revokeSession,
+    revokeOtherSessions,
     readMyProgress,
     writeProgress,
     deleteProgress,
@@ -726,6 +1017,7 @@
     addLikedCompany,
     formatDate,
     getSessionToken,
+    sanitizeReturnTo,
     logActivity,
     getNotificationStatus,
     requestNotificationPermission,
@@ -733,6 +1025,11 @@
     saveNotificationPrefs,
     scheduleLocalNotification,
     checkDeadlineReminders,
+    ensureVerifiedUser,
+    getLocalBackupSummary,
+    createLocalBackupSnapshot,
+    downloadLocalBackup,
+    restoreLocalBackup,
   };
 
   // ── ページ読み込み時に page_view を自動記録 ─────────

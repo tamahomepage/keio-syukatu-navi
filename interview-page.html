@@ -2,25 +2,13 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<script>
-  (function(measurementId){
-    if (!measurementId) return;
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', measurementId);
-  })('');
-</script>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>面接対策 ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
   :root {
     --navy: #0a1a3e;
@@ -466,11 +454,11 @@
 
         <!-- 企業チップ -->
         <div class="ip-company-chips" id="ip-company-chips">
-          <button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ テーマを追加</button>
+          <button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ 企業・テーマを追加</button>
         </div>
 
         <!-- 企業が未登録のとき -->
-        <div class="ip-empty-company" id="ip-no-company">テーマを追加して面接対策を始めましょう。</div>
+        <div class="ip-empty-company" id="ip-no-company">企業名やテーマを追加して面接対策を始めましょう。</div>
 
         <!-- 企業パネル群 -->
         <div id="ip-panels"></div>
@@ -645,6 +633,9 @@
         </div>
       </div>
       <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.2rem;">AIが面接官として質問します。マイクボタンを押して音声で回答、またはテキスト入力もできます。回答後にAIがフィードバックします。</p>
+      <div style="font-size:0.68rem;color:var(--text-muted);padding:0.4rem 0.8rem;background:rgba(10,26,62,0.02);border:1px solid rgba(10,26,62,0.06);margin-bottom:1rem;line-height:1.6;">
+        ※ AI機能はAnthropic社のClaude APIを使用しています。回答は参考情報であり、正確性・完全性を保証するものではありません。重要な判断には必ずご自身で確認してください。
+      </div>
 
       <div style="margin-bottom:1rem;">
         <label style="font-size:0.78rem;color:var(--text-muted);">面接タイプ</label>
@@ -878,11 +869,11 @@
 <!-- 面接対策 テーマ追加・編集モーダル -->
 <div class="ip-modal-overlay" id="ip-company-modal">
   <div class="ip-modal">
-    <div class="es-modal-title" id="ip-cm-title">テーマを追加する</div>
+    <div class="es-modal-title" id="ip-cm-title">企業・テーマを追加する</div>
     <input type="hidden" id="ip-cm-id">
     <div class="ai-form-group">
-      <label class="ai-label">テーマ名 <span style="color:var(--crimson)">*</span></label>
-      <input type="text" class="ai-input" id="ip-cm-name" placeholder="例：志望動機、ガクチカ深掘り">
+      <label class="ai-label">企業名・テーマ <span style="color:var(--crimson)">*</span></label>
+      <input type="text" class="ai-input" id="ip-cm-name" placeholder="例：○○株式会社、商社面接対策、ガクチカ深掘り">
     </div>
     <div class="ai-form-group">
       <label class="ai-label">カテゴリ</label>
@@ -946,8 +937,16 @@
 <script src="auth.js"></script>
 <script>
   // ===== Constants =====
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbymaWYmys7-r9SnUk8o6tIx5SnNAdcKD2en4pi_tTnNtZF7QI_zf6_H6gvjAxQ__plYAA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
+
+  var AI_CONSENT_KEY = 'keio_navi_ai_consent_v1';
+  function checkAiConsent() {
+    if (localStorage.getItem(AI_CONSENT_KEY)) return true;
+    var ok = confirm('AI機能の利用について\n\n・入力されたテキストはAI（Claude）に送信されます\n・送信されたテキストはAI処理のみに使用され、第三者に共有されません\n・AIの回答は参考情報であり、正確性を保証するものではありません\n・重要な判断には必ずご自身で確認してください\n\nよろしいですか？');
+    if (ok) localStorage.setItem(AI_CONSENT_KEY, '1');
+    return ok;
+  }
 
   // ===== callAuthApi =====
   async function callAuthApi(action, extraPayload) {
@@ -1065,12 +1064,12 @@
     document.getElementById('cl-progress-text').textContent = count + ' / ' + CL_TOTAL + ' 完了（' + pct + '%）';
     document.getElementById('checklist-body').innerHTML = CL_GROUPS.map(function(g) {
       return '<div class="checklist-group">' +
-        '<div class="checklist-group-title">' + g.title + '</div>' +
+        '<div class="checklist-group-title">' + ipEscHtml(g.title || '') + '</div>' +
         g.items.map(function(item) {
           var done = checked.includes(item.id);
-          return '<div class="checklist-item" onclick="toggleCheck(\'' + item.id + '\')">' +
+          return '<div class="checklist-item" onclick="toggleCheck(\'' + ipEscJsString(item.id || '') + '\')">' +
             '<div class="checklist-box' + (done ? ' checked' : '') + '"></div>' +
-            '<span class="checklist-text' + (done ? ' checked' : '') + '">' + item.text + '</span>' +
+            '<span class="checklist-text' + (done ? ' checked' : '') + '">' + ipEscHtml(item.text || '') + '</span>' +
           '</div>';
         }).join('') +
       '</div>';
@@ -1127,19 +1126,44 @@
     ipRenderPanels();
   }
 
+  function ipEscHtml(value) {
+    var div = document.createElement('div');
+    div.textContent = value == null ? '' : String(value);
+    return div.innerHTML;
+  }
+
+  function ipEscAttr(value) {
+    return ipEscHtml(value).replace(/'/g, '&#39;');
+  }
+
+  function ipEscJsString(value) {
+    return String(value == null ? '' : value)
+      .replace(/\\/g, '\\\\')
+      .replace(/'/g, "\\'")
+      .replace(/\r/g, '\\r')
+      .replace(/\n/g, '\\n')
+      .replace(/</g, '\\x3C');
+  }
+
+  function ipRenderMultilineHtml(value) {
+    return ipEscHtml(value).replace(/\n/g, '<br>');
+  }
+
   function ipRenderChips() {
     var el = document.getElementById('ip-company-chips');
     var noCoEl = document.getElementById('ip-no-company');
     noCoEl.style.display = ipDb.companies.length ? 'none' : '';
 
     var chips = ipDb.companies.map(function(c) {
+      var companyId = String(c.id || '');
+      var companyIdJs = ipEscJsString(companyId);
       var qs = ipGetQsByCompany(c.id);
       var ready = qs.filter(function(q) { return q.ready; }).length;
-      return '<button class="ip-company-chip' + (c.id === ipCurrentCompanyId ? ' active' : '') + '" onclick="ipSelectCompany(\'' + c.id + '\')">' +
-        c.name + '<span class="ip-company-chip-badge">' + ready + '/' + qs.length + '</span>' +
+      return '<button class="ip-company-chip' + (c.id === ipCurrentCompanyId ? ' active' : '') + '" onclick="ipSelectCompany(\'' + companyIdJs + '\')">' +
+        ipEscHtml(c.name || '無題') + '<span class="ip-company-chip-badge">' + ready + '/' + qs.length + '</span>' +
       '</button>';
     }).join('');
-    el.innerHTML = chips + '<button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ テーマを追加</button>';
+    el.innerHTML = chips + '<button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ 企業・テーマを追加</button>';
   }
 
   function ipSelectCompany(id) {
@@ -1152,6 +1176,9 @@
     if (!ipDb.companies.length) { el.innerHTML = ''; return; }
 
     el.innerHTML = ipDb.companies.map(function(c) {
+      var companyId = String(c.id || '');
+      var companyIdAttr = ipEscAttr(companyId);
+      var companyIdJs = ipEscJsString(companyId);
       var gkQs  = ipGetQsByType(c.id, 'gakuchika');
       var stdQs = ipGetQsByType(c.id, 'standard');
       var cusQs = ipGetQsByType(c.id, 'custom');
@@ -1159,16 +1186,18 @@
       var readyCount = allQs.filter(function(q) { return q.ready; }).length;
       var pct = allQs.length ? Math.round(readyCount / allQs.length * 100) : 0;
       var isActive = c.id === ipCurrentCompanyId;
+      var metaLabel = c.industry ? c.industry + (c.position ? ' \xb7 ' + c.position : '') : (c.position || '');
+      var statusHtml = c.status ? ' &nbsp;|&nbsp; \x3cstrong style=color:var(--navy)>' + ipEscHtml(c.status) + '\x3c/strong>' : '';
 
-      return '<div class="ip-company-panel' + (isActive ? ' active' : '') + '" id="ip-panel-' + c.id + '">' +
+      return '<div class="ip-company-panel' + (isActive ? ' active' : '') + '" id="ip-panel-' + companyIdAttr + '">' +
         '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;">' +
           '<div style="font-size:0.75rem;color:var(--text-muted);">' +
-            (c.industry ? c.industry + (c.position ? ' \xb7 ' + c.position : '') : (c.position || '')) +
-            (c.status ? ' &nbsp;|&nbsp; \x3cstrong style=color:var(--navy)>' + c.status + '\x3c/strong>' : '') +
+            ipEscHtml(metaLabel) +
+            statusHtml +
           '</div>' +
           '<div style="display:flex;gap:0.4rem;">' +
-            '<button class="es-bank-btn primary" onclick="ipOpenEditCompany(\'' + c.id + '\')">編集</button>' +
-            '<button class="es-bank-btn" onclick="ipDeleteCompany(\'' + c.id + '\')">削除</button>' +
+            '<button class="es-bank-btn primary" onclick="ipOpenEditCompany(\'' + companyIdJs + '\')">編集</button>' +
+            '<button class="es-bank-btn" onclick="ipDeleteCompany(\'' + companyIdJs + '\')">削除</button>' +
           '</div>' +
         '</div>' +
         '<div class="ip-progress-row">' +
@@ -1177,32 +1206,32 @@
           '<span style="font-size:0.73rem;">' + pct + '%</span>' +
         '</div>' +
         '<div class="ip-tabs">' +
-          '<button class="ip-tab-btn active" data-iptab="ip-t-gk-' + c.id + '" onclick="ipSwitchTab(this)">ガクチカ深掘り<span class="ip-tab-count">' + gkQs.length + '</span></button>' +
-          '<button class="ip-tab-btn" data-iptab="ip-t-std-' + c.id + '" onclick="ipSwitchTab(this)">定番質問<span class="ip-tab-count">' + stdQs.length + '</span></button>' +
-          '<button class="ip-tab-btn" data-iptab="ip-t-cus-' + c.id + '" onclick="ipSwitchTab(this)">カスタム<span class="ip-tab-count">' + cusQs.length + '</span></button>' +
+          '<button class="ip-tab-btn active" data-iptab="ip-t-gk-' + companyIdAttr + '" onclick="ipSwitchTab(this)">ガクチカ深掘り<span class="ip-tab-count">' + gkQs.length + '</span></button>' +
+          '<button class="ip-tab-btn" data-iptab="ip-t-std-' + companyIdAttr + '" onclick="ipSwitchTab(this)">定番質問<span class="ip-tab-count">' + stdQs.length + '</span></button>' +
+          '<button class="ip-tab-btn" data-iptab="ip-t-cus-' + companyIdAttr + '" onclick="ipSwitchTab(this)">カスタム<span class="ip-tab-count">' + cusQs.length + '</span></button>' +
         '</div>' +
-        '<div class="ip-tab-panel active" id="ip-t-gk-' + c.id + '">' +
+        '<div class="ip-tab-panel active" id="ip-t-gk-' + companyIdAttr + '">' +
           '<div class="ip-gk-box">' +
             '<div class="ip-gk-box-title">ガクチカを入力 → 深掘り質問を自動生成</div>' +
             '<div class="ip-gk-hint">「なぜ」「具体的に」「困難は」など面接官が実際に聞く深掘り質問を10〜12問生成します。</div>' +
-            '<textarea class="ai-textarea" id="ip-gk-input-' + c.id + '" placeholder="ガクチカを貼り付けてください..." style="min-height:110px;"></textarea>' +
-            '<button class="ai-submit-btn" id="ip-gen-btn-' + c.id + '" onclick="ipGenerateQuestions(\'' + c.id + '\')" style="margin-top:0.6rem;padding:0.65rem;">&#10022; 深掘り質問を生成する</button>' +
-            '<div class="ai-error-msg" id="ip-gen-err-' + c.id + '"></div>' +
+            '<textarea class="ai-textarea" id="ip-gk-input-' + companyIdAttr + '" placeholder="ガクチカを貼り付けてください..." style="min-height:110px;"></textarea>' +
+            '<button class="ai-submit-btn" id="ip-gen-btn-' + companyIdAttr + '" onclick="ipGenerateQuestions(\'' + companyIdJs + '\')" style="margin-top:0.6rem;padding:0.65rem;">&#10022; 深掘り質問を生成する</button>' +
+            '<div class="ai-error-msg" id="ip-gen-err-' + companyIdAttr + '"></div>' +
           '</div>' +
-          '<div class="ip-qa-list" id="ip-gk-list-' + c.id + '">' +
+          '<div class="ip-qa-list" id="ip-gk-list-' + companyIdAttr + '">' +
             (gkQs.length ? gkQs.map(function(q) { return ipRenderQaCard(q); }).join('') : '<div style="text-align:center;padding:1rem;font-size:0.8rem;color:var(--text-muted);">まだ質問がありません。ガクチカを入力して生成してください。</div>') +
           '</div>' +
         '</div>' +
-        '<div class="ip-tab-panel" id="ip-t-std-' + c.id + '">' +
-          '<div class="ip-qa-list" id="ip-std-list-' + c.id + '">' +
+        '<div class="ip-tab-panel" id="ip-t-std-' + companyIdAttr + '">' +
+          '<div class="ip-qa-list" id="ip-std-list-' + companyIdAttr + '">' +
             stdQs.map(function(q) { return ipRenderQaCard(q); }).join('') +
           '</div>' +
         '</div>' +
-        '<div class="ip-tab-panel" id="ip-t-cus-' + c.id + '">' +
-          '<div class="ip-qa-list" id="ip-cus-list-' + c.id + '">' +
+        '<div class="ip-tab-panel" id="ip-t-cus-' + companyIdAttr + '">' +
+          '<div class="ip-qa-list" id="ip-cus-list-' + companyIdAttr + '">' +
             (cusQs.length ? cusQs.map(function(q) { return ipRenderQaCard(q); }).join('') : '<div style="text-align:center;padding:1rem;font-size:0.8rem;color:var(--text-muted);">まだカスタム質問がありません。</div>') +
           '</div>' +
-          '<button class="ip-add-q-btn" onclick="ipOpenAddCq(\'' + c.id + '\')">+ 質問を追加する</button>' +
+          '<button class="ip-add-q-btn" onclick="ipOpenAddCq(\'' + companyIdJs + '\')">+ 質問を追加する</button>' +
         '</div>' +
       '</div>';
     }).join('');
@@ -1217,26 +1246,29 @@
   }
 
   function ipRenderQaCard(q) {
+    var questionId = String(q.id || '');
+    var questionIdAttr = ipEscAttr(questionId);
+    var questionIdJs = ipEscJsString(questionId);
     var catKey = (q.category || '').replace(/[・\s]/g, '');
-    return '<div class="ip-qa-card' + (q.ready ? ' ready' : '') + '" id="ip-card-' + q.id + '">' +
-      '<div class="ip-qa-card-hdr" onclick="ipToggleCard(\'' + q.id + '\')">' +
-        '<span class="ip-qa-cat ' + catKey + '">' + (q.category || '質問') + '</span>' +
-        '<span class="ip-qa-question">' + q.question + '</span>' +
+    return '<div class="ip-qa-card' + (q.ready ? ' ready' : '') + '" id="ip-card-' + questionIdAttr + '">' +
+      '<div class="ip-qa-card-hdr" onclick="ipToggleCard(\'' + questionIdJs + '\')">' +
+        '<span class="ip-qa-cat ' + ipEscAttr(catKey || 'default') + '">' + ipEscHtml(q.category || '質問') + '</span>' +
+        '<span class="ip-qa-question">' + ipEscHtml(q.question || '') + '</span>' +
         (q.ready ? '<span class="ip-qa-ready-icon">\u2713</span>' : '') +
       '</div>' +
-      '<div class="ip-qa-body' + (q.answer ? ' open' : '') + '" id="ip-body-' + q.id + '">' +
+      '<div class="ip-qa-body' + (q.answer ? ' open' : '') + '" id="ip-body-' + questionIdAttr + '">' +
         '<div class="ip-qa-sub-label">回答メモ（面接本番で話す内容）</div>' +
         '<div class="ip-qa-answer-wrap">' +
-          '<textarea class="ip-qa-answer" id="ip-ans-' + q.id + '" oninput="ipUpdateCharCount(\'' + q.id + '\')" placeholder="ここに回答をメモしましょう...">' + (q.answer || '') + '\x3c/textarea>' +
-          '<div class="ip-qa-charcount" id="ip-cc-' + q.id + '">' + (q.answer||'').length + '字</div>' +
+          '<textarea class="ip-qa-answer" id="ip-ans-' + questionIdAttr + '" oninput="ipUpdateCharCount(\'' + questionIdJs + '\')" placeholder="ここに回答をメモしましょう...">' + ipEscHtml(q.answer || '') + '\x3c/textarea>' +
+          '<div class="ip-qa-charcount" id="ip-cc-' + questionIdAttr + '">' + (q.answer||'').length + '字</div>' +
         '</div>' +
         '<div class="ip-qa-actions">' +
-          '<button class="ip-qa-save-btn" onclick="ipSaveAnswer(\'' + q.id + '\')">保存</button>' +
-          '<button class="ip-qa-ai-btn" id="ip-ai-btn-' + q.id + '" onclick="ipEvaluateAnswer(\'' + q.id + '\')">&#10022; AI添削</button>' +
-          '<button class="ip-qa-ready-btn' + (q.ready ? ' on' : '') + '" onclick="ipToggleReady(\'' + q.id + '\')">' + (q.ready ? '\u2713 準備完了' : '準備完了にする') + '</button>' +
-          '<button class="ip-qa-del-btn" onclick="ipDeleteQuestion(\'' + q.id + '\')">&#10005;</button>' +
+          '<button class="ip-qa-save-btn" onclick="ipSaveAnswer(\'' + questionIdJs + '\')">保存</button>' +
+          '<button class="ip-qa-ai-btn" id="ip-ai-btn-' + questionIdAttr + '" onclick="ipEvaluateAnswer(\'' + questionIdJs + '\')">&#10022; AI添削</button>' +
+          '<button class="ip-qa-ready-btn' + (q.ready ? ' on' : '') + '" onclick="ipToggleReady(\'' + questionIdJs + '\')">' + (q.ready ? '\u2713 準備完了' : '準備完了にする') + '</button>' +
+          '<button class="ip-qa-del-btn" onclick="ipDeleteQuestion(\'' + questionIdJs + '\')">&#10005;</button>' +
         '</div>' +
-        '<div class="ip-qa-feedback' + (q.aiFeedback ? ' show' : '') + '" id="ip-fb-' + q.id + '">' + (q.aiFeedback || '') + '</div>' +
+        '<div class="ip-qa-feedback' + (q.aiFeedback ? ' show' : '') + '" id="ip-fb-' + questionIdAttr + '">' + ipRenderMultilineHtml(q.aiFeedback || '') + '</div>' +
       '</div>' +
     '</div>';
   }
@@ -1306,7 +1338,7 @@
 
   // ── 企業 CRUD ──
   function ipOpenAddCompany() {
-    document.getElementById('ip-cm-title').textContent = 'テーマを追加する';
+    document.getElementById('ip-cm-title').textContent = '企業・テーマを追加する';
     ['ip-cm-id','ip-cm-name','ip-cm-industry','ip-cm-position'].forEach(function(id) { document.getElementById(id).value = ''; });
     document.getElementById('ip-cm-status').value = '';
     document.getElementById('ip-cm-error').textContent = '';
@@ -1330,7 +1362,7 @@
 
   function ipSaveCompany() {
     var name = document.getElementById('ip-cm-name').value.trim();
-    if (!name) { document.getElementById('ip-cm-error').textContent = 'テーマ名を入力してください。'; return; }
+    if (!name) { document.getElementById('ip-cm-error').textContent = '企業名またはテーマを入力してください。'; return; }
     var id = document.getElementById('ip-cm-id').value;
     if (id) {
       var c = ipDb.companies.find(function(c) { return c.id === id; });
@@ -1380,6 +1412,7 @@
 
   // ── AI: 深掘り質問生成 ──
   async function ipGenerateQuestions(cid) {
+    if (!checkAiConsent()) return;
     var gkText = document.getElementById('ip-gk-input-' + cid).value.trim();
     if (!gkText) { document.getElementById('ip-gen-err-' + cid).textContent = 'ガクチカを入力してください。'; return; }
     document.getElementById('ip-gen-err-' + cid).textContent = '';
@@ -1411,6 +1444,7 @@
 
   // ── AI: 回答評価 ──
   async function ipEvaluateAnswer(id) {
+    if (!checkAiConsent()) return;
     var q = ipDb.questions.find(function(q) { return q.id === id; });
     if (!q) return;
     var answer = document.getElementById('ip-ans-' + id).value.trim();
@@ -1462,11 +1496,12 @@
       return;
     }
     el.innerHTML = gakuchikaEntries.map(function(g) {
+      var gId = g.id || '';
       return '<label style="display:flex;align-items:center;gap:0.55rem;cursor:pointer;padding:0.3rem 0.2rem;font-size:0.82rem;">' +
-        '<input type="checkbox" ' + (jsGkSelected.has(g.id) ? 'checked' : '') + ' onchange="toggleJsGkItem(\'' + g.id + '\', this)" style="cursor:pointer;">' +
+        '<input type="checkbox" ' + (jsGkSelected.has(gId) ? 'checked' : '') + ' onchange="toggleJsGkItem(\'' + ipEscJsString(gId) + '\', this)" style="cursor:pointer;">' +
         '<span>' +
-          '\x3cstrong style="color:var(--navy);">' + (g.title || '（タイトルなし）') + '\x3c/strong>' +
-          (g.category ? '<span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.4rem;">' + g.category + '</span>' : '') +
+          '\x3cstrong style="color:var(--navy);">' + ipEscHtml(g.title || '（タイトルなし）') + '\x3c/strong>' +
+          (g.category ? '<span style="font-size:0.7rem;color:var(--text-muted);margin-left:0.4rem;">' + ipEscHtml(g.category) + '</span>' : '') +
         '</span>' +
       '</label>';
     }).join('');
@@ -1661,6 +1696,7 @@
   }
 
   function startMockInterview() {
+    if (!checkAiConsent()) return;
     if (typeof gtag === 'function') { gtag('event', 'mock_interview_start'); }
     miType = document.getElementById('mi-type').value;
     miMessages = [];
@@ -1705,13 +1741,36 @@
     }
   }
 
+  function escHtml(value) {
+    var div = document.createElement('div');
+    div.textContent = value == null ? '' : String(value);
+    return div.innerHTML;
+  }
+
+  function escAttr(value) {
+    return escHtml(value).replace(/'/g, '&#39;');
+  }
+
+  function escJsString(value) {
+    return String(value == null ? '' : value)
+      .replace(/\\/g, '\\\\')
+      .replace(/'/g, "\\'")
+      .replace(/\r/g, '\\r')
+      .replace(/\n/g, '\\n')
+      .replace(/</g, '\\x3C');
+  }
+
+  function renderMultilineHtml(value) {
+    return escHtml(value).replace(/\n/g, '<br>');
+  }
+
   function appendBubble(type, text) {
     var chat = document.getElementById('mi-chat');
     if (type === 'system') {
-      chat.innerHTML += '<div style="text-align:center;padding:0.6rem;font-size:0.72rem;color:var(--text-muted);">' + text + '</div>';
+      chat.innerHTML += '<div style="text-align:center;padding:0.6rem;font-size:0.72rem;color:var(--text-muted);">' + renderMultilineHtml(text) + '</div>';
     } else {
       var role = type === 'interviewer' ? '面接官' : 'あなた';
-      chat.innerHTML += '<div class="mi-bubble ' + type + '"><div class="mi-role">' + role + '</div>' + text + '</div>';
+      chat.innerHTML += '<div class="mi-bubble ' + type + '"><div class="mi-role">' + escHtml(role) + '</div>' + renderMultilineHtml(text) + '</div>';
     }
     chat.scrollTop = chat.scrollHeight;
   }
@@ -1721,7 +1780,7 @@
     var bubbles = chat.querySelectorAll('.mi-bubble.' + type);
     if (bubbles.length) {
       var role = type === 'interviewer' ? '面接官' : 'あなた';
-      bubbles[bubbles.length - 1].innerHTML = '<div class="mi-role">' + role + '</div>' + text;
+      bubbles[bubbles.length - 1].innerHTML = '<div class="mi-role">' + escHtml(role) + '</div>' + renderMultilineHtml(text);
     }
     if (type === 'interviewer' && text && text !== '...' && miSpeakEnabled) {
       speakText(text);
@@ -1903,7 +1962,7 @@ async function loadReviews() {
     reviewsCache = data.reviews || [];
     renderReviews();
   } catch (e) {
-    el.innerHTML = '\x3cdiv style="text-align:center;padding:1.5rem;color:var(--crimson);font-size:0.82rem;">' + e.message + '\x3c/div>';
+    el.innerHTML = '\x3cdiv style="text-align:center;padding:1.5rem;color:var(--crimson);font-size:0.82rem;">' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
@@ -1915,17 +1974,19 @@ function renderReviews() {
   }
   var stars = function(n) { var s=''; for(var i=0;i<5;i++) s += i < n ? '\u2605' : '\u2606'; return s; };
   el.innerHTML = reviewsCache.map(function(r) {
+    var reviewId = String(r.id || '');
+    var reviewIdJs = escJsString(reviewId);
     return '\x3cdiv style="border:1px solid rgba(10,26,62,0.1);padding:1rem;margin-bottom:0.8rem;background:white;">'
       + '\x3cdiv style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">'
-      + '\x3cspan style="font-size:0.82rem;font-weight:700;color:var(--navy);">' + (r.interviewType || '') + '\x3c/span>'
-      + '\x3cspan style="font-size:0.72rem;color:var(--text-muted);">' + (r.date || '') + '\x3c/span>'
+      + '\x3cspan style="font-size:0.82rem;font-weight:700;color:var(--navy);">' + escHtml(r.interviewType || '') + '\x3c/span>'
+      + '\x3cspan style="font-size:0.72rem;color:var(--text-muted);">' + escHtml(r.date || '') + '\x3c/span>'
       + '\x3c/div>'
       + '\x3cdiv style="font-size:0.78rem;color:var(--gold);margin-bottom:0.5rem;">' + stars(parseInt(r.rating)||0) + '\x3c/div>'
-      + (r.questions ? '\x3cdiv style="font-size:0.78rem;margin-bottom:0.4rem;"\x3e\x3cstrong>質問:\x3c/strong> ' + r.questions.substring(0,100) + (r.questions.length>100?'...':'') + '\x3c/div>' : '')
-      + (r.reflection ? '\x3cdiv style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;"\x3e\x3cstrong>反省:\x3c/strong> ' + r.reflection.substring(0,80) + (r.reflection.length>80?'...':'') + '\x3c/div>' : '')
+      + (r.questions ? '\x3cdiv style="font-size:0.78rem;margin-bottom:0.4rem;"\x3e\x3cstrong>質問:\x3c/strong> ' + escHtml(r.questions.substring(0,100) + (r.questions.length>100?'...':'')) + '\x3c/div>' : '')
+      + (r.reflection ? '\x3cdiv style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;"\x3e\x3cstrong>反省:\x3c/strong> ' + escHtml(r.reflection.substring(0,80) + (r.reflection.length>80?'...':'')) + '\x3c/div>' : '')
       + '\x3cdiv style="display:flex;gap:0.5rem;margin-top:0.6rem;">'
-      + '\x3cbutton onclick="editReview(\'' + r.id + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(10,26,62,0.2);color:var(--text-muted);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">編集\x3c/button>'
-      + '\x3cbutton onclick="deleteReview(\'' + r.id + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(192,0,26,0.2);color:var(--crimson);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">削除\x3c/button>'
+      + '\x3cbutton onclick="editReview(\'' + reviewIdJs + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(10,26,62,0.2);color:var(--text-muted);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">編集\x3c/button>'
+      + '\x3cbutton onclick="deleteReview(\'' + reviewIdJs + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(192,0,26,0.2);color:var(--crimson);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">削除\x3c/button>'
       + '\x3c/div>'
       + '\x3c/div>';
   }).join('');
@@ -2141,7 +2202,7 @@ async function loadOBVisits() {
     obVisitsCache = data.entries || [];
     renderOBVisits();
   } catch (e) {
-    el.innerHTML = '\x3cdiv style="text-align:center;padding:1.5rem;color:var(--crimson);font-size:0.82rem;">' + e.message + '\x3c/div>';
+    el.innerHTML = '\x3cdiv style="text-align:center;padding:1.5rem;color:var(--crimson);font-size:0.82rem;">' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
@@ -2154,34 +2215,37 @@ function renderOBVisits() {
   }
   var stars = function(n) { var s=''; for(var i=0;i<5;i++) s += i < n ? '\u2605' : '\u2606'; return s; };
   el.innerHTML = obVisitsCache.map(function(r) {
+    var visitId = String(r.id || '');
+    var visitIdAttr = escAttr(visitId);
+    var visitIdJs = escJsString(visitId);
     var statusClass = r.status === 'completed' ? 'ob-status-completed' : 'ob-status-planned';
     var statusLabel = r.status === 'completed' ? '完了' : '予定';
     var completedBtns = '';
     if (r.status === 'completed') {
-      completedBtns = '\x3cbutton onclick="generateMotivationFromOB(\'' + r.id + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:linear-gradient(135deg,var(--gold),#e6a817);color:var(--navy);border:none;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;font-weight:700;">この振り返りから志望動機を生成\x3c/button>'
-        + '\x3cbutton onclick="generateThankYouEmail(\'' + r.id + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:linear-gradient(135deg,var(--crimson),#e6243a);color:white;border:none;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;font-weight:700;">お礼メールを生成\x3c/button>'
-        + '\x3cbutton onclick="shareOBAnonymously(\'' + r.id + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(10,26,62,0.2);color:var(--navy);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">この訪問を匿名で共有する\x3c/button>';
+      completedBtns = '\x3cbutton onclick="generateMotivationFromOB(\'' + visitIdJs + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:linear-gradient(135deg,var(--gold),#e6a817);color:var(--navy);border:none;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;font-weight:700;">この振り返りから志望動機を生成\x3c/button>'
+        + '\x3cbutton onclick="generateThankYouEmail(\'' + visitIdJs + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:linear-gradient(135deg,var(--crimson),#e6243a);color:white;border:none;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;font-weight:700;">お礼メールを生成\x3c/button>'
+        + '\x3cbutton onclick="shareOBAnonymously(\'' + visitIdJs + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(10,26,62,0.2);color:var(--navy);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">この訪問を匿名で共有する\x3c/button>';
     }
-    var visitModeBtn = r.status === 'planned' ? '\x3cbutton onclick="startVisitMode(\'' + r.id + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:var(--crimson);color:white;border:none;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;font-weight:700;">訪問中メモ\x3c/button>' : '';
+    var visitModeBtn = r.status === 'planned' ? '\x3cbutton onclick="startVisitMode(\'' + visitIdJs + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:var(--crimson);color:white;border:none;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;font-weight:700;">訪問中メモ\x3c/button>' : '';
     return '\x3cdiv class="ob-card">'
       + '\x3cdiv class="ob-card-header">'
-      + '\x3cspan class="ob-card-company">' + (r.company || '') + '\x3c/span>'
-      + '\x3cspan class="ob-card-date">' + (r.visitDate || '') + '\x3c/span>'
+      + '\x3cspan class="ob-card-company">' + escHtml(r.company || '') + '\x3c/span>'
+      + '\x3cspan class="ob-card-date">' + escHtml(r.visitDate || '') + '\x3c/span>'
       + '\x3c/div>'
       + '\x3cdiv style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">'
       + '\x3cspan class="ob-status-badge ' + statusClass + '">' + statusLabel + '\x3c/span>'
-      + (r.obName ? '\x3cspan style="font-size:0.78rem;color:var(--text-muted);">' + r.obName + (r.obDepartment ? ' (' + r.obDepartment + ')' : '') + '\x3c/span>' : '')
+      + (r.obName ? '\x3cspan style="font-size:0.78rem;color:var(--text-muted);">' + escHtml(r.obName + (r.obDepartment ? ' (' + r.obDepartment + ')' : '')) + '\x3c/span>' : '')
       + '\x3c/div>'
       + (r.rating ? '\x3cdiv style="font-size:0.78rem;color:var(--gold);margin-bottom:0.4rem;">' + stars(parseInt(r.rating)||0) + '\x3c/div>' : '')
-      + (r.reviewNotes ? '\x3cdiv style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">' + r.reviewNotes.substring(0,100) + (r.reviewNotes.length>100?'...':'') + '\x3c/div>' : '')
-      + '\x3cdiv id="ob-motivation-result-' + r.id + '" style="display:none;margin:0.5rem 0;padding:0.8rem;background:var(--white);border:1px solid rgba(10,26,62,0.1);font-size:0.78rem;line-height:1.7;">\x3c/div>'
+      + (r.reviewNotes ? '\x3cdiv style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;">' + escHtml(r.reviewNotes.substring(0,100) + (r.reviewNotes.length>100?'...':'')) + '\x3c/div>' : '')
+      + '\x3cdiv id="ob-motivation-result-' + visitIdAttr + '" style="display:none;margin:0.5rem 0;padding:0.8rem;background:var(--white);border:1px solid rgba(10,26,62,0.1);font-size:0.78rem;line-height:1.7;">\x3c/div>'
       + '\x3cdiv style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.6rem;">'
-      + '\x3cbutton onclick="editOBVisit(\'' + r.id + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(10,26,62,0.2);color:var(--text-muted);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">編集\x3c/button>'
-      + '\x3cbutton onclick="deleteOBVisit(\'' + r.id + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(192,0,26,0.2);color:var(--crimson);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">削除\x3c/button>'
+      + '\x3cbutton onclick="editOBVisit(\'' + visitIdJs + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(10,26,62,0.2);color:var(--text-muted);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">編集\x3c/button>'
+      + '\x3cbutton onclick="deleteOBVisit(\'' + visitIdJs + '\')" style="padding:0.3rem 0.8rem;font-size:0.72rem;background:none;border:1px solid rgba(192,0,26,0.2);color:var(--crimson);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">削除\x3c/button>'
       + visitModeBtn
       + completedBtns
       + '\x3c/div>'
-      + '\x3cdiv id="ob-thankyou-result-' + r.id + '" style="display:none;margin-top:0.5rem;padding:0.8rem;background:var(--white);border:1px solid rgba(10,26,62,0.1);font-size:0.78rem;line-height:1.7;">\x3c/div>'
+      + '\x3cdiv id="ob-thankyou-result-' + visitIdAttr + '" style="display:none;margin-top:0.5rem;padding:0.8rem;background:var(--white);border:1px solid rgba(10,26,62,0.1);font-size:0.78rem;line-height:1.7;">\x3c/div>'
       + '\x3c/div>';
   }).join('');
 }
@@ -2343,9 +2407,9 @@ async function generateMotivationFromOB(visitId) {
       + '\x3cspan style="font-size:0.72rem;color:var(--gold);font-weight:700;letter-spacing:0.1em;">志望動機ドラフト\x3c/span>'
       + '\x3cbutton onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.textContent);this.textContent=\'コピー済\';var b=this;setTimeout(function(){b.textContent=\'コピー\';},1500);" style="padding:0.2rem 0.6rem;font-size:0.7rem;background:var(--navy);color:white;border:none;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">コピー\x3c/button>'
       + '\x3c/div>'
-      + '\x3cdiv style="white-space:pre-wrap;color:var(--text-muted);">' + text + '\x3c/div>';
+      + '\x3cdiv style="white-space:pre-wrap;color:var(--text-muted);">' + renderMultilineHtml(text) + '\x3c/div>';
   } catch (e) {
-    resultEl.innerHTML = '\x3cdiv style="color:var(--crimson);">エラー: ' + e.message + '\x3c/div>';
+    resultEl.innerHTML = '\x3cdiv style="color:var(--crimson);">エラー: ' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
@@ -2365,9 +2429,9 @@ function renderOBSchedule() {
     else if (r.visitDate && r.visitDate < today) { color = 'var(--crimson)'; label = '期限超過'; }
     else { color = 'var(--gold)'; label = '予定'; }
     return '\x3cdiv style="display:flex;align-items:center;gap:0.6rem;padding:0.4rem 0.6rem;background:rgba(10,26,62,0.02);border-left:3px solid ' + color + ';">'
-      + '\x3cspan style="font-size:0.72rem;color:' + color + ';font-weight:700;min-width:3.5rem;">' + (r.visitDate || '未定') + '\x3c/span>'
-      + '\x3cspan style="font-size:0.78rem;color:var(--navy);font-weight:600;">' + (r.company || '') + '\x3c/span>'
-      + (r.obName ? '\x3cspan style="font-size:0.72rem;color:var(--text-muted);">' + r.obName + '\x3c/span>' : '')
+      + '\x3cspan style="font-size:0.72rem;color:' + color + ';font-weight:700;min-width:3.5rem;">' + escHtml(r.visitDate || '未定') + '\x3c/span>'
+      + '\x3cspan style="font-size:0.78rem;color:var(--navy);font-weight:600;">' + escHtml(r.company || '') + '\x3c/span>'
+      + (r.obName ? '\x3cspan style="font-size:0.72rem;color:var(--text-muted);">' + escHtml(r.obName) + '\x3c/span>' : '')
       + '\x3cspan style="font-size:0.68rem;padding:0.1rem 0.4rem;background:' + color + ';color:white;font-weight:700;margin-left:auto;">' + label + '\x3c/span>'
       + '\x3c/div>';
   }).join('');
@@ -2404,7 +2468,7 @@ async function loadSharedOBInfo() {
     renderSharedOBInfo();
   } catch (e) {
     var el = document.getElementById('ob-shared-feed');
-    if (el) el.innerHTML = '\x3cdiv style="text-align:center;padding:1rem;color:var(--crimson);font-size:0.82rem;">' + e.message + '\x3c/div>';
+    if (el) el.innerHTML = '\x3cdiv style="text-align:center;padding:1rem;color:var(--crimson);font-size:0.82rem;">' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
@@ -2418,13 +2482,13 @@ function renderSharedOBInfo() {
   el.innerHTML = sharedOBCache.slice().reverse().map(function(r) {
     return '\x3cdiv style="padding:0.8rem;background:var(--white);border:1px solid rgba(10,26,62,0.08);margin-bottom:0.5rem;">'
       + '\x3cdiv style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.4rem;">'
-      + (r.industry ? '\x3cspan style="font-size:0.7rem;padding:0.15rem 0.5rem;background:rgba(10,26,62,0.06);color:var(--navy);font-weight:600;">業界: ' + r.industry + '\x3c/span>' : '')
-      + (r.department ? '\x3cspan style="font-size:0.7rem;padding:0.15rem 0.5rem;background:rgba(10,26,62,0.06);color:var(--navy);font-weight:600;">部署: ' + r.department + '\x3c/span>' : '')
-      + (r.yearsOfExp ? '\x3cspan style="font-size:0.7rem;padding:0.15rem 0.5rem;background:rgba(10,26,62,0.06);color:var(--navy);font-weight:600;">年次: ' + r.yearsOfExp + '\x3c/span>' : '')
+      + (r.industry ? '\x3cspan style="font-size:0.7rem;padding:0.15rem 0.5rem;background:rgba(10,26,62,0.06);color:var(--navy);font-weight:600;">業界: ' + escHtml(r.industry) + '\x3c/span>' : '')
+      + (r.department ? '\x3cspan style="font-size:0.7rem;padding:0.15rem 0.5rem;background:rgba(10,26,62,0.06);color:var(--navy);font-weight:600;">部署: ' + escHtml(r.department) + '\x3c/span>' : '')
+      + (r.yearsOfExp ? '\x3cspan style="font-size:0.7rem;padding:0.15rem 0.5rem;background:rgba(10,26,62,0.06);color:var(--navy);font-weight:600;">年次: ' + escHtml(r.yearsOfExp) + '\x3c/span>' : '')
       + '\x3c/div>'
-      + (r.keyInsights ? '\x3cdiv style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.3rem;line-height:1.6;">\x3cstrong style="color:var(--navy);">学び:\x3c/strong> ' + r.keyInsights + '\x3c/div>' : '')
-      + (r.tips ? '\x3cdiv style="font-size:0.78rem;color:var(--text-muted);line-height:1.6;">\x3cstrong style="color:var(--navy);">アドバイス:\x3c/strong> ' + r.tips + '\x3c/div>' : '')
-      + '\x3cdiv style="font-size:0.68rem;color:var(--text-muted);margin-top:0.3rem;text-align:right;">' + (r.sharedAt ? r.sharedAt.substring(0, 10) : '') + '\x3c/div>'
+      + (r.keyInsights ? '\x3cdiv style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.3rem;line-height:1.6;">\x3cstrong style="color:var(--navy);">学び:\x3c/strong> ' + escHtml(r.keyInsights) + '\x3c/div>' : '')
+      + (r.tips ? '\x3cdiv style="font-size:0.78rem;color:var(--text-muted);line-height:1.6;">\x3cstrong style="color:var(--navy);">アドバイス:\x3c/strong> ' + escHtml(r.tips) + '\x3c/div>' : '')
+      + '\x3cdiv style="font-size:0.68rem;color:var(--text-muted);margin-top:0.3rem;text-align:right;">' + escHtml(r.sharedAt ? r.sharedAt.substring(0, 10) : '') + '\x3c/div>'
       + '\x3c/div>';
   }).join('');
 }
@@ -2474,7 +2538,7 @@ function startVisitMode(visitId) {
         itemsEl.innerHTML = qs.map(function(q, i) {
           return '\x3cdiv class="ob-checklist-item" id="ob-cl-' + i + '">'
             + '\x3cinput type="checkbox" onchange="toggleChecklistItem(this,' + i + ')">'
-            + '\x3cspan>' + q + '\x3c/span>'
+            + '\x3cspan>' + escHtml(q) + '\x3c/span>'
             + '\x3c/div>';
         }).join('');
       } else {
@@ -2565,9 +2629,9 @@ async function generateThankYouEmail(visitId) {
       + '\x3cspan style="font-size:0.72rem;color:var(--gold);font-weight:700;letter-spacing:0.1em;">お礼メール\x3c/span>'
       + '\x3cbutton onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.textContent);this.textContent=\'コピー済\';var b=this;setTimeout(function(){b.textContent=\'コピー\';},1500);" style="padding:0.2rem 0.6rem;font-size:0.7rem;background:var(--navy);color:white;border:none;cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;">コピー\x3c/button>'
       + '\x3c/div>'
-      + '\x3cdiv style="white-space:pre-wrap;color:var(--text-muted);">' + text + '\x3c/div>';
+      + '\x3cdiv style="white-space:pre-wrap;color:var(--text-muted);">' + renderMultilineHtml(text) + '\x3c/div>';
   } catch(e) {
-    resultEl.innerHTML = '\x3cdiv style="color:var(--crimson);">エラー: ' + e.message + '\x3c/div>';
+    resultEl.innerHTML = '\x3cdiv style="color:var(--crimson);">エラー: ' + escHtml(e.message) + '\x3c/div>';
   }
 }
 
@@ -2589,7 +2653,7 @@ async function generateOBQuestions() {
     var questions = result.split('\n').filter(function(line) { return line.trim().length > 0; }).map(function(line) { return line.replace(/^\d+[\.\)]\s*/, '').trim(); }).filter(function(q) { return q.length > 2; });
     var listEl = document.getElementById('ob-ai-questions-list');
     listEl.innerHTML = questions.map(function(q) {
-      return '\x3cli>\x3cspan style="flex:1;">' + q + '\x3c/span>\x3cbutton class="ob-q-copy" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent=\'copied\';var b=this;setTimeout(function(){b.textContent=\'コピー\';},1500);">コピー\x3c/button>\x3c/li>';
+      return '\x3cli>\x3cspan style="flex:1;">' + escHtml(q) + '\x3c/span>\x3cbutton class="ob-q-copy" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent=\'copied\';var b=this;setTimeout(function(){b.textContent=\'コピー\';},1500);">コピー\x3c/button>\x3c/li>';
     }).join('');
     document.getElementById('ob-ai-result').style.display = 'block';
   } catch (e) {

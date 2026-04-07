@@ -2,25 +2,13 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<script>
-  (function(measurementId){
-    if (!measurementId) return;
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
-    document.head.appendChild(script);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ dataLayer.push(arguments); };
-    gtag('js', new Date());
-    gtag('config', measurementId);
-  })('');
-</script>
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>もっと ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
 <style>
   :root {
     --navy: #0a1a3e;
@@ -154,6 +142,64 @@
   .bottom-tab svg { width: 20px; height: 20px; }
   .bottom-tab:hover, .bottom-tab.active { color: var(--gold-light); }
   .bottom-tab.active { font-weight: 700; }
+
+  /* ===== EXPORT MODAL ===== */
+  .export-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(10,26,62,0.6); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  .export-overlay.active { display: flex; }
+  .export-modal {
+    background: var(--white); max-width: 480px; width: 100%;
+    max-height: 90vh; overflow-y: auto; position: relative;
+    border: 1px solid rgba(10,26,62,0.08);
+  }
+  .export-modal::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--navy), var(--gold));
+  }
+  .export-modal-header {
+    padding: 1.8rem 1.5rem 1rem; display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .export-modal-header h2 {
+    font-family: 'Noto Serif JP', serif; font-size: 1.15rem; color: var(--navy);
+  }
+  .export-modal-header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; }
+  .export-close {
+    background: none; border: none; font-size: 1.4rem; color: var(--text-muted);
+    cursor: pointer; padding: 0.2rem; line-height: 1;
+  }
+  .export-body { padding: 0 1.5rem 1.5rem; }
+  .export-group-label {
+    font-size: 0.72rem; font-weight: 700; color: var(--navy); letter-spacing: 0.08em;
+    margin-bottom: 0.6rem; margin-top: 1rem;
+  }
+  .export-check-list { list-style: none; display: grid; gap: 0.4rem; }
+  .export-check-list label {
+    display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.7rem;
+    background: var(--gray); font-size: 0.82rem; cursor: pointer; transition: background 0.15s;
+  }
+  .export-check-list label:hover { background: rgba(201,168,76,0.1); }
+  .export-check-list input[type="checkbox"] { accent-color: var(--navy); width: 16px; height: 16px; }
+  .export-format-row {
+    display: flex; gap: 0.6rem; margin-top: 0.5rem;
+  }
+  .export-format-btn {
+    flex: 1; padding: 0.65rem; border: 1px solid rgba(10,26,62,0.15);
+    background: var(--white); font-size: 0.8rem; font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer; text-align: center; transition: all 0.2s; color: var(--text);
+  }
+  .export-format-btn.selected {
+    border-color: var(--navy); background: var(--navy); color: var(--white);
+  }
+  .export-dl-btn {
+    display: block; width: 100%; margin-top: 1.2rem; padding: 0.85rem;
+    background: var(--navy); color: var(--gold-light); border: 1px solid rgba(201,168,76,0.3);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.9rem; font-weight: 600;
+    letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s;
+  }
+  .export-dl-btn:hover { background: rgba(10,26,62,0.85); }
 </style>
 </head>
 <body>
@@ -209,6 +255,7 @@
           <div class="more-card-desc">不動産デベロッパーの仕事をゲームで体験</div>
         </div>
       </a>
+      </a>
       <a href="glossary.html" class="more-card">
         <span class="more-card-icon">📖</span>
         <div class="more-card-text">
@@ -258,11 +305,26 @@
           <div class="more-card-desc">仲間からのフィードバックで自分の強みを発見</div>
         </div>
       </a>
+      <a href="javascript:void(0)" class="more-card" onclick="openExportModal()">
+        <span class="more-card-icon">📥</span>
+        <div class="more-card-text">
+          <div class="more-card-title">データエクスポート</div>
+          <div class="more-card-desc">ES・ガクチカ・自己分析・選考記録をダウンロード</div>
+        </div>
+      </a>
       <a href="account.html" class="more-card">
         <span class="more-card-icon">⚙️</span>
         <div class="more-card-text">
           <div class="more-card-title">アカウント設定</div>
           <div class="more-card-desc">プロフィールや通知設定を管理</div>
+          <div style="margin-top:0.4rem;"><a href="account.html#delete-account-block" style="font-size:0.68rem;color:var(--crimson);text-decoration:underline;">アカウント削除</a></div>
+        </div>
+      </a>
+      <a href="terms.html" class="more-card">
+        <span class="more-card-icon">📜</span>
+        <div class="more-card-text">
+          <div class="more-card-title">利用規約</div>
+          <div class="more-card-desc">サービスの利用条件について</div>
         </div>
       </a>
       <a href="privacy.html" class="more-card">
@@ -276,6 +338,37 @@
   </main>
 </div>
 
+<!-- EXPORT MODAL -->
+<div class="export-overlay" id="export-overlay" onclick="if(event.target===this)closeExportModal()">
+  <div class="export-modal">
+    <div class="export-modal-header">
+      <div>
+        <h2>データエクスポート</h2>
+        <p>エクスポートするデータと形式を選択してください</p>
+      </div>
+      <button class="export-close" onclick="closeExportModal()">&times;</button>
+    </div>
+    <div class="export-body">
+      <div class="export-group-label">エクスポートするデータ</div>
+      <ul class="export-check-list">
+        <li><label><input type="checkbox" value="gakuchika" checked> ガクチカ保管庫</label></li>
+        <li><label><input type="checkbox" value="es" checked> ES保管庫</label></li>
+        <li><label><input type="checkbox" value="self_analysis" checked> 自己分析ワークブック</label></li>
+        <li><label><input type="checkbox" value="pipeline" checked> 選考管理（パイプライン）</label></li>
+        <li><label><input type="checkbox" value="interview" checked> 面接対策ノート</label></li>
+        <li><label><input type="checkbox" value="gd_feedback" checked> GD練習会FB</label></li>
+        <li><label><input type="checkbox" value="research" checked> 研究メモ</label></li>
+      </ul>
+      <div class="export-group-label">ファイル形式</div>
+      <div class="export-format-row">
+        <button class="export-format-btn selected" onclick="selectExportFormat('csv',this)">CSV（テキストデータ）</button>
+        <button class="export-format-btn" onclick="selectExportFormat('pdf',this)">PDF（印刷用レイアウト）</button>
+      </div>
+      <button class="export-dl-btn" onclick="executeExport()">ダウンロード</button>
+    </div>
+  </div>
+</div>
+
 <script src="auth.js"></script>
 <script>
   (function() {
@@ -287,6 +380,257 @@
       document.getElementById('password-screen').style.display = 'flex';
     }
   })();
+</script>
+<script>
+/* ===== Data Export Engine ===== */
+var _exportFormat = 'csv';
+
+function openExportModal() {
+  document.getElementById('export-overlay').classList.add('active');
+}
+function closeExportModal() {
+  document.getElementById('export-overlay').classList.remove('active');
+}
+function selectExportFormat(fmt, btn) {
+  _exportFormat = fmt;
+  document.querySelectorAll('.export-format-btn').forEach(function(b){ b.classList.remove('selected'); });
+  btn.classList.add('selected');
+}
+
+function getSelectedExportKeys() {
+  var checks = document.querySelectorAll('.export-check-list input[type="checkbox"]:checked');
+  var keys = [];
+  checks.forEach(function(c){ keys.push(c.value); });
+  return keys;
+}
+
+function readLocalData(key) {
+  try { var d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } catch(e){ return null; }
+}
+
+async function gatherExportData(selectedKeys) {
+  var sections = [];
+
+  for (var i = 0; i < selectedKeys.length; i++) {
+    var k = selectedKeys[i];
+
+    if (k === 'gakuchika') {
+      var gkData = null;
+      try {
+        if (typeof callAuthApi === 'function') {
+          var resp = await callAuthApi('readMyGakuchika');
+          if (resp && resp.items) gkData = resp.items;
+        }
+      } catch(e){}
+      if (!gkData) {
+        gkData = readLocalData('keio_navi_gk_deepdive_v1');
+      }
+      sections.push({ title: 'ガクチカ保管庫', data: gkData });
+    }
+
+    if (k === 'es') {
+      var esData = null;
+      try {
+        if (typeof callAuthApi === 'function') {
+          var resp2 = await callAuthApi('readMyES');
+          if (resp2 && resp2.items) esData = resp2.items;
+        }
+      } catch(e){}
+      if (!esData) {
+        esData = readLocalData('keio_navi_es_v1');
+      }
+      sections.push({ title: 'ES保管庫', data: esData });
+    }
+
+    if (k === 'self_analysis') {
+      sections.push({ title: '自己分析ワークブック', data: readLocalData('keio_navi_self_analysis_v1') });
+    }
+    if (k === 'pipeline') {
+      sections.push({ title: '選考管理（パイプライン）', data: readLocalData('keio_navi_progress_v1') });
+    }
+    if (k === 'interview') {
+      sections.push({ title: '面接対策ノート', data: readLocalData('keio_navi_interview_prep_v1') });
+    }
+    if (k === 'gd_feedback') {
+      sections.push({ title: 'GD練習会FB', data: readLocalData('keio_navi_gd_feedback_v1') });
+    }
+    if (k === 'research') {
+      sections.push({ title: '研究メモ', data: readLocalData('keio_navi_research_notes_v1') });
+    }
+  }
+  return sections;
+}
+
+function flattenObj(obj, prefix) {
+  var rows = {};
+  for (var key in obj) {
+    if (!obj.hasOwnProperty(key)) continue;
+    var val = obj[key];
+    var newKey = prefix ? prefix + '.' + key : key;
+    if (val && typeof val === 'object' && !Array.isArray(val)) {
+      var sub = flattenObj(val, newKey);
+      for (var s in sub) rows[s] = sub[s];
+    } else if (Array.isArray(val)) {
+      rows[newKey] = val.join('; ');
+    } else {
+      rows[newKey] = val == null ? '' : String(val);
+    }
+  }
+  return rows;
+}
+
+function escapeCSV(str) {
+  if (str == null) return '';
+  str = String(str);
+  if (str.indexOf(',') !== -1 || str.indexOf('"') !== -1 || str.indexOf('\n') !== -1) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+  return str;
+}
+
+function sectionsToCSV(sections) {
+  var lines = [];
+  sections.forEach(function(sec) {
+    lines.push('');
+    lines.push('=== ' + sec.title + ' ===');
+    var data = sec.data;
+    if (!data) { lines.push('(データなし)'); return; }
+    if (Array.isArray(data)) {
+      if (data.length === 0) { lines.push('(データなし)'); return; }
+      var allKeys = {};
+      data.forEach(function(item) {
+        if (item && typeof item === 'object') {
+          var flat = flattenObj(item, '');
+          for (var fk in flat) allKeys[fk] = true;
+        }
+      });
+      var headers = Object.keys(allKeys);
+      lines.push(headers.map(escapeCSV).join(','));
+      data.forEach(function(item) {
+        if (!item || typeof item !== 'object') { lines.push(String(item)); return; }
+        var flat = flattenObj(item, '');
+        lines.push(headers.map(function(h){ return escapeCSV(flat[h] || ''); }).join(','));
+      });
+    } else if (typeof data === 'object') {
+      var flat2 = flattenObj(data, '');
+      for (var dk in flat2) {
+        lines.push(escapeCSV(dk) + ',' + escapeCSV(flat2[dk]));
+      }
+    } else {
+      lines.push(String(data));
+    }
+  });
+  return lines.join('\r\n');
+}
+
+function downloadCSV(sections) {
+  var csv = sectionsToCSV(sections);
+  var bom = '\uFEFF';
+  var blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '就活ナビ_エクスポート_' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function renderPDFSection(sec) {
+  var html = '<h2 style="color:#0a1a3e;border-bottom:2px solid #c9a84c;padding-bottom:6px;margin:24px 0 12px;font-size:16px;">' + sec.title + '</h2>';
+  var data = sec.data;
+  if (!data) return html + '<p style="color:#888;">(データなし)</p>';
+  if (Array.isArray(data)) {
+    if (data.length === 0) return html + '<p style="color:#888;">(データなし)</p>';
+    var allKeys = {};
+    data.forEach(function(item) {
+      if (item && typeof item === 'object') {
+        var flat = flattenObj(item, '');
+        for (var fk in flat) allKeys[fk] = true;
+      }
+    });
+    var headers = Object.keys(allKeys);
+    html += '<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px;">';
+    html += '<tr>';
+    headers.forEach(function(h) {
+      html += '<th style="background:#0a1a3e;color:#e8c96c;padding:6px 8px;text-align:left;border:1px solid #ddd;white-space:nowrap;">' + h + '</th>';
+    });
+    html += '</tr>';
+    data.forEach(function(item, idx) {
+      var bg = idx % 2 === 0 ? '#fff' : '#f8f6f1';
+      var flat = (item && typeof item === 'object') ? flattenObj(item, '') : {};
+      html += '<tr style="background:' + bg + ';">';
+      headers.forEach(function(h) {
+        var v = (typeof item === 'object') ? (flat[h] || '') : String(item);
+        html += '<td style="padding:5px 8px;border:1px solid #eee;word-break:break-all;">' + String(v).replace(/</g,'&lt;') + '</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</table>';
+  } else if (typeof data === 'object') {
+    var flat2 = flattenObj(data, '');
+    html += '<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;">';
+    for (var dk in flat2) {
+      html += '<tr><td style="font-weight:bold;padding:5px 8px;border:1px solid #eee;background:#f4f1ec;white-space:nowrap;width:30%;">' + dk + '</td>';
+      html += '<td style="padding:5px 8px;border:1px solid #eee;">' + String(flat2[dk]).replace(/</g,'&lt;') + '</td></tr>';
+    }
+    html += '</table>';
+  } else {
+    html += '<p>' + String(data).replace(/</g,'&lt;') + '</p>';
+  }
+  return html;
+}
+
+function openPDFWindow(sections) {
+  var body = '';
+  sections.forEach(function(sec) { body += renderPDFSection(sec); });
+  var fullHTML = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>就活ナビ データエクスポート</title>'
+    + '<style>@media print{body{margin:0;padding:20px;}h1{font-size:18px;}} body{font-family:"Noto Sans JP","Hiragino Sans",sans-serif;max-width:900px;margin:0 auto;padding:24px;color:#1a1a2e;}</style></head><body>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:3px solid #0a1a3e;">'
+    + '<div style="font-size:24px;font-weight:900;color:#0a1a3e;font-family:serif;">慶應就活ナビ</div>'
+    + '<div style="font-size:11px;color:#c9a84c;letter-spacing:0.1em;">DATA EXPORT</div>'
+    + '<div style="margin-left:auto;font-size:11px;color:#6b6b7e;">' + new Date().toLocaleDateString('ja-JP') + '</div>'
+    + '</div>'
+    + body
+    + '<script>window.onload=function(){window.print();}<\/script>'
+    + '</body></html>';
+  var w = window.open('', '_blank');
+  if (w) { w.document.write(fullHTML); w.document.close(); }
+  else { alert('ポップアップがブロックされました。ブラウザの設定を確認してください。'); }
+}
+
+async function executeExport() {
+  var keys = getSelectedExportKeys();
+  if (keys.length === 0) { alert('エクスポートするデータを選択してください。'); return; }
+  var btn = document.querySelector('.export-dl-btn');
+  btn.textContent = 'エクスポート中...';
+  btn.disabled = true;
+  try {
+    var sections = await gatherExportData(keys);
+    if (_exportFormat === 'csv') {
+      downloadCSV(sections);
+    } else {
+      openPDFWindow(sections);
+    }
+    closeExportModal();
+  } catch(e) {
+    alert('エクスポートに失敗しました: ' + e.message);
+  } finally {
+    btn.textContent = 'ダウンロード';
+    btn.disabled = false;
+  }
+}
+
+function exportDataDirect(format, dataKeys) {
+  _exportFormat = format || 'csv';
+  gatherExportData(dataKeys).then(function(sections) {
+    if (_exportFormat === 'csv') downloadCSV(sections);
+    else openPDFWindow(sections);
+  }).catch(function(e) {
+    alert('エクスポートに失敗しました: ' + e.message);
+  });
+}
 </script>
 
 <nav class="bottom-tab-bar">
