@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>就活準備度チェック | 就活ナビ</title>
+<title>就活準備度チェック | 慶應就活ナビ</title>
 <meta name="description" content="1分であなたの就活準備度を診断">
+<meta name="robots" content="noindex, nofollow">
 
 <!-- OGP -->
-<meta property="og:title" content="就活準備度チェック | 就活ナビ">
+<meta property="og:title" content="就活準備度チェック | 慶應就活ナビ">
 <meta property="og:description" content="1分であなたの就活準備度を診断">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="就活ナビ">
+<meta property="og:site_name" content="慶應就活ナビ">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="就活準備度チェック | 就活ナビ">
+<meta name="twitter:title" content="就活準備度チェック | 慶應就活ナビ">
 <meta name="twitter:description" content="1分であなたの就活準備度を診断">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,21 +64,24 @@
 
   .nav-logo {
     font-family: 'Playfair Display', serif;
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--gold-light);
-    letter-spacing: 0.04em;
     text-decoration: none;
   }
 
   .nav-back {
-    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
     text-decoration: none;
-    font-size: 0.82rem;
-    letter-spacing: 0.08em;
-    font-weight: 500;
+    letter-spacing: 0.06em;
     transition: color 0.2s;
   }
   .nav-back:hover { color: var(--gold-light); }
+
+  .nav-member-badge {
+    font-size: 0.68rem; background: rgba(201,168,76,0.15); color: var(--gold);
+    padding: 0.2rem 0.7rem; border: 1px solid rgba(201,168,76,0.3); letter-spacing: 0.1em;
+  }
 
   /* ===== HERO ===== */
   .hero {
@@ -536,8 +540,9 @@
 
 <!-- NAV -->
 <nav>
-  <a href="index.html" class="nav-logo">就活ナビ</a>
-  <a href="index.html" class="nav-back">トップへ戻る</a>
+  <a href="members.html" class="nav-logo">慶應就活ナビ</a>
+  <a href="members.html" class="nav-back">会員ページへ戻る</a>
+  <span class="nav-member-badge">MEMBER</span>
 </nav>
 
 <!-- HERO -->
@@ -583,7 +588,7 @@
     <div class="result-level" id="result-level"></div>
     <div class="result-score" id="result-score"></div>
     <p class="result-desc" id="result-desc"></p>
-    <a href="account.html?mode=signup" class="result-cta">就活ナビで準備を加速する &rarr;</a>
+    <a href="account.html?mode=signup" class="result-cta">慶應就活ナビで準備を加速する &rarr;</a>
   </div>
 
   <div class="weak-section" id="weak-section">
@@ -611,11 +616,11 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <span class="footer-logo">就活ナビ</span>
+    <span class="footer-logo">慶應就活ナビ</span>
     <a href="index.html" class="footer-link">トップページへ</a>
     <a href="privacy.html" class="footer-link">プライバシーポリシー</a>
     <a href="terms.html" class="footer-link">利用規約</a>
-    <div class="footer-copy">&copy; 2026 就活ナビ. All rights reserved.</div>
+    <div class="footer-copy">&copy; 2026 慶應就活ナビ. All rights reserved.</div>
   </div>
 </footer>
 
@@ -729,7 +734,7 @@
 
   var currentQ = 0;
   var scores = [];
-  var BRAND = '就活ナビ';
+  var BRAND = '慶應就活ナビ';
 
   // ===== START =====
   window.startQuiz = function() {
@@ -847,7 +852,7 @@
     document.getElementById('weak-items').innerHTML = weakHTML;
 
     // Share URLs
-    var shareText = encodeURIComponent('就活準備度チェックの結果: ' + level + ' (' + totalScore + '/24) #就活 #就活ナビ');
+    var shareText = encodeURIComponent('就活準備度チェックの結果: ' + level + ' (' + totalScore + '/24) #就活 #慶應就活ナビ');
     var shareUrl = encodeURIComponent(window.location.href);
     document.getElementById('share-x').href = 'https://twitter.com/intent/tweet?text=' + shareText + '&url=' + shareUrl;
     document.getElementById('share-line').href = 'https://social-plugins.line.me/lineit/share?url=' + shareUrl + '&text=' + shareText;

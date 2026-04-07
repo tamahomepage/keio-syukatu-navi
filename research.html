@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企業を知る ｜ 慶應就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 68px;
+    background: rgba(10,26,62,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold-light); text-decoration: none; }
+  .nav-back { font-size: 0.8rem; color: rgba(255,255,255,0.6); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold-light); }
+  .nav-member-badge {
+    font-size: 0.68rem; background: rgba(201,168,76,0.15); color: var(--gold);
+    padding: 0.2rem 0.7rem; border: 1px solid rgba(201,168,76,0.3); letter-spacing: 0.1em;
+  }
+  .nav-link-active {
+    color: var(--gold-light) !important; font-weight: 700;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.15rem;
+  }
+
+  /* ===== PASSWORD SCREEN ===== */
+  #password-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--navy); padding: 2rem;
+  }
+  .pw-box {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(201,168,76,0.2);
+    padding: 3rem 2.5rem; max-width: 420px; width: 100%; text-align: center;
+    position: relative;
+  }
+  .pw-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--crimson), var(--gold));
+  }
+  .pw-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .pw-title { font-family: 'Noto Serif JP', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 0.5rem; }
+  .pw-sub { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; line-height: 1.8; }
+  .pw-btn {
+    display: block;
+    width: 100%; padding: 0.9rem; background: var(--navy);
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold-light);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem;
+    font-weight: 500; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .pw-btn:hover { background: rgba(201,168,76,0.1); }
+  .gate-actions { display: grid; gap: 0.75rem; }
+  .pw-link-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; color: rgba(255,255,255,0.72);
+    text-decoration: none; padding: 0.85rem 1rem;
+    border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s;
+  }
+  .pw-link-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+
+  /* ===== MEMBERS CONTENT ===== */
+  #members-content { display: none; padding-top: 68px; }
+
+  /* ===== HERO ===== */
+  .members-hero {
+    background: var(--navy); padding: 60px 5vw 50px;
+    border-bottom: 1px solid rgba(201,168,76,0.15); position: relative; overflow: hidden;
+  }
+  .members-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 40% 80% at 90% 50%, rgba(192,0,26,0.1) 0%, transparent 70%);
+  }
+  .members-hero-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+  .members-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 1px solid rgba(201,168,76,0.4); padding: 0.3rem 0.9rem;
+    font-size: 0.68rem; color: var(--gold); letter-spacing: 0.15em; font-weight: 600;
+    margin-bottom: 1.2rem;
+  }
+  .members-hero h1 { font-family: 'Noto Serif JP', serif; font-size: 1.8rem; color: var(--white); margin-bottom: 0.5rem; }
+  .members-hero p { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+
+  /* ===== MAIN LAYOUT ===== */
+  .members-main { max-width: 1200px; margin: 0 auto; padding: 3rem 5vw 6rem; }
+
+  /* ===== SECTION ===== */
+  .m-section { margin-bottom: 4rem; }
+  .m-section-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(10,26,62,0.1);
+  }
+  .m-section-icon {
+    width: 36px; height: 36px; background: var(--navy);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .m-section-icon svg { width: 16px; height: 16px; }
+  .m-section-title { font-family: 'Noto Serif JP', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
+  .m-section-label { font-size: 0.68rem; color: var(--crimson); letter-spacing: 0.15em; font-weight: 700; }
+
+  .submit-selection-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.55rem 1.2rem; background: transparent;
+    border: 1px solid rgba(10,26,62,0.2); color: var(--navy);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.78rem;
+    font-weight: 600; cursor: pointer; letter-spacing: 0.05em;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .submit-selection-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+
+  /* ===== DEADLINE ALERT BANNER ===== */
+  .deadline-alert {
+    display: none;
+    background: var(--crimson); padding: 0.75rem 1.5rem;
+    cursor: pointer; transition: background 0.2s;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .deadline-alert:hover { background: #e8001f; }
+  .deadline-alert-inner { max-width: 1000px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .deadline-alert-title { font-size: 0.82rem; color: white; font-weight: 700; }
+  .deadline-alert-companies { font-size: 0.7rem; color: rgba(255,255,255,0.75); margin-top: 0.15rem; line-height: 1.6; }
+  .deadline-alert-right { display: flex; align-items: center; gap: 0.8rem; flex-shrink: 0; }
+  .deadline-alert-link { font-size: 0.72rem; color: rgba(255,255,255,0.8); white-space: nowrap; }
+  .deadline-alert-dismiss { background: none; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.6); font-size: 0.65rem; padding: 0.15rem 0.5rem; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
+  .deadline-alert-dismiss:hover { background: rgba(255,255,255,0.1); }
+
+  /* ===== WEEKLY DEADLINE BANNER ===== */
+  .deadline-banner {
+    background: var(--navy); border-left: 4px solid var(--crimson);
+    padding: 1rem 1.5rem; margin-bottom: 1px; display: none;
+  }
+  .deadline-banner-header {
+    display: flex; align-items: center; gap: 0.6rem;
+    margin-bottom: 0.8rem;
+  }
+  .deadline-banner-label {
+    font-size: 0.65rem; color: var(--crimson); font-weight: 700;
+    letter-spacing: 0.15em;
+  }
+  .deadline-banner-title {
+    font-size: 0.82rem; color: rgba(255,255,255,0.9); font-weight: 600;
+  }
+  .deadline-banner-list {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .deadline-chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.3rem 0.8rem; background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12); font-size: 0.75rem;
+    color: rgba(255,255,255,0.85); cursor: pointer; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .deadline-chip:hover { background: rgba(255,255,255,0.15); border-color: var(--gold); color: var(--gold); }
+  .deadline-chip-days { font-size: 0.65rem; color: var(--crimson); font-weight: 700; }
+  .deadline-chip-days.today { color: #ff6b6b; }
+
+  /* ===== PAGINATION ===== */
+  .pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.8rem 1rem; background: white;
+    border-top: 1px solid rgba(10,26,62,0.08);
+    font-size: 0.78rem;
+  }
+  .pagination-info { color: var(--text-muted); }
+  .pagination-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .pagination-btn {
+    padding: 0.3rem 0.7rem; border: 1px solid rgba(10,26,62,0.15);
+    background: white; color: var(--navy); cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.75rem;
+    font-weight: 600; transition: all 0.15s; min-width: 34px; text-align: center;
+  }
+  .pagination-btn:hover:not(:disabled) { background: var(--navy); color: white; border-color: var(--navy); }
+  .pagination-btn:disabled { opacity: 0.3; cursor: default; }
+  .pagination-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+  /* ===== SELECTION INFO TABLE ===== */
+  .selection-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
+  .selection-row {
+    display: grid; grid-template-columns: 1fr 100px 120px 80px;
+    align-items: center; gap: 1.5rem; padding: 1.2rem 1.5rem;
+    background: var(--white); transition: background 0.2s;
+  }
+  .selection-row:hover { background: #f8f5f0; }
+  .selection-row.header {
+    background: var(--navy); padding: 0.7rem 1.5rem;
+  }
+  .selection-row.header span { font-size: 0.72rem; color: rgba(255,255,255,0.6); letter-spacing: 0.08em; font-weight: 600; }
+  .sel-company { font-weight: 700; font-size: 0.92rem; color: var(--navy); }
+  .sel-type { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .sel-deadline { font-size: 0.82rem; color: var(--text); }
+  .sel-tag {
+    font-size: 0.65rem; padding: 0.2rem 0.6rem; font-weight: 700; letter-spacing: 0.06em;
+    display: inline-block; text-align: center;
+  }
+  .tag-intern { background: rgba(201,168,76,0.15); color: #8a6d1a; }
+  .tag-honsen { background: rgba(192,0,26,0.08); color: var(--crimson); }
+  .sel-link { font-size: 0.78rem; color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
+  .feature-btn { border-color: rgba(192,0,26,0.3); color: var(--crimson); }
+  .feature-btn:hover, .feature-btn.active { background: var(--crimson); border-color: var(--crimson); color: white; }
+
+  /* ===== INDUSTRY FILTER ===== */
+  .industry-filter {
+    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem;
+  }
+  .industry-btn {
+    padding: 0.35rem 0.9rem; font-size: 0.72rem; font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 500; letter-spacing: 0.05em; border: 1px solid rgba(10,26,62,0.2);
+    background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+    border-radius: 0;
+  }
+  .industry-btn:hover { background: var(--navy); border-color: var(--navy); color: white; }
+  .industry-btn.active { background: var(--navy); border-color: var(--navy); color: white; }
+  .sort-row {
+    display: flex; align-items: center; justify-content: flex-end;
+    margin-bottom: 0.6rem;
+  }
+  .sort-btn {
+    font-size: 0.72rem; color: var(--text-muted); background: none; border: none;
+    cursor: pointer; font-family: 'Noto Sans JP', sans-serif; letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 0.3rem; transition: color 0.2s;
+  }
+  .sort-btn:hover, .sort-btn.active { color: var(--navy); font-weight: 700; }
+  .sel-deadline.urgent { color: var(--crimson); font-weight: 700; }
+
+  /* ===== APPLICATION STATUS ===== */
+  .sel-status-select {
+    font-size: 0.68rem; padding: 0.2rem 0.45rem; margin-top: 0.35rem;
+    border: 1px solid rgba(10,26,62,0.18); background: white;
+    color: var(--text-muted); cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+    outline: none; max-width: 130px;
+  }
+  .sel-status-select.st-applied  { border-color: var(--gold); color: #8a6d1a; background: rgba(201,168,76,0.08); }
+  .sel-status-select.st-passed   { border-color: #0057c2; color: #0057c2; background: rgba(0,87,194,0.06); }
+  .sel-status-select.st-interview{ border-color: #7b2fbe; color: #7b2fbe; background: rgba(123,47,190,0.06); }
+  .sel-status-select.st-offer    { border-color: #00703c; color: #00703c; background: rgba(0,112,60,0.08); }
+  .sel-status-select.st-rejected { border-color: var(--crimson); color: var(--crimson); background: rgba(192,0,26,0.05); }
+
+  /* ===== MODAL MEMO ===== */
+  .modal-memo {
+    width: 100%; padding: 0.75rem 1rem; font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.85rem; color: var(--text); line-height: 1.7;
+    border: 1px solid rgba(10,26,62,0.15); background: white;
+    resize: vertical; min-height: 80px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .modal-memo:focus { border-color: var(--navy); }
+  .modal-memo-saved { font-size: 0.65rem; color: #00703c; margin-top: 0.3rem; height: 1em; }
+
+  /* ===== COMPANY NOTE MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(10,26,62,0.7); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 2rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--cream); max-width: 680px; width: 100%;
+    max-height: 85vh; overflow-y: auto; position: relative;
+    border-top: 3px solid var(--gold);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .modal-header {
+    position: sticky; top: 0; background: var(--navy);
+    padding: 1.2rem 1.5rem; display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; z-index: 1;
+  }
+  .modal-company-name { font-family: 'Noto Serif JP', serif; font-size: 1.1rem; color: var(--white); font-weight: 700; }
+  .modal-industry { font-size: 0.72rem; color: var(--gold); letter-spacing: 0.1em; margin-top: 0.2rem; }
+  .modal-close {
+    background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6);
+    width: 32px; height: 32px; font-size: 1rem; cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .modal-close:hover { border-color: var(--crimson); color: var(--crimson); }
+  .modal-body { padding: 1.8rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .modal-field {}
+  .modal-field-label {
+    font-size: 0.65rem; color: var(--crimson); font-weight: 700;
+    letter-spacing: 0.15em; margin-bottom: 0.5rem;
+  }
+  .modal-field-content {
+    font-size: 0.88rem; color: var(--text); line-height: 1.8;
+    white-space: pre-wrap; background: white; padding: 0.8rem 1rem;
+    border-left: 2px solid rgba(201,168,76,0.3);
+  }
+  .modal-field-empty { color: var(--text-muted); font-style: italic; }
+  .modal-url { font-size: 0.82rem; color: var(--navy); word-break: break-all; text-decoration: underline; text-underline-offset: 3px; }
+  .modal-no-data {
+    text-align: center; padding: 3rem; color: var(--text-muted); font-size: 0.88rem;
+  }
+  .event-row.has-note { cursor: pointer; }
+  .event-row.has-note:hover { background: #f0ede6; }
+  .note-badge {
+    font-size: 0.62rem; padding: 0.15rem 0.5rem; background: rgba(10,26,62,0.08);
+    color: var(--navy); border: 1px solid rgba(10,26,62,0.15); font-weight: 600;
+    letter-spacing: 0.05em; white-space: nowrap;
+  }
+
+  /* ===== QUIZ ===== */
+  .quiz-box {
+    background: var(--white); border: 1px solid rgba(10,26,62,0.08); padding: 2.5rem;
+  }
+  .quiz-start { text-align: center; }
+  .quiz-start-desc { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .quiz-start-btn {
+    padding: 0.8rem 2rem; background: var(--navy); color: white;
+    border: none; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem;
+    font-weight: 600; cursor: pointer; letter-spacing: 0.08em; transition: background 0.2s;
+  }
+  .quiz-start-btn:hover { background: var(--crimson); }
+  .quiz-score-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(10,26,62,0.08);
+  }
+  .quiz-score { font-size: 0.8rem; color: var(--text-muted); }
+  .quiz-score strong { color: var(--navy); font-size: 1rem; }
+  .quiz-skip-btn {
+    font-size: 0.72rem; color: var(--text-muted); background: none; border: none;
+    cursor: pointer; font-family: 'Noto Sans JP', sans-serif; text-decoration: underline;
+  }
+  .quiz-hints { margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+  .quiz-hint {
+    padding: 0.8rem 1.2rem; background: var(--gray);
+    border-left: 3px solid var(--gold);
+  }
+  .quiz-hint-label { font-size: 0.62rem; color: var(--crimson); font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.3rem; }
+  .quiz-hint-text { font-size: 0.85rem; color: var(--text); line-height: 1.7; }
+  .quiz-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.5rem; }
+  .quiz-choice {
+    padding: 0.9rem 1rem; background: white; border: 1px solid rgba(10,26,62,0.15);
+    font-family: 'Noto Serif JP', serif; font-size: 0.88rem; color: var(--navy);
+    cursor: pointer; text-align: left; transition: all 0.15s; font-weight: 600;
+  }
+  .quiz-choice:hover { background: rgba(10,26,62,0.05); border-color: var(--navy); }
+  .quiz-choice.correct { background: rgba(0,160,80,0.1); border-color: #00703c; color: #00703c; }
+  .quiz-choice.wrong { background: rgba(192,0,26,0.08); border-color: var(--crimson); color: var(--crimson); }
+  .quiz-choice.reveal { background: rgba(0,160,80,0.06); border-color: #00703c; color: #00703c; }
+  .quiz-choice:disabled { cursor: default; }
+  .quiz-result {
+    text-align: center; padding: 1.2rem; margin-bottom: 1rem;
+    font-size: 1rem; font-weight: 700; font-family: 'Noto Serif JP', serif;
+  }
+  .quiz-result.correct { color: #00703c; background: rgba(0,160,80,0.08); }
+  .quiz-result.wrong { color: var(--crimson); background: rgba(192,0,26,0.05); }
+  .quiz-next-btn {
+    width: 100%; padding: 0.8rem; background: var(--navy); color: white;
+    border: none; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem;
+    font-weight: 600; cursor: pointer; letter-spacing: 0.06em; transition: background 0.2s;
+  }
+  .quiz-next-btn:hover { background: var(--crimson); }
+  .quiz-finish { text-align: center; padding: 1rem 0; }
+  .quiz-finish-score { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--navy); line-height: 1; margin-bottom: 0.5rem; }
+  .quiz-finish-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  @media (max-width: 500px) { .quiz-choices { grid-template-columns: 1fr; } }
+
+  /* ===== COMPANY NOTES SEARCH ===== */
+  .company-search-wrap { margin-bottom: 1rem; }
+  .company-search-input {
+    width: 100%; padding: 0.85rem 1.2rem;
+    border: 1px solid rgba(10,26,62,0.2); background: white;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.9rem; color: var(--text);
+    outline: none; transition: border-color 0.2s;
+  }
+  .company-search-input:focus { border-color: var(--navy); }
+  .company-notes-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: rgba(10,26,62,0.08);
+  }
+  .company-note-card {
+    background: white; padding: 1.3rem 1.5rem;
+    cursor: pointer; transition: background 0.2s; border-left: 3px solid transparent;
+  }
+  .company-note-card:hover { background: #f8f5f0; border-left-color: var(--gold); }
+  .company-note-card-name { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+  .company-note-card-industry { font-size: 0.72rem; color: var(--gold); font-weight: 600; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+  .company-note-card-preview { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .company-note-card-arrow { font-size: 0.72rem; color: var(--navy); margin-top: 0.6rem; }
+  @media (max-width: 760px) { .company-notes-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 500px) { .company-notes-grid { grid-template-columns: 1fr; } }
+
+  /* ===== CORPORATE EVENT LIST ===== */
+  .event-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
+  .event-row {
+    display: grid; grid-template-columns: 110px 1fr auto;
+    align-items: center; gap: 1.5rem; padding: 1.2rem 1.5rem;
+    background: var(--white); transition: background 0.2s;
+  }
+  .event-row:hover { background: #f8f5f0; }
+  .event-row.header { background: var(--navy); padding: 0.7rem 1.5rem; }
+  .event-row.header span { font-size: 0.72rem; color: rgba(255,255,255,0.6); letter-spacing: 0.08em; font-weight: 600; }
+  .event-date-block { display: flex; flex-direction: column; gap: 0.15rem; }
+  .event-date-main { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; color: var(--navy); font-weight: 700; }
+  .event-date-time { font-size: 0.72rem; color: var(--text-muted); }
+  .event-name { font-weight: 700; font-size: 0.92rem; color: var(--navy); margin-bottom: 0.2rem; }
+  .event-meta { font-size: 0.78rem; color: var(--text-muted); display: flex; gap: 0.8rem; flex-wrap: wrap; }
+  .event-meta-item { display: flex; align-items: center; gap: 0.2rem; }
+  .event-benefit {
+    font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.6rem;
+    background: rgba(201,168,76,0.15); color: #8a6d1a;
+    border: 1px solid rgba(201,168,76,0.3); white-space: nowrap;
+  }
+  .event-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
+  .event-apply-btn {
+    font-size: 0.75rem; font-weight: 600; padding: 0.45rem 1rem;
+    background: var(--navy); color: white; text-decoration: none;
+    letter-spacing: 0.05em; transition: background 0.2s; white-space: nowrap;
+  }
+  .event-apply-btn:hover { background: var(--crimson); }
+  .event-apply-btn.no-link { background: rgba(10,26,62,0.08); color: var(--text-muted); cursor: default; }
+
+  @media (max-width: 600px) {
+    .event-row { grid-template-columns: 1fr; gap: 0.8rem; }
+    .event-actions { align-items: flex-start; }
+  }
+
+  /* ===== DIFFICULTY STARS ===== */
+  .sel-difficulty { display: inline-flex; align-items: center; gap: 0.15rem; margin-left: 0.4rem; }
+  .diff-star { cursor: pointer; font-size: 0.82rem; color: rgba(10,26,62,0.15); transition: color 0.1s; }
+  .diff-star.filled { color: var(--gold); }
+  .diff-voted-label { font-size: 0.6rem; color: var(--text-muted); margin-left: 0.2rem; }
+
+  /* ===== LOADING ===== */
+  .m-loading { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; background: var(--white); }
+  .m-empty { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; background: var(--white); line-height: 2; }
+  .m-empty-cta {
+    display: inline-block; margin-top: 0.8rem;
+    padding: 0.5rem 1.2rem; background: var(--navy); color: white;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em;
+    text-decoration: none; transition: background 0.2s;
+  }
+  .m-empty-cta:hover { background: var(--crimson); color: white; }
+  .sheet-note { font-size: 0.7rem; color: rgba(10,26,62,0.3); text-align: right; margin-top: 0.8rem; }
+
+  @keyframes genSpin { to { transform: rotate(360deg); } }
+
+  /* ===== スクロールトップボタン ===== */
+  .scroll-top-btn {
+    position: fixed; right: 1.4rem; bottom: 1.6rem; z-index: 150;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--navy); border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold-light); font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 16px rgba(10,26,62,0.35);
+  }
+  .scroll-top-btn.visible { opacity: 1; pointer-events: auto; }
+  .scroll-top-btn:hover { background: var(--crimson); transform: translateY(-2px); }
+
+  /* ===== PROGRESS MODAL (for recruit fetch) ===== */
+  .progress-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 250;
+    background: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+  }
+  .progress-modal-overlay.open { display: flex; }
+  .progress-modal-box {
+    background: white; width: min(420px, 90vw); max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .progress-modal-header { background: var(--navy); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .progress-modal-title { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; color: white; font-weight: 700; }
+  .progress-modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+
+  /* ===== HAMBURGER (members) ===== */
+  .hamburger-m {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger-m span {
+    display: block; width: 22px; height: 2px;
+    background: rgba(255,255,255,0.7); transition: all 0.3s;
+  }
+  .hamburger-m.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger-m.open span:nth-child(2) { opacity: 0; }
+  .hamburger-m.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu-m {
+    display: none; position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: rgba(10,26,62,0.98); backdrop-filter: blur(12px);
+    z-index: 99; flex-direction: column;
+    padding: 1.2rem 5vw 1.8rem;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .mobile-menu-m.open { display: flex; }
+  .mobile-menu-m a, .mobile-menu-m button {
+    color: rgba(255,255,255,0.75); text-decoration: none;
+    font-size: 0.9rem; padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    letter-spacing: 0.04em; transition: color 0.2s;
+    background: none; border-top: none; border-left: none; border-right: none;
+    font-family: 'Noto Sans JP', sans-serif; cursor: pointer; text-align: left;
+  }
+  .mobile-menu-m a:hover, .mobile-menu-m button:hover { color: var(--gold-light); }
+
+  @media (max-width: 768px) {
+    .hamburger-m { display: flex; }
+    .nav-desktop-links { display: none; }
+  }
+
+  /* ===== LOGOUT ===== */
+  .logout-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5);
+    padding: 0.3rem 0.8rem; font-size: 0.72rem; font-family: 'Noto Sans JP', sans-serif;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.06em;
+  }
+  .logout-btn:hover { border-color: var(--crimson); color: var(--crimson); }
+
+  @media (max-width: 760px) {
+    .selection-row { grid-template-columns: 1fr 80px; }
+    .selection-row > :nth-child(3), .selection-row > :nth-child(4) { grid-column: 2; }
+  }
+</style>
+</head>
+<body>
+
+<nav style="justify-content:center;">
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a>
+  <span class="nav-member-badge" id="member-badge" style="display:none;position:absolute;right:5vw;font-size:0.72rem;color:var(--gold-light);"></span>
+  <button class="logout-btn" id="logout-btn" style="display:none;position:absolute;right:5vw;" onclick="logout()">ログアウト</button>
+</nav>
+
+<!-- DEADLINE ALERT BANNER -->
+<div class="deadline-alert" id="deadline-alert" onclick="scrollToSelection()">
+  <div class="deadline-alert-inner">
+    <div>
+      <div class="deadline-alert-title" id="deadline-alert-title"></div>
+      <div class="deadline-alert-companies" id="deadline-alert-companies"></div>
+    </div>
+    <div class="deadline-alert-right">
+      <span class="deadline-alert-link">選考情報を見る →</span>
+      <button class="deadline-alert-dismiss" onclick="dismissAlert(event)">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- PASSWORD SCREEN -->
+<div id="password-screen">
+  <div class="pw-box">
+    <div class="pw-icon">👤</div>
+    <h2 class="pw-title">会員専用ページ</h2>
+    <p class="pw-sub" id="auth-gate-copy">このページは慶應就活ナビのメンバー限定です。<br>個人アカウントでログインすると閲覧できます。</p>
+    <div class="gate-actions">
+      <a class="pw-btn" id="gate-login-btn" href="account.html?mode=login&amp;returnTo=research.html">ログインして入る →</a>
+      <a class="pw-link-btn" href="account.html?mode=signup&amp;returnTo=research.html">新しくアカウントを作る</a>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERS CONTENT -->
+<div id="members-content">
+
+  <div class="members-hero">
+    <div class="members-hero-inner">
+      <div class="members-badge">RESEARCH</div>
+      <h1>企業を知る</h1>
+      <p id="members-hero-copy">選考情報・企業分析ノート・イベント情報をまとめています。</p>
+    </div>
+  </div>
+
+  <div class="members-main">
+
+    <!-- TODAY'S PICK -->
+    <div class="m-section" id="random-notes-section" style="display:none;">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">TODAY'S PICK</div>
+          <div class="m-section-title" id="random-notes-title">今日のおすすめ企業ノート</div>
+        </div>
+      </div>
+      <div class="company-notes-grid" id="random-notes-grid"></div>
+    </div>
+
+    <!-- 企業分析ノート検索 -->
+    <div class="m-section" id="company-notes">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">COMPANY NOTES</div>
+          <div class="m-section-title">企業分析ノート</div>
+        </div>
+      </div>
+      <div class="company-search-wrap">
+        <input type="text" id="company-search-input" class="company-search-input" placeholder="企業名で検索..." oninput="searchCompanyNotes()">
+      </div>
+      <div class="company-notes-grid" id="company-notes-grid">
+        <div class="m-empty">企業名を入力して検索してください。</div>
+      </div>
+    </div>
+
+    <!-- 企業クイズ -->
+    <div class="m-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">QUIZ</div>
+          <div class="m-section-title">企業研究クイズ</div>
+        </div>
+      </div>
+      <div class="quiz-box" id="quiz-box">
+        <div class="quiz-start">
+          <p class="quiz-start-desc">企業ノートの情報をヒントに、どの会社か当てよう！</p>
+          <button class="quiz-start-btn" onclick="startQuiz()">クイズを始める →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 選考情報・ES共有 -->
+    <div class="m-section" id="selection-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">SELECTION INFO</div>
+          <div class="m-section-title">選考情報・ES共有</div>
+        </div>
+      </div>
+      <!-- 特集フィルター -->
+      <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+        <span style="font-size:0.68rem; color:var(--crimson); letter-spacing:0.1em; font-weight:600;">特集</span>
+        <div style="flex:1; height:1px; background:rgba(10,26,62,0.08);"></div>
+      </div>
+      <div class="industry-filter" style="margin-bottom:1rem;">
+        <button class="industry-btn feature-btn active" data-feature="all" onclick="setFeature('all')">すべて</button>
+        <button class="industry-btn feature-btn" data-feature="大手" onclick="setFeature('大手')">大手</button>
+        <button class="industry-btn feature-btn" data-feature="ベンチャー" onclick="setFeature('ベンチャー')">ベンチャー</button>
+      </div>
+      <!-- 業界フィルター -->
+      <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+        <span style="font-size:0.68rem; color:var(--text-muted); letter-spacing:0.1em; font-weight:600;">業界</span>
+        <div style="flex:1; height:1px; background:rgba(10,26,62,0.08);"></div>
+      </div>
+      <div class="industry-filter" id="industry-filter" style="margin-bottom:1rem;">
+        <button class="industry-btn active" data-industry="all" onclick="setIndustry('all')">すべて</button>
+        <button class="industry-btn" data-industry="メーカー" onclick="setIndustry('メーカー')">メーカー</button>
+        <button class="industry-btn" data-industry="商社" onclick="setIndustry('商社')">商社</button>
+        <button class="industry-btn" data-industry="小売" onclick="setIndustry('小売')">小売</button>
+        <button class="industry-btn" data-industry="金融" onclick="setIndustry('金融')">金融</button>
+        <button class="industry-btn" data-industry="サービス・インフラ" onclick="setIndustry('サービス・インフラ')">サービス・インフラ</button>
+        <button class="industry-btn" data-industry="ソフトウェア" onclick="setIndustry('ソフトウェア')">ソフトウェア</button>
+        <button class="industry-btn" data-industry="マスコミ" onclick="setIndustry('マスコミ')">広告・出版・マスコミ</button>
+        <button class="industry-btn" data-industry="官公庁" onclick="setIndustry('官公庁')">官公庁・公社・団体</button>
+        <button class="industry-btn" data-industry="コンサル" onclick="setIndustry('コンサル')">コンサル</button>
+      </div>
+      <div class="sort-row">
+        <button class="sort-btn active" id="sort-btn" onclick="toggleSort()">↑ 締切が近い順</button>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-bottom:0.8rem; flex-wrap:wrap;">
+        <button class="submit-selection-btn" style="border:1.5px solid var(--navy); background:none; color:var(--navy); cursor:pointer; font-family:'Noto Sans JP',sans-serif; font-weight:700; font-size:0.78rem; padding:0.5rem 1rem;" onclick="openRecruitFetchModal()">AI で選考情報を収集</button>
+        <a id="selection-form-btn" href="#" target="_blank" rel="noopener noreferrer" class="submit-selection-btn">
+          ＋ 選考情報を投稿する
+        </a>
+      </div>
+      <div class="deadline-banner" id="deadline-banner">
+        <div class="deadline-banner-header">
+          <span class="deadline-banner-label">URGENT</span>
+          <span class="deadline-banner-title" id="deadline-banner-title"></span>
+        </div>
+        <div class="deadline-banner-list" id="deadline-banner-list"></div>
+      </div>
+      <div class="selection-list" id="selection-list">
+        <div class="m-loading">読み込み中...</div>
+      </div>
+      <p class="sheet-note" id="selection-note"></p>
+    </div>
+
+    <!-- 企業イベント情報 -->
+    <div class="m-section">
+      <div class="m-section-header">
+        <div class="m-section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div>
+          <div class="m-section-label">EVENTS</div>
+          <div class="m-section-title">企業イベント情報</div>
+        </div>
+      </div>
+      <div class="sort-row">
+        <button class="sort-btn active" id="event-sort-btn" onclick="toggleEventSort()">↑ 日付が近い順</button>
+      </div>
+      <div class="event-list" id="event-list">
+        <div class="m-loading">読み込み中...</div>
+      </div>
+      <p class="sheet-note" id="event-note"></p>
+    </div>
+
+  </div><!-- .members-main -->
+</div><!-- #members-content -->
+
+<!-- 選考情報AI収集モーダル -->
+<div class="progress-modal-overlay" id="recruit-fetch-modal">
+  <div class="progress-modal-box" style="max-width:520px;">
+    <div class="progress-modal-header">
+      <span class="progress-modal-title">AIで選考情報を収集</span>
+      <button onclick="document.getElementById('recruit-fetch-modal').classList.remove('open')" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">✕</button>
+    </div>
+    <div class="progress-modal-body">
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.7;">企業名を入力すると、AIが公式採用ページを探して選考情報を自動抽出します。</p>
+      <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">企業名 <span style="color:var(--crimson);">*</span></label>
+        <input id="rf-company" type="text" style="width:100%;padding:0.6rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.88rem;font-family:'Noto Sans JP',sans-serif;" placeholder="例: トヨタ自動車">
+      </div>
+      <div style="margin-top:0.8rem;">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">採用ページURL（任意 — 空欄ならAIが探します）</label>
+        <input id="rf-url" type="url" style="width:100%;padding:0.6rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.88rem;font-family:'Noto Sans JP',sans-serif;" placeholder="https://...">
+      </div>
+      <div style="font-size:0.78rem;color:var(--crimson);min-height:1.2em;margin-top:0.5rem;" id="rf-error"></div>
+      <button id="rf-fetch-btn" onclick="fetchRecruitInfo()" style="width:100%;padding:0.85rem;background:var(--navy);color:white;border:none;font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;letter-spacing:0.06em;margin-top:0.5rem;">AIで取得する</button>
+
+      <!-- 結果プレビュー -->
+      <div id="rf-result" style="display:none;margin-top:1.2rem;border-top:1px solid rgba(10,26,62,0.1);padding-top:1rem;">
+        <div style="font-size:0.78rem;color:var(--gold);font-weight:700;letter-spacing:0.1em;margin-bottom:0.8rem;">取得結果</div>
+        <div id="rf-preview" style="font-size:0.82rem;line-height:1.8;"></div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.5rem;" id="rf-source"></div>
+        <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+          <button id="rf-save-btn" onclick="saveRecruitInfo()" style="flex:1;padding:0.7rem;background:var(--crimson);color:white;border:none;font-family:'Noto Sans JP',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">選考情報スプシに保存</button>
+          <button onclick="document.getElementById('rf-result').style.display='none'" style="padding:0.7rem 1rem;background:none;border:1px solid rgba(10,26,62,0.2);color:var(--text-muted);font-family:'Noto Sans JP',sans-serif;font-size:0.82rem;cursor:pointer;">やり直す</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- スクロールトップボタン -->
+<button class="scroll-top-btn" id="scroll-top-btn" aria-label="ページトップへ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- COMPANY NOTE MODAL -->
+<div class="modal-overlay" id="company-modal" onclick="closeModal(event)">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-company-name" id="modal-company-name">–</div>
+        <div class="modal-industry" id="modal-industry"></div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  // ===== 定数 =====
+  const SELECTION_KEY = 'selection';
+  const COMPANY_KEY   = 'company';
+  const EVENT_KEY     = 'event';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
+  const SELECTION_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSeg0-r0YzP_1sdSjvI98lNWrlwYfCsChk67fGlq3uwrQvuuFA/viewform?usp=publish-editor';
+  const LENDING_FORM  = 'https://docs.google.com/forms/d/e/1FAIpQLScmV_ubANH5RNIHD_wEH3yakHbs5YqdegrPysSfpFo4veAg4Q/viewform';
+
+  // ===== Auth & Nav =====
+  function logout() {
+    KeioNaviAuth.logout();
+    location.reload();
+  }
+
+  function escHtml(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+  function escAttr(s) { return escHtml(s).replace(/'/g, '&#39;'); }
+  function safeHttpUrl(value) {
+    var raw = String(value || '').trim();
+    if (!raw) return '';
+    try {
+      var url = new URL(raw, window.location.href);
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+      return url.href;
+    } catch (e) {
+      return '';
+    }
+  }
+  function renderUrlList(value) {
+    return String(value || '').split(/[|;]/).map(function(item) {
+      return safeHttpUrl(item);
+    }).filter(Boolean).map(function(url) {
+      return '<a href="' + escAttr(url) + '" target="_blank" rel="noopener noreferrer" class="modal-url" style="display:block;margin-bottom:0.3rem;">' + escHtml(url) + '</a>';
+    }).join('');
+  }
+  function buildDifficultyHtml(diffKey, myVote) {
+    var keyAttr = escAttr(diffKey);
+    var html = '<span class="sel-difficulty" data-key="' + keyAttr + '">';
+    for (var n = 1; n <= 5; n++) {
+      html += '<span class="diff-star' + (myVote >= n ? ' filled' : '') + '" data-key="' + keyAttr + '" data-n="' + n + '">\u2605</span>';
+    }
+    html += myVote ? '<span class="diff-voted-label">\u96E3\u6613\u5EA6' + myVote + '</span>' : '';
+    html += '</span>';
+    return html;
+  }
+  function attachSelectionInteractions(container) {
+    if (!container) return;
+    container.querySelectorAll('.sel-note-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openModal(btn.dataset.company || '');
+      });
+    });
+    container.querySelectorAll('.sel-status-select').forEach(function(select) {
+      select.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+      select.addEventListener('change', function() {
+        updateSelStatus(select.dataset.key || '', select.value);
+      });
+    });
+    container.querySelectorAll('.diff-star').forEach(function(star) {
+      star.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var key = star.dataset.key || '';
+        var n = Number(star.dataset.n || 0);
+        if (!key || !n) return;
+        voteDifficulty(key, n, star);
+      });
+    });
+    container.querySelectorAll('[data-deadline-url]').forEach(function(chip) {
+      chip.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var url = safeHttpUrl(chip.dataset.deadlineUrl || '');
+        if (url) window.open(url, '_blank', 'noopener,noreferrer');
+      });
+    });
+  }
+
+  function toggleMobileMenuM() {
+    document.getElementById('hamburger-m').classList.toggle('open');
+    document.getElementById('mobile-menu-m').classList.toggle('open');
+  }
+
+  function showMembers(user) {
+    document.getElementById('password-screen').style.display = 'none';
+    document.getElementById('members-content').style.display = 'block';
+    document.getElementById('member-badge').style.display = 'inline-block';
+    document.getElementById('logout-btn').style.display = 'inline-block';
+    document.getElementById('member-badge').textContent = (user?.username || '会員') + ' さん';
+    const industryMsg = user?.desiredIndustry ? '\u3010' + user.desiredIndustry + '\u3011志望 ' : '';
+    document.getElementById('members-hero-copy').textContent = industryMsg + (user?.username || 'あなた') + ' さん向けに、選考情報・企業分析・イベント情報をまとめています。';
+    loadAll();
+  }
+
+  // ===== GAS Fetch =====
+  async function fetchViaGAS(sheetKey) {
+    if (!GAS_PROXY_URL) throw new Error('GAS_PROXY_URLが設定されていません');
+    const sessionToken = typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
+    const res = await fetch(GAS_PROXY_URL, {
+      method: 'POST',
+      body: JSON.stringify(sessionToken ? { action: 'read', sheetKey, sessionToken } : { action: 'read', sheetKey }),
+      redirect: 'follow',
+    });
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message || '読み込みに失敗しました');
+    if (!Array.isArray(data.rows)) throw new Error('GASからのレスポンスが不正です（rows がありません）');
+    return data.rows;
+  }
+
+  // ===== 選考ステータス（localStorage） =====
+  const SEL_STATUS_KEY = 'keio_navi_sel_status_v1';
+  const MEMO_KEY = 'keio_navi_memo_v1';
+  const STATUS_OPTIONS = [
+    { value: '',           label: '-- 状況 --',    cls: '' },
+    { value: 'applied',   label: '応募済み',       cls: 'st-applied' },
+    { value: 'passed',    label: '書類通過',       cls: 'st-passed' },
+    { value: 'interview', label: '面接中',         cls: 'st-interview' },
+    { value: 'offer',     label: '内定',           cls: 'st-offer' },
+    { value: 'rejected',  label: '不採用',         cls: 'st-rejected' },
+  ];
+
+  function getSelStatuses() {
+    try { return JSON.parse(localStorage.getItem(SEL_STATUS_KEY) || '{}'); } catch(e) { return {}; }
+  }
+  function getSelStatus(companyKey) {
+    return getSelStatuses()[companyKey] || '';
+  }
+  function updateSelStatus(companyKey, val) {
+    const all = getSelStatuses();
+    if (val) all[companyKey] = val; else delete all[companyKey];
+    localStorage.setItem(SEL_STATUS_KEY, JSON.stringify(all));
+    const sel = document.querySelector('.sel-status-select[data-key="' + CSS.escape(companyKey) + '"]');
+    if (sel) {
+      STATUS_OPTIONS.forEach(o => sel.classList.remove(o.cls));
+      const opt = STATUS_OPTIONS.find(o => o.value === val);
+      if (opt && opt.cls) sel.classList.add(opt.cls);
+    }
+  }
+
+  function getMemo(companyName) {
+    try { return (JSON.parse(localStorage.getItem(MEMO_KEY) || '{}'))[companyName] || ''; } catch(e) { return ''; }
+  }
+  function saveMemo(companyName, val) {
+    const all = (() => { try { return JSON.parse(localStorage.getItem(MEMO_KEY) || '{}'); } catch(e) { return {}; } })();
+    if (val.trim()) all[companyName] = val; else delete all[companyName];
+    localStorage.setItem(MEMO_KEY, JSON.stringify(all));
+    const saved = document.getElementById('memo-saved-msg');
+    if (saved) { saved.textContent = '保存しました'; setTimeout(() => saved.textContent = '', 1500); }
+  }
+
+  // ===== 難易度投票 =====
+  const DIFF_KEY = 'keio_navi_difficulty_v1';
+  function getDifficultyVote(key) {
+    try { return (JSON.parse(localStorage.getItem(DIFF_KEY) || '{}'))[key] || 0; } catch { return 0; }
+  }
+  function voteDifficulty(key, n, el) {
+    const all = (() => { try { return JSON.parse(localStorage.getItem(DIFF_KEY) || '{}'); } catch { return {}; } })();
+    all[key] = n;
+    localStorage.setItem(DIFF_KEY, JSON.stringify(all));
+    const container = el.closest('.sel-difficulty');
+    if (!container) return;
+    container.querySelectorAll('.diff-star').forEach((s, i) => s.classList.toggle('filled', i < n));
+    var label = container.querySelector('.diff-voted-label');
+    if (!label) { label = document.createElement('span'); label.className = 'diff-voted-label'; container.appendChild(label); }
+    label.textContent = '\u96E3\u6613\u5EA6' + n;
+  }
+
+  // ===== 業界件数バッジ更新 =====
+  function updateIndustryCounts() {
+    const valid = selectionRows.filter(r => r[0] && r[0] !== '企業名' && r[0] !== '企業名・選考内容');
+    const allBtn = document.querySelector('[data-industry="all"]');
+    if (allBtn) allBtn.textContent = '\u3059\u3079\u3066 (' + valid.length + ')';
+    const industries = [
+      { key: 'メーカー', label: 'メーカー' },
+      { key: '商社', label: '商社' },
+      { key: '小売', label: '小売' },
+      { key: '金融', label: '金融' },
+      { key: 'サービス・インフラ', label: 'サービス・インフラ' },
+      { key: 'ソフトウェア', label: 'ソフトウェア' },
+      { key: 'マスコミ', label: '広告・出版・マスコミ' },
+      { key: '官公庁', label: '官公庁・公社・団体' },
+      { key: 'コンサル', label: 'コンサル' },
+    ];
+    industries.forEach(function(item) {
+      var btn = document.querySelector('[data-industry="' + item.key + '"]');
+      if (!btn) return;
+      var count = valid.filter(function(r) {
+        var ind = r[4] || '';
+        if (item.key === '官公庁') return ind.includes('官公庁') || ind.includes('公社') || ind.includes('団体');
+        return ind.includes(item.key);
+      }).length;
+      btn.textContent = item.label + ' (' + count + ')';
+    });
+  }
+
+  // ===== 選考情報 =====
+  var selectionRows = [];
+  var selectionSortAsc = true;
+  var selectionIndustry = 'all';
+  var selectionFeature = 'all';
+  var selectionPage = 0;
+  var SELECTION_PAGE_SIZE = 10;
+
+  async function loadSelection() {
+    var el = document.getElementById('selection-list');
+    var note = document.getElementById('selection-note');
+    var sample = [
+      ['〇〇商事（サマーインターン）', '2025/06/10', 'インターン', '', '商社', '大手'],
+      ['△△銀行（早期選考）', '2025/06/20', '本選考', '', '金融', '大手'],
+      ['□□コンサル（早期選考）', '2025/07/01', '本選考', '', 'コンサル', ''],
+      ['〇〇テック（インターン）', '2025/06/15', 'インターン', '', 'ソフトウェア', 'ベンチャー'],
+      ['△△スタートアップ', '2025/06/25', 'インターン', '', 'サービス・インフラ', 'ベンチャー'],
+    ];
+    try {
+      selectionRows = SELECTION_KEY ? (await fetchViaGAS(SELECTION_KEY)) : sample;
+    } catch(err) {
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26A0 読み込みエラー: ' + escHtml(err.message) + '</div>';
+      console.error('SELECTION_KEY:', err); return;
+    }
+    if (!selectionRows.length) {
+      el.innerHTML = '<div class="m-empty">選考情報はまだ登録されていません。<br>あなたが最初の一件を共有しましょう！<br><a class="m-empty-cta" href="' + SELECTION_FORM + '" target="_blank" rel="noopener">選考情報を投稿する →</a></div>';
+      return;
+    }
+    renderSelection();
+    updateIndustryCounts();
+    checkDeadlineAlert();
+    if (!SELECTION_KEY) note.textContent = '※ サンプルデータです。スプシの6列目に業界名、7列目に「大手」または「ベンチャー」を入力してください。';
+  }
+
+  function checkDeadlineAlert() {
+    if (!selectionRows.length) return;
+    var liked = KeioNaviAuth.getLikedCompanies();
+    var today = new Date();
+    var urgent = [];
+
+    if (liked.length) {
+      liked.forEach(function(c) {
+        selectionRows.forEach(function(r) {
+          if (!r[0] || !r[1]) return;
+          var rowName = (r[0]||'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').trim();
+          var selAlias = r[6] || '';
+          if (!selectionMatch(rowName, selAlias, c.name)) return;
+          var d = new Date(r[1].replace(/\//g,'-'));
+          if (isNaN(d)) return;
+          var diff = Math.ceil((d - today) / (1000*60*60*24));
+          if (diff >= 0 && diff <= 7) urgent.push({ name: r[0], diff: diff });
+        });
+      });
+    } else {
+      selectionRows.forEach(function(r) {
+        if (!r[0] || !r[1]) return;
+        var d = new Date(r[1].replace(/\//g,'-'));
+        if (isNaN(d)) return;
+        var diff = Math.ceil((d - today) / (1000*60*60*24));
+        if (diff >= 0 && diff <= 7) urgent.push({ name: r[0], diff: diff });
+      });
+    }
+
+    if (!urgent.length) return;
+    urgent.sort(function(a,b) { return a.diff - b.diff; });
+
+    var banner = document.getElementById('deadline-alert');
+    var titleEl = document.getElementById('deadline-alert-title');
+    var companiesEl = document.getElementById('deadline-alert-companies');
+
+    var prefix = liked.length ? '気になり企業' : '選考';
+    titleEl.textContent = '\u26A0 ' + prefix + 'の締切が近い企業が ' + urgent.length + ' 社あります';
+    companiesEl.textContent = urgent.map(function(a) { return a.name + '（残' + a.diff + '日）'; }).join('\u3000・\u3000');
+    banner.style.display = 'block';
+  }
+
+  function scrollToSelection() {
+    var el = document.getElementById('selection-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function dismissAlert(e) {
+    e.stopPropagation();
+    document.getElementById('deadline-alert').style.display = 'none';
+  }
+
+  function normalizeDate(val) {
+    if (!val) return '';
+    var s = String(val).trim();
+    if (s.match(/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/)) return s.replace(/-/g, '/');
+    var p = new Date(s);
+    if (isNaN(p)) return s;
+    return p.getFullYear() + '/' + String(p.getMonth()+1).padStart(2,'0') + '/' + String(p.getDate()).padStart(2,'0');
+  }
+
+  function renderDeadlineBanner(today) {
+    var banner = document.getElementById('deadline-banner');
+    var listEl = document.getElementById('deadline-banner-list');
+    var titleEl = document.getElementById('deadline-banner-title');
+
+    var urgent = selectionRows.filter(function(r) {
+      if (!r[0] || !r[1]) return false;
+      var d = new Date(r[1].replace(/\//g,'-'));
+      if (isNaN(d)) return false;
+      var diff = Math.ceil((d - today) / (1000*60*60*24));
+      return diff >= 0 && diff <= 7;
+    }).sort(function(a, b) {
+      var da = new Date(a[1].replace(/\//g,'-'));
+      var db = new Date(b[1].replace(/\//g,'-'));
+      return da - db;
+    });
+
+    if (!urgent.length) { banner.style.display = 'none'; return; }
+
+    banner.style.display = 'block';
+    titleEl.textContent = '\u4ECA\u9031\u7DE0\u5207\u306E\u4F01\u696D\u304C ' + urgent.length + ' \u793E\u3042\u308A\u307E\u3059';
+    listEl.innerHTML = urgent.map(function(r) {
+      var d = new Date(r[1].replace(/\//g,'-'));
+      var diff = Math.ceil((d - today) / (1000*60*60*24));
+      var daysLabel = diff === 0 ? '今日' : '残' + diff + '日';
+      var isToday = diff === 0;
+      var linkUrl = safeHttpUrl(r[3]);
+      return '<span class="deadline-chip"' + (linkUrl ? ' data-deadline-url="' + escAttr(linkUrl) + '"' : '') + '>' +
+        escHtml(r[0] || '') +
+        ' <span class="deadline-chip-days' + (isToday ? ' today' : '') + '">' + escHtml(daysLabel) + '</span>' +
+      '</span>';
+    }).join('');
+    attachSelectionInteractions(listEl);
+  }
+
+  function renderSelection() {
+    var el = document.getElementById('selection-list');
+    var today = new Date();
+    var liked = KeioNaviAuth.getLikedCompanies();
+    renderDeadlineBanner(today);
+
+    var rows = selectionRows.slice().filter(function(r) { return r[0] && r[0] !== '企業名・選考内容' && r[0] !== '企業名'; });
+
+    if (selectionFeature !== 'all') {
+      rows = rows.filter(function(r) { return (r[5] || '').includes(selectionFeature); });
+    }
+    if (selectionIndustry !== 'all') {
+      rows = rows.filter(function(r) {
+        var ind = r[4] || '';
+        if (selectionIndustry === '官公庁') return ind.includes('官公庁') || ind.includes('公社') || ind.includes('団体');
+        if (selectionIndustry === 'その他') return !ind || !['メーカー','商社','小売','金融','サービス','インフラ','ソフトウェア','広告','出版','マスコミ','官公庁','公社','団体','コンサル'].some(function(k) { return ind.includes(k); });
+        return ind.includes(selectionIndustry);
+      });
+    }
+
+    rows.sort(function(a, b) {
+      var aLiked = liked.some(function(c) {
+        var rowName = (a[0] || '').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').trim();
+        return selectionMatch(rowName, a[6] || '', c.name);
+      });
+      var bLiked = liked.some(function(c) {
+        var rowName = (b[0] || '').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').trim();
+        return selectionMatch(rowName, b[6] || '', c.name);
+      });
+      if (aLiked !== bLiked) return aLiked ? -1 : 1;
+      var da = a[1] ? new Date(a[1].replace(/\//g,'-')) : new Date('9999-12-31');
+      var db = b[1] ? new Date(b[1].replace(/\//g,'-')) : new Date('9999-12-31');
+      return selectionSortAsc ? da - db : db - da;
+    });
+
+    if (!rows.length) {
+      el.innerHTML = '<div class="m-empty">該当する情報はありません。</div>';
+      return;
+    }
+
+    var totalPages = Math.ceil(rows.length / SELECTION_PAGE_SIZE);
+    if (selectionPage >= totalPages) selectionPage = 0;
+    var pageRows = rows.slice(selectionPage * SELECTION_PAGE_SIZE, (selectionPage + 1) * SELECTION_PAGE_SIZE);
+
+    var html = '<div class="selection-row header"><span>企業名</span><span>締切</span><span>タグ</span><span>資料</span></div>';
+
+    pageRows.forEach(function(r) {
+      var companyLabel = escHtml(r[0] || '\u2013');
+      var tagClass = (r[2] && r[2].includes('本選考')) ? 'tag-honsen' : 'tag-intern';
+      var linkUrl = safeHttpUrl(r[3]);
+      var normD1 = normalizeDate(r[1]);
+      var d = normD1 ? new Date(normD1.replace(/\//g,'-')) : null;
+      var diff = d ? Math.ceil((d - today) / (1000*60*60*24)) : 999;
+      var urgent = diff >= 0 && diff <= 7;
+      var deadlineLabel = normD1 ? (urgent ? '\u26A0 ' + normD1 + '（残' + diff + '日）' : normD1) : '未定';
+      var featureTag = (r[5] && r[5] !== 'なし') ? ' <span style="font-size:0.68rem;color:var(--crimson);margin-left:0.3rem;">' + escHtml(r[5]) + '</span>' : '';
+      var companyNameClean = (r[0]||'').replace(/（.*?）/g,'').replace(/\(.*?\)/g,'').trim();
+      var selNote = findNote(companyNameClean);
+      var isLiked = liked.some(function(c) { return selectionMatch(companyNameClean, r[6] || '', c.name); });
+      var statusKey = r[0] || '';
+      var currentStatus = getSelStatus(statusKey);
+      var statusCls = (STATUS_OPTIONS.find(function(o) { return o.value === currentStatus; }) || {}).cls || '';
+      var statusOptions = STATUS_OPTIONS.map(function(o) {
+        return '<option value="' + escAttr(o.value) + '"' + (currentStatus === o.value ? ' selected' : '') + '>' + escHtml(o.label) + '</option>';
+      }).join('');
+      var diffKey = companyNameClean;
+      var myVote = getDifficultyVote(diffKey);
+      var diffHtml = buildDifficultyHtml(diffKey, myVote);
+
+      html += '<div class="selection-row">' +
+        '<div>' +
+          '<div class="sel-company">' + companyLabel + (isLiked ? '<span style="font-size:0.66rem; margin-left:0.45rem; color:var(--crimson); font-weight:700;">\u2665 気になる企業</span>' : '') + diffHtml + '</div>' +
+          '<div class="sel-type">' + (r[4] ? '<span style="font-size:0.68rem;color:var(--gold);">' + escHtml(r[4]) + '</span>' : '') + featureTag + '</div>' +
+          '<select class="sel-status-select ' + statusCls + '" data-key="' + escAttr(statusKey) + '">' + statusOptions + '</select>' +
+        '</div>' +
+        '<div class="sel-deadline' + (urgent ? ' urgent' : '') + '">' + escHtml(deadlineLabel) + '</div>' +
+        '<div><span class="sel-tag ' + tagClass + '">' + escHtml(r[2] || '\u2013') + '</span></div>' +
+        '<div style="display:flex;flex-direction:column;gap:0.4rem;align-items:flex-start;">' +
+          (linkUrl ? '<a href="' + escAttr(linkUrl) + '" target="_blank" rel="noopener noreferrer" class="sel-link">開く →</a>' : '\u2013') +
+          (selNote ? '<button class="sel-note-btn" data-company="' + escAttr(companyNameClean) + '" style="font-size:0.68rem;padding:0.2rem 0.6rem;background:rgba(10,26,62,0.07);border:1px solid rgba(10,26,62,0.15);color:var(--navy);cursor:pointer;font-family:\'Noto Sans JP\',sans-serif;font-weight:600;letter-spacing:0.04em;white-space:nowrap;">企業ノート</button>' : '') +
+        '</div>' +
+      '</div>';
+    });
+
+    el.innerHTML = html;
+
+    if (totalPages > 1) {
+      var start = selectionPage * SELECTION_PAGE_SIZE + 1;
+      var end = Math.min((selectionPage + 1) * SELECTION_PAGE_SIZE, rows.length);
+      var pageButtons = '';
+      for (var i = 0; i < totalPages; i++) {
+        pageButtons += '<button class="pagination-btn' + (i === selectionPage ? ' active' : '') + '" onclick="goSelectionPage(' + i + ')">' + (i + 1) + '</button>';
+      }
+      el.innerHTML += '<div class="pagination">' +
+        '<span class="pagination-info">' + rows.length + '件中 ' + start + '～' + end + '件</span>' +
+        '<div class="pagination-btns">' +
+          '<button class="pagination-btn" onclick="goSelectionPage(' + (selectionPage - 1) + ')"' + (selectionPage === 0 ? ' disabled' : '') + '>\u2190</button>' +
+          pageButtons +
+          '<button class="pagination-btn" onclick="goSelectionPage(' + (selectionPage + 1) + ')"' + (selectionPage >= totalPages - 1 ? ' disabled' : '') + '>\u2192</button>' +
+        '</div>' +
+      '</div>';
+    }
+    attachSelectionInteractions(el);
+  }
+
+  function goSelectionPage(page) {
+    selectionPage = page;
+    renderSelection();
+    var el = document.getElementById('selection-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function setFeature(val) {
+    selectionFeature = val; selectionPage = 0;
+    document.querySelectorAll('[data-feature]').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelector('[data-feature="' + val + '"]').classList.add('active');
+    renderSelection();
+  }
+
+  function setIndustry(val) {
+    selectionIndustry = val; selectionPage = 0;
+    document.querySelectorAll('[data-industry]').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelector('[data-industry="' + val + '"]').classList.add('active');
+    renderSelection();
+  }
+
+  function toggleSort() {
+    selectionSortAsc = !selectionSortAsc; selectionPage = 0;
+    var btn = document.getElementById('sort-btn');
+    btn.textContent = selectionSortAsc ? '\u2191 締切が近い順' : '\u2193 締切が遅い順';
+    renderSelection();
+  }
+
+  // ===== 企業イベント情報 =====
+  var eventRows = [];
+  var eventSortAsc = true;
+
+  async function loadEvents() {
+    var el = document.getElementById('event-list');
+    var note = document.getElementById('event-note');
+    var sample = [
+      ['2025/06/05', '14:00〜16:00', '〇〇商事 会社説明会', 'オンライン', '〇〇商事', '', '田中', '2025/06/03'],
+      ['2025/06/12', '10:00〜12:00', '△△銀行 インターン説明会', 'オフライン（三田）', '△△銀行', '', '', '2025/06/10'],
+      ['2025/06/20', '18:00〜20:00', '□□テック エンジニア交流会', 'オンライン', '□□テック', '', '鈴木', ''],
+    ];
+    try {
+      eventRows = EVENT_KEY ? (await fetchViaGAS(EVENT_KEY)) : sample;
+    } catch(err) {
+      el.innerHTML = '<div class="m-empty" style="color:var(--crimson);">\u26A0 読み込みエラー: ' + escHtml(err.message) + '</div>';
+      console.error('EVENT_KEY:', err); return;
+    }
+    if (!eventRows.length) { el.innerHTML = '<div class="m-empty">現在予定されているイベントはありません。<br>LINEコミュニティで最新情報を確認してください。</div>'; return; }
+    renderEvents();
+    if (!EVENT_KEY) note.textContent = '※ サンプルデータです。スプシURLを設定してください。';
+  }
+
+  function renderEvents() {
+    var el = document.getElementById('event-list');
+    var today = new Date();
+    var rows = eventRows.slice().filter(function(r) { return r[0] && r[0] !== '日付' && r[0] !== ''; });
+    rows.sort(function(a, b) {
+      var da = a[0] ? new Date(a[0].replace(/\//g,'-')) : new Date('9999-12-31');
+      var db = b[0] ? new Date(b[0].replace(/\//g,'-')) : new Date('9999-12-31');
+      return eventSortAsc ? da - db : db - da;
+    });
+    if (!rows.length) { el.innerHTML = '<div class="m-empty">該当するイベントはありません。</div>'; return; }
+
+    var WEEKDAYS = ['日','月','火','水','木','金','土'];
+    var html = '<div class="event-row header"><span>日付・時間</span><span>イベント情報・締切</span><span>申し込み</span></div>';
+
+    rows.forEach(function(r) {
+      var rawDate = r[0] ? String(r[0]).trim() : '';
+      var normalizedDate = rawDate;
+      if (rawDate && !rawDate.match(/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/)) {
+        var parsed = new Date(rawDate);
+        if (!isNaN(parsed)) {
+          normalizedDate = parsed.getFullYear() + '/' + String(parsed.getMonth()+1).padStart(2,'0') + '/' + String(parsed.getDate()).padStart(2,'0');
+        }
+      }
+      var d = normalizedDate ? new Date(normalizedDate.replace(/\//g,'-')) : null;
+      var dateStr = (d && !isNaN(d))
+        ? normalizedDate + '（' + WEEKDAYS[d.getDay()] + '）'
+        : '日付未定';
+      var timeStr = r[1] ? r[1] : '時間未定';
+
+      var normDeadline = '';
+      if (r[7]) {
+        var ds = String(r[7]).trim();
+        if (ds.match(/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/)) { normDeadline = ds; }
+        else { var pp = new Date(ds); if (!isNaN(pp)) { normDeadline = pp.getFullYear() + '/' + String(pp.getMonth()+1).padStart(2,'0') + '/' + String(pp.getDate()).padStart(2,'0'); } }
+      }
+      var isPast = normDeadline ? new Date(normDeadline.replace(/\//g,'-')) < today : false;
+      var linkUrl = safeHttpUrl(r[5]);
+      var hasBenefit = r[6] && r[6].trim() !== '' && r[6].trim() !== 'なし';
+
+      var noteCompany = r[4] || '';
+      var noteExists = findNote(noteCompany);
+
+      var deadlineHtml = '';
+      if (normDeadline) {
+        var dl = new Date(normDeadline.replace(/\//g,'-'));
+        var ddiff = Math.ceil((dl - today) / (1000*60*60*24));
+        if (ddiff < 0) deadlineHtml = '<span class="event-meta-item" style="color:var(--text-muted);">締切済み</span>';
+        else if (ddiff <= 3) deadlineHtml = '<span class="event-meta-item" style="color:var(--crimson);font-weight:700;">\u26A0 締切 ' + escHtml(normDeadline) + '（残' + ddiff + '日）</span>';
+        else deadlineHtml = '<span class="event-meta-item">\uD83D\uDCC5 締切 ' + escHtml(normDeadline) + '</span>';
+      }
+
+      html += '<div class="event-row' + (noteExists ? ' has-note' : '') + '" style="' + (isPast ? 'opacity:0.45;' : '') + '"' + (noteExists ? ' data-open-modal="' + escAttr(noteCompany) + '"' : '') + '>' +
+        '<div class="event-date-block">' +
+          '<div class="event-date-main">' + escHtml(dateStr) + '</div>' +
+          '<div class="event-date-time">' + escHtml(timeStr) + '</div>' +
+        '</div>' +
+        '<div>' +
+          '<div class="event-name">' + escHtml(r[2] || '\u2013') + '</div>' +
+          '<div class="event-meta">' +
+            (r[4] ? '<span class="event-meta-item">\u30FB' + escHtml(r[4]) + '</span>' : '') +
+            (r[3] ? '<span class="event-meta-item">\u30FB' + escHtml(r[3]) + '</span>' : '') +
+            deadlineHtml +
+          '</div>' +
+        '</div>' +
+        '<div class="event-actions">' +
+          (noteExists ? '<span class="note-badge">\uD83D\uDCCB 企業ノートあり</span>' : '') +
+          (hasBenefit ? '<span class="event-benefit">\uD83C\uDF81 ' + escHtml(r[6].trim()) + 'さん紹介特典あり</span>' : '') +
+          (linkUrl
+            ? '<a href="' + escAttr(linkUrl) + '" target="_blank" rel="noopener noreferrer" class="event-apply-btn">申し込む →</a>'
+            : '<span class="event-apply-btn no-link">リンクなし</span>') +
+        '</div>' +
+      '</div>';
+    });
+
+    el.innerHTML = html;
+    el.querySelectorAll('[data-open-modal]').forEach(function(row) {
+      row.addEventListener('click', function() { openModal(row.dataset.openModal); });
+    });
+  }
+
+  function toggleEventSort() {
+    eventSortAsc = !eventSortAsc;
+    var btn = document.getElementById('event-sort-btn');
+    btn.textContent = eventSortAsc ? '\u2191 日付が近い順' : '\u2193 日付が遅い順';
+    renderEvents();
+  }
+
+  // ===== 企業分析ノート =====
+  var companyNotes = [];
+
+  async function loadCompanyNotes() {
+    if (!GAS_PROXY_URL) return;
+    try {
+      companyNotes = await fetchViaGAS(COMPANY_KEY);
+      renderRandomNotes();
+    } catch(e) { console.warn('企業分析ノート読み込み失敗', e); }
+  }
+
+  function renderRandomNotes() {
+    var valid = companyNotes.filter(function(r) { return r[0] && r[0].trim(); });
+    if (!valid.length) return;
+    var liked = KeioNaviAuth.getLikedCompanies();
+    var title = document.getElementById('random-notes-title');
+    var preferred = liked
+      .map(function(company) { return findNote(company.name); })
+      .filter(Boolean)
+      .filter(function(note, index, list) { return list.findIndex(function(item) { return item[0] === note[0]; }) === index; });
+    var fallback = valid
+      .filter(function(note) { return !preferred.some(function(item) { return item[0] === note[0]; }); })
+      .sort(function() { return Math.random() - 0.5; });
+    var picks = preferred.concat(fallback).slice(0, Math.min(3, valid.length));
+    var section = document.getElementById('random-notes-section');
+    var grid = document.getElementById('random-notes-grid');
+    section.style.display = 'block';
+    if (title) {
+      title.textContent = preferred.length ? '気になる企業のノート' : '今日のおすすめ企業ノート';
+    }
+    grid.innerHTML = picks.map(function(r) {
+      var preview = escHtml([r[2], r[3], r[4]].filter(Boolean).join(' ／ '));
+      var escapedName = escAttr(r[0] || '');
+      return '<div class="company-note-card" data-open-modal="' + escapedName + '">' +
+        '<div class="company-note-card-name">' + escHtml(r[0] || '\u2013') + '</div>' +
+        (r[1] ? '<div class="company-note-card-industry">' + escHtml(r[1]) + '</div>' : '') +
+        (preview ? '<div class="company-note-card-preview">' + preview + '</div>' : '') +
+        '<div class="company-note-card-arrow">ノートを見る →</div>' +
+      '</div>';
+    }).join('');
+    grid.querySelectorAll('[data-open-modal]').forEach(function(card) {
+      card.addEventListener('click', function() { openModal(card.dataset.openModal); });
+    });
+  }
+
+  // ===== 企業名マッチングユーティリティ =====
+  function normalizeName(s) {
+    return (s || '')
+      .replace(/株式会社|有限会社|合同会社|（株）|\(株\)|HD|ホールディングス|グループ|コーポレーション/g, '')
+      .replace(/\s+/g, '').trim();
+  }
+
+  function companyMatch(a, b) {
+    var na = normalizeName(a);
+    var nb = normalizeName(b);
+    if (!na || !nb) return false;
+    if (na === nb) return true;
+    var diff = Math.abs(na.length - nb.length);
+    if (diff <= 5) {
+      if (na.includes(nb) || nb.includes(na)) return true;
+    }
+    return false;
+  }
+
+  function selectionMatch(rowName, alias, targetName) {
+    if (companyMatch(rowName, targetName)) return true;
+    if (alias && companyMatch(alias, targetName)) return true;
+    return false;
+  }
+
+  function findNote(companyName) {
+    if (!companyName || !companyNotes.length) return null;
+    return companyNotes.find(function(r) {
+      var alias = r[7] || '';
+      return companyMatch(r[0] || '', companyName) ||
+             (alias && companyMatch(alias, companyName));
+    }) || null;
+  }
+
+  function searchCompanyNotes() {
+    var q = document.getElementById('company-search-input').value.trim();
+    var grid = document.getElementById('company-notes-grid');
+    if (!q) {
+      grid.innerHTML = '<div class="m-empty">企業名を入力して検索してください。</div>';
+      return;
+    }
+    var results = companyNotes.filter(function(r) {
+      var name = (r[0] || '').trim();
+      var industry = (r[1] || '').trim();
+      var alias = (r[7] || '').trim();
+      return (name && name.includes(q)) || (industry && industry.includes(q)) || (alias && alias.includes(q));
+    });
+    if (!results.length) {
+      var safeQ = escHtml(q);
+      grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem;">' +
+        '<div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.2rem;">「' + safeQ + '」の企業ノートはまだ登録されていません。</div>' +
+        (GAS_PROXY_URL
+          ? '<button id="search-generate-btn" style="padding:0.7rem 1.8rem; background:var(--navy); color:white; border:none; font-family:\'Noto Sans JP\',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; letter-spacing:0.06em; transition:background 0.2s;" onmouseover="this.style.background=\'var(--crimson)\'" onmouseout="this.style.background=\'var(--navy)\'">公式HPからAI分析ノートを生成</button>'
+          : '') +
+      '</div>';
+      if (GAS_PROXY_URL) {
+        document.getElementById('search-generate-btn').addEventListener('click', function() { generateNote(q); });
+      }
+      return;
+    }
+    grid.innerHTML = results.map(function(r) {
+      var preview = escHtml([r[2], r[3], r[4]].filter(Boolean).join(' ／ '));
+      var escapedName = escAttr(r[0] || '');
+      return '<div class="company-note-card" data-open-modal="' + escapedName + '">' +
+        '<div class="company-note-card-name">' + escHtml(r[0] || '\u2013') + '</div>' +
+        (r[1] ? '<div class="company-note-card-industry">' + escHtml(r[1]) + '</div>' : '') +
+        (preview ? '<div class="company-note-card-preview">' + preview + '</div>' : '') +
+        '<div class="company-note-card-arrow">ノートを見る →</div>' +
+      '</div>';
+    }).join('');
+    grid.querySelectorAll('[data-open-modal]').forEach(function(card) {
+      card.addEventListener('click', function() { openModal(card.dataset.openModal); });
+    });
+  }
+
+  function openModal(companyName) {
+    var note = findNote(companyName);
+    document.getElementById('modal-company-name').textContent = companyName || '\u2013';
+    document.getElementById('modal-industry').textContent = note ? (note[1] || '') : '';
+    var body = document.getElementById('modal-body');
+    var memoValue = escHtml(getMemo(companyName));
+    if (!note) {
+      body.innerHTML = '<div style="text-align:center; padding:2.5rem 1rem;">' +
+        '<div class="modal-no-data" style="margin-bottom:1.2rem;">この企業の分析ノートはまだ登録されていません。</div>' +
+        (GAS_PROXY_URL
+          ? '<button id="modal-generate-btn" style="padding:0.7rem 1.8rem; background:var(--navy); color:white; border:none; font-family:\'Noto Sans JP\',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; letter-spacing:0.06em;">公式HPからAI分析ノートを生成</button>'
+          : '') +
+      '</div>' +
+      '<div class="modal-field">' +
+        '<div class="modal-field-label">MY MEMO（自分用メモ）</div>' +
+        '<textarea class="modal-memo" id="modal-memo-area" placeholder="自分用のメモを書く（このデバイスに保存されます）...">' + memoValue + '</textarea>' +
+        '<div class="modal-memo-saved" id="memo-saved-msg"></div>' +
+      '</div>';
+      if (GAS_PROXY_URL) {
+        document.getElementById('modal-generate-btn').addEventListener('click', function() { generateNote(companyName); });
+      }
+      document.getElementById('modal-memo-area').addEventListener('input', function(e) { saveMemo(companyName, e.target.value); });
+    } else {
+      var fields = [
+        { label: '事業内容（AI独自分析）', value: note[2] },
+        { label: '強み・特徴（AI独自分析）', value: note[3] },
+        { label: '志望動機を考える観点（AI独自分析）', value: note[4] },
+        { label: '選考フロー', value: note[5] },
+        { label: '出典', value: note[6], isUrl: true },
+      ];
+      var memoHtml = '<div class="modal-field">' +
+        '<div class="modal-field-label">MY MEMO（自分用メモ）</div>' +
+        '<textarea class="modal-memo" id="modal-memo-area" placeholder="自分用のメモを書く（このデバイスに保存されます）...">' + memoValue + '</textarea>' +
+        '<div class="modal-memo-saved" id="memo-saved-msg"></div>' +
+      '</div>';
+      var fieldsHtml = fields.map(function(f) {
+        if (!f.value) return '';
+        var val;
+        if (f.isUrl) {
+          val = renderUrlList(f.value);
+        } else {
+          val = '<div class="modal-field-content">' + escHtml(f.value) + '</div>';
+        }
+        return '<div class="modal-field"><div class="modal-field-label">' + escHtml(f.label) + '</div>' + val + '</div>';
+      }).filter(Boolean).join('');
+      body.innerHTML = (fieldsHtml || '<div class="modal-no-data">内容がまだ入力されていません。</div>') + memoHtml;
+      document.getElementById('modal-memo-area').addEventListener('input', function(e) { saveMemo(companyName, e.target.value); });
+    }
+    document.getElementById('company-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // ===== AI 企業ノート自動生成 =====
+  async function generateNote(searchWord) {
+    document.getElementById('modal-company-name').textContent = searchWord;
+    document.getElementById('modal-industry').textContent = '生成中...';
+    var body = document.getElementById('modal-body');
+    body.innerHTML = '<div style="text-align:center; padding:3rem;">' +
+      '<div style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.5rem;">Claudeが企業ノートを生成しています...<br><span style="font-size:0.75rem; opacity:0.6;">（30～60秒かかります。そのままお待ちください）</span></div>' +
+      '<div style="width:36px; height:36px; border:2px solid rgba(10,26,62,0.1); border-top-color:var(--navy); border-radius:50%; animation:genSpin 0.8s linear infinite; margin:0 auto;"></div>' +
+    '</div>';
+    document.getElementById('company-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    try {
+      var controller = new AbortController();
+      var timeout = setTimeout(function() { controller.abort(); }, 90000);
+      var sessionToken = typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        body: JSON.stringify({ action: 'generate', companyName: searchWord, sessionToken: sessionToken }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+      var text = await res.text();
+      var data;
+      try { data = JSON.parse(text); }
+      catch(e) { throw new Error('GASからの応答が不正です: ' + text.slice(0, 100)); }
+
+      if (data.status !== 'ok' && data.message === 'NOT_FOUND') {
+        var safeSearchWord = escHtml(searchWord);
+        body.innerHTML = '<div style="text-align:center; padding:3rem;">' +
+          '<div style="font-size:1.5rem; margin-bottom:1rem;">\uD83D\uDD0D</div>' +
+          '<div style="font-size:0.92rem; font-weight:700; color:var(--navy); margin-bottom:0.6rem;">「' + safeSearchWord + '」は見つかりませんでした</div>' +
+          '<div style="font-size:0.8rem; color:var(--text-muted); line-height:1.8;">企業名を正式名称や別の表記で試してみてください。<br>それでも見つからない場合はスプシに直接入力してください。</div>' +
+        '</div>';
+        document.getElementById('modal-industry').textContent = '';
+        return;
+      }
+
+      if (data.status !== 'ok') throw new Error(data.message || '生成に失敗しました');
+      var noteData = data.note;
+
+      var officialName = noteData.officialName || searchWord;
+      document.getElementById('modal-company-name').textContent = officialName;
+      document.getElementById('modal-industry').textContent = noteData.industry || '';
+
+      var newRow = [officialName, noteData.industry||'', noteData.business||'', noteData.strength||'', noteData.motive||'', noteData.process||'', noteData.url||'', searchWord !== officialName ? searchWord : ''];
+      companyNotes.push(newRow);
+
+      var genFields = [
+        { label: '事業内容メモ', value: noteData.business },
+        { label: '強み・弱み', value: noteData.strength },
+        { label: '志望動機メモ', value: noteData.motive },
+        { label: '選考フロー', value: noteData.process },
+        { label: '参考URL', value: noteData.url, isUrl: true },
+      ];
+
+      window._lastGeneratedNote = { searchWord: searchWord, officialName: officialName, note: noteData };
+
+      body.innerHTML = genFields.map(function(f) {
+        if (!f.value) return '';
+        var val;
+        if (f.isUrl) {
+          val = renderUrlList(f.value);
+        } else {
+          val = '<div class="modal-field-content">' + escHtml(f.value) + '</div>';
+        }
+        return '<div class="modal-field"><div class="modal-field-label">' + escHtml(f.label) + '</div>' + val + '</div>';
+      }).filter(Boolean).join('') +
+      '<div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid rgba(10,26,62,0.1); text-align:center;">' +
+        '<div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:0.8rem;">※ このノートはまだスプシに保存されていません</div>' +
+        '<button onclick="saveLastNote(this)" style="padding:0.5rem 1.4rem; background:rgba(10,26,62,0.07); border:1px solid rgba(10,26,62,0.2); color:var(--navy); font-family:\'Noto Sans JP\',sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer;">スプシに保存する</button>' +
+      '</div>';
+
+    } catch(err) {
+      body.innerHTML = '<div class="modal-no-data" style="color:var(--crimson);">\u26A0 生成エラー: ' + escHtml(err.message) + '</div>';
+    }
+  }
+
+  async function saveLastNote(btn) {
+    var data = window._lastGeneratedNote;
+    if (!data) return;
+    await saveNoteToSheet(data.searchWord, data.officialName, data.note, btn);
+  }
+
+  async function saveNoteToSheet(searchWord, officialName, noteData, btn) {
+    try {
+      btn.textContent = '保存中...'; btn.disabled = true;
+      var sessionToken = typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        body: JSON.stringify({ action: 'save', searchWord: searchWord, note: Object.assign({}, noteData, { officialName: officialName }), sessionToken: sessionToken }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      var resultText = await res.text();
+      var result;
+      try { result = JSON.parse(resultText); }
+      catch(e) { throw new Error('保存応答が不正です'); }
+      if (result.status === 'ok') {
+        btn.textContent = '\u2713 保存しました';
+        btn.style.background = 'rgba(0,112,60,0.08)';
+        btn.style.color = '#00703c';
+        btn.style.borderColor = '#00703c';
+      } else throw new Error(result.message);
+    } catch(err) {
+      alert('保存エラー: ' + err.message);
+    }
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('company-modal')) closeModalDirect();
+  }
+  function closeModalDirect() {
+    document.getElementById('company-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModalDirect(); });
+
+  // ===== 企業クイズ =====
+  var quizCorrect = 0, quizTotal = 0, quizUsed = [];
+
+  function startQuiz() {
+    quizCorrect = 0; quizTotal = 0; quizUsed = [];
+    nextQuiz();
+  }
+
+  function nextQuiz() {
+    var valid = companyNotes.filter(function(r) {
+      return r[0] && r[0].trim() && [r[2],r[3],r[4],r[5]].some(function(v) { return v && v.trim(); });
+    });
+    if (valid.length < 4) {
+      document.getElementById('quiz-box').innerHTML =
+        '<div class="quiz-start"><p class="quiz-start-desc">企業ノートが4社以上登録されると遊べるようになります。</p></div>';
+      return;
+    }
+    var pool = valid.filter(function(r) { return !quizUsed.includes(r[0]); });
+    if (pool.length === 0) { quizUsed = []; pool = valid; }
+
+    var correct = pool[Math.floor(Math.random() * pool.length)];
+    quizUsed.push(correct[0]);
+
+    var others = valid.filter(function(r) { return r[0] !== correct[0]; });
+    var shuffled = others.sort(function() { return Math.random() - 0.5; }).slice(0, 3);
+    var choices = shuffled.concat([correct]).sort(function() { return Math.random() - 0.5; });
+
+    var hintDefs = [
+      { label: '事業内容', value: correct[2] },
+      { label: '強み・弱み', value: correct[3] },
+      { label: '志望動機メモ', value: correct[4] },
+      { label: '選考フロー', value: correct[5] },
+    ].filter(function(h) { return h.value && h.value.trim(); });
+    var hints = hintDefs.sort(function() { return Math.random() - 0.5; }).slice(0, 2);
+
+    var box = document.getElementById('quiz-box');
+    var hintsHtml = hints.map(function(h) {
+      return '<div class="quiz-hint"><div class="quiz-hint-label">' + escHtml(h.label) + '</div><div class="quiz-hint-text">' + escHtml(h.value) + '</div></div>';
+    }).join('');
+    var choicesHtml = choices.map(function(r) {
+      var en = escAttr(r[0] || '');
+      var ec = escAttr(correct[0] || '');
+      return '<button class="quiz-choice" data-chosen="' + en + '" data-correct="' + ec + '">' + escHtml(r[0] || '') + '</button>';
+    }).join('');
+
+    box.innerHTML = '<div class="quiz-score-bar">' +
+      '<div class="quiz-score">正解 <strong>' + quizCorrect + '</strong> / ' + quizTotal + '問</div>' +
+      '<button class="quiz-skip-btn" onclick="nextQuiz()">スキップ</button>' +
+    '</div>' +
+    '<div class="quiz-hints">' + hintsHtml + '</div>' +
+    '<div class="quiz-choices">' + choicesHtml + '</div>' +
+    '<div id="quiz-result"></div>';
+
+    box.querySelectorAll('.quiz-choice').forEach(function(btn) {
+      btn.addEventListener('click', function() { answerQuiz(btn, btn.dataset.chosen, btn.dataset.correct); });
+    });
+  }
+
+  function answerQuiz(btn, chosen, correctName) {
+    quizTotal++;
+    var isCorrect = chosen === correctName;
+    if (isCorrect) quizCorrect++;
+
+    document.querySelectorAll('.quiz-choice').forEach(function(b) {
+      b.disabled = true;
+      if (b.textContent.trim() === correctName) b.classList.add(isCorrect ? 'correct' : 'reveal');
+      else if (b === btn && !isCorrect) b.classList.add('wrong');
+    });
+
+    var result = document.getElementById('quiz-result');
+    result.className = 'quiz-result ' + (isCorrect ? 'correct' : 'wrong');
+    result.textContent = isCorrect ? '正解！' : '不正解…正解は「' + correctName + '」でした';
+
+    var box = document.getElementById('quiz-box');
+    var nextBtn = document.createElement('button');
+    nextBtn.className = 'quiz-next-btn';
+    if (quizTotal >= 5) {
+      nextBtn.textContent = '結果を見る';
+      nextBtn.onclick = showQuizResult;
+    } else {
+      nextBtn.textContent = '次の問題へ（' + quizTotal + '/5）→';
+      nextBtn.onclick = nextQuiz;
+    }
+    box.appendChild(nextBtn);
+  }
+
+  function showQuizResult() {
+    var pct = Math.round(quizCorrect / quizTotal * 100);
+    var msg = pct === 100 ? '完璧！企業研究マスター' : pct >= 60 ? 'なかなかいい感じ！' : 'もっと企業ノートを読もう…';
+    document.getElementById('quiz-box').innerHTML =
+      '<div class="quiz-finish">' +
+        '<div class="quiz-finish-score">' + quizCorrect + ' / ' + quizTotal + '</div>' +
+        '<div class="quiz-finish-label">' + msg + '</div>' +
+        '<button class="quiz-start-btn" onclick="startQuiz()">もう一度挑戦する</button>' +
+      '</div>';
+  }
+
+  // ===== 選考情報AI収集 =====
+  var lastRecruitInfo = null;
+
+  function openRecruitFetchModal() {
+    document.getElementById('rf-company').value = '';
+    document.getElementById('rf-url').value = '';
+    document.getElementById('rf-error').textContent = '';
+    document.getElementById('rf-result').style.display = 'none';
+    document.getElementById('rf-fetch-btn').disabled = false;
+    document.getElementById('rf-fetch-btn').textContent = 'AIで取得する';
+    lastRecruitInfo = null;
+    document.getElementById('recruit-fetch-modal').classList.add('open');
+  }
+
+  async function fetchRecruitInfo() {
+    var company = document.getElementById('rf-company').value.trim();
+    var url = document.getElementById('rf-url').value.trim();
+    var errorEl = document.getElementById('rf-error');
+    var btn = document.getElementById('rf-fetch-btn');
+
+    if (!company) { errorEl.textContent = '企業名を入力してください。'; return; }
+
+    errorEl.textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'AI が公式HPを検索中...';
+    document.getElementById('rf-result').style.display = 'none';
+
+    try {
+      var sessionToken = typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'fetchRecruitInfo', companyName: company, url: url, sessionToken: sessionToken })
+      });
+      var data = await res.json();
+
+      if (data.status !== 'ok') {
+        errorEl.textContent = data.message || '取得に失敗しました。';
+        if (data.suggestedUrl) {
+          errorEl.textContent += ' 推測URL: ' + data.suggestedUrl;
+        }
+        btn.disabled = false;
+        btn.textContent = 'AIで取得する';
+        return;
+      }
+
+      lastRecruitInfo = data.recruitInfo;
+      var info = data.recruitInfo;
+      var preview = document.getElementById('rf-preview');
+      preview.innerHTML = '<div style="display:grid;gap:0.5rem;">' +
+        '<div><strong>企業名:</strong> ' + escHtml(info.company || '-') + '</div>' +
+        '<div><strong>締切:</strong> ' + escHtml(info.deadline || '不明') + '</div>' +
+        '<div><strong>種別:</strong> ' + escHtml(info.type || '不明') + '</div>' +
+        '<div><strong>選考フロー:</strong> ' + escHtml(info.flow || '不明') + '</div>' +
+        '<div><strong>応募条件:</strong> ' + escHtml(info.requirements || '不明') + '</div>' +
+        '<div><strong>業界:</strong> ' + escHtml(info.industry || '不明') + '</div>' +
+        (info.notes ? '<div><strong>備考:</strong> ' + escHtml(info.notes) + '</div>' : '') +
+      '</div>';
+      document.getElementById('rf-source').textContent = '出典: ' + (data.sourceUrl || '企業公式HP');
+      document.getElementById('rf-result').style.display = 'block';
+
+    } catch (e) {
+      errorEl.textContent = 'エラー: ' + e.message;
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'AIで取得する';
+  }
+
+  async function saveRecruitInfo() {
+    if (!lastRecruitInfo) return;
+    var btn = document.getElementById('rf-save-btn');
+    btn.disabled = true;
+    btn.textContent = '保存中...';
+
+    try {
+      var sessionToken = typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
+      var res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'saveRecruitInfo', recruitInfo: lastRecruitInfo, sessionToken: sessionToken })
+      });
+      var data = await res.json();
+
+      if (data.status === 'ok') {
+        document.getElementById('recruit-fetch-modal').classList.remove('open');
+        loadSelection();
+      } else {
+        document.getElementById('rf-error').textContent = data.message || '保存に失敗しました。';
+      }
+    } catch (e) {
+      document.getElementById('rf-error').textContent = 'エラー: ' + e.message;
+    }
+
+    btn.disabled = false;
+    btn.textContent = '選考情報スプシに保存';
+  }
+
+  document.getElementById('recruit-fetch-modal').addEventListener('click', function(e) {
+    if (e.target === document.getElementById('recruit-fetch-modal'))
+      document.getElementById('recruit-fetch-modal').classList.remove('open');
+  });
+
+  function initSelectionFormBtn() {
+    var btn = document.getElementById('selection-form-btn');
+    if (SELECTION_FORM) {
+      btn.href = SELECTION_FORM;
+    } else {
+      btn.style.display = 'none';
+    }
+  }
+
+  // ===== スクロールトップボタン =====
+  var scrollTopBtn = document.getElementById('scroll-top-btn');
+  window.addEventListener('scroll', function() {
+    scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+
+  // ===== ロード =====
+  async function loadAll() {
+    initSelectionFormBtn();
+    await loadCompanyNotes();
+    await Promise.all([loadSelection(), loadEvents()]);
+  }
+
+  // ===== 初期化 =====
+  (function init() {
+    var user = KeioNaviAuth.requireAuth({ returnTo: 'research.html', redirect: false });
+    if (user) {
+      showMembers(user);
+    } else {
+      document.getElementById('password-screen').style.display = 'flex';
+    }
+  })();
+</script>
+<style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
+<nav class="bottom-tab-bar">
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>マイページ</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="community.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
+</nav>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
+</html>

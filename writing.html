@@ -491,22 +491,15 @@
   .sa-step-btn.done .sa-step-num { color: #00703c; }
   .sa-panel { display: none; padding: 1.5rem; }
   .sa-panel.active { display: block; }
-  .sa-field-label {
-    font-size: 0.78rem; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem;
-  }
-  .sa-field-desc {
-    font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.6rem; line-height: 1.6;
-  }
+  .sa-field-label { font-size: 0.78rem; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem; }
+  .sa-field-desc { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.6rem; line-height: 1.6; }
   .sa-textarea {
     width: 100%; min-height: 80px; padding: 0.7rem; border: 1px solid rgba(10,26,62,0.15);
     font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem; line-height: 1.7;
-    color: var(--text); outline: none; resize: vertical; background: var(--cream);
-    transition: border-color 0.2s;
+    color: var(--text); outline: none; resize: vertical; background: var(--cream); transition: border-color 0.2s;
   }
   .sa-textarea:focus { border-color: var(--navy); }
-  .sa-chip-grid {
-    display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem;
-  }
+  .sa-chip-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
   .sa-chip {
     padding: 0.4rem 0.8rem; border: 1px solid rgba(10,26,62,0.15);
     background: white; font-family: 'Noto Sans JP', sans-serif;
@@ -795,8 +788,6 @@
           <button class="sa-step-btn" onclick="saGoStep(2)" id="sa-tab-2"><span class="sa-step-num">STEP 3</span>Will-Can-Must</button>
           <button class="sa-step-btn" onclick="saGoStep(3)" id="sa-tab-3"><span class="sa-step-num">STEP 4</span>まとめ</button>
         </div>
-
-        <!-- STEP 1: 価値観 -->
         <div class="sa-panel active" id="sa-panel-0">
           <div class="sa-field-group">
             <div class="sa-field-label">あなたが大切にしている価値観を選んでください（複数可）</div>
@@ -813,8 +804,6 @@
             <span class="sa-saved-msg" id="sa-save-msg-0">保存しました</span>
           </div>
         </div>
-
-        <!-- STEP 2: 強み・弱み -->
         <div class="sa-panel" id="sa-panel-1">
           <div class="sa-field-group">
             <div class="sa-field-label">あなたの強み（3つ）</div>
@@ -837,8 +826,6 @@
             <span class="sa-saved-msg" id="sa-save-msg-1">保存しました</span>
           </div>
         </div>
-
-        <!-- STEP 3: Will-Can-Must -->
         <div class="sa-panel" id="sa-panel-2">
           <div class="sa-field-group">
             <div class="sa-field-label">Will — やりたいこと</div>
@@ -860,8 +847,6 @@
             <span class="sa-saved-msg" id="sa-save-msg-2">保存しました</span>
           </div>
         </div>
-
-        <!-- STEP 4: まとめ -->
         <div class="sa-panel" id="sa-panel-3">
           <div class="sa-field-label" style="margin-bottom:0.8rem;">あなたの自己分析サマリー</div>
           <div id="sa-summary"></div>
@@ -981,14 +966,14 @@
       <div id="pr-steps"></div>
       <div style="margin-top:0.5rem;">
         <label style="font-size:0.78rem;color:var(--text-muted);">メモ（任意）</label>
-        <textarea id="pr-memo" placeholder="改善メモなど..." style="width:100%;padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;min-height:50px;margin-top:0.3rem;"></textarea>
+        <textarea id="pr-memo" placeholder="使用予定の企業、改善メモなど..." style="width:100%;padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;min-height:50px;margin-top:0.3rem;"></textarea>
       </div>
       <div class="pr-preview-wrap"><div class="pr-preview" id="pr-preview">（入力するとここにプレビューが表示されます）</div></div>
       <div class="pr-char-count" id="pr-char-count">0文字</div>
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;">
         <button class="pr-copy-btn" onclick="saveSelfPR()" style="background:var(--navy);color:white;border-color:var(--navy);">サーバーに保存</button>
         <button class="pr-copy-btn" onclick="copyPR()">クリップボードにコピー</button>
-        <button class="pr-copy-btn" onclick="aiReviewPR()" id="pr-ai-btn" style="background:var(--navy);color:white;border-color:var(--navy);">AIに添削してもらう</button>
+        <button class="pr-copy-btn" onclick="aiReviewPR()" id="pr-ai-btn" style="background:var(--gold);color:var(--navy);border-color:var(--gold);">AIに添削してもらう</button>
         <button class="pr-copy-btn" onclick="resetPRForm()" style="color:var(--text-muted);">新規作成</button>
       </div>
       <div id="pr-ai-result" style="display:none;margin-top:1.2rem;padding:1rem;background:var(--gray);font-size:0.82rem;line-height:1.8;white-space:pre-wrap;border-left:3px solid var(--gold);"></div>
@@ -1019,7 +1004,8 @@
       <!-- タブ1: ES自動添削 -->
       <div class="ai-tab-panel active" id="ai-tab-es-review">
         <div class="ai-form-group">
-          <input type="hidden" class="ai-input" id="esr-company" value="">
+          <label class="ai-label">企業名（任意）</label>
+          <input type="text" class="ai-input" id="esr-company" placeholder="例：〇〇商事、△△銀行">
         </div>
         <div class="esr-questions" id="esr-questions">
           <div class="esr-question-block" data-index="0">
@@ -1095,7 +1081,8 @@
           <div class="ai-char-count" id="rw-char1">0 字</div>
         </div>
         <div class="ai-form-group">
-          <input type="hidden" class="ai-input" id="rw-company" value="">
+          <label class="ai-label">志望企業名 <span style="color:var(--crimson)">*</span></label>
+          <input type="text" class="ai-input" id="rw-company" placeholder="例：△△銀行">
         </div>
         <div class="ai-form-group">
           <label class="ai-label">新しい設問（任意）</label>
@@ -1297,7 +1284,8 @@
       <div class="gk-gen-select-list" id="gk-gen-select-list"></div>
     </div>
     <div class="ai-form-group">
-      <input type="hidden" class="ai-input" id="gk-gen-company" value="">
+      <label class="ai-label">志望企業名</label>
+      <input type="text" class="ai-input" id="gk-gen-company" placeholder="例：三菱商事">
     </div>
     <div class="ai-form-group">
       <label class="ai-label">設問テキスト</label>
@@ -1465,7 +1453,7 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
   const GAS_URL = GAS_PROXY_URL;
 
   var AI_CONSENT_KEY = 'keio_navi_ai_consent_v1';
@@ -2254,28 +2242,15 @@
         existingQuestions: existingQs
       });
 
-      // AIの回答から質問を抽出
       var lines = (res || '').split('\n');
       var newQs = [];
       lines.forEach(function(line) {
-        var trimmed = line.replace(/^\s*[\d]+[\.\)）]\s*/, '').replace(/^[\-\*]\s*/, '').replace(/^❓\s*/, '').replace(/^「/, '').replace(/」$/, '').trim();
-        if (trimmed.length > 10 && trimmed.endsWith('？') || trimmed.endsWith('?') || trimmed.includes('？') || trimmed.includes('?')) {
-          var q = trimmed.replace(/^[\s\S]*?(?=「)/, '').replace(/^「/, '').replace(/」[\s\S]*$/, '');
-          if (q.length < 10) q = trimmed;
-          newQs.push({ question: q, answer: '', feedback: '' });
+        var t = line.trim();
+        if (t.length > 5 && (t.includes('？') || t.includes('?'))) {
+          var clean = t.replace(/^\s*[\d]+[\.\)）\-\*]\s*/, '').replace(/^❓\s*/, '').trim();
+          if (clean.length > 5) newQs.push({ question: clean, answer: '', feedback: '' });
         }
       });
-
-      if (newQs.length < 3) {
-        newQs = [];
-        lines.forEach(function(line) {
-          var t = line.trim();
-          if (t.length > 5 && (t.includes('？') || t.includes('?'))) {
-            var clean = t.replace(/^\s*[\d]+[\.\)）\-\*]\s*/, '').replace(/^❓\s*/, '').trim();
-            if (clean.length > 5) newQs.push({ question: clean, answer: '', feedback: '' });
-          }
-        });
-      }
 
       if (!allData[_gkDdCurrentId]) allData[_gkDdCurrentId] = { questions: [] };
       allData[_gkDdCurrentId].questions = allData[_gkDdCurrentId].questions.concat(newQs);
@@ -2749,11 +2724,15 @@
     // ルーブリックスコア抽出
     var rubricScores = parseRubricScores(text);
     var feedbackText = rubricScores ? stripRubricTag(text) : text;
+    // AIが自称する文字数（例:「（393字）」）を正確な値に置換
     var corrected = feedbackText.replace(/（(\d+)字）/g, function(match, num) {
+      // この括弧の直前までのテキストの実際の文字数を計算
       var idx = feedbackText.indexOf(match);
       var beforeText = feedbackText.substring(0, idx);
+      // 最後のセクション（見出し以降）の文字数をカウント
       var sections = beforeText.split(/##\s/);
       var lastSection = sections[sections.length - 1] || beforeText;
+      // 見出し・空行・記号を除いた本文の文字数
       var bodyText = lastSection.replace(/^.*\n/m, '').replace(/\s+/g, '').replace(/[#*\-\[\]（）\(\)「」『』【】]/g, '');
       var actualCount = bodyText.length;
       return '（' + actualCount + '字）';
@@ -2829,14 +2808,11 @@
       }
       saveEsReviewHistory(esrCompany, esrQuestion, esrText, text, rubricScores);
     }
-    // 結果エリアまで自動スクロール
-    setTimeout(function() { result.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
   }
 
   function saveRevisedEsToBank() {
     var textToSave = lastRevisedText || '';
     if (!textToSave) {
-      // 改善版が抽出できなかった場合、AI結果全体から改善版を探す
       var resultEl = document.getElementById('esr-result');
       if (resultEl) textToSave = resultEl.textContent || '';
     }
@@ -2849,7 +2825,6 @@
       question = blocks[0].querySelector('.esr-q-input').value.trim();
     }
 
-    // ESバンクに追加
     var ES_BANK_KEY = 'keio_navi_es_bank_v1';
     var bank;
     try { bank = JSON.parse(localStorage.getItem(ES_BANK_KEY) || '[]'); } catch(e) { bank = []; }
@@ -2865,7 +2840,6 @@
     });
     localStorage.setItem(ES_BANK_KEY, JSON.stringify(bank));
 
-    // サーバー同期も試みる
     if (typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken()) {
       KeioNaviAuth.postToGas({ action: 'writeES', sessionToken: KeioNaviAuth.getSessionToken(), entry: bank[0] }).catch(function(){});
     }
@@ -3146,7 +3120,7 @@
   var ESR_CHAT_SYSTEM = 'あなたは新卒就職活動のプロフェッショナルなESコーチです。慶應義塾大学の学生のESについて対話形式でサポートしています。日本語で具体的かつ建設的にアドバイスしてください。';
 
   function initEsrChat(company, entries, aiResponse) {
-    var userContent = '以下のESを添削してください。\n\n' +
+    var userContent = '【企業名】' + (company || '（未記入）') + '\n\n以下のESを添削してください。\n\n' +
       entries.map(function(e, i) {
         var lim = e.charLimit ? '（字数制限: ' + e.charLimit + '字）' : '';
         return '【設問' + (i+1) + '】' + (e.question || '') + lim + '\n\n' + e.esText;
@@ -3244,7 +3218,6 @@
         result = await callClaudeApi('esMultiReview', { company: company, entries: entries, direction: direction });
       }
       showAiResult('esr-submit-btn', 'esr-result', '\u2728 AIに添削してもらう', result);
-      if (typeof gtag === 'function') { gtag('event', 'ai_es_review'); }
       document.getElementById('esr-chat-area').style.display = 'none';
       document.getElementById('esr-chat-messages').innerHTML = '';
       initEsrChat(company, entries, result);
@@ -3282,7 +3255,7 @@
     var originalEs = document.getElementById('rw-original').value.trim();
     var targetCompany = document.getElementById('rw-company').value.trim();
     if (!originalEs) { document.getElementById('rw-error').textContent = '元のES内容を入力してください。'; return; }
-    if (!targetCompany) { targetCompany = '（未指定）'; }
+    if (!targetCompany) { document.getElementById('rw-error').textContent = '志望企業名を入力してください。'; return; }
     document.getElementById('rw-error').textContent = '';
     setAiLoading('rw-submit-btn', 'rw-result', 'rw-error', true);
     try {
@@ -3610,7 +3583,6 @@
   ];
 
   function saInit() {
-    // 価値観チップを生成
     var grid = document.getElementById('sa-values-grid');
     if (!grid) return;
     var saved = saLoad();
@@ -3619,15 +3591,12 @@
       var cls = selectedVals.indexOf(v) !== -1 ? 'sa-chip selected' : 'sa-chip';
       return '<button class="' + cls + '" onclick="saToggleValue(this,\'' + v + '\')">' + v + '</button>';
     }).join('');
-
-    // フィールドを復元
     if (saved.valuesReason) document.getElementById('sa-values-reason').value = saved.valuesReason;
     if (saved.strengths) document.getElementById('sa-strengths').value = saved.strengths;
     if (saved.weaknesses) document.getElementById('sa-weaknesses').value = saved.weaknesses;
     if (saved.will) document.getElementById('sa-will').value = saved.will;
     if (saved.can) document.getElementById('sa-can').value = saved.can;
     if (saved.must) document.getElementById('sa-must').value = saved.must;
-
     saUpdateStepDone();
   }
 
@@ -3656,16 +3625,14 @@
   function saAutoSave() {
     clearTimeout(_saAutoSaveTimer);
     _saAutoSaveTimer = setTimeout(function() {
-      var data = {
+      saSave({
         valuesReason: document.getElementById('sa-values-reason').value,
         strengths: document.getElementById('sa-strengths').value,
         weaknesses: document.getElementById('sa-weaknesses').value,
         will: document.getElementById('sa-will').value,
         can: document.getElementById('sa-can').value,
         must: document.getElementById('sa-must').value,
-      };
-      saSave(data);
-      // 現在のパネルに保存メッセージ表示
+      });
       var activePanel = document.querySelector('.sa-panel.active');
       if (activePanel) {
         var idx = activePanel.id.replace('sa-panel-','');
@@ -3709,16 +3676,11 @@
     var d = saLoad();
     var el = document.getElementById('sa-summary');
     var cards = [];
-
     if (d.values && d.values.length) {
       cards.push({ label: 'VALUES', title: '価値観', text: d.values.join('、') + (d.valuesReason ? '\n\n' + d.valuesReason : '') });
     }
-    if (d.strengths) {
-      cards.push({ label: 'STRENGTHS', title: '強み', text: d.strengths });
-    }
-    if (d.weaknesses) {
-      cards.push({ label: 'WEAKNESSES', title: '弱み・改善', text: d.weaknesses });
-    }
+    if (d.strengths) cards.push({ label: 'STRENGTHS', title: '強み', text: d.strengths });
+    if (d.weaknesses) cards.push({ label: 'WEAKNESSES', title: '弱み・改善', text: d.weaknesses });
     if (d.will || d.can || d.must) {
       var wcm = '';
       if (d.will) wcm += 'Will: ' + d.will;
@@ -3726,12 +3688,10 @@
       if (d.must) wcm += (wcm ? '\n' : '') + 'Must: ' + d.must;
       cards.push({ label: 'WILL-CAN-MUST', title: 'フレームワーク', text: wcm });
     }
-
     if (!cards.length) {
       el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.82rem;">まだ入力がありません。STEP 1から始めてみましょう。</div>';
       return;
     }
-
     el.innerHTML = cards.map(function(c) {
       return '<div class="sa-summary-card">'
         + '<div class="sa-summary-label">' + c.label + '</div>'
@@ -3865,12 +3825,11 @@
   }
 
   function loadGkForExpDive() {
-    // ガクチカバンクから経験をインポート
     var list = gakuchikaEntries || [];
     if (!list.length) { alert('ガクチカバンクにエピソードがありません。先にガクチカを登録してください。'); return; }
     var html = '<div style="font-size:0.85rem;font-weight:700;color:var(--navy);margin-bottom:0.8rem;">ガクチカを選択</div>';
     html += list.map(function(g) {
-      var preview = [g.situation, g.task, g.action, g.result].filter(Boolean).join(' → ');
+      var preview = [g.situation, g.task, g.action, g.result].filter(Boolean).join(' \u2192 ');
       if (preview.length > 80) preview = preview.substring(0, 80) + '...';
       return '<div onclick="importGkToExpDive(\'' + g.id + '\')" style="padding:0.7rem;border:1px solid rgba(10,26,62,0.1);margin-bottom:0.4rem;cursor:pointer;transition:background 0.2s;background:white;" onmouseover="this.style.background=\'#f8f5f0\'" onmouseout="this.style.background=\'white\'">'
         + '<div style="font-weight:600;font-size:0.82rem;color:var(--navy);">' + (g.title || '（タイトルなし）') + '</div>'
@@ -3878,7 +3837,6 @@
         + (preview ? '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.2rem;">' + preview + '</div>' : '')
         + '</div>';
     }).join('');
-    // 簡易モーダル表示
     var overlay = document.createElement('div');
     overlay.id = 'exp-gk-picker';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2500;display:flex;align-items:center;justify-content:center;padding:1rem;';
@@ -3893,7 +3851,6 @@
   function importGkToExpDive(gkId) {
     var g = (gakuchikaEntries || []).find(function(e) { return e.id === gkId; });
     if (!g) return;
-    // フォームに自動入力
     document.getElementById('exp-dive-period').value = g.period || '大学';
     document.getElementById('exp-dive-title').value = g.title || '';
     var desc = [
@@ -3904,7 +3861,6 @@
       g.appeal ? '【学び】' + g.appeal : ''
     ].filter(Boolean).join('\n');
     document.getElementById('exp-dive-desc').value = desc;
-    // ピッカーを閉じる
     var picker = document.getElementById('exp-gk-picker');
     if (picker) picker.remove();
   }
@@ -4176,7 +4132,6 @@
     }
   }
 
-  // 初期化
   (function() {
     if (document.getElementById('sa-values-grid')) saInit();
     if (document.getElementById('exp-dive-list')) initExpDive();

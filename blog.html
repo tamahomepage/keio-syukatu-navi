@@ -5,20 +5,9 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0a1a3e">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>就活コラム ｜ 就活ナビ</title>
+<title>就活コラム ｜ 慶應就活ナビ</title>
 <meta name="description" content="就活に役立つ知識とヒント。ガクチカの書き方、ES対策、面接のコツ、業界研究の方法、メンタルケアまで、就活生に必要な情報を厳選してお届けします。">
-<meta name="robots" content="index, follow">
-
-<!-- OGP -->
-<meta property="og:title" content="就活コラム ｜ 就活ナビ">
-<meta property="og:description" content="就活に役立つ知識とヒント。ガクチカ・ES・面接・業界研究のノウハウを厳選してお届けします。">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="就活ナビ">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="就活コラム ｜ 就活ナビ">
-<meta name="twitter:description" content="就活に役立つ知識とヒント。ガクチカ・ES・面接・業界研究のノウハウを厳選してお届けします。">
+<meta name="robots" content="noindex, nofollow">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -222,9 +211,7 @@
     transform: translateY(-2px);
   }
 
-  .article-header {
-    padding: 1.8rem 2rem 1.2rem;
-  }
+  .article-header { padding: 1.8rem 2rem 1.2rem; }
 
   .article-meta {
     display: flex;
@@ -247,10 +234,7 @@
   .cat-industry { background: #059669; }
   .cat-mindset { background: var(--gold); color: var(--navy); }
 
-  .reading-time {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-  }
+  .reading-time { font-size: 0.72rem; color: var(--text-muted); }
 
   .article-title {
     font-family: 'Noto Serif JP', serif;
@@ -301,9 +285,7 @@
     padding-left: 0.8rem;
     border-left: 3px solid var(--gold);
   }
-  .article-body-content p {
-    margin-bottom: 1rem;
-  }
+  .article-body-content p { margin-bottom: 1rem; }
 
   .article-footer {
     display: flex;
@@ -326,20 +308,14 @@
     cursor: pointer;
     transition: all 0.2s;
   }
-  .helpful-btn:hover {
-    border-color: var(--crimson);
-    color: var(--crimson);
-  }
+  .helpful-btn:hover { border-color: var(--crimson); color: var(--crimson); }
   .helpful-btn.voted {
     background: rgba(192,0,26,0.06);
     border-color: var(--crimson);
     color: var(--crimson);
     font-weight: 600;
   }
-  .helpful-count {
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
+  .helpful-count { font-size: 0.75rem; font-weight: 600; }
 
   /* ===== CTA SECTION ===== */
   .blog-cta {
@@ -456,15 +432,16 @@
 
 <!-- NAV -->
 <nav>
-  <a href="index.html" class="nav-logo">就活ナビ</a>
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a><span style="font-size:0.55rem;color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.2);padding:0.1rem 0.4rem;margin-left:0.5rem;letter-spacing:0.05em;vertical-align:middle;">非公式・学生有志</span>
   <ul class="nav-links">
     <li><a href="index.html">ホーム</a></li>
     <li><a href="blog.html" style="color:var(--gold-light);">コラム</a></li>
     <li><a href="industry-guide.html">業界研究</a></li>
     <li><a href="quiz.html">準備度チェック</a></li>
     <li><a href="glossary.html">用語集</a></li>
+    <li><a href="members.html" id="members-nav-item" style="display:none;">会員ページ</a></li>
     <li><a href="account.html" id="account-nav-link">ログイン</a></li>
-    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="nav-cta" target="_blank" rel="noopener">参加申請</a></li>
+    <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" class="nav-cta" target="_blank" rel="noopener">LINE参加申請</a></li>
   </ul>
   <button class="hamburger" id="hamburger" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -478,6 +455,7 @@
   <a href="industry-guide.html">業界研究</a>
   <a href="quiz.html">準備度チェック</a>
   <a href="glossary.html">用語集</a>
+  <a href="members.html" id="mobile-members-link" style="display:none;">会員ページ</a>
   <a href="account.html">ログイン</a>
 </div>
 
@@ -500,7 +478,7 @@
 <!-- ARTICLES -->
 <div class="articles-grid" id="articles-grid">
 
-  <!-- Article 1: ガクチカが書けない -->
+  <!-- Article 1 -->
   <article class="article-card" data-category="selfanalysis" data-id="1" onclick="toggleArticle(this)">
     <div class="article-header">
       <div class="article-meta">
@@ -515,16 +493,12 @@
       <div class="article-body-content">
         <h3>ステップ1: 「些細な経験」を棚卸しする</h3>
         <p>ガクチカに求められるのは、派手な実績ではありません。面接官が見ているのは「あなたがどう考え、どう行動したか」というプロセスです。まずはアルバイト、サークル、授業、趣味など、少しでも工夫した経験を10個書き出しましょう。「コンビニのレジで並び方を改善した」「ゼミの発表で資料の作り方を変えた」など、小さなことで構いません。</p>
-
         <h3>ステップ2: STAR法でエピソードを構造化する</h3>
         <p>書き出した経験の中から1つ選び、STAR法で整理します。<strong>S(状況)</strong>:どんな場面だったか。<strong>T(課題)</strong>:何が問題・目標だったか。<strong>A(行動)</strong>:あなたが具体的に何をしたか。<strong>R(結果)</strong>:どんな成果が出たか。この4つに分解するだけで、漠然としたエピソードが論理的なストーリーに変わります。</p>
-
         <h3>ステップ3: 数字で具体性を出す</h3>
         <p>「売上を伸ばした」ではなく「売上を前月比120%に伸ばした」、「参加者が増えた」ではなく「参加者を15人から40人に増やした」と書くだけで説得力が大きく変わります。正確な数字がわからなくても、「約○○」「○○程度」と概算を入れるだけで十分です。</p>
-
         <h3>ステップ4: 学びと再現性を示す</h3>
         <p>面接官が最も知りたいのは「その経験から何を学び、入社後にどう活かせるか」です。単なる成功体験の自慢ではなく、「この経験を通じて○○の大切さを学んだ」「この力を御社の○○で活かしたい」と、学びの汎用性を示しましょう。</p>
-
         <h3>ステップ5: 第三者に読んでもらう</h3>
         <p>自分では伝わると思っている文章でも、他の人が読むと意味が通じないことがあります。友人やキャリアセンターの方に読んでもらい、「結局何を伝えたいの？」と聞いてみましょう。相手が一言で要約できれば、あなたのガクチカは完成に近づいています。</p>
       </div>
@@ -537,7 +511,7 @@
     </div>
   </article>
 
-  <!-- Article 2: ES通過率 -->
+  <!-- Article 2 -->
   <article class="article-card" data-category="es" data-id="2" onclick="toggleArticle(this)">
     <div class="article-header">
       <div class="article-meta">
@@ -552,10 +526,8 @@
       <div class="article-body-content">
         <h3>ポイント1: 結論ファーストを徹底する</h3>
         <p>ESの冒頭は最も重要な場所です。「私が学生時代に力を入れたのは～」と始めるのではなく、「チームの売上を2倍にした経験から、目標達成に向けたリーダーシップを学びました」のように、結論と成果を先に提示しましょう。採用担当者が最初の1行で「もっと読みたい」と思えば、通過の可能性は大きく上がります。</p>
-
         <h3>ポイント2: 具体的なエピソードで差別化する</h3>
         <p>「コミュニケーション力があります」「チームワークを大切にしています」という抽象的な表現は、何百枚ものESの中に埋もれてしまいます。代わりに「意見が対立するメンバー間で、週1回の1on1ミーティングを提案し実施した結果、プロジェクトの進行速度が1.5倍になった」のように、あなただけの具体的な場面を描写しましょう。</p>
-
         <h3>ポイント3: 企業との接点を明確に示す</h3>
         <p>どれだけ素晴らしい経験を書いても、「なぜこの会社なのか」が伝わらなければ意味がありません。企業のIR資料、中期経営計画、最近のニュースリリースを読み込み、「御社が注力する○○事業において、私の○○の経験が活かせると考えています」と、自分の強みと企業の方向性を結びつけましょう。企業研究の深さが、志望度の高さとして伝わります。</p>
       </div>
@@ -568,7 +540,7 @@
     </div>
   </article>
 
-  <!-- Article 3: 面接で弱み -->
+  <!-- Article 3 -->
   <article class="article-card" data-category="interview" data-id="3" onclick="toggleArticle(this)">
     <div class="article-header">
       <div class="article-meta">
@@ -583,10 +555,8 @@
       <div class="article-body-content">
         <h3>弱みの「選び方」が最も重要</h3>
         <p>弱みの質問で最初に考えるべきは「何を弱みとして選ぶか」です。避けるべきは2パターンあります。1つ目は業務に致命的な弱み（例：「時間を守れません」）。2つ目は弱みに見せかけた自慢（例：「頑張りすぎてしまうところです」）。面接官は何百人もの学生を見ているので、こうした回答はすぐに見抜かれます。「慎重すぎて決断に時間がかかる」「人前で話すことに苦手意識がある」など、本当の弱みだけれど致命的ではないものを選びましょう。</p>
-
         <h3>改善の「プロセス」を具体的に語る</h3>
         <p>弱みを伝えた後、面接官が聞きたいのは「その弱みとどう向き合っているか」です。「意識しています」だけでは不十分です。「慎重すぎる点については、判断の期限を自分で設定するようにしています。例えばゼミの研究テーマ選びでは、3日以内に決めるとルールを作り、実際にそれを守ることで意思決定のスピードが上がりました」のように、具体的な行動と結果を示しましょう。</p>
-
         <h3>「成長ストーリー」として構成する</h3>
         <p>最も高い評価を得られるのは、弱みの認識から改善行動、そして実際の変化までを一連のストーリーとして語れる場合です。以前はどうだったか、何をきっかけに変わろうとしたか、今はどの程度改善できたか。この流れを1分程度で話せるように準備しておくと、「自己認知力がある」「成長意欲が高い」という印象を与えられます。弱みの質問は、実はあなたの成長力をアピールする絶好の機会なのです。</p>
       </div>
@@ -599,7 +569,7 @@
     </div>
   </article>
 
-  <!-- Article 4: 業界研究 -->
+  <!-- Article 4 -->
   <article class="article-card" data-category="industry" data-id="4" onclick="toggleArticle(this)">
     <div class="article-header">
       <div class="article-meta">
@@ -614,10 +584,8 @@
       <div class="article-body-content">
         <h3>業界地図の「正しい読み方」</h3>
         <p>業界地図や四季報を手に取る就活生は多いですが、ただ眺めるだけでは情報が頭に残りません。効果的な読み方は「比較」です。同じ業界内の企業を3社選び、「売上構成比の違い」「注力事業の違い」「社風の違い」を表にまとめましょう。比較することで各社の特徴が浮き彫りになり、面接で「なぜA社ではなくB社なのか」という質問にも自信を持って答えられるようになります。</p>
-
         <h3>OB・OG訪問を「仮説検証」の場にする</h3>
         <p>OB・OG訪問を「業界のことを教えてもらう場」と考えるのはもったいないです。事前に業界研究をして「○○業界は今後△△の方向に進むと思うのですが、現場の実感としてはいかがですか？」のように自分なりの仮説を持って臨みましょう。質問の質が上がるだけでなく、「よく勉強しているね」という好印象にもつながります。社員の方の生の声は、ネットでは得られない貴重な情報源です。</p>
-
         <h3>「自分軸」との照合を忘れない</h3>
         <p>業界研究で最も大切なのは、集めた情報を「自分の価値観」と照らし合わせることです。「この業界の仕事内容は、自分の○○という強みを活かせるか」「この業界の働き方は、自分が大切にしている○○と合っているか」。この自問を繰り返すことで、志望動機は借り物の言葉ではなく、あなた自身の言葉になります。業界研究はゴールではなく、自己理解を深めるためのプロセスなのです。</p>
       </div>
@@ -630,7 +598,7 @@
     </div>
   </article>
 
-  <!-- Article 5: メンタル -->
+  <!-- Article 5 -->
   <article class="article-card" data-category="mindset" data-id="5" onclick="toggleArticle(this)">
     <div class="article-header">
       <div class="article-meta">
@@ -645,10 +613,8 @@
       <div class="article-body-content">
         <h3>「比較」をやめる仕組みを作る</h3>
         <p>SNSで友人の内定報告を見て焦る気持ちは自然なものです。しかし、就活のタイミングは人それぞれ。早期内定が「正解」というわけではありません。メンタルを守るために、就活期間中はSNSの通知をオフにしたり、就活アカウントのフォローを整理したりすることも立派な戦略です。比較するなら「昨日の自分」と比較しましょう。先週書けなかったガクチカが今週書けた、面接で言えなかったことが言えた。そうした小さな成長に目を向けてください。</p>
-
         <h3>「小さな成功」を記録する</h3>
         <p>不合格の連絡ばかりに意識が向きがちですが、就活には小さな成功がたくさんあります。「ESを1社提出できた」「初めてOB訪問をした」「面接で笑顔で話せた」。これらを毎日1つだけノートに書く習慣をつけましょう。就活が辛くなった時にこのノートを読み返すと、自分が確実に前に進んでいることを実感できます。結果だけでなく、行動した自分を認めることが大切です。</p>
-
         <h3>相談できる「安全基地」を持つ</h3>
         <p>就活の悩みを一人で抱え込むのは最も危険なパターンです。友人、家族、キャリアセンター、先輩など、本音を話せる相手を最低1人は確保しておきましょう。「弱音を吐いたら負け」と思う必要はありません。プロのアスリートですら、メンタルコーチの力を借りています。就活は一人で戦うものではなく、周りの力を借りながら乗り越えるものです。辛い時に「辛い」と言える環境を自分で作りましょう。</p>
       </div>
@@ -661,7 +627,7 @@
     </div>
   </article>
 
-  <!-- Article 6: 志望動機 -->
+  <!-- Article 6 -->
   <article class="article-card" data-category="es" data-id="6" onclick="toggleArticle(this)">
     <div class="article-header">
       <div class="article-meta">
@@ -676,13 +642,10 @@
       <div class="article-body-content">
         <h3>PREP法で「伝わる構成」を作る</h3>
         <p>志望動機はPREP法で組み立てましょう。<strong>P(Point)</strong>:志望理由の結論を一文で。<strong>R(Reason)</strong>:なぜそう思うのか、根拠を示す。<strong>E(Example)</strong>:自分の経験や企業の具体的な取り組みを挙げる。<strong>P(Point)</strong>:改めて結論と入社後のビジョンを伝える。この型に沿って書くだけで、論理的で読みやすい志望動機になります。</p>
-
         <h3>「業界理解」で土台を固める</h3>
         <p>志望動機の説得力は、業界・企業への理解度に比例します。「御社の事業に興味があります」という表面的な表現ではなく、「御社が○○領域で業界シェア1位を維持している背景には、△△という独自の強みがあると理解しています」のように、具体的な事実を盛り込みましょう。IR資料、決算説明会の資料、社長メッセージは必読です。これらを読み込んだ上での志望動機は、他の学生と明確に差がつきます。</p>
-
         <h3>「自分の経験」との接続点を見つける</h3>
         <p>企業への理解を示した上で、「なぜ自分がその企業で活躍できるのか」を裏付けるエピソードを入れましょう。「大学でのマーケティングのゼミ活動で培ったデータ分析力を、御社のデジタルマーケティング事業で活かしたい」のように、自分の経験と企業の事業を結びつけます。</p>
-
         <h3>「将来のビジョン」で熱意を伝える</h3>
         <p>最後に、入社後にどんな貢献をしたいか、5年後・10年後にどんなビジネスパーソンになりたいかを伝えます。「入社後はまず○○の現場経験を積み、将来的には○○事業の海外展開を担うリーダーになりたい」のように、具体的かつ現実的なビジョンを描きましょう。企業の成長戦略と自分のキャリアビジョンが重なる点を見つけることが、最も説得力のある志望動機になります。</p>
       </div>
@@ -700,8 +663,8 @@
 <!-- CTA -->
 <section class="blog-cta">
   <h2>学んだことを、実践してみよう</h2>
-  <p>就活ナビに登録すれば、自己分析ワークブック・ES添削・面接練習など<br>すべての機能を無料で利用できます。</p>
-  <a href="account.html" class="blog-cta-btn">就活ナビに登録して実践する →</a>
+  <p>慶應就活ナビに登録すれば、自己分析ワークブック・ES添削・面接練習など<br>すべての機能を無料で利用できます。</p>
+  <a href="account.html" class="blog-cta-btn">慶應就活ナビに登録して実践する →</a>
 </section>
 
 <!-- FOOTER -->
@@ -709,8 +672,8 @@
   <div class="footer-inner">
     <div class="footer-top">
       <div>
-        <span class="footer-logo">就活ナビ</span>
-        <p class="footer-tagline">就活に役立つ知識とヒントを<br>すべての就活生に届けます。</p>
+        <span class="footer-logo">慶應就活ナビ</span>
+        <p class="footer-tagline">就活を、ひとりで戦わない。<br>慶應生のための就活支援コミュニティ。</p>
       </div>
       <div class="footer-nav">
         <div class="footer-nav-group">
@@ -726,7 +689,7 @@
         <div class="footer-nav-group">
           <h4>機能</h4>
           <ul>
-            <li><a href="writing.html">ES・ガクチカ</a></li>
+            <li><a href="members.html">会員ページ</a></li>
             <li><a href="interview-page.html">面接対策</a></li>
             <li><a href="account.html">ログイン</a></li>
           </ul>
@@ -734,33 +697,30 @@
         <div class="footer-nav-group">
           <h4>参加する</h4>
           <ul>
-            <li><a href="account.html">新規登録</a></li>
-            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" target="_blank" rel="noopener">参加申請</a></li>
+            <li><a href="orientation.html">新入生の方へ</a></li>
+            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" target="_blank" rel="noopener">LINE参加申請</a></li>
           </ul>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
       <div style="margin-bottom:0.5rem;"><a href="privacy.html" style="color:rgba(255,255,255,0.4);font-size:0.7rem;text-decoration:underline;">プライバシーポリシー</a> ｜ <a href="terms.html" style="color:rgba(255,255,255,0.4);font-size:0.7rem;text-decoration:underline;">利用規約</a></div>
-      <div class="footer-copy">&copy; 2026 就活ナビ. All rights reserved.</div>
-      <div class="footer-note">※本サイトは大学公式ではありません。</div>
+      <div class="footer-copy">&copy; 2026 慶應就活ナビ. All rights reserved.</div>
+      <div class="footer-note">※大学公式ではありません。有志の学生による非営利団体です。</div>
     </div>
   </div>
 </footer>
 
 <script>
-  // ===== HAMBURGER MENU =====
   function toggleMenu() {
     document.getElementById('hamburger').classList.toggle('open');
     document.getElementById('mobile-menu').classList.toggle('open');
   }
 
-  // ===== CATEGORY FILTER =====
   function filterArticles(category) {
     var buttons = document.querySelectorAll('.filter-btn');
     buttons.forEach(function(btn) { btn.classList.remove('active'); });
     event.target.classList.add('active');
-
     var cards = document.querySelectorAll('.article-card');
     cards.forEach(function(card) {
       if (category === 'all' || card.dataset.category === category) {
@@ -771,7 +731,6 @@
     });
   }
 
-  // ===== EXPAND / COLLAPSE ARTICLES =====
   function toggleArticle(card) {
     var body = card.querySelector('.article-body');
     var icon = card.querySelector('.article-expand-icon');
@@ -784,13 +743,11 @@
     }
   }
 
-  // ===== HELPFUL BUTTON (localStorage) =====
-  var HELPFUL_KEY = 'shukatsu_navi_blog_helpful_v1';
+  var HELPFUL_KEY = 'keio_navi_blog_helpful_v1';
 
   function getHelpfulData() {
-    try {
-      return JSON.parse(localStorage.getItem(HELPFUL_KEY)) || {};
-    } catch(e) { return {}; }
+    try { return JSON.parse(localStorage.getItem(HELPFUL_KEY)) || {}; }
+    catch(e) { return {}; }
   }
 
   function saveHelpfulData(data) {
@@ -801,9 +758,7 @@
     var data = getHelpfulData();
     var key = 'article_' + articleId;
     var countKey = 'count_' + articleId;
-
     if (!data[countKey]) data[countKey] = 0;
-
     if (data[key]) {
       data[key] = false;
       data[countKey] = Math.max(0, data[countKey] - 1);
@@ -813,12 +768,10 @@
       data[countKey] = (data[countKey] || 0) + 1;
       btn.classList.add('voted');
     }
-
     saveHelpfulData(data);
     document.getElementById('helpful-count-' + articleId).textContent = data[countKey];
   }
 
-  // Initialize helpful counts on load
   (function() {
     var data = getHelpfulData();
     for (var i = 1; i <= 6; i++) {

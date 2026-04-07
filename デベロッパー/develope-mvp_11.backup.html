@@ -522,7 +522,6 @@ h3.section-title{font-size:12px;color:var(--text);margin-bottom:10px;font-weight
 <div id="topbar" style="flex-wrap:wrap;gap:6px;">
   <!-- 上段（常に表示）: ハンバーガー + ロゴ + ターン終了 -->
   <div id="topbar-row1" style="display:flex;align-items:center;gap:8px;width:100%;min-height:40px;">
-    <a href="members.html" style="font-size:11px;color:var(--text2);text-decoration:none;font-family:var(--sans);padding:2px 8px;border:1px solid var(--border);border-radius:4px;white-space:nowrap;flex-shrink:0;transition:color 0.2s,border-color 0.2s;" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent)'" onmouseout="this.style.color='var(--text2)';this.style.borderColor='var(--border)'">&#8592; 慶應就活ナビに戻る</a>
     <button id="menu-btn" onclick="G.toggleSidebar()">☰</button>
     <div class="logo">DEVELOPE<span>— 場所の未来を設計するゲーム</span></div>
     <div id="turn-limit-bar" style="margin-left:4px;">
@@ -1412,207 +1411,6 @@ let S = null; // State
 let activeTab = 'map';
 let activeProjectId = null;
 let pendingEvent = null;
-const AREA_HOOKS = {
-  A1:{pain:'駅前なのに夜が死んでいる', win:'夜間回遊と防災で駅前の顔を作る', style:'交渉 × 回遊設計'},
-  A2:{pain:'産業地の未来像が割れている', win:'雇用を守りながら用途転換を通す', style:'産業理解 × 行政攻略'},
-  A3:{pain:'子育て需要はあるのに街が縮んでいる', win:'住宅・子育て・商店街共存を成立させる', style:'地域共感 × 日常設計'},
-  A4:{pain:'観光ポテンシャルは高いが滞在しない', win:'水辺で滞在価値とブランドを作る', style:'ブランド × 大規模複合'},
-};
-const THEME_NOTES = {
-  '職住近接':   {promise:'通勤・生活・消費を一体化させ、安定収益を作る', tradeoff:'派手さより堅実さが強い', fit:'住宅需要が強い都心で効く'},
-  '生活利便':   {promise:'日常使いの強さで街に根を張る', tradeoff:'短期IRRは伸びにくい', fit:'郊外・住民主体エリアに効く'},
-  '観光商業':   {promise:'滞在時間を伸ばし、街の格を上げる', tradeoff:'観光変動の影響を受けやすい', fit:'観光ポテンシャルの高い場所に効く'},
-  '産業R&D':    {promise:'雇用と専門性で行政を味方に付ける', tradeoff:'賃料の華やかさは薄い', fit:'準工業・産業系で強い'},
-  'ナイトタイム':{promise:'昼だけの街を夜も使われる街へ変える', tradeoff:'地域受容と運営力が必要', fit:'夜間人口が薄い駅前に効く'},
-  'コミュニティ':{promise:'街の居場所を作り、長く愛される核を作る', tradeoff:'床効率より公共性が優先される', fit:'地域感情が強い場所に効く'},
-};
-
-function getAreaHook(areaId){
-  return AREA_HOOKS[areaId] || {pain:'この街にはまだ語られていない課題がある', win:'文脈を読んで価値を作る', style:'総合開発'};
-}
-
-function getAnalysisFocusChoices(area){
-  const byArea = {
-    A1:[
-      {id:'night', icon:'🌃', label:'夜間賑わい不足', desc:'昼に偏る街を、夜も歩きたくなる街に変える'},
-      {id:'walkability', icon:'🚶', label:'回遊動線の弱さ', desc:'駅前なのに素通りされる問題を解く'},
-      {id:'resilience', icon:'🛟', label:'防災機能の不足', desc:'行政が求める防災性を価値に変える'},
-    ],
-    A2:[
-      {id:'industry', icon:'🧪', label:'産業機能の維持', desc:'雇用と産業集積を守りながら更新する'},
-      {id:'cleanup', icon:'⚗️', label:'土壌・環境リスク', desc:'見えない制約を先に潰して計画を通す'},
-      {id:'anchor', icon:'🏭', label:'アンカーテナント先行', desc:'先に大口需要を確保して全体を成立させる'},
-    ],
-    A3:[
-      {id:'family', icon:'👶', label:'子育て需要の受け皿不足', desc:'住宅と子育て支援を街の核にする'},
-      {id:'coexist', icon:'🏪', label:'商店街との共存', desc:'新旧の商業をぶつけずに共存させる'},
-      {id:'daily', icon:'🧺', label:'日常利用の弱さ', desc:'観光でなく毎日の使われ方を強くする'},
-    ],
-    A4:[
-      {id:'tourism', icon:'✈️', label:'滞在時間の短さ', desc:'通過地を目的地に変える'},
-      {id:'brand', icon:'✨', label:'街の象徴不足', desc:'この場所でしか成立しない顔を作る'},
-      {id:'resilience', icon:'🌊', label:'海抜・高潮リスク', desc:'防災対応をブランドに転換する'},
-    ],
-  };
-  return byArea[area.id] || [];
-}
-
-function getSelectedFocus(proj, area){
-  return getAnalysisFocusChoices(area).find(f=>f.id===proj.analysisFocus) || null;
-}
-
-function getFocusAlignment(proj, area){
-  const focus = getSelectedFocus(proj, area);
-  if(!focus) return {score:0, label:'未設定', reasons:['分析フェーズで最大課題を宣言すると、その後の判断に一貫性が生まれます。']};
-  let score = 35;
-  const reasons = [];
-  const c = proj.concept || {};
-  const pc = proj.publicContrib || {};
-  const theme = proj.concept?.theme || '';
-  const push = (ok, good, bad, delta) => {
-    if(ok){ score += delta; reasons.push(good); }
-    else   { reasons.push(bad); }
-  };
-  switch(focus.id){
-    case 'night':
-      push((c.commercial||0) >= 35, '商業比率が夜間の滞在を支えています。', '夜を作る用途がやや弱めです。', 20);
-      push((c.plaza||0) >= 10 || pc.plaza, '広場が夜間活動の受け皿になります。', '公共空間が少なく、夜の居場所が不足しています。', 18);
-      push(theme === 'ナイトタイム', 'テーマが夜間活性化に直結しています。', 'テーマと夜間課題の接続が弱めです。', 18);
-      break;
-    case 'walkability':
-      push(pc.pedestrianDeck, '歩行者デッキが回遊改善に効きます。', '回遊改善のハード施策が不足しています。', 22);
-      push((c.commercial||0) >= 25 && (c.plaza||0) >= 10, '低層の賑わい用途が回遊を生みます。', '低層部が通過型のままになりやすい構成です。', 20);
-      push(theme === 'コミュニティ' || theme === '生活利便', '街路を使わせるテーマ選択です。', 'テーマが歩行導線の再設計に寄っていません。', 15);
-      break;
-    case 'resilience':
-      push(pc.disasterStorage, '防災備蓄が行政論点に直結しています。', '防災の象徴施策が不足しています。', 22);
-      push(pc.pedestrianDeck || pc.plaza, '避難・滞留空間を確保できています。', '避難行動を支える空間が弱めです。', 16);
-      push(theme === '観光商業' ? false : true, '用途が防災との両立を阻害していません。', '観光偏重だと防災論点が後景化します。', 12);
-      break;
-    case 'industry':
-      push((c.office||0) >= 40, '産業・R&D床が十分です。', '行政が期待する産業床が不足しています。', 22);
-      push(theme === '産業R&D', 'テーマが産業集積に合っています。', 'テーマが産業行政の期待とずれています。', 18);
-      push((c.housing||0) <= 20, '住宅偏重を避け、用途転換リスクを抑えています。', '住宅比率が高く、審査で難航しやすいです。', 16);
-      break;
-    case 'cleanup':
-      push((proj.phase||0) >= 3, '調査を前提に計画へ進めています。', 'リスクの潰し込みがまだ見えていません。', 12);
-      push(pc.disasterStorage || theme === '産業R&D', '安全・信頼側に寄せた設計です。', '環境リスク対応が価値提案に変換されていません。', 15);
-      push((c.housing||0) <= 20, '安全確認前に住宅へ寄りすぎていません。', 'リスクと住宅用途のバランスが悪いです。', 15);
-      break;
-    case 'anchor':
-      push(proj.officePlan?.anchorFirst, 'アンカー先行戦略で仮説と一致しています。', '先に核となる需要を押さえる設計が弱いです。', 20);
-      push((c.office||0) >= 35 || (c.hotel||0) >= 25, '核用途に十分な床を割いています。', 'アンカーが活きるだけの床規模がありません。', 18);
-      push((proj.selectedTenants||[]).length > 0 || proj.selectedHotel, '実際の誘致行動に仮説がつながっています。', '誘致行動がまだ仮説に追いついていません。', 14);
-      break;
-    case 'family':
-      push((c.housing||0) >= 55, '住宅がしっかり核になっています。', '子育て需要に対して住宅が少なめです。', 20);
-      push(pc.childcare, '保育・子育て施設が行政と住民の支持を呼びます。', '子育て支援の象徴施策が不足しています。', 22);
-      push(theme === '生活利便' || theme === 'コミュニティ', 'テーマと家族需要が噛み合っています。', 'テーマが家族需要とずれています。', 16);
-      break;
-    case 'coexist':
-      push((c.commercial||0) <= 30, '商業を絞り、既存商店街との摩擦を抑えています。', '商業比率が高く、既存商店街とぶつかりやすいです。', 18);
-      push(pc.childcare || pc.plaza, '地域に開く要素が共存の材料になります。', '地域に返す要素が少なく、反発を受けやすいです。', 15);
-      push(theme === 'コミュニティ', '地域共存にテーマが直結しています。', 'テーマが地域感情に寄り切れていません。', 18);
-      break;
-    case 'daily':
-      push((c.commercial||0) >= 15 && (c.commercial||0) <= 30, '日常使いにちょうど良い商業量です。', '日常利用向けとしては商業量が過不足あります。', 18);
-      push((proj.selectedTenants||[]).some(id=>['T2','TC1','TC2'].includes(id)), '生活密着テナントが日常利用を支えます。', '毎日使う理由になるテナントがまだ弱いです。', 18);
-      push(theme === '生活利便', 'テーマが毎日の使われ方に合っています。', 'テーマが非日常寄りです。', 16);
-      break;
-    case 'tourism':
-      push((c.hotel||0) >= 20, 'ホテル床が滞在時間を伸ばします。', '滞在型用途が不足しています。', 20);
-      push((c.commercial||0) >= 25, '商業が観光客の回遊を支えます。', '観光消費を受け止める用途が弱いです。', 18);
-      push(theme === '観光商業', 'テーマが観光課題に直結しています。', 'テーマと観光課題がずれています。', 18);
-      break;
-    case 'brand':
-      push(proj.concept?.grade === 'premium' || proj.concept?.grade === 'high', 'グレードが街の象徴性を支えます。', 'ブランドを作るには商品力がやや弱いです。', 18);
-      push((proj.selectedHotel && HOTEL_OPERATORS.find(h=>h.id===proj.selectedHotel)?.brand >= 75) || (proj.selectedTenants||[]).some(id=>TENANT_POOL.find(t=>t.id===id&&t.brandPower>75)), '強いブランドテナントが核になります。', '顔になるブランドがまだ見えていません。', 20);
-      push(theme === '観光商業' || theme === 'ナイトタイム', 'テーマが象徴性と噛み合っています。', 'テーマがブランド形成より機能重視です。', 14);
-      break;
-  }
-  return {
-    score: Math.max(0, Math.min(100, score)),
-    label: score >= 80 ? '仮説と企画が強く接続' : score >= 60 ? '仮説に沿っている' : '仮説の実装が弱い',
-    reasons: reasons.slice(0,3),
-  };
-}
-
-function calcFutureForecast(proj, area){
-  const f = calcFinance(proj);
-  const alignment = getFocusAlignment(proj, area);
-  const nearValue = Math.round(Math.max(0, Math.min(100, 45 + f.irr*4 + (f.cf>=0?10:-18) - (f.ltv>70?12:0))));
-  const longValue = Math.round(Math.max(0, Math.min(100, getAreaValue(proj)*0.6 + alignment.score*0.4)));
-  const nightFlow = Math.round(25 + (proj.concept.commercial||0)*0.6 + (proj.concept.plaza||0)*0.8 + (proj.publicContrib?.pedestrianDeck?10:0));
-  const brandLift = Math.round((proj.selectedTenants||[]).filter(id=>TENANT_POOL.find(t=>t.id===id&&t.brandPower>70)).length*8 + (proj.selectedHotel?12:0) + (proj.concept.grade==='premium'?12:proj.concept.grade==='high'?6:0));
-  const nearLabel = nearValue >= 70 ? '短期でも成立感が強い' : nearValue >= 50 ? '短期は成立圏' : '短期はかなりシビア';
-  const longLabel = longValue >= 75 ? '長期で街の顔になる' : longValue >= 55 ? '長期でじわっと効く' : '長期価値はまだ弱い';
-  return {
-    near:{score:nearValue, label:nearLabel, body:`IRR ${f.irr}% / 年間CF ${f.cf>=0?'+':''}${f.cf}M¥ / LTV ${f.ltv}%`},
-    long:{score:longValue, label:longLabel, body:`夜間回遊 +${nightFlow} / ブランド波及 +${brandLift} / 仮説整合 ${alignment.score}`},
-    story: alignment.reasons[0] || 'まずは分析仮説と企画を接続させると、この案件の物語が立ちます。',
-  };
-}
-
-function getGuidance(proj, area){
-  if(!proj) return {tone:'info', title:'最初の一手', body:'エリアを選び、問題のある場所を引き受けるところから始めましょう。'};
-  const reason = getPhaseBlockReason(proj);
-  if(S.turn <= 2 && proj.phase === 1) return {tone:'good', title:'最初の3分で掴むべきこと', body:'このフェーズでは正解を探すより、「この街の最大課題は何か」を掴むことが大事です。分析フェーズへ進みましょう。'};
-  if(proj.phase === 2 && !proj.analysisFocus) return {tone:'good', title:'分析フェーズのゴール', body:'最大課題を1つ宣言してください。ここで選んだ仮説が、後の行政・住民・収支の読み方を変えます。'};
-  if(proj.phase === 3 && !proj.concept.theme) return {tone:'good', title:'構想フェーズのコツ', body:'まずはテーマカードを選び、その後にスライダーで微調整すると迷いにくいです。'};
-  if(reason) return {tone:'warn', title:'今のボトルネック', body:reason};
-  if(proj.phase === 4) return {tone:'info', title:'交渉の考え方', body:'好感度を上げるより、「この人が何を失うのか」を潰すと話が早く進みます。'};
-  if(proj.phase === 5) return {tone:'info', title:'行政協議の考え方', body:'公共貢献はコストではなく交渉カードです。ボーナス条件と一緒に見ると筋が通ります。'};
-  if(proj.phase === 8) return {tone:'info', title:'リーシングの考え方', body:'空き床を埋めるだけでなく、「誰が入ると街の格が上がるか」で選ぶと後半が伸びます。'};
-  if(proj.phase === 9) return {tone:'good', title:'運営フェーズの見どころ', body:'ここでは収益だけでなく、街の使われ方を育てると最終評価が伸びます。'};
-  return {tone:'info', title:'次の一手', body:'いまの計画は前進しています。短期収支と長期価値のどちらを優先するかを意識して進めてください。'};
-}
-
-function recordEffect(title, detail, projId){
-  if(!S) return;
-  if(!S.turnEffects) S.turnEffects = [];
-  S.turnEffects.push({title, detail, projId:projId||null, turn:S.turn, season:S.season});
-  if(S.turnEffects.length > 14) S.turnEffects.shift();
-}
-
-function getVisibleTurnSummary(projId){
-  if(!S?.lastTurnSummary?.items?.length) return null;
-  const items = S.lastTurnSummary.items.filter(item=>!projId || !item.projId || item.projId===projId);
-  if(!items.length) return null;
-  return {...S.lastTurnSummary, items};
-}
-
-function getStakeholderHint(lo){
-  if(lo.hiddenUnlocked && lo.hiddenInfo) return '本音が見えています。条件設計で一気に動かせます。';
-  if((lo.hearingCount||0)===0) return 'まだ建前の条件しか見えていません。まずは聞くフェーズです。';
-  if((lo.hearingCount||0)===1) return 'あと1回の対話で、本音が見える可能性があります。';
-  return '信頼が閾値を超えると、合意提案が刺さりやすくなります。';
-}
-
-function getStreetVoices(proj, area){
-  const op = proj.operation || {};
-  const voices = [];
-  if((op.dailyFlow||0) >= 6500) voices.push('「最近、この辺で待ち合わせする人が明らかに増えた」');
-  if((op.stayTime||0) >= 80) voices.push('「通るだけじゃなく、ちゃんと滞在する街になってきた」');
-  if((op.satisfaction||0) >= 80) voices.push('「この施設ができて、街の印象が変わった」');
-  if((proj.softMeasures||[]).includes('SM3')) voices.push('「夜でも歩ける雰囲気が出てきた」');
-  if((proj.publicContrib?.childcare)) voices.push('「子育て世帯にとって使いやすい街になった」');
-  if(area.id === 'A2') voices.push('「雇用が残ったのが大きい。産業の灯が消えなかった」');
-  return voices.slice(0,3);
-}
-
-function calcDeveloperArchetype(){
-  const completed = S.completedProjects || [];
-  const avgArea = Object.values(S.areaValue||{}).reduce((a,b)=>a+b,0) / (Object.keys(S.areaValue||{}).length||1);
-  const avgIrr = completed.reduce((a,p)=>a+(calcFinance(p).irr||0),0) / (completed.length||1);
-  const publicCount = completed.reduce((sum,p)=>sum + Object.values(p.publicContrib||{}).filter(Boolean).length, 0);
-  const softCount = completed.reduce((sum,p)=>sum + (p.softMeasures||[]).length, 0);
-  const placemaking = avgArea*0.55 + publicCount*3 + softCount*4 + S.reputation*0.25;
-  const finance = avgIrr*8 + completed.length*12 + S.brand*0.25;
-  const coalition = S.govTrust*0.45 + S.ownerNetwork*0.35 + S.reputation*0.20;
-  if(placemaking >= finance && placemaking >= coalition) return {title:'街の編集者', sub:'収益だけでなく、使われ方と雰囲気まで設計した', icon:'🌆', color:'var(--purple)'};
-  if(finance >= placemaking && finance >= coalition) return {title:'収益の設計者', sub:'成立条件を見抜き、事業として強い案件を作った', icon:'💹', color:'var(--gold)'};
-  return {title:'合意形成の指揮者', sub:'多様な主体を束ね、難案件を通した', icon:'🤝', color:'var(--accent)'};
-}
 
 function initState(mode){
   const modes = {
@@ -1634,8 +1432,6 @@ function initState(mode){
     reputation:55, brand:35, tenantNetwork:40,
     areaValue:{A1:40,A2:30,A3:35,A4:25},
     expertise:{housing:1,commercial:1,office:0,hotel:0,logistics:0},
-    turnEffects:[],
-    lastTurnSummary:null,
     projects:[],
     completedProjects:[],
     market:{
@@ -1658,7 +1454,7 @@ function createProject(areaId){
   const area = AREAS.find(a=>a.id===areaId);
   const lo = shuffle(LANDOWNER_POOL.slice()).slice(0,Math.floor(2+Math.random()*3)).map(l=>({
     ...l, trust:20+Math.floor(Math.random()*30),
-    hearingCount:0, hiddenUnlocked:false, status:'未交渉', lastReaction:'まずは話を聞きたい。'
+    hearingCount:0, hiddenUnlocked:false, status:'未交渉'
   }));
   return {
     id:'PRJ-'+Date.now(),
@@ -1676,8 +1472,6 @@ function createProject(areaId){
     housingType:{s:40,m:40,l:20}, // 住宅タイプ比率（1LDK/2LDK/3LDK）
     softMeasures:[],
     operation:{occupancyRate:0,dailyFlow:0,stayTime:0,satisfaction:0,monthlyRent:0},
-    analysisFocus:null,
-    lastReaction:null,
     completedPhases:[],
     constructionTurns:0,
     constructorId:null,
@@ -1698,8 +1492,6 @@ function calcFinance(proj){
   const sc   = BUILDING_SCALES[proj.buildingScale||'mid'];
   const op   = proj.officePlan || {};
   const zr   = proj.zoneRents  || {};
-  const contractor = proj.constructorId ? CONTRACTORS[proj.constructorId] : null;
-  const contractorMult = contractor ? (contractor.costMult||1.0) : 1.0;
 
   // 延床面積（建物規模 vs 容積率の小さい方）
   const baseRatio  = proj.floorRatio / 100;
@@ -1821,9 +1613,6 @@ function getAreaValue(proj){
   v += brandTens*5;
   v += proj.softMeasures.length*3;
   if(proj.finance.bonusApplied) v+=8;
-  const area = AREAS.find(a=>a.id===proj.areaId);
-  const align = area ? getFocusAlignment(proj, area).score : 0;
-  v += Math.round(align * 0.12);
   return Math.min(100,Math.round(v));
 }
 
@@ -1841,12 +1630,6 @@ function endTurn(){
   // AP消費サマリーをログに残す
   const spent = S.maxAp - S.ap;
   if(spent > 0) addLog(`AP消費: ${spent}/${S.maxAp} — ${S.apHistory.slice(-3).join('、')}`);
-  const turnSummaryItems = (S.turnEffects||[]).filter(item=>item.turn===S.turn).slice(-6);
-  S.lastTurnSummary = {
-    season: S.season,
-    items: turnSummaryItems.length ? turnSummaryItems : [{title:'静かな期', detail:'大きな意思決定は少なかったが、市況と時間は動き続けています。', projId:null}],
-  };
-  S.turnEffects = [];
 
   S.turn++;
   // ターン終了でmaxApペナルティを1ずつ回復（上限6）
@@ -2249,7 +2032,6 @@ function advancePhase(projId, forced){
   proj.completedPhases.push(proj.phase);
   proj.phase++;
   const toPh = PHASE_DEF[proj.phase-1];
-  recordEffect('フェーズ進行', `PH${fromPh?.id||'?'}「${fromPh?.name||''}」から PH${toPh?.id||'?'}「${toPh?.name||''}」へ進んだ。`, projId);
   // フェーズ7→8（着工決定）: 建設費をここで支出
   if(proj.phase === 8){
     proj.finance = {...proj.finance, ...calcFinance(proj)};
@@ -2271,7 +2053,6 @@ function advancePhase(projId, forced){
       isProjectLoan: true,  // 緊急借入と区別
     });
     addLog(`[着工] ${proj.name} — 自己資金 ${equityAmt.toLocaleString()}M¥ 支出 / 借入 ${loanAmt.toLocaleString()}M¥（金利${(loanRate*100).toFixed(2)}%）`);
-    recordEffect('着工判断', `自己資金 ${equityAmt.toLocaleString()}M¥ を投じて着工した。`, projId);
     notify(`🏗️ 着工！自己資金 ${equityAmt.toLocaleString()}M¥ 支出 / 借入 ${loanAmt.toLocaleString()}M¥`, 'warn');
   } else {
     notify(`📋 PH${proj.phase}「${toPh?.name||'完了'}」へ進みました`, 'info');
@@ -2300,7 +2081,6 @@ function advancePhase(projId, forced){
         notify(`🏨 ${h.name} 開業 — ブランド+${h.effect.brand}！`,'good');
       }
     }
-    recordEffect('開業', `${proj.name} が開業し、街の運営フェーズへ入った。`, projId);
     notify('🎉 ' + proj.name + ' 開業！', 'good');
     addLog(proj.name + ' が開業しました');
     S.areaValue[proj.areaId] = Math.min(100, (S.areaValue[proj.areaId]||40) + 15);
@@ -2323,10 +2103,6 @@ function negotiateOwner(projId, loId, action){
     if(lo.hearingCount>=2&&lo.hiddenInfo) lo.hiddenUnlocked=true;
     if(lo.trust>=40&&lo.status==='未交渉') lo.status='交渉中';
     S.ownerNetwork=Math.min(100,S.ownerNetwork+2);
-    lo.lastReaction = lo.hiddenUnlocked
-      ? '建前ではなく、本音で話してもよいかもしれない。'
-      : '少し安心した。次はもっと具体的に聞きたい。';
-    recordEffect('地権者ヒアリング', `${lo.name}の信頼が上がり、${lo.hiddenUnlocked?'本音が見え始めた':'対話の土台ができた'}`, projId);
     notify('ヒアリング完了 — '+lo.name+' 信頼+12','good');
   } else if(action==='hidden_offer'){
     // 本音に応じた特別提案
@@ -2334,25 +2110,17 @@ function negotiateOwner(projId, loId, action){
     lo.trust = Math.min(100, lo.trust + bonus);
     lo.status = '合意済み';
     lo.hiddenOfferUsed = true;
-    lo.lastReaction = 'それなら乗れる。自分の事情まで見てくれた。';
     S.ownerNetwork = Math.min(100, S.ownerNetwork + 5);
-    recordEffect('本音提案が刺さる', `${lo.name}が合意済みに転じた。`, projId);
     notify(`💡 本音に応じた提案が刺さりました — ${lo.name} 信頼+${bonus}・合意！`, 'good');
     addLog(`[本音提案] ${lo.name}と合意（信頼+${bonus}）`);
   } else {
     if(lo.trust>=lo.trustReq){
       lo.trust=Math.min(100,lo.trust+10);
       lo.status=lo.status==='反対'?'条件付き賛成':'合意済み';
-      lo.lastReaction = lo.status==='条件付き賛成'
-        ? '完全にではないが、条件が揃えば前向きに考えられる。'
-        : '条件は飲める。ここまで整理してくれたなら進めたい。';
-      recordEffect('地権者合意', `${lo.name}が${lo.status}になった。`, projId);
       notify('✓ '+lo.name+' と合意しました','good');
     } else {
       lo.trust=Math.min(100,lo.trust+6);
       lo.status='交渉中';
-      lo.lastReaction = '方向性は悪くないが、まだ腹落ちしきっていない。';
-      recordEffect('交渉継続', `${lo.name}はまだ様子見。信頼をもう一段積む必要がある。`, projId);
       notify('もう少し信頼関係が必要です（信頼値'+lo.trust+'/'+lo.trustReq+'）','info');
     }
   }
@@ -2364,13 +2132,10 @@ function consultGov(projId){
   const proj = S.projects.find(p=>p.id===projId);
   if(!spendAP(1, '行政協議')) return;
   const pc=proj.publicContrib;
-  const area = AREAS.find(a=>a.id===proj.areaId);
-  const align = area ? getFocusAlignment(proj, area).score : 0;
   proj.govProgress.urbanPlanning=Math.min(90,proj.govProgress.urbanPlanning+15+(pc.pedestrianDeck?20:0));
-  proj.govProgress.disaster=Math.min(90,proj.govProgress.disaster+12+(pc.disasterStorage?22:0)+(align>=70?4:0));
+  proj.govProgress.disaster=Math.min(90,proj.govProgress.disaster+12+(pc.disasterStorage?22:0));
   proj.govProgress.architecture=Math.min(90,proj.govProgress.architecture+10);
   S.govTrust=Math.min(100,S.govTrust+6+(pc.disasterStorage?4:0)+(pc.pedestrianDeck?4:0));
-  recordEffect('行政協議', `都市計画 ${proj.govProgress.urbanPlanning} / 防災 ${proj.govProgress.disaster} / 建築 ${proj.govProgress.architecture}`, projId);
   // ボーナス条件チェック
   if(pc.disasterStorage&&pc.pedestrianDeck&&S.govTrust>=65&&!proj.finance.bonusApplied){
     notify('🌟 容積ボーナス条件達成！「特例容積を適用」ボタンが現れます','good');
@@ -2386,7 +2151,6 @@ function applyVolumeBonus(projId){
   proj.finance.ratioBonus=100;
   proj.finance={...proj.finance,...calcFinance(proj)};
   S.govTrust=Math.min(100,S.govTrust+8);
-  recordEffect('容積ボーナス取得', `特例容積率 +${proj.finance.ratioBonus}% を適用した。`, projId);
   notify('容積ボーナス+100%を適用しました！収支が改善されます','good');
   renderProjectDetail(projId);
   renderSidebar();
@@ -2398,10 +2162,7 @@ function togglePublicContrib(projId,key){
   if(proj.publicContrib[key]){
     if(key==='childcare') S.reputation=Math.min(100,S.reputation+12);
     if(key==='plaza') S.areaValue[proj.areaId]=Math.min(100,(S.areaValue[proj.areaId]||40)+5);
-    recordEffect('公共貢献を追加', `${key} を計画に組み込んだ。`, projId);
     notify('公共貢献を追加: '+key,'good');
-  } else {
-    recordEffect('公共貢献を見直し', `${key} を外して収益側へ寄せた。`, projId);
   }
   renderProjectDetail(projId);
 }
@@ -2471,7 +2232,6 @@ function _selectHotel(projId, hotelId){
   const h = HOTEL_OPERATORS.find(h=>h.id===hotelId);
   if(h && proj.selectedHotel){
     S.brand = Math.min(100, S.brand + Math.round(h.effect.brand/3));
-    recordEffect('ホテルオペレーター確保', `${h.name} を誘致し、ブランドと観光ポテンシャルを上げた。`, projId);
     notify(`🏨 ${h.name}と契約しました`, 'good');
   }
   proj.finance = {...proj.finance, ...calcFinance(proj)};
@@ -2499,8 +2259,6 @@ function toggleTenant(projId,tenantId){
   const idx=proj.selectedTenants.indexOf(tenantId);
   if(idx>=0){
     proj.selectedTenants.splice(idx,1);
-    const removed = TENANT_POOL.find(t=>t.id===tenantId);
-    if(removed) recordEffect('テナント構成を調整', `${removed.name} を外してミックスを見直した。`, projId);
   } else {
     const t = TENANT_POOL.find(t=>t.id===tenantId);
     const zone     = t ? (t.zone||'commercial') : 'commercial';
@@ -2533,7 +2291,6 @@ function toggleTenant(projId,tenantId){
       if(t2.effect.brand) S.brand=Math.min(100,S.brand+t2.effect.brand);
       if(t2.effect.reputation) S.reputation=Math.min(100,S.reputation+t2.effect.reputation);
       if(t2.effect.govTrust) S.govTrust=Math.min(100,S.govTrust+t2.effect.govTrust);
-      recordEffect('テナント誘致', `${t2.name} を入居候補に加えた。`, projId);
     }
   }
   renderProjectDetail(projId);
@@ -2557,7 +2314,6 @@ function applySoftMeasure(projId, measureId){
   if(m.brand) S.brand=Math.min(100,S.brand+m.brand);
   if(m.reputation) S.reputation=Math.min(100,S.reputation+m.reputation);
   if(m.flow&&proj.operation) proj.operation.dailyFlow=(proj.operation.dailyFlow||0)+m.flow;
-  recordEffect('運営施策', `${m.name} を実施し、街の使われ方を育てた。`, projId);
   notify(m.name+' を実施しました','good');
   renderProjectDetail(projId);
   _updateResourceBars();
@@ -2572,7 +2328,6 @@ function setContractor(projId, cId){
     if(ct.reputationBonus!==0) S.reputation=Math.min(100,Math.max(0,S.reputation+ct.reputationBonus));
     proj.finance={...proj.finance,...calcFinance(proj)};
     const costPct=Math.round((ct.costMult-1)*100);
-    recordEffect('施工会社選定', `${ct.name} を選定。建設費 ${costPct===0?'標準':costPct>0?`+${costPct}%`:`${costPct}%`}`, projId);
     notify(`${ct.icon} ${ct.name} を選択 — 建設費${costPct===0?'標準':costPct>0?`+${costPct}%`:`${costPct}%`}${ct.reputationBonus!==0?` / 評判${ct.reputationBonus>0?'+':''}${ct.reputationBonus}`:''}`, 'good');
   }
   renderProjectDetail(projId);
@@ -2592,19 +2347,16 @@ function showNewProjectModal(){
     </div>`:''}
     <div style="display:flex;flex-direction:column;gap:10px;">`;
   available.forEach(area=>{
-    const hook = getAreaHook(area.id);
-    const recommended = isFirstSelection && area.id==='A1';
     html+=`<div class="stakeholder-row" onclick="G._startProject('${area.id}')" style="cursor:pointer;align-items:flex-start;">
       <div style="font-size:28px;width:40px;text-align:center;">🗺️</div>
       <div style="flex:1;">
         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
           <div style="font-size:13px;font-weight:700;color:var(--text);">${area.name}</div>
-          ${recommended?'<span class="badge badge-gold">初回推奨</span>':''}
-          <span class="badge badge-gray">${hook.style}</span>
+          ${isFirstSelection&&area.id==='A1'?'<span class="badge badge-gold">初回推奨</span>':''}
         </div>
-        <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px;">${area.type} / 容積率${area.floorRatio}%</div>
-        <div style="font-size:11px;color:var(--amber);font-weight:700;margin-top:5px;">${hook.pain}</div>
-        <div style="font-size:11px;color:var(--accent);margin-top:4px;">勝ち筋: ${hook.win}</div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--mono);">${area.type} / 容積率${area.floorRatio}%</div>
+        <div style="font-size:11px;color:var(--amber);font-weight:700;margin-top:5px;">${area.context[0]}</div>
+        <div style="font-size:11px;color:var(--accent);margin-top:4px;">行政の注目: ${area.govPriority[0]}</div>
       </div>
       <span style="color:${area.color};font-size:18px;">→</span>
     </div>`;
@@ -2620,7 +2372,6 @@ function _startProject(areaId){
   S.projects.push(proj);
   activeProjectId=proj.id;
   addLog('新規案件を開始: '+proj.name);
-  recordEffect('案件着手', `${proj.name} を担当し、この街の未来設計が始まった。`, proj.id);
   _closeModal();
   switchTab('project');
   renderAll();
@@ -2907,7 +2658,6 @@ function renderMapTab(){
     const unlocked=S.unlockedAreas.includes(area.id);
     const hasProj=S.projects.find(p=>p.areaId===area.id);
     const aVal=S.areaValue[area.id]||40;
-    const hook=getAreaHook(area.id);
     // EV指数に応じた画像レベル
     const imgLevel = aVal >= 70 ? 'high' : aVal >= 45 ? 'mid' : 'low';
     const imgUrl = area.images && area.images[imgLevel];
@@ -2945,12 +2695,9 @@ function renderMapTab(){
       <div style="padding:8px 12px;">
         <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;">
           <span class="badge badge-blue">容積${area.floorRatio}%</span>
-          <span class="badge badge-purple">${hook.style}</span>
           ${hasProj?`<span class="badge badge-amber">PH${hasProj.phase}進行中</span>`:'<span class="badge badge-gray">案件なし</span>'}
         </div>
-        <div style="font-size:11px;color:var(--amber);font-weight:700;line-height:1.5;margin-bottom:5px;">${hook.pain}</div>
-        <div style="font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:5px;">勝ち筋: ${hook.win}</div>
-        <div style="font-size:10px;color:var(--text3);line-height:1.5;margin-bottom:6px;">${area.context[0]}</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.5;margin-bottom:6px;">${area.context[0]}</div>
         ${!hasProj?`<button class="btn btn-sm btn-primary" onclick="event.stopPropagation();G._startProject('${area.id}')">＋ 担当する</button>`:''}
       </div>
     </div>`;
@@ -3078,13 +2825,10 @@ function renderProjectDetail(projId){
   const proj=S.projects.find(p=>p.id===projId);
   if(!proj) return '';
   const area=AREAS.find(a=>a.id===proj.areaId);
-  const hook=getAreaHook(area.id);
   // financeはprojに保存済みのキャッシュを使う（毎回再計算しない）
   const f=proj.finance && proj.finance.totalInvestment ? proj.finance : calcFinance(proj);
   const av=getAreaValue(proj);
   const agr=getAgreementRate(proj);
-  const guide=getGuidance(proj, area);
-  const turnSummary=getVisibleTurnSummary(proj.id);
 
   // Phase stepper
   const steps=PHASE_DEF.map(ph=>{
@@ -3151,26 +2895,6 @@ function renderProjectDetail(projId){
       </div>
       <div class="phase-steps">${steps}</div>
     </div>
-    ${guide ? `<div class="card" style="margin-bottom:12px;border-color:${guide.tone==='warn'?'rgba(245,166,35,.35)':guide.tone==='good'?'rgba(45,224,132,.3)':'rgba(0,200,255,.2)'};background:${guide.tone==='warn'?'rgba(245,166,35,.04)':guide.tone==='good'?'rgba(45,224,132,.04)':'rgba(0,200,255,.04)'};">
-      <div style="display:flex;align-items:flex-start;gap:12px;">
-        <div style="font-size:20px;">${guide.tone==='warn'?'⚠️':guide.tone==='good'?'🎯':'🧭'}</div>
-        <div>
-          <div style="font-size:11px;color:${guide.tone==='warn'?'var(--amber)':guide.tone==='good'?'var(--green)':'var(--accent)'};font-family:var(--mono);letter-spacing:.08em;margin-bottom:4px;">${guide.title}</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.7;">${guide.body}</div>
-          <div style="font-size:10px;color:var(--text3);margin-top:5px;">この街の痛み: ${hook.pain}</div>
-        </div>
-      </div>
-    </div>` : ''}
-    ${turnSummary ? `<div class="card" style="margin-bottom:12px;">
-      <div class="card-hdr"><div class="dot" style="background:var(--gold)"></div>前期の振り返り <span style="margin-left:auto;color:var(--text3);font-size:10px;">${turnSummary.season}</span></div>
-      ${turnSummary.items.map(item=>`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);">
-        <span style="color:var(--gold);font-size:12px;font-family:var(--mono);flex-shrink:0;">▶</span>
-        <div>
-          <div style="font-size:11px;color:var(--text);font-weight:700;">${item.title}</div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.6;">${item.detail}</div>
-        </div>
-      </div>`).join('')}
-    </div>` : ''}
     <!-- 立地データパネル（フェーズ3以降で常時参照可能） -->
     ${renderAnalysisPanel(proj, area)}
     <!-- Phase content -->
@@ -3273,8 +2997,6 @@ function renderPhase2(proj, area){
 
   // エリア固有論点
   const areaPoints = (area.phasePoints && area.phasePoints[2]) || [];
-  const focusChoices = getAnalysisFocusChoices(area);
-  const selectedFocus = getSelectedFocus(proj, area);
 
   // フェーズ2通過時にスナップショットを保存（後から参照用）
   if(!proj.analysisCache){
@@ -3324,23 +3046,6 @@ function renderPhase2(proj, area){
             <span style="font-size:12px;color:var(--text2);line-height:1.6;">${p}</span>
           </div>`).join('')}
       </div>
-      <div class="card" style="border-color:${selectedFocus?area.color+'66':'var(--border)'};">
-        <div class="card-hdr"><div class="dot" style="background:${selectedFocus?area.color:'var(--accent)'}"></div>分析仮説を宣言する</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">「この街の最大課題は何か」を1つ決めると、その後の構想・行政・運営の軸になります。</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          ${focusChoices.map(f=>`
-            <button class="btn ${selectedFocus&&selectedFocus.id===f.id?'btn-primary':''}" style="text-align:left;padding:10px 12px;" onclick="G._setAnalysisFocus('${proj.id}','${f.id}')">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                <span style="font-size:18px;">${f.icon}</span>
-                <span style="font-size:12px;font-weight:700;color:var(--text);">${f.label}</span>
-              </div>
-              <div style="font-size:11px;color:var(--text2);line-height:1.6;">${f.desc}</div>
-            </button>`).join('')}
-        </div>
-        <div style="margin-top:10px;padding:8px 10px;background:var(--bg3);border-radius:6px;font-size:11px;color:${selectedFocus?area.color:'var(--text3)'};">
-          ${selectedFocus ? `現在の仮説: ${selectedFocus.label}` : 'まだ仮説が選ばれていません。ここで何を解く案件かを定めましょう。'}
-        </div>
-      </div>
       <div class="card">
         <div class="card-hdr"><div class="dot" style="background:var(--amber)"></div>制度制約</div>
         <div style="font-size:12px;color:var(--text2);line-height:2.0;">
@@ -3382,9 +3087,6 @@ function renderPhase3(proj, area, f){
   const op  = proj.officePlan || {};
   const sc  = BUILDING_SCALES[proj.buildingScale||'mid'];
   const totalPct = c.housing+c.commercial+c.office+(c.hotel||0)+(c.plaza||0)||100;
-  const selectedFocus = getSelectedFocus(proj, area);
-  const alignment = getFocusAlignment(proj, area);
-  const forecast = calcFutureForecast(proj, area);
 
   // ビルSVG生成（ゾーン配分をシルエットで表示）
   const BLDG_H=200, BLDG_W=80, BLDG_X=20;
@@ -3505,24 +3207,9 @@ function renderPhase3(proj, area, f){
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
           ${targets.map(t=>`<button class="btn btn-sm ${c.target===t?'btn-primary':''}" onclick="G._setConcept('${proj.id}','target','${t}')">${t}</button>`).join('')}
         </div>
-        <label style="display:block;margin-bottom:6px;">開発テーマ</label>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          ${themes.map(t=>{
-            const note = THEME_NOTES[t.id] || {promise:'街に役割を与える', tradeoff:'トレードオフあり', fit:'文脈に合わせて使う'};
-            const selected = c.theme===t.id;
-            return `<button class="btn ${selected?'btn-gold':''}" style="text-align:left;padding:10px 12px;" onclick="G._applyTheme('${proj.id}','${t.id}')">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px;">
-                <span style="font-size:12px;font-weight:700;color:var(--text);">${t.label}</span>
-                ${selected?'<span class="badge badge-gold">採用中</span>':''}
-              </div>
-              <div style="font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:4px;">${note.promise}</div>
-              <div style="font-size:10px;color:var(--amber);">代償: ${note.tradeoff}</div>
-              <div style="font-size:10px;color:var(--text3);margin-top:3px;">向いている場面: ${note.fit}</div>
-            </button>`;
-          }).join('')}
-        </div>
-        <div style="margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:6px;font-size:11px;color:${selectedFocus?area.color:'var(--text3)'};">
-          ${selectedFocus ? `分析仮説「${selectedFocus.label}」に対する整合度: ${alignment.score}/100` : '分析仮説を先に決めると、テーマ選びがぶれにくくなります。'}
+        <label>開発テーマ</label>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${themes.map(t=>`<button class="btn btn-sm ${c.theme===t.id?'btn-gold':''}" onclick="G._applyTheme('${proj.id}','${t.id}')">${t.label}</button>`).join('')}
         </div>
       </div>
       <div class="card">
@@ -3596,29 +3283,6 @@ function renderPhase3(proj, area, f){
               ${ch.ty==='good'?'✅':ch.ty==='warn'?'⚠️':'ℹ️'} ${ch.t}
             </div>`).join('')}
       </div>
-      <div class="card" style="border-color:${alignment.score>=70?'rgba(45,224,132,.3)':alignment.score>=50?'rgba(245,166,35,.3)':'rgba(255,68,102,.25)'};">
-        <div class="card-hdr"><div class="dot" style="background:${alignment.score>=70?'var(--green)':alignment.score>=50?'var(--amber)':'var(--red)'}"></div>未来予測</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-          <div style="padding:10px 12px;background:var(--bg3);border-radius:6px;">
-            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;">2期後の見え方</div>
-            <div style="font-size:18px;font-family:var(--mono);font-weight:900;color:${forecast.near.score>=70?'var(--green)':forecast.near.score>=50?'var(--amber)':'var(--red)'};">${forecast.near.score}</div>
-            <div style="font-size:11px;color:var(--text);margin-top:2px;">${forecast.near.label}</div>
-            <div style="font-size:10px;color:var(--text3);margin-top:4px;line-height:1.6;">${forecast.near.body}</div>
-          </div>
-          <div style="padding:10px 12px;background:var(--bg3);border-radius:6px;">
-            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;">開業3年後の伸び</div>
-            <div style="font-size:18px;font-family:var(--mono);font-weight:900;color:${forecast.long.score>=70?'var(--green)':forecast.long.score>=50?'var(--amber)':'var(--red)'};">${forecast.long.score}</div>
-            <div style="font-size:11px;color:var(--text);margin-top:2px;">${forecast.long.label}</div>
-            <div style="font-size:10px;color:var(--text3);margin-top:4px;line-height:1.6;">${forecast.long.body}</div>
-          </div>
-        </div>
-        <div style="padding:8px 10px;background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.12);border-radius:6px;font-size:11px;color:var(--text2);line-height:1.7;">
-          ${forecast.story}
-        </div>
-        ${selectedFocus ? `<div style="margin-top:8px;font-size:10px;color:${alignment.score>=70?'var(--green)':alignment.score>=50?'var(--amber)':'var(--red)'};">
-          仮説整合: ${alignment.label}
-        </div>` : ''}
-      </div>
     </div>
   </div></div>`; // ← 外側の<div>（ビジュアライザーラッパー）を閉じる
 }
@@ -3671,11 +3335,6 @@ function renderPhase4(proj, area, agr){
           <div style="font-size:12px;color:var(--text2);">信頼値 ${lo.trustReq}以上で合意提案が成功しやすくなる</div>
           ${lo.dealBreaker ? `<div style="font-size:12px;color:var(--red);margin-top:4px;">❌ NG: ${lo.dealBreaker}</div>` : ''}
         </div>
-        <div style="padding:10px 12px;background:var(--bg3);border-radius:8px;margin-bottom:10px;">
-          <div style="font-size:10px;color:var(--accent);font-family:var(--mono);letter-spacing:.08em;margin-bottom:5px;">最新の反応</div>
-          <div style="font-size:12px;color:var(--text);line-height:1.7;margin-bottom:6px;">「${lo.lastReaction||'まずは条件を聞きたい。'}」</div>
-          <div style="font-size:10px;color:var(--text3);line-height:1.6;">${getStakeholderHint(lo)}</div>
-        </div>
         ${lo.hiddenUnlocked && lo.hiddenInfo
           ? `<div style="padding:10px 12px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3);border-radius:8px;margin-bottom:10px;">
               <div style="font-size:10px;color:var(--purple);font-family:var(--mono);letter-spacing:.08em;margin-bottom:5px;">🔓 本音（ヒアリングで判明）</div>
@@ -3716,14 +3375,13 @@ function renderPhase5(proj,area,f,agr){
   const gp=proj.govProgress;
   const bonusReady=pc.disasterStorage&&pc.pedestrianDeck&&S.govTrust>=65;
   const govAvg=Math.round((gp.urbanPlanning+gp.disaster+gp.architecture)/3);
-  const focus = getSelectedFocus(proj, area);
 
   const contribItems=[
-    {k:'disasterStorage',l:'防災備蓄倉庫',icon:'🏪',eff:'防災課+22、ボーナス条件',cost:200,preview:'IRR微減 / 行政説得力が大きく伸びる'},
-    {k:'pedestrianDeck', l:'歩行者デッキ整備',icon:'🚶',eff:'都市計画課+20、ボーナス条件',cost:500,preview:'短期収支は重い / 回遊性とボーナスの核'},
-    {k:'childcare',      l:'保育施設誘致',icon:'👶',eff:'地域評判+12',cost:300,preview:'収益床は減る / 住民・行政の追い風が強い'},
-    {k:'plaza',          l:'公開空地・広場',icon:'🌳',eff:'エリア価値+5',cost:400,preview:'床効率は落ちる / 街の顔を作りやすい'},
-    {k:'parking',        l:'駐輪場200台以上',icon:'🚲',eff:'地域評判+8',cost:150,preview:'小コスト / 生活動線の説得材料になる'},
+    {k:'disasterStorage',l:'防災備蓄倉庫',icon:'🏪',eff:'防災課+22、ボーナス条件',cost:200},
+    {k:'pedestrianDeck', l:'歩行者デッキ整備',icon:'🚶',eff:'都市計画課+20、ボーナス条件',cost:500},
+    {k:'childcare',      l:'保育施設誘致',icon:'👶',eff:'地域評判+12',cost:300},
+    {k:'plaza',          l:'公開空地・広場',icon:'🌳',eff:'エリア価値+5',cost:400},
+    {k:'parking',        l:'駐輪場200台以上',icon:'🚲',eff:'地域評判+8',cost:150},
   ];
   const totalContribCost = contribItems.reduce((sum,item)=>sum+(pc[item.k]?item.cost:0),0);
 
@@ -3768,9 +3426,6 @@ function renderPhase5(proj,area,f,agr){
                 <span style="font-size:10px;font-family:var(--mono);color:var(--amber);">+${item.cost}M¥</span>
               </div>
               <div style="font-size:10px;color:var(--green);">${item.eff}</div>
-              <div style="font-size:10px;color:${focus&&((focus.id==='family'&&item.k==='childcare')||(focus.id==='walkability'&&item.k==='pedestrianDeck')||(focus.id==='resilience'&&item.k==='disasterStorage'))?'var(--accent)':'var(--text3)'};margin-top:2px;">
-                ${item.preview}${focus&&((focus.id==='family'&&item.k==='childcare')||(focus.id==='walkability'&&item.k==='pedestrianDeck')||(focus.id==='resilience'&&item.k==='disasterStorage'))?' / 今の仮説と特に相性が良い':''}
-              </div>
             </div>
           </label>`).join('')}
       </div>
@@ -3792,7 +3447,6 @@ function renderPhase5(proj,area,f,agr){
 
 function renderPhase6(proj,area,f){
   const warnings=[];
-  const forecast = calcFutureForecast(proj, area);
   if(f.ltv>70) warnings.push({t:`LTV ${f.ltv}% → 融資条件70%超過`,ty:'error'});
   if(f.irr<5) warnings.push({t:`IRR ${f.irr}% → 目標5%未達。投資家合意困難`,ty:'error'});
   if(f.irr>=5&&f.irr<6) warnings.push({t:`IRR ${f.irr}% → 合格ラインだがバッファ不足`,ty:'warn'});
@@ -3887,21 +3541,6 @@ function renderPhase6(proj,area,f){
         <div style="font-size:12px;color:var(--text2);line-height:1.8;">
           IRR・LTV・CF・エリア価値の4軸で総合判断してください。<br>
           短期収益だけでなく、この案件がエリア全体の価値にどう貢献するかが、次の案件の競争優位を作ります。
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--purple)"></div>短期と長期の見え方</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div style="padding:10px;background:var(--bg3);border-radius:6px;">
-            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;">短期</div>
-            <div style="font-size:18px;font-family:var(--mono);font-weight:900;color:${forecast.near.score>=70?'var(--green)':forecast.near.score>=50?'var(--amber)':'var(--red)'};">${forecast.near.score}</div>
-            <div style="font-size:11px;color:var(--text);">${forecast.near.label}</div>
-          </div>
-          <div style="padding:10px;background:var(--bg3);border-radius:6px;">
-            <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:4px;">長期</div>
-            <div style="font-size:18px;font-family:var(--mono);font-weight:900;color:${forecast.long.score>=70?'var(--green)':forecast.long.score>=50?'var(--amber)':'var(--red)'};">${forecast.long.score}</div>
-            <div style="font-size:11px;color:var(--text);">${forecast.long.label}</div>
-          </div>
         </div>
       </div>
     </div>
@@ -4288,9 +3927,6 @@ function renderPhase8(proj,area,f){
 
 function renderPhase9(proj,area,f,av){
   const op=proj.operation;
-  const voices=getStreetVoices(proj, area);
-  const dayFlow=Math.min(100, Math.round((op.dailyFlow||0)/90));
-  const nightFlow=Math.min(100, Math.round(((op.stayTime||0)+(proj.softMeasures||[]).includes('SM3')*18)));
   const softMeasureDefs={
     'SM1':{n:'週末マルシェ',icon:'🛍️'},
     'SM2':{n:'アートイベント',icon:'🎨'},
@@ -4324,27 +3960,6 @@ function renderPhase9(proj,area,f,av){
         </div>
       </div>
       <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--accent)"></div>街の使われ方</div>
-        <div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--text2);">昼の賑わい</span>
-            <span style="color:var(--accent);font-family:var(--mono);">${dayFlow}</span>
-          </div>
-          <div class="bar-track" style="height:8px;"><div class="bar-fill" style="width:${dayFlow}%;background:var(--accent)"></div></div>
-        </div>
-        <div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">
-            <span style="color:var(--text2);">夜の賑わい</span>
-            <span style="color:var(--purple);font-family:var(--mono);">${nightFlow}</span>
-          </div>
-          <div class="bar-track" style="height:8px;"><div class="bar-fill" style="width:${nightFlow}%;background:var(--purple)"></div></div>
-        </div>
-        <div style="font-size:10px;color:var(--text3);line-height:1.7;">
-          開発前: 昼は通過、夜は薄い<br>
-          現在: ${dayFlow>=70?'昼の滞在が明確に伸びた':'昼は改善中'} / ${nightFlow>=60?'夜も歩ける街に近づいた':'夜の育成余地がまだ大きい'}
-        </div>
-      </div>
-      <div class="card">
         <div class="card-hdr"><div class="dot" style="background:var(--amber)"></div>ソフト施策の実施</div>
         ${Object.entries(softMeasureDefs).map(([id,m])=>{
           const applied=proj.softMeasures.includes(id);
@@ -4371,10 +3986,6 @@ function renderPhase9(proj,area,f,av){
       <div class="card">
         <div class="card-hdr"><div class="dot" style="background:var(--accent)"></div>🌆 エリアへの波及効果</div>
         ${['周辺地価が上昇傾向（+5〜8%）','徒歩人流増加→周辺店舗売上向上','空きビルへの開発問い合わせが増加','行政からまちづくり協議会への招待'].map(t=>`<div style="padding:6px 0;font-size:12px;color:var(--text2);border-bottom:1px solid var(--border);">${t}</div>`).join('')}
-      </div>
-      <div class="card">
-        <div class="card-hdr"><div class="dot" style="background:var(--gold)"></div>街の声</div>
-        ${voices.length ? voices.map(v=>`<div style="padding:8px 10px;background:var(--bg3);border-radius:6px;margin-bottom:6px;font-size:12px;color:var(--text2);line-height:1.7;">${v}</div>`).join('') : '<div style="font-size:12px;color:var(--text3);">まだ街の評価は定まっていません。運営施策で育てましょう。</div>'}
       </div>
       <button class="btn btn-gold" style="font-size:14px;padding:12px;" onclick="G._finishProject('${proj.id}')">✅ 案件完成・次案件へ</button>
     </div>
@@ -4514,8 +4125,6 @@ function _setConcept(projId,key,val){
   proj.concept[key]=val;
   // grade変更時のみcalcFinanceを再計算（target/themeはfinanceに影響しない）
   if(key==='grade') proj.finance={...proj.finance,...calcFinance(proj)};
-  if(key==='target') recordEffect('ターゲット設定', `メインターゲットを「${val}」に定めた。`, projId);
-  if(key==='grade') recordEffect('商品グレード調整', `建物グレードを「${val}」に変更した。`, projId);
   renderProjectDetail(projId);
 }
 
@@ -4532,7 +4141,6 @@ function _setBuildingScale(projId, scale){
   proj.buildingScale = scale;
   proj.finance = {...proj.finance, ...calcFinance(proj)};
   addLog(`[建物規模] ${BUILDING_SCALES[scale].label}を選択`);
-  recordEffect('建物規模を変更', `${BUILDING_SCALES[scale].label} に変更した。`, projId);
   renderProjectDetail(projId);
 }
 
@@ -4548,18 +4156,6 @@ function _setConceptSlider(projId,key,val){
   const proj=S.projects.find(p=>p.id===projId);
   proj.concept[key]=parseInt(val);
   proj.finance={...proj.finance,...calcFinance(proj)};
-  recordEffect('用途配分を調整', `${key} を ${val}% に変更した。`, projId);
-  renderProjectDetail(projId);
-}
-
-function _setAnalysisFocus(projId, focusId){
-  const proj = S.projects.find(p=>p.id===projId);
-  if(!proj) return;
-  proj.analysisFocus = focusId;
-  const area = AREAS.find(a=>a.id===proj.areaId);
-  const focus = area ? getSelectedFocus(proj, area) : null;
-  if(focus) recordEffect('分析仮説を宣言', `最大課題を「${focus.label}」と捉えた。`, projId);
-  notify(focus ? `分析仮説を設定: ${focus.label}` : '分析仮説を更新しました', 'good');
   renderProjectDetail(projId);
 }
 
@@ -4569,7 +4165,6 @@ function _applyTheme(projId,themeId){
   if(!theme) return;
   proj.concept={...proj.concept,theme:themeId,housing:theme.housing,commercial:theme.commercial,office:theme.office,hotel:0,plaza:theme.plaza};
   proj.finance={...proj.finance,...calcFinance(proj)};
-  recordEffect('開発テーマ採択', `「${theme.label}」を軸に企画を組み直した。`, projId);
   notify('テーマ「'+theme.label+'」を適用しました','info');
   renderProjectDetail(projId);
 }
@@ -4592,7 +4187,6 @@ function _finishProject(projId){
   if((proj.concept.hotel||0)>20) S.expertise.hotel=Math.min(5,(S.expertise.hotel||0)+1);
   S.brand=Math.min(100,S.brand+8);
   S.tenantNetwork=Math.min(100,S.tenantNetwork+6);
-  recordEffect('案件完成', `${proj.name} を完遂し、次案件への信用を得た。`, projId);
   addLog(proj.name+' が完成しました');
   notify('🏆 案件完成！ブランド力+8','good');
   activeProjectId=S.projects.length>0?S.projects[0].id:null;
@@ -4617,7 +4211,6 @@ function _finishProject(projId){
 function showEnding(){
   const totalScore=calcFinalScore();
   const ending=getEndingType(totalScore);
-  const archetype=calcDeveloperArchetype();
   const endEl=document.getElementById('ending-box');
   endEl.innerHTML=`
     <div style="text-align:center;margin-bottom:28px;">
@@ -4643,18 +4236,6 @@ function showEnding(){
         <div style="font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text);">${m.v}</div>
       </div>`).join('')}
     </div>
-    <div style="padding:16px 20px;background:${archetype.color}11;border:1px solid ${archetype.color}44;border-radius:10px;margin-bottom:20px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-        <div style="font-size:28px;">${archetype.icon}</div>
-        <div>
-          <div style="color:${archetype.color};font-size:13px;font-weight:700;">あなたは「${archetype.title}」タイプのデベロッパー</div>
-          <div style="color:var(--text2);font-size:12px;">${archetype.sub}</div>
-        </div>
-      </div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.8;">
-        数字だけでなく、あなたがどこに価値を置いて街を動かしたかが、この結果に表れています。
-      </div>
-    </div>
     <div style="padding:16px 20px;background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:10px;margin-bottom:20px;">
       <div style="color:var(--accent);font-size:13px;font-weight:700;margin-bottom:8px;">🏙️ このキャリアが残したもの</div>
       <div style="color:var(--text2);font-size:13px;line-height:1.8;">
@@ -4674,19 +4255,13 @@ function showEnding(){
 function calcFinalScore(){
   let s=0;
   const maxComp = S.gameMode==='single' ? 1 : 3;
-  const avgArea = Object.values(S.areaValue||{}).reduce((a,b)=>a+b,0)/(Object.keys(S.areaValue||{}).length||1);
-  const publicCount = (S.completedProjects||[]).reduce((sum,p)=>sum + Object.values(p.publicContrib||{}).filter(Boolean).length, 0);
-  const softCount = (S.completedProjects||[]).reduce((sum,p)=>sum + (p.softMeasures||[]).length, 0);
   s+=Math.min(30, Math.round(S.completedProjects.length/maxComp*30));
   const avgIrr=S.completedProjects.reduce((a,p)=>a+(calcFinance(p).irr||0),0)/(S.completedProjects.length||1);
   s+=avgIrr>=5?20:avgIrr>=3?12:5;
   s+=S.govTrust>=70?15:S.govTrust>=50?10:5;
   s+=S.reputation>=70?10:S.reputation>=50?7:3;
   s+=S.brand>=60?10:S.brand>=40?7:3;
-  s+=avgArea>=70?10:avgArea>=55?7:3;
-  s+=Math.min(5, Math.round(publicCount/2));
-  s+=Math.min(5, softCount);
-  s+=S.unlockedAreas.length*2;
+  s+=S.unlockedAreas.length*3;
   return Math.min(100,Math.round(s));
 }
 
@@ -4724,7 +4299,6 @@ function bindTabEvents(){/* Dynamic events bound via onclick strings */}
 // ── 立地データ折りたたみパネル ──
 function renderAnalysisPanel(proj, area){
   const cache = proj.analysisCache;
-  const selectedFocus = getSelectedFocus(proj, area);
   // フェーズ1・2ではこのパネルは出さない
   if(proj.phase <= 2) return '';
 
@@ -4823,12 +4397,6 @@ function renderAnalysisPanel(proj, area){
             ${context.map(c=>`<div style="font-size:11px;color:var(--text2);padding:5px 8px;background:var(--bg3);border-radius:4px;line-height:1.5;">• ${c}</div>`).join('')}
           </div>
         </div>` : ''}
-        ${selectedFocus ? `
-        <div style="margin-top:10px;padding:10px 12px;background:${area.color}11;border:1px solid ${area.color}33;border-radius:6px;">
-          <div style="font-size:9px;color:${area.color};font-family:var(--mono);letter-spacing:.1em;margin-bottom:6px;">分析仮説</div>
-          <div style="font-size:12px;color:var(--text);font-weight:700;margin-bottom:4px;">${selectedFocus.icon} ${selectedFocus.label}</div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.6;">${selectedFocus.desc}</div>
-        </div>` : ''}
         <!-- 固有論点 -->
         ${areaPoints.length>0 ? `
         <div style="margin-top:10px;">
@@ -4914,21 +4482,17 @@ function showTitleScreen(){
   document.getElementById('title-overlay').classList.add('show');
 }
 
-function startGame(mode, firstAreaId){
+function startGame(mode){
   document.getElementById('title-overlay').classList.remove('show');
   initState(mode);
   renderAll();
   updateSeason();
   renderTopbar();
   checkTurnLimit();
-  if(firstAreaId){
-    if(!S.unlockedAreas.includes(firstAreaId)) S.unlockedAreas.push(firstAreaId);
-    _startProject(firstAreaId);
-  }
   setTimeout(()=>{
     const modeLabel = mode==='area' ? 'エリア開発モード（10年）' : '単一開発モード（4年）';
-    notify(firstAreaId ? `${modeLabel}でゲーム開始！案件に着任しました` : `${modeLabel}でゲーム開始！最初の案件を選んでください`, 'good');
-    if(!firstAreaId && S.projects.length===0){
+    notify(`${modeLabel}でゲーム開始！最初の案件を選んでください`, 'good');
+    if(S.projects.length===0){
       showNewProjectModal();
     }
   }, 400);
@@ -4940,7 +4504,6 @@ return {
   negotiateOwner,consultGov,applyVolumeBonus,togglePublicContrib,
   toggleTenant,applySoftMeasure,setContractor,
   _setConcept,_setConceptSlider,_applyTheme,_selectLo,_setOfficePlan,_setBuildingScale,_setZoneRent,_selectHotel,_setHousingType,_setTenantRent,
-  _setAnalysisFocus,
   _selectProject,_finishProject,_restart,
   showNewProjectModalForArea,
   showHelp,_closeHelp,

@@ -1,5 +1,5 @@
 (function () {
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
   const SESSION_TOKEN_KEY = 'keio_navi_session_token_v1';
   const USER_CACHE_KEY = 'keio_navi_current_user_cache_v1';
   const LIKED_CACHE_KEY = 'keio_navi_liked_cache_v1';
@@ -351,7 +351,7 @@
     }
     if (!profile.displayName && !profile.username) return '表示名を入力してください。';
     if (!profile.desiredIndustry) return '志望業界を選択してください。';
-    if (!profile.preferredCompany1) return '第1志望を入力してください。';
+    if (!profile.preferredCompany1) return '第1志望の企業名を入力してください。';
     if (!profile.lineName) return 'LINE名を入力してください。';
     if (options && options.requireLineQr && !profile.lineQrDataUrl) {
       return 'LINE QRをアップロードしてください。';
@@ -803,10 +803,10 @@
     if (!('Notification' in window)) return null;
     if (Notification.permission !== 'granted') return null;
 
-    const prefs = getNotificationPrefs();
+    var prefs = getNotificationPrefs();
     if (!prefs.enabled) return null;
 
-    const timerId = setTimeout(function () {
+    var timerId = setTimeout(function () {
       try {
         new Notification(title, {
           body: body,
@@ -815,8 +815,6 @@
           requireInteraction: false,
         });
       } catch (e) {
-        // Service Worker環境でなければ直接Notificationを使う
-        // SW経由の場合はregistration.showNotificationを使う
         if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
           navigator.serviceWorker.ready.then(function (reg) {
             reg.showNotification(title, {
@@ -839,20 +837,14 @@
     var prefs = getNotificationPrefs();
     if (!prefs.enabled || !prefs.deadlineReminder) return;
 
-    // 既に送信済みの通知タグを取得（日付ベースで重複防止）
     var today = new Date().toISOString().slice(0, 10);
     var sentMap = readJSON(NOTIFICATION_SENT_KEY, {});
-    // 古い日付のエントリをクリーンアップ
     Object.keys(sentMap).forEach(function (key) {
       if (sentMap[key] < today) delete sentMap[key];
     });
 
-    // 選考管理データ（localStorageに保存されている場合）を確認
-    // members.htmlのinitProgressTrackerが使うキーを参照
     var progressEntries = [];
     try {
-      // GAS経由で取得されたデータはmembers.htmlで管理されるが、
-      // ローカルにキャッシュされた選考データも確認する
       var selectionData = readJSON('keio_navi_selection_cache_v1', []);
       if (Array.isArray(selectionData)) {
         selectionData.forEach(function (entry) {
@@ -867,7 +859,6 @@
       }
     } catch (e) {}
 
-    // progress tracker のエントリもチェック
     try {
       var progressData = readJSON('keio_navi_progress_cache_v1', []);
       if (Array.isArray(progressData)) {
@@ -898,11 +889,10 @@
       var diffMs = deadlineDate.getTime() - now.getTime();
       var diffDays = Math.ceil(diffMs / (24 * 60 * 60 * 1000));
 
-      // 当日または3日以内
       if (diffDays < 0 || diffDays > 3) return;
 
       var notifTag = 'deadline-' + entry.company + '-' + deadlineDateStr;
-      if (sentMap[notifTag]) return; // 既に通知済み
+      if (sentMap[notifTag]) return;
 
       var title, body;
       if (diffDays === 0) {
@@ -913,7 +903,6 @@
         body = entry.company + (entry.step ? '（' + entry.step + '）' : '') + 'の締切が' + deadlineDateStr + 'です。準備を進めましょう。';
       }
 
-      // 少しずらして表示（重複を避けるため）
       scheduleLocalNotification(title, body, 2000, notifTag);
       sentMap[notifTag] = todayStr;
     });

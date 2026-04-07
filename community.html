@@ -34,7 +34,6 @@
   }
   .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--gold-light); text-decoration: none; letter-spacing: 0.05em; }
   .nav-links { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-  .nav-links::-webkit-scrollbar { display: none; }
   .nav-link { color: rgba(255,255,255,0.72); text-decoration: none; font-size: 0.75rem; padding: 0.4rem 0.8rem; border: 1px solid rgba(255,255,255,0.14); transition: all 0.2s; }
   .nav-link:hover { color: var(--gold-light); border-color: rgba(201,168,76,0.35); }
   .nav-link.active { color: var(--gold-light); border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.08); }
@@ -167,18 +166,8 @@
   @media (max-width: 600px) {
     nav {
       padding: 0.9rem 1rem;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 0.65rem;
     }
-    .nav-links {
-      width: 100%;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      scrollbar-width: none;
-      padding-bottom: 0.15rem;
-    }
-    main { padding: 6.8rem 0.8rem 2rem; }
+    main { padding: 4.8rem 0.8rem 2rem; }
     .section-header,
     .section-body,
     .opt-in-bar,
@@ -223,21 +212,15 @@
 </head>
 <body>
 
-<nav>
-  <a href="index.html" class="nav-logo">Keio Navi</a>
-  <div class="nav-links" id="nav-links">
-    <a href="members.html" class="nav-link">会員ページ</a>
-    <a href="glossary.html" class="nav-link">用語集</a>
-    <a href="community.html" class="nav-link active">コミュニティ</a>
-    <a href="account.html" class="nav-link">マイページ</a>
-  </div>
+<nav style="justify-content:center;">
+  <a href="index.html" class="nav-logo">慶應就活ナビ</a>
 </nav>
 
 <main>
   <div class="page-header">
     <div class="page-label">COMMUNITY</div>
     <div class="page-title">仲間を見つける</div>
-    <div class="page-desc">同じ業界を志望するメンバーとつながって、就活を一緒に乗り越えよう。</div>
+    <div class="page-desc">同じ業界・企業を志望するメンバーとつながって、就活を一緒に乗り越えよう。</div>
   </div>
 
   <div class="flash" id="flash"></div>
@@ -298,7 +281,7 @@
     </div>
     <div class="section-body">
       <div class="filter-bar">
-        <input class="filter-input" type="text" id="filter-company" placeholder="キーワードで絞り込み...">
+        <input class="filter-input" type="text" id="filter-company" placeholder="企業名で絞り込み...">
         <button class="filter-btn" onclick="searchByCompany()">検索</button>
       </div>
       <div id="company-match-list" class="member-grid">
@@ -352,7 +335,7 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
   const flash = document.getElementById('flash');
   const verificationBanner = document.getElementById('verification-banner');
   let mutedUserIds = {};
@@ -429,13 +412,13 @@
     const user = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
     const locked = !!(user && !user.emailVerified);
     [
-      { buttonId: 'group-create-btn', noteId: 'group-lock-note', lockedLabel: 'グループ作成', actionLabel: 'グループ作成' },
-      { buttonId: 'consul-submit-btn', noteId: 'consul-lock-note', lockedLabel: '相談投稿', actionLabel: '相談投稿' },
-      { buttonId: 'gd-create-btn', noteId: 'gd-lock-note', lockedLabel: 'GDセッション作成', actionLabel: 'GDセッション作成' },
-      { buttonId: 'pm-open-btn', noteId: 'pm-lock-note', lockedLabel: '練習募集投稿', actionLabel: '練習募集投稿' },
-      { buttonId: 'qa-open-btn', noteId: 'qa-lock-note', lockedLabel: '質問投稿', actionLabel: '質問投稿' },
-      { buttonId: 'board-post-btn', noteId: 'board-lock-note', lockedLabel: 'ES投稿', actionLabel: 'ES投稿' },
-      { buttonId: 'exp-open-btn', noteId: 'exp-lock-note', lockedLabel: '体験記投稿', actionLabel: '体験記投稿' }
+      { buttonId: 'group-create-btn', noteId: 'group-lock-note', actionLabel: 'グループ作成' },
+      { buttonId: 'consul-submit-btn', noteId: 'consul-lock-note', actionLabel: '相談投稿' },
+      { buttonId: 'gd-create-btn', noteId: 'gd-lock-note', actionLabel: 'GDセッション作成' },
+      { buttonId: 'pm-open-btn', noteId: 'pm-lock-note', actionLabel: '練習募集投稿' },
+      { buttonId: 'qa-open-btn', noteId: 'qa-lock-note', actionLabel: '質問投稿' },
+      { buttonId: 'board-post-btn', noteId: 'board-lock-note', actionLabel: 'ES投稿' },
+      { buttonId: 'exp-open-btn', noteId: 'exp-lock-note', actionLabel: '体験記投稿' }
     ].forEach(function(config) {
       const button = document.getElementById(config.buttonId);
       const note = document.getElementById(config.noteId);
@@ -706,7 +689,7 @@
 .consul-post-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
 .consul-cat { font-size:0.68rem; background:rgba(201,168,76,0.12); color:#7a5f10; padding:0.15rem 0.5rem; font-weight:700; }
 .consul-meta { font-size:0.7rem; color:var(--text-muted); }
-.consul-title-text { font-weight:700; font-size:0.88rem; color:var(--navy); margin-bottom:0.4rem; }
+.consul-title { font-weight:700; font-size:0.88rem; color:var(--navy); margin-bottom:0.4rem; }
 .consul-body { font-size:0.8rem; color:var(--text); line-height:1.7; margin-bottom:0.6rem; }
 .consul-comments { border-top:1px solid rgba(10,26,62,0.06); padding-top:0.6rem; }
 .consul-comment { font-size:0.78rem; color:var(--text); padding:0.4rem 0; border-bottom:1px solid rgba(10,26,62,0.04); line-height:1.6; }
@@ -716,12 +699,12 @@
 .consul-comment-form button { padding:0.4rem 0.8rem; background:var(--navy); color:white; border:none; font-size:0.72rem; cursor:pointer; font-weight:700; font-family:'Noto Sans JP',sans-serif; white-space:nowrap; }
 .gd-session { border:1px solid rgba(10,26,62,0.1); padding:1rem 1.2rem; margin-bottom:0.8rem; background:white; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
 .gd-info { flex:1; min-width:200px; }
-.gd-title-text { font-weight:700; font-size:0.88rem; color:var(--navy); }
+.gd-title { font-weight:700; font-size:0.88rem; color:var(--navy); }
 .gd-meta { font-size:0.72rem; color:var(--text-muted); margin-top:0.2rem; }
 .gd-actions { display:flex; gap:0.5rem; flex-shrink:0; }
 </style>
 
-<div class="section" style="margin:0 0 1.5rem;">
+<div class="section">
   <div class="section-header">
     <div class="section-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -762,7 +745,7 @@
 </div>
 
 <!-- ===== GD練習マッチング ===== -->
-<div class="section" style="margin:0 0 1.5rem;">
+<div class="section">
   <div class="section-header">
     <div class="section-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
@@ -829,7 +812,7 @@ function renderConsultations(posts) {
     }).join('');
     return '\x3cdiv class="consul-post">'
       + '\x3cdiv class="consul-post-header">\x3cspan class="consul-cat">' + escHtml(p.category || '') + '\x3c/span>\x3cspan class="consul-meta">' + author + ' | ' + dateLabel + '\x3c/span>\x3c/div>'
-      + '\x3cdiv class="consul-title-text">' + title + '\x3c/div>'
+      + '\x3cdiv class="consul-title">' + title + '\x3c/div>'
       + '\x3cdiv class="consul-body">' + body + '\x3c/div>'
       + buildInlineActionButtons(p.userId, p.displayName || '匿名', 'consultation', p.id)
       + '\x3cdiv class="consul-comments">' + commentsHtml
@@ -897,7 +880,7 @@ function renderGDSessions(sessions) {
         : '\x3cbutton class="btn-join locked-action" onclick="event.stopPropagation();guardVerifiedAction(\'GDセッション参加\')">認証後に参加\x3c/button>');
     return '\x3cdiv class="gd-session">'
       + '\x3cdiv class="gd-info">'
-      + '\x3cdiv class="gd-title-text">' + escHtml(s.title || 'GDセッション') + '\x3c/div>'
+      + '\x3cdiv class="gd-title">' + escHtml(s.title || 'GDセッション') + '\x3c/div>'
       + '\x3cdiv class="gd-meta">' + escHtml(s.scheduledDate || s.date || '') + ' ' + escHtml(s.scheduledTime || s.time || '') + ' | ' + (Number(s.participantCount) || 0) + '/' + (Number(s.maxParticipants) || 6) + '人参加\x3c/div>'
       + '\x3c/div>'
       + '\x3cdiv class="gd-actions">' + actions + '\x3c/div>'
@@ -1173,13 +1156,13 @@ function renderPracticeRequests() {
         + '\x3cdiv class="pm-card-info-row">\x3cstrong>希望日時:\x3c/strong> ' + escHtml(r.preferredDate) + '\x3c/div>'
       + '\x3c/div>'
       + (r.message ? '\x3cdiv class="pm-card-message">' + escHtml(r.message) + '\x3c/div>' : '')
+      + buildInlineActionButtons(r.userId, r.displayName || '名前未設定', 'practice_request', r.id)
       + '\x3cdiv class="pm-participants">'
         + '\x3cdiv class="pm-participants-label">参加者 ' + r.participants.length + '/' + r.maxMembers + '人'
         + (!isClosed && slotsLeft > 0 ? ' \x3cspan class="pm-slots-left">（あと' + slotsLeft + '人募集中）\x3c/span>' : '')
         + '\x3c/div>'
         + '\x3cdiv class="pm-participant-list">' + (partHtml || '\x3cspan class="pm-participant-name">まだ参加者はいません\x3c/span>') + '\x3c/div>'
       + '\x3c/div>'
-      + buildInlineActionButtons(r.userId, r.displayName || '名前未設定', 'practice_request', r.id)
       + '\x3cdiv class="pm-card-actions">' + actionsHtml + '\x3c/div>'
       + lineHtml
     + '\x3c/div>';
@@ -1314,7 +1297,7 @@ document.getElementById('pm-post-modal').addEventListener('click', function(e) {
 .qa-modal-submit:hover { opacity:0.85; }
 </style>
 
-<div class="section" style="margin:0 0 1.5rem;">
+<div class="section">
   <div class="section-header">
     <div class="section-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -1583,17 +1566,6 @@ document.getElementById('qa-post-modal').addEventListener('click', function(e) {
   if (e.target === document.getElementById('qa-post-modal'))
     document.getElementById('qa-post-modal').classList.remove('open');
 });
-
-// Load on init
-(function() {
-  var checkReady = setInterval(function() {
-    if (typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken && KeioNaviAuth.getSessionToken()) {
-      clearInterval(checkReady);
-      loadQuestions();
-    }
-  }, 200);
-  setTimeout(function() { clearInterval(checkReady); }, 10000);
-})();
 </script>
 
 <!-- ===== ES添削掲示板 ===== -->
@@ -1658,7 +1630,7 @@ document.getElementById('qa-post-modal').addEventListener('click', function(e) {
       <button id="board-modal-close" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">&#10005;</button>
     </div>
     <div class="board-modal-body">
-      <div style="font-size:0.72rem;color:var(--text-muted);padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);margin-bottom:1rem;line-height:1.7;">
+      <div style="font-size:0.72rem;color:var(--text-muted);padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);margin-bottom:0;line-height:1.7;">
         <div style="font-weight:700;color:var(--navy);margin-bottom:0.3rem;">投稿ガイドライン</div>
         ・企業の機密情報（NDA対象の選考内容等）は投稿しないでください<br>
         ・他の就活生の個人情報を含めないでください<br>
@@ -1666,8 +1638,8 @@ document.getElementById('qa-post-modal').addEventListener('click', function(e) {
         ・投稿内容はメンバー全員に公開されます
       </div>
       <div>
-        <label class="board-field-label">タイトル <span style="color:var(--crimson);">*</span></label>
-        <input type="text" id="bm-company" class="board-field-input" placeholder="例：志望動機（総合商社）">
+        <label class="board-field-label">企業名 <span style="color:var(--crimson);">*</span></label>
+        <input type="text" id="bm-company" class="board-field-input" placeholder="例：三菱商事">
       </div>
       <div>
         <label class="board-field-label">設問 <span style="color:var(--crimson);">*</span></label>

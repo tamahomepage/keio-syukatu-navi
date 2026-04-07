@@ -347,7 +347,7 @@
   const PRIORITY_KEY  = 'priority';
   const FILES_KEY     = 'files';
   const BOOKS_KEY     = 'books';
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
   const LENDING_FORM  = 'https://docs.google.com/forms/d/e/1FAIpQLScmV_ubANH5RNIHD_wEH3yakHbs5YqdegrPysSfpFo4veAg4Q/viewform';
 
   // ===== Auth & Nav =====
@@ -507,10 +507,10 @@
     el.innerHTML = rows.map(function(r) {
       var available = !r[2] || r[2].indexOf('可') >= 0 || r[2].toLowerCase().indexOf('available') >= 0;
       var formUrl = LENDING_FORM + '?usp=pp_url&entry.title=' + encodeURIComponent(r[0]||'');
-      var title = (r[0]||'\u2013').replace(/\x3c/g,'&lt;');
-      var author = (r[1]||'').replace(/\x3c/g,'&lt;');
-      var status = (r[2]||'\u2013').replace(/\x3c/g,'&lt;');
-      var holder = r[3] ? r[3].replace(/\x3c/g,'&lt;') : '';
+      var title = escHtml(r[0] || '\u2013');
+      var author = escHtml(r[1] || '');
+      var status = escHtml(r[2] || '\u2013');
+      var holder = r[3] ? escHtml(r[3]) : '';
       return '<div class="book-card">'
         + '<div class="book-title">' + title + '</div>'
         + '<div class="book-author">' + author + '</div>'

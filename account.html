@@ -656,6 +656,7 @@
   <div class="nav-links" id="nav-links">
     <a href="index.html" class="nav-link">トップへ戻る</a>
     <a href="members.html" class="nav-link">会員ページ</a>
+    <a href="match.html" class="nav-link primary">企業マッチング</a>
   </div>
 </nav>
 
@@ -665,8 +666,8 @@
       <div class="eyebrow">PERSONAL ACCOUNT</div>
       <h1 class="hero-title">就活の動きを、<br><span>自分のアカウント</span>でつなぐ。</h1>
       <p class="hero-desc">
-        会員ページの機能をひとつのアカウントで管理できます。
-        アカウント情報はサーバー側に保存され、個人アカウント経由で会員ページに反映されます。
+        会員ページ、企業マッチング、気になる企業の保存をひとつのアカウントで管理できます。
+        アカウント情報と「気になる企業」はサーバー側に保存され、個人アカウント経由で会員ページに反映されます。
       </p>
 
       <div class="status-card">
@@ -678,7 +679,11 @@
       <div class="intro-list">
         <div class="intro-item">
           <div class="intro-item-title">会員限定ページの入口を一本化</div>
-          <div class="intro-item-desc">共通パスワードではなく、個人ごとのログインで会員ページに入れます。</div>
+          <div class="intro-item-desc">共通パスワードではなく、個人ごとのログインで会員ページと企業マッチングに入れます。</div>
+        </div>
+        <div class="intro-item">
+          <div class="intro-item-title">気になる企業を個人ごとに保存</div>
+          <div class="intro-item-desc">企業マッチングで付けた「気になる」はアカウント単位でサーバー保存され、別端末でログインしても引き継げます。</div>
         </div>
         <div class="intro-item">
           <div class="intro-item-title">登録時に必要な情報を整理</div>
@@ -865,7 +870,7 @@
       </div>
 
       <div class="quick-launch">
-        <div class="quick-launch-copy" id="members-launch-copy">現行の会員ページにそのまま入りつつ、選考情報、締切リマインダーがあなたのアカウントに応じて反映されます。</div>
+        <div class="quick-launch-copy" id="members-launch-copy">現行の会員ページにそのまま入りつつ、気になる企業の選考情報、企業ノート、締切リマインダーがあなたのアカウントに応じて反映されます。</div>
         <a href="members.html" class="submit-btn" id="members-launch-btn" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">会員ページを開く</a>
       </div>
 
@@ -874,6 +879,11 @@
           <div class="quick-link-label">MEMBERS</div>
           <div class="quick-link-title">会員ページ</div>
           <div class="quick-link-desc">選考情報、限定資料、イベント情報をまとめて確認できます。</div>
+        </a>
+        <a href="match.html" class="quick-link">
+          <div class="quick-link-label">MATCHING</div>
+          <div class="quick-link-title">企業マッチング</div>
+          <div class="quick-link-desc">気になる企業を自分のアカウントで保存しながら探せます。</div>
         </a>
         <a href="members.html#interview-prep-section" class="quick-link">
           <div class="quick-link-label">INTERVIEW</div>
@@ -948,20 +958,38 @@
             <span class="field-help" id="profile-line-qr-status">変更する場合だけ再アップロードしてください。</span>
           </label>
 
-          <label class="field-group">
+          <div class="field-group" style="border:1px solid rgba(10,26,62,0.08);padding:1rem;margin-top:0.5rem;">
             <span class="field-label">LINE通知</span>
-            <div style="display:flex;align-items:center;gap:0.8rem;">
-              <input type="checkbox" name="lineNotify" style="width:18px;height:18px;" disabled>
-              <span class="field-help">LINE Notifyで締切リマインダーや新着通知を受け取る（今後実装予定）</span>
+            <span class="field-help" style="margin-bottom:0.6rem;display:block;">LINE Notifyで締切リマインダーや新着コメントの通知を受け取れます。</span>
+            <div style="margin-bottom:0.6rem;">
+              <input class="field-input" type="text" id="line-notify-token" placeholder="LINE Notifyトークンを貼り付け">
             </div>
-          </label>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+              <button type="button" class="subtle-btn" onclick="saveLineToken()" style="font-size:0.78rem;">トークンを保存</button>
+              <a href="https://notify-bot.line.me/my/" target="_blank" rel="noopener noreferrer" style="font-size:0.72rem;color:var(--crimson);text-decoration:underline;">トークンを発行する（LINE Notify公式）</a>
+            </div>
+            <div id="line-notify-status" style="font-size:0.72rem;color:var(--text-muted);margin-top:0.4rem;"></div>
+            <details style="margin-top:0.6rem;">
+              <summary style="font-size:0.72rem;color:var(--text-muted);cursor:pointer;">設定方法</summary>
+              <ol style="font-size:0.72rem;color:var(--text-muted);line-height:1.8;margin:0.5rem 0 0 1.2rem;">
+                <li><a href="https://notify-bot.line.me/my/" target="_blank" rel="noopener noreferrer" style="color:var(--crimson);">LINE Notify</a>にログイン</li>
+                <li>「トークンを発行する」をクリック</li>
+                <li>トークン名に「就活ナビ」、通知先に「1:1でLINE Notifyから通知を受け取る」を選択</li>
+                <li>発行されたトークンをコピーして上の欄に貼り付け</li>
+                <li>「トークンを保存」を押す → テスト通知が届けば完了</li>
+              </ol>
+            </details>
+          </div>
 
           <button class="submit-btn" type="submit">プロフィールを保存する</button>
         </form>
       </div>
 
       <div class="settings-block" id="liked-companies-block" style="display:none;">
+        <h3 class="settings-title">気になる企業リスト</h3>
+        <p class="settings-sub">企業マッチングで「気になる」した企業の一覧です。</p>
         <div id="liked-companies-list" style="display:grid; gap:0.5rem;"></div>
+        <a href="match.html" style="display:inline-block; margin-top:1rem; font-size:0.8rem; color:var(--crimson); font-weight:700; text-decoration:underline; text-underline-offset:3px;">企業マッチングへ →</a>
       </div>
 
       <div class="settings-block">
@@ -1713,7 +1741,7 @@
   function updateIntroForUser(user) {
     if (user) {
       statusTitle.textContent = user.displayName + ' さんでログイン中';
-      statusDesc.textContent = '会員ページをそのまま開けます。LINE情報の変更もこの画面から行えます。';
+      statusDesc.textContent = '会員ページと企業マッチングをそのまま開けます。志望企業やLINE情報の変更もこの画面から行えます。';
     } else if (returnTo) {
       statusTitle.textContent = '会員機能を使う準備ができています';
       statusDesc.textContent = 'ログインまたは登録が完了すると、元のページへそのまま戻れます。';
@@ -1764,8 +1792,8 @@
     document.getElementById('created-at').textContent = KeioNaviAuth.formatDate(user.createdAt) || '-';
     document.getElementById('updated-at').textContent = KeioNaviAuth.formatDate(user.updatedAt) || '-';
     document.getElementById('members-launch-copy').textContent = likedCount
-      ? '現行の会員ページに入るだけで、選考情報が優先表示され、締切リマインダーも追いやすくなります。'
-      : '現行の会員ページにそのまま入れます。選考情報・締切リマインダーを確認できます。';
+      ? '現行の会員ページに入るだけで、気になる企業 ' + likedCount + ' 社に合わせて選考情報が優先表示され、企業ノートと締切リマインダーも追いやすくなります。'
+      : '現行の会員ページにはそのまま入れます。先に企業マッチでいいねしておくと、その会員ページの中で選考情報・企業ノート・締切リマインダーが個別化されます。';
 
     field(profileForm, 'email').value = user.email || '';
     field(profileForm, 'displayName').value = user.displayName || '';
@@ -1800,7 +1828,10 @@
           <span style="font-size:0.65rem; color:var(--crimson); font-weight:700;">♥</span>
         </div>`).join('');
     } else {
-      likedList.innerHTML = '';
+      likedList.innerHTML = `<div style="text-align:center; padding:1.2rem; color:var(--text-muted); font-size:0.82rem; line-height:2;">
+        まだ気になる企業がありません。<br>
+        <a href="match.html" style="display:inline-block; margin-top:0.5rem; padding:0.45rem 1.1rem; background:var(--navy); color:white; font-size:0.75rem; font-weight:700; text-decoration:none; letter-spacing:0.05em;">企業マッチングを試す →</a>
+      </div>`;
     }
 
     const target = returnTo || '';
@@ -1815,12 +1846,14 @@
       navLinks.innerHTML = `
         <a href="index.html" class="nav-link">トップへ戻る</a>
         <a href="members.html" class="nav-link">会員ページ</a>
+        <a href="match.html" class="nav-link primary">企業マッチング</a>
       `;
       return;
     }
 
     navLinks.innerHTML = `
       <a href="members.html" class="nav-link">会員ページ</a>
+      <a href="match.html" class="nav-link primary">企業マッチング</a>
       <a href="index.html" class="nav-link">${escHtml(user.displayName)} さん</a>
     `;
   }
@@ -2064,6 +2097,21 @@
     document.getElementById('referral-count').textContent = '紹介実績: ' + (result.referralCount || 0) + '人';
   }
 
+  async function saveLineToken() {
+    var token = document.getElementById('line-notify-token').value.trim();
+    var statusEl = document.getElementById('line-notify-status');
+    statusEl.textContent = '保存中...';
+    try {
+      var data = await KeioNaviAuth.postToGas({ action: 'authSaveLineNotifyToken', sessionToken: KeioNaviAuth.getSessionToken(), lineNotifyToken: token });
+      statusEl.textContent = data.message || (data.status === 'ok' ? '保存しました' : 'エラー');
+      statusEl.style.color = data.status === 'ok' ? 'var(--success)' : 'var(--crimson)';
+    } catch(e) {
+      statusEl.textContent = 'エラー: ' + e.message;
+      statusEl.style.color = 'var(--crimson)';
+    }
+  }
+  window.saveLineToken = saveLineToken;
+
   function copyReferralCode() {
     const code = document.getElementById('referral-code').textContent;
     navigator.clipboard.writeText(code).then(() => showFlash('紹介コードをコピーしました。', 'success'));
@@ -2180,7 +2228,6 @@
         notifStatus.textContent = 'テスト通知を送信しました。';
         notifStatus.style.color = 'var(--success)';
       } catch (e) {
-        // SW経由で送信
         if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
           navigator.serviceWorker.ready.then(function (reg) {
             reg.showNotification('就活ナビ テスト通知', {

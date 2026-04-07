@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>新入生の方へ | 慶應就活ナビ</title>
 <meta name="description" content="慶應就活ナビへようこそ。就活を、ひとりで戦わなくていい。新入生向けの就活支援コミュニティ紹介ページです。">
 
@@ -307,7 +307,7 @@
       <div class="why-card reveal">
         <div class="why-num">01</div>
         <div class="why-title">業界研究は今から</div>
-        <div class="why-desc">「どんな仕事があるのか」を知らないまま3年生になる人がほとんど。就活の情報を今から集めておくだけで、視野が広がります。</div>
+        <div class="why-desc">「どんな仕事があるのか」を知らないまま3年生になる人がほとんど。企業分析ノートを今から読んでおくだけで、視野が広がります。</div>
       </div>
       <div class="why-card reveal" style="transition-delay:0.1s;">
         <div class="why-num">02</div>
@@ -335,8 +335,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
         <div>
-          <div class="get-title">就活情報ノート</div>
-          <div class="get-desc">業界ごとの特徴・選考フロー・よくある質問などをまとめたノート。業界研究の起点として今すぐ使えます。</div>
+          <div class="get-title">企業分析ノート</div>
+          <div class="get-desc">三菱商事・マッキンゼー・電通など、主要企業の事業内容・強み弱み・選考フローをまとめたノート。業界研究の起点として今すぐ使えます。</div>
         </div>
       </div>
       <div class="get-card">
@@ -354,8 +354,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </div>
         <div>
-          <div class="get-title">就活知識クイズ</div>
-          <div class="get-desc">就活に関する知識を問う4択クイズ。楽しみながら業界・選考の知識が身につきます。</div>
+          <div class="get-title">企業研究クイズ</div>
+          <div class="get-desc">蓄積された企業ノートをもとに、どの企業かを当てる4択クイズ。楽しみながら業界・企業知識が身につきます。</div>
         </div>
       </div>
       <div class="get-card">
@@ -391,7 +391,7 @@
     <div class="faq-list">
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)">1年生でも参加できますか？</div>
-        <div class="faq-a">もちろんです。むしろ早く入るほど得られる情報量が増えます。就活は3年生になってから始めるイメージがありますが、業界研究・選考情報の確認・先輩との繋がりは今から使えます。</div>
+        <div class="faq-a">もちろんです。むしろ早く入るほど得られる情報量が増えます。就活は3年生になってから始めるイメージがありますが、業界研究・企業ノート閲覧・先輩との繋がりは今から使えます。</div>
       </div>
       <div class="faq-item">
         <div class="faq-q" onclick="toggleFaq(this)">費用はかかりますか？</div>
@@ -441,7 +441,7 @@
   }
 
   // ===== 新歓イベント スプシ連携（GASプロキシ経由）=====
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
 
   async function loadOrientationEvents() {
     const el = document.getElementById('orientation-events');
@@ -500,5 +500,5 @@
     document.getElementById('mobile-menu').classList.remove('open');
   }
 </script>
-</body>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
 </html>

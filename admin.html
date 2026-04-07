@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理者ダッシュボード | 慶應就活ナビ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --navy-light: #142254;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --text-main: #1a1a2e;
+    --text-muted: #6b7280;
+    --bg: #f4f1ec;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    padding-bottom: 70px;
+  }
+  .admin-header {
+    background: linear-gradient(135deg, #0a1a3e 0%, #142254 100%);
+    padding: 2rem 1.2rem 1.5rem;
+    color: white;
+  }
+  .admin-header-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .admin-header-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 0.2rem;
+  }
+  .admin-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+  }
+  .admin-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .admin-stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .admin-stat-num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--navy);
+    font-family: 'Playfair Display', serif;
+  }
+  .admin-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+    font-weight: 600;
+  }
+  .admin-stat-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+  }
+  .admin-loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  #admin-content { display: none; }
+
+  /* アクティビティ分析セクション */
+  .analytics-section {
+    margin-top: 2rem;
+  }
+  .analytics-section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--gold);
+  }
+  .analytics-card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 1rem;
+  }
+  .analytics-card-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.8rem;
+  }
+  .funnel-step {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0ece6;
+  }
+  .funnel-step:last-child { border-bottom: none; }
+  .funnel-label {
+    font-size: 0.78rem;
+    color: var(--text-main);
+    flex: 1;
+  }
+  .funnel-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--navy);
+    min-width: 40px;
+    text-align: right;
+  }
+  .funnel-bar-bg {
+    flex: 1;
+    max-width: 120px;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .funnel-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--crimson));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+  .feature-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #f0ece6;
+    font-size: 0.8rem;
+  }
+  .feature-row:last-child { border-bottom: none; }
+  .feature-name { color: var(--text-main); }
+  .feature-count {
+    font-weight: 700;
+    color: var(--navy);
+    font-family: 'Playfair Display', serif;
+  }
+  #analytics-loading {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.22rem 0.55rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    border-radius: 999px;
+    background: rgba(10, 26, 62, 0.08);
+    color: var(--navy);
+  }
+  .status-pill.warn {
+    background: rgba(201, 168, 76, 0.16);
+    color: #7a5f10;
+  }
+  .status-pill.danger {
+    background: rgba(192, 0, 26, 0.1);
+    color: var(--crimson);
+  }
+  .report-list,
+  .audit-list {
+    display: grid;
+    gap: 0.8rem;
+  }
+  .report-card,
+  .audit-row {
+    background: var(--gray);
+    border-left: 3px solid rgba(10, 26, 62, 0.14);
+    padding: 0.95rem 1rem;
+  }
+  .report-card.open { border-left-color: var(--gold); }
+  .report-head,
+  .audit-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .report-title,
+  .audit-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .report-meta,
+  .audit-meta,
+  .report-body {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+  .report-body {
+    margin-top: 0.55rem;
+    color: var(--text-main);
+  }
+  .report-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.7rem;
+  }
+  .mini-btn {
+    border: 1px solid rgba(10, 26, 62, 0.14);
+    background: white;
+    color: var(--navy);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.45rem 0.8rem;
+    cursor: pointer;
+  }
+  .mini-btn.warn {
+    border-color: rgba(201, 168, 76, 0.45);
+    color: #7a5f10;
+  }
+  .mini-btn.danger {
+    border-color: rgba(192, 0, 26, 0.28);
+    color: var(--crimson);
+  }
+  @media (max-width: 640px) {
+    .admin-grid {
+      grid-template-columns: 1fr;
+    }
+    .admin-container {
+      padding-left: 0.85rem;
+      padding-right: 0.85rem;
+    }
+    .funnel-step,
+    .report-head,
+    .audit-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .funnel-bar-bg {
+      max-width: none;
+      width: 100%;
+    }
+    .report-actions {
+      width: 100%;
+    }
+    .mini-btn {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-header">
+  <div style="max-width:600px;margin:0 auto;">
+    <div class="admin-header-label">ADMIN DASHBOARD</div>
+    <div class="admin-header-title">管理者ダッシュボード</div>
+    <div style="width:40px;height:2px;background:var(--gold);margin-top:0.5rem;"></div>
+  </div>
+</div>
+
+<div class="admin-container">
+  <div id="admin-loading" class="admin-loading">読み込み中...</div>
+  <div id="admin-content">
+    <div class="admin-grid">
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">👥</div>
+        <div class="admin-stat-num" id="stat-users">-</div>
+        <div class="admin-stat-label">登録ユーザー</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">📝</div>
+        <div class="admin-stat-num" id="stat-es">-</div>
+        <div class="admin-stat-label">ES保存数</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">💪</div>
+        <div class="admin-stat-num" id="stat-gk">-</div>
+        <div class="admin-stat-label">ガクチカ保存数</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">💬</div>
+        <div class="admin-stat-num" id="stat-board">-</div>
+        <div class="admin-stat-label">掲示板投稿数</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">📊</div>
+        <div class="admin-stat-num" id="stat-timeline">-</div>
+        <div class="admin-stat-label">タイムライン</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">⭐</div>
+        <div class="admin-stat-num" id="stat-nps">-</div>
+        <div class="admin-stat-label">NPS平均 (<span id="stat-nps-count">0</span>件)</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">✉️</div>
+        <div class="admin-stat-num" id="stat-unverified">-</div>
+        <div class="admin-stat-label">未認証ユーザー</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">🔐</div>
+        <div class="admin-stat-num" id="stat-sessions">-</div>
+        <div class="admin-stat-label">有効セッション</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">🚨</div>
+        <div class="admin-stat-num" id="stat-reports">-</div>
+        <div class="admin-stat-label">未対応の通報</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">🙈</div>
+        <div class="admin-stat-num" id="stat-hidden">-</div>
+        <div class="admin-stat-label">非表示コンテンツ</div>
+      </div>
+    </div>
+
+    <!-- アクティビティ分析セクション -->
+    <div class="analytics-section" id="analytics-section" style="display:none;">
+      <div class="analytics-section-title">Usage Analytics</div>
+
+      <div class="analytics-card">
+        <div class="analytics-card-title">PV数（直近7日間）</div>
+        <div style="text-align:center;">
+          <span id="analytics-pv" style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--navy);">-</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);margin-left:0.3rem;">views</span>
+        </div>
+      </div>
+
+      <div class="analytics-card">
+        <div class="analytics-card-title">利用機能ランキング（直近7日）</div>
+        <div id="analytics-features">
+          <div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:0.5rem;">データなし</div>
+        </div>
+      </div>
+
+      <div class="analytics-card">
+        <div class="analytics-card-title">ユーザーファネル</div>
+        <div id="analytics-funnel">
+          <div class="funnel-step">
+            <span class="funnel-label">Registration</span>
+            <span class="funnel-count" id="funnel-registered">-</span>
+            <div class="funnel-bar-bg"><div class="funnel-bar-fill" id="funnel-bar-registered" style="width:0%"></div></div>
+          </div>
+          <div class="funnel-step">
+            <span class="funnel-label">First Gakuchika</span>
+            <span class="funnel-count" id="funnel-gakuchika">-</span>
+            <div class="funnel-bar-bg"><div class="funnel-bar-fill" id="funnel-bar-gakuchika" style="width:0%"></div></div>
+          </div>
+          <div class="funnel-step">
+            <span class="funnel-label">First ES</span>
+            <span class="funnel-count" id="funnel-es">-</span>
+            <div class="funnel-bar-bg"><div class="funnel-bar-fill" id="funnel-bar-es" style="width:0%"></div></div>
+          </div>
+          <div class="funnel-step">
+            <span class="funnel-label">First Interview Prep</span>
+            <span class="funnel-count" id="funnel-interview">-</span>
+            <div class="funnel-bar-bg"><div class="funnel-bar-fill" id="funnel-bar-interview" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="analytics-loading" style="display:none;">分析データ読み込み中...</div>
+
+    <div class="analytics-section">
+      <div class="analytics-section-title">Operations</div>
+
+      <div class="analytics-card">
+        <div class="analytics-card-title">モデレーションキュー</div>
+        <div id="moderation-summary" style="font-size:0.76rem; color:var(--text-muted); line-height:1.8; margin-bottom:0.9rem;">読み込み中...</div>
+        <div id="moderation-queue" class="report-list">
+          <div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:0.8rem 0;">読み込み中...</div>
+        </div>
+      </div>
+
+      <div class="analytics-card">
+        <div class="analytics-card-title">認証監査ログ</div>
+        <div id="audit-log" class="audit-list">
+          <div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:0.8rem 0;">読み込み中...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  var GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
+  var sessionToken = '';
+
+  function escHtml(value) {
+    var div = document.createElement('div');
+    div.textContent = value == null ? '' : String(value);
+    return div.innerHTML;
+  }
+
+  function formatDateTime(value) {
+    if (!value) return '';
+    var date = new Date(value);
+    if (isNaN(date)) return '';
+    return date.toLocaleString('ja-JP', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  function setText(id, value) {
+    document.getElementById(id).textContent = value;
+  }
+
+  async function callAdminApi(action, extra) {
+    return KeioNaviAuth.postToGas(Object.assign({
+      action: action,
+      sessionToken: sessionToken
+    }, extra || {}));
+  }
+
+  async function loadAdminStats() {
+    try {
+      var data = await callAdminApi('getAdminStats');
+      var s = data.stats || {};
+      setText('stat-users', s.userCount || 0);
+      setText('stat-es', s.esCount || 0);
+      setText('stat-gk', s.gkCount || 0);
+      setText('stat-board', s.boardCount || 0);
+      setText('stat-timeline', s.tlCount || 0);
+      setText('stat-nps', s.npsAvg || 0);
+      setText('stat-nps-count', s.npsCount || 0);
+      setText('stat-unverified', s.unverifiedUserCount || 0);
+      setText('stat-sessions', s.activeSessionCount || 0);
+      setText('stat-reports', s.pendingReportCount || 0);
+      setText('stat-hidden', s.hiddenContentCount || 0);
+      document.getElementById('admin-loading').style.display = 'none';
+      document.getElementById('admin-content').style.display = 'block';
+    } catch (error) {
+      document.getElementById('admin-loading').textContent = error && error.message ? error.message : 'データの取得に失敗しました。';
+    }
+  }
+
+  async function loadAnalytics() {
+    var analyticsLoading = document.getElementById('analytics-loading');
+    analyticsLoading.style.display = 'block';
+
+    try {
+      var data = await callAdminApi('getActivitySummary');
+      var s = data.summary || {};
+      document.getElementById('analytics-pv').textContent = s.pageViews7d || 0;
+
+      var featEl = document.getElementById('analytics-features');
+      if (s.topFeatures && s.topFeatures.length > 0) {
+        var featHtml = '';
+        var featureLabels = {
+          'gakuchika_create': 'ガクチカ作成',
+          'gakuchika_edit': 'ガクチカ編集',
+          'es_save': 'ES保存',
+          'es_review': 'ES添削',
+          'es_rewrite': 'ESリライト',
+          'interview_practice': '面接練習',
+          'company_research': '企業研究',
+          'company_save': '企業保存'
+        };
+        s.topFeatures.forEach(function(f) {
+          var label = featureLabels[f.feature] || f.feature;
+          featHtml += '<div class="feature-row"><span class="feature-name">' + escHtml(label) + '</span><span class="feature-count">' + escHtml(f.count) + '</span></div>';
+        });
+        featEl.innerHTML = featHtml;
+      }
+
+      var funnel = s.funnel || {};
+      var maxVal = funnel.registered || 1;
+      setText('funnel-registered', funnel.registered || 0);
+      setText('funnel-gakuchika', funnel.firstGakuchika || 0);
+      setText('funnel-es', funnel.firstEs || 0);
+      setText('funnel-interview', funnel.firstInterview || 0);
+      document.getElementById('funnel-bar-registered').style.width = '100%';
+      document.getElementById('funnel-bar-gakuchika').style.width = Math.round(((funnel.firstGakuchika || 0) / maxVal) * 100) + '%';
+      document.getElementById('funnel-bar-es').style.width = Math.round(((funnel.firstEs || 0) / maxVal) * 100) + '%';
+      document.getElementById('funnel-bar-interview').style.width = Math.round(((funnel.firstInterview || 0) / maxVal) * 100) + '%';
+
+      analyticsLoading.style.display = 'none';
+      document.getElementById('analytics-section').style.display = 'block';
+    } catch (error) {
+      analyticsLoading.textContent = error && error.message ? error.message : '分析データの読み込みエラー。';
+    }
+  }
+
+  function renderModerationQueue(data) {
+    var summaryEl = document.getElementById('moderation-summary');
+    var queueEl = document.getElementById('moderation-queue');
+    var reports = (data && data.reports) || [];
+    var summary = (data && data.summary) || {};
+    summaryEl.innerHTML = '未対応の通報: <strong style="color:var(--navy);">' + escHtml(summary.openCount || 0) + '</strong>件 / 非表示中のコンテンツ: <strong style="color:var(--navy);">' + escHtml(summary.hiddenCount || 0) + '</strong>件';
+
+    if (!reports.length) {
+      queueEl.innerHTML = '<div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:0.8rem 0;">通報はまだありません。</div>';
+      return;
+    }
+
+    var typeLabels = {
+      board_post: 'ES添削掲示板',
+      consultation: '相談掲示板',
+      qa_question: '質問掲示板',
+      experience: '体験記',
+      practice_request: '練習募集'
+    };
+
+    queueEl.innerHTML = reports.map(function(report) {
+      var open = report.status === 'open';
+      var statusClass = open ? 'warn' : (report.resolution === 'hidden' ? 'danger' : '');
+      var statusLabel = open ? '未対応' : (report.resolution === 'hidden' ? '非表示対応' : report.resolution === 'restored' ? '再表示対応' : '却下');
+      var contentState = report.contentState === 'hidden' ? 'hidden' : 'visible';
+      var contentStateLabel = contentState === 'hidden' ? '現在は非表示' : '現在は表示中';
+      var actions = '';
+      if (open) {
+        actions = '<div class="report-actions">';
+        if (contentState !== 'hidden') {
+          actions += '<button class="mini-btn danger" onclick="resolveModerationReport(\'' + escHtml(report.id) + '\',\'hidden\')">非表示にする</button>';
+        }
+        if (contentState === 'hidden') {
+          actions += '<button class="mini-btn warn" onclick="resolveModerationReport(\'' + escHtml(report.id) + '\',\'restored\')">再表示にする</button>';
+        }
+        actions += '<button class="mini-btn" onclick="resolveModerationReport(\'' + escHtml(report.id) + '\',\'dismissed\')">問題なしで閉じる</button>';
+        actions += '</div>';
+      }
+      var resolutionMeta = open ? '' : '<div class="report-meta" style="margin-top:0.45rem;">対応: ' + escHtml(statusLabel) + ' / ' + escHtml(formatDateTime(report.resolvedAt) || '-') + '</div>';
+      return '<div class="report-card' + (open ? ' open' : '') + '">'
+        + '<div class="report-head">'
+        + '<div>'
+        + '<div class="report-title">' + escHtml(typeLabels[report.contentType] || report.contentType || '投稿') + ' / ' + escHtml(report.reason || '理由未設定') + '</div>'
+        + '<div class="report-meta">通報者: ' + escHtml(report.reporterName || '不明') + ' / 対象: ' + escHtml(report.targetUserName || report.targetUserId || '不明') + ' / 受付: ' + escHtml(formatDateTime(report.createdAt) || '-') + '</div>'
+        + '</div>'
+        + '<div style="display:flex; gap:0.45rem; flex-wrap:wrap;">'
+        + '<span class="status-pill ' + statusClass + '">' + escHtml(statusLabel) + '</span>'
+        + '<span class="status-pill ' + (contentState === 'hidden' ? 'danger' : '') + '">' + escHtml(contentStateLabel) + '</span>'
+        + '</div>'
+        + '</div>'
+        + '<div class="report-body">' + escHtml(report.details || '補足情報はありません。') + '</div>'
+        + resolutionMeta
+        + actions
+        + '</div>';
+    }).join('');
+  }
+
+  async function loadModerationQueue() {
+    var queueEl = document.getElementById('moderation-queue');
+    queueEl.innerHTML = '<div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:0.8rem 0;">読み込み中...</div>';
+    try {
+      var data = await callAdminApi('getModerationQueue');
+      renderModerationQueue(data);
+    } catch (error) {
+      queueEl.innerHTML = '<div style="font-size:0.78rem; color:var(--crimson); text-align:center; padding:0.8rem 0;">' + escHtml(error && error.message ? error.message : 'モデレーションデータを取得できませんでした。') + '</div>';
+    }
+  }
+
+  async function loadAuthAuditLog() {
+    var auditEl = document.getElementById('audit-log');
+    auditEl.innerHTML = '<div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:0.8rem 0;">読み込み中...</div>';
+    try {
+      var data = await callAdminApi('getAuthAuditLog');
+      var entries = data.entries || [];
+      if (!entries.length) {
+        auditEl.innerHTML = '<div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:0.8rem 0;">監査ログはまだありません。</div>';
+        return;
+      }
+      auditEl.innerHTML = entries.map(function(entry) {
+        return '<div class="audit-row">'
+          + '<div class="audit-head">'
+          + '<div class="audit-title">' + escHtml(entry.action || '-') + '</div>'
+          + '<span class="status-pill ' + (entry.status === 'error' ? 'danger' : '') + '">' + escHtml(entry.status || '-') + '</span>'
+          + '</div>'
+          + '<div class="audit-meta">時刻: ' + escHtml(formatDateTime(entry.timestamp) || '-') + ' / userId: ' + escHtml(entry.userId || '-') + ' / session: ' + escHtml(entry.sessionRef || '-') + '</div>'
+          + '<div class="audit-meta" style="margin-top:0.35rem;">detail: ' + escHtml(entry.detail || '-') + '</div>'
+          + '</div>';
+      }).join('');
+    } catch (error) {
+      auditEl.innerHTML = '<div style="font-size:0.78rem; color:var(--crimson); text-align:center; padding:0.8rem 0;">' + escHtml(error && error.message ? error.message : '監査ログを取得できませんでした。') + '</div>';
+    }
+  }
+
+  async function resolveModerationReport(reportId, resolution) {
+    var note = window.prompt('対応メモがあれば入力してください。（任意）') || '';
+    try {
+      await callAdminApi('resolveModerationReport', {
+        reportId: reportId,
+        resolution: resolution,
+        note: note
+      });
+      await Promise.all([loadAdminStats(), loadModerationQueue(), loadAuthAuditLog()]);
+    } catch (error) {
+      window.alert(error && error.message ? error.message : '対応を保存できませんでした。');
+    }
+  }
+
+  window.resolveModerationReport = resolveModerationReport;
+
+  (async function init() {
+    var user = KeioNaviAuth.requireAuth({ returnTo: 'admin.html' });
+    if (!user) return;
+    sessionToken = KeioNaviAuth.getSessionToken();
+    if (!sessionToken) return;
+
+    await loadAdminStats();
+    loadAnalytics();
+    loadModerationQueue();
+    loadAuthAuditLog();
+  })();
+</script>
+<style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
+<nav class="bottom-tab-bar">
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>マイページ</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="community.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
+</nav>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
+</html>

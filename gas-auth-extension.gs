@@ -2591,13 +2591,18 @@ function writeProgress_(payload) {
     var idx = findRecordIndex_(rows, function (row) {
       return row.id === id && row.userId === session.userId;
     });
+    if (idx < 0) {
+      idx = findRecordIndex_(rows, function (row) {
+        return row.company === company && row.userId === session.userId;
+      });
+    }
     if (idx >= 0) {
       sheet.getRange(idx + 2, 3, 1, 6).setValues([[
         rowData.company, rowData.industry, rowData.deadline,
         rowData.stage, rowData.status, rowData.memo
       ]]);
       sheet.getRange(idx + 2, 10).setValue(now);
-      return { status: 'ok', id: id };
+      return { status: 'ok', id: rows[idx].id || id };
     }
   }
 

@@ -366,7 +366,7 @@
   .gd-fb-card-header { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
   .gd-fb-date { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
   .gd-fb-theme { font-family: 'Noto Serif JP', serif; font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
-  .gd-fb-role-badge { display: inline-block; padding: 0.15rem 0.6rem; font-size: 0.7rem; font-weight: 700; border-radius: 2px; }
+  .gd-fb-role-badge { display: inline-block; padding: 0.15rem 0.6rem; font-size: 0.7rem; font-weight: 700; border-radius: 2px; letter-spacing: 0.04em; }
   .gd-fb-role-司会 { background: var(--crimson); color: white; }
   .gd-fb-role-書記 { background: var(--navy); color: white; }
   .gd-fb-role-タイムキーパー { background: var(--gold); color: var(--text); }
@@ -379,7 +379,7 @@
   .gd-fb-card-actions button { background: none; border: 1px solid rgba(10,26,62,0.15); padding: 0.3rem 0.7rem; font-size: 0.72rem; font-family: 'Noto Sans JP', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
   .gd-fb-card-actions button:hover { border-color: var(--navy); color: var(--navy); }
   .gd-fb-card-actions button.gd-fb-del:hover { border-color: var(--crimson); color: var(--crimson); }
-  .gd-fb-add-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.2rem; background: transparent; border: 1px solid rgba(10,26,62,0.2); color: var(--navy); font-family: 'Noto Sans JP', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem; transition: all 0.25s; }
+  .gd-fb-add-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.2rem; background: transparent; border: 1px solid rgba(10,26,62,0.2); color: var(--navy); font-family: 'Noto Sans JP', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; transition: all 0.25s; margin-bottom: 1rem; }
   .gd-fb-add-btn:hover { background: var(--navy); color: white; }
   .gd-fb-modal-overlay { display: none; position: fixed; inset: 0; z-index: 250; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
   .gd-fb-modal-overlay.open { display: flex; }
@@ -393,10 +393,13 @@
   .gd-fb-stars-input { display: flex; gap: 0.3rem; cursor: pointer; }
   .gd-fb-stars-input span { font-size: 1.4rem; color: #ccc; transition: color 0.15s; user-select: none; }
   .gd-fb-stars-input span.filled { color: var(--gold); }
+  .gd-fb-stars-input span:hover { color: var(--gold); }
   .gd-fb-modal-actions { display: flex; gap: 0.8rem; margin-top: 0.5rem; }
-  .gd-fb-modal-actions button { flex: 1; padding: 0.8rem; font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; }
+  .gd-fb-modal-actions button { flex: 1; padding: 0.8rem; font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: opacity 0.2s; letter-spacing: 0.04em; }
   .gd-fb-save-btn { background: var(--navy); color: white; }
+  .gd-fb-save-btn:hover { opacity: 0.9; }
   .gd-fb-cancel-btn { background: rgba(10,26,62,0.06); color: var(--text-muted); }
+  .gd-fb-cancel-btn:hover { opacity: 0.8; }
   .gd-fb-empty { text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.85rem; line-height: 1.8; }
 </style>
 </head>
@@ -450,15 +453,15 @@
         </div>
       </div>
       <div class="m-section-body">
-        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.65;">深掘り質問をAIが自動生成。回答をメモしてAIに添削してもらい、面接本番に備えましょう。</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.65;">企業別に深掘り質問を自動生成。回答をメモしてAIに添削してもらい、面接本番に備えましょう。</div>
 
         <!-- 企業チップ -->
         <div class="ip-company-chips" id="ip-company-chips">
-          <button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ 企業・テーマを追加</button>
+          <button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ 企業を追加</button>
         </div>
 
         <!-- 企業が未登録のとき -->
-        <div class="ip-empty-company" id="ip-no-company">企業名やテーマを追加して面接対策を始めましょう。</div>
+        <div class="ip-empty-company" id="ip-no-company">企業を追加して面接対策を始めましょう。</div>
 
         <!-- 企業パネル群 -->
         <div id="ip-panels"></div>
@@ -637,16 +640,46 @@
         ※ AI機能はAnthropic社のClaude APIを使用しています。回答は参考情報であり、正確性・完全性を保証するものではありません。重要な判断には必ずご自身で確認してください。
       </div>
 
-      <div style="margin-bottom:1rem;">
-        <label style="font-size:0.78rem;color:var(--text-muted);">面接タイプ</label>
-        <select id="mi-type" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
-          <option value="general">一般面接（自己PR・ガクチカ中心）</option>
-          <option value="motivation">志望動機面接</option>
-          <option value="behavioral">行動面接（困難・挫折経験）</option>
-          <option value="final">最終面接（将来ビジョン）</option>
-        </select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.8rem;">
+        <div>
+          <label style="font-size:0.78rem;color:var(--text-muted);">企業名</label>
+          <input type="text" id="mi-company" placeholder="例: 三菱商事" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;color:var(--text-muted);">コース・職種</label>
+          <input type="text" id="mi-course" placeholder="例: 総合職" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;">
+        <div>
+          <label style="font-size:0.78rem;color:var(--text-muted);">面接タイプ</label>
+          <select id="mi-type" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
+            <option value="general">一般面接（自己PR・ガクチカ中心）</option>
+            <option value="motivation">志望動機面接</option>
+            <option value="behavioral">行動面接（困難・挫折経験）</option>
+            <option value="final">最終面接（将来ビジョン）</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.78rem;color:var(--text-muted);">何次面接</label>
+          <select id="mi-round" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
+            <option value="">指定なし</option>
+            <option value="1次面接">1次面接</option>
+            <option value="2次面接">2次面接</option>
+            <option value="3次面接">3次面接</option>
+            <option value="最終面接">最終面接</option>
+            <option value="リクルーター面談">リクルーター面談</option>
+            <option value="インターン選考">インターン選考</option>
+          </select>
+        </div>
       </div>
 
+      <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.8rem;">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+          <input type="checkbox" id="mi-speak-toggle" checked onchange="miSpeakEnabled=this.checked" style="width:16px;height:16px;">
+          面接官の音声読み上げ
+        </label>
+      </div>
       <button id="mi-start-btn" onclick="startMockInterview()" style="width:100%;padding:0.85rem;background:var(--navy);color:white;border:none;font-size:0.88rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;letter-spacing:0.06em;">模擬面接を始める</button>
 
       <div id="mi-session" style="display:none;margin-top:1.5rem;">
@@ -733,7 +766,7 @@
       <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1rem;">AIがOB訪問で聞くべき質問を提案します。業界・職種を指定するとより具体的な質問が生成されます。</p>
       <div style="margin-bottom:0.8rem;">
         <label style="font-size:0.78rem;color:var(--text-muted);">業界・職種（任意）</label>
-        <input type="text" id="ob-ai-industry" placeholder="例: IT / コンサル / メーカー" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
+        <input type="text" id="ob-ai-industry" placeholder="例: 総合商社 / IT / コンサル" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
       </div>
       <button id="ob-ai-gen-btn" onclick="generateOBQuestions()" style="width:100%;padding:0.7rem;background:var(--navy);color:white;border:none;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;letter-spacing:0.05em;">AIにOB訪問の質問を提案してもらう</button>
       <div id="ob-ai-result" style="display:none;margin-top:1rem;padding:1rem;background:var(--white);border:1px solid rgba(10,26,62,0.1);">
@@ -816,9 +849,15 @@
         </div>
       </div>
       <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.8;margin-bottom:1rem;">AIが入社3年目の社員として応答します。OB訪問の練習や、質問の仕方を磨くのに活用してください。音声入出力にも対応しています。</p>
-      <div style="margin-bottom:0.8rem;">
-        <label style="font-size:0.78rem;color:var(--text-muted);">業界・職種</label>
-        <input type="text" id="ob-rp-industry" placeholder="例: IT企業 エンジニア" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.8rem;">
+        <div>
+          <label style="font-size:0.78rem;color:var(--text-muted);">企業名</label>
+          <input type="text" id="ob-rp-company" placeholder="例: 三井物産" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;color:var(--text-muted);">業界・職種</label>
+          <input type="text" id="ob-rp-industry" placeholder="例: 総合商社 営業" style="width:100%;padding:0.5rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;margin-top:0.3rem;">
+        </div>
       </div>
       <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.8rem;">
         <label style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
@@ -866,27 +905,33 @@
   </div>
 </div>
 
-<!-- 面接対策 テーマ追加・編集モーダル -->
+<!-- 面接対策 企業追加・編集モーダル -->
 <div class="ip-modal-overlay" id="ip-company-modal">
   <div class="ip-modal">
-    <div class="es-modal-title" id="ip-cm-title">企業・テーマを追加する</div>
+    <div class="es-modal-title" id="ip-cm-title">企業を追加する</div>
     <input type="hidden" id="ip-cm-id">
     <div class="ai-form-group">
-      <label class="ai-label">企業名・テーマ <span style="color:var(--crimson)">*</span></label>
-      <input type="text" class="ai-input" id="ip-cm-name" placeholder="例：○○株式会社、商社面接対策、ガクチカ深掘り">
+      <label class="ai-label">企業名 <span style="color:var(--crimson)">*</span></label>
+      <input type="text" class="ai-input" id="ip-cm-name" placeholder="例：三井物産">
     </div>
     <div class="ai-form-group">
-      <label class="ai-label">カテゴリ</label>
-      <input type="text" class="ai-input" id="ip-cm-industry" placeholder="例：自己分析、業界研究">
+      <label class="ai-label">業界</label>
+      <input type="text" class="ai-input" id="ip-cm-industry" placeholder="例：総合商社">
     </div>
     <div class="ai-form-group">
-      <label class="ai-label">メモ</label>
-      <input type="text" class="ai-input" id="ip-cm-position" placeholder="例：よく聞かれる質問を重点的に">
+      <label class="ai-label">職種・コース</label>
+      <input type="text" class="ai-input" id="ip-cm-position" placeholder="例：総合職、デジタル職">
     </div>
-    <div class="ai-form-group" style="display:none;">
+    <div class="ai-form-group">
       <label class="ai-label">選考状況</label>
       <select class="es-modal-select" id="ip-cm-status">
         <option value="">未設定</option>
+        <option value="ES提出前">ES提出前</option>
+        <option value="ES提出済">ES提出済</option>
+        <option value="一次面接">一次面接</option>
+        <option value="二次面接">二次面接</option>
+        <option value="最終面接">最終面接</option>
+        <option value="内定">内定</option>
       </select>
     </div>
     <div class="ai-error-msg" id="ip-cm-error"></div>
@@ -914,9 +959,14 @@
   </div>
 </div>
 
+
+<!-- GDフィードバック追加/編集モーダル -->
 <div class="gd-fb-modal-overlay" id="gd-fb-modal">
   <div class="gd-fb-modal-box">
-    <div class="gd-fb-modal-header"><span class="gd-fb-modal-title" id="gd-fb-modal-title">GDフィードバックを記録</span><button onclick="closeGdFbModal()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">&#10005;</button></div>
+    <div class="gd-fb-modal-header">
+      <span class="gd-fb-modal-title" id="gd-fb-modal-title">GDフィードバックを記録</span>
+      <button onclick="closeGdFbModal()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">&#10005;</button>
+    </div>
     <div class="gd-fb-modal-body">
       <input type="hidden" id="gd-fb-edit-id" value="">
       <div><label>日付</label><input type="date" id="gd-fb-date"></div>
@@ -926,7 +976,10 @@
       <div><label>自分の振り返り</label><textarea id="gd-fb-self" placeholder="自分で感じた良かった点・改善点..."></textarea></div>
       <div><label>自己評価</label><div class="gd-fb-stars-input" id="gd-fb-stars"><span onclick="setGdFbRating(1)">&#9734;</span><span onclick="setGdFbRating(2)">&#9734;</span><span onclick="setGdFbRating(3)">&#9734;</span><span onclick="setGdFbRating(4)">&#9734;</span><span onclick="setGdFbRating(5)">&#9734;</span></div></div>
       <div style="font-size:0.78rem;color:var(--crimson);min-height:1.2em;" id="gd-fb-error"></div>
-      <div class="gd-fb-modal-actions"><button class="gd-fb-cancel-btn" onclick="closeGdFbModal()">キャンセル</button><button class="gd-fb-save-btn" onclick="saveGdFbEntry()">保存</button></div>
+      <div class="gd-fb-modal-actions">
+        <button class="gd-fb-cancel-btn" onclick="closeGdFbModal()">キャンセル</button>
+        <button class="gd-fb-save-btn" onclick="saveGdFbEntry()">保存</button>
+      </div>
     </div>
   </div>
 </div>
@@ -937,8 +990,8 @@
 <script src="auth.js"></script>
 <script>
   // ===== Constants =====
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
 
   var AI_CONSENT_KEY = 'keio_navi_ai_consent_v1';
   function checkAiConsent() {
@@ -1031,7 +1084,7 @@
   const CL_KEY = 'keio_navi_checklist_v1';
   const CL_GROUPS = [
     { title: '面接前の準備', items: [
-      { id:'cl1', text:'業界研究は完了しているか' },
+      { id:'cl1', text:'企業研究は完了しているか' },
       { id:'cl2', text:'自分の強み・弱みを整理したか' },
       { id:'cl3', text:'逆質問を3つ以上準備したか' },
       { id:'cl4', text:'志望動機を1分で話せるか' },
@@ -1163,7 +1216,7 @@
         ipEscHtml(c.name || '無題') + '<span class="ip-company-chip-badge">' + ready + '/' + qs.length + '</span>' +
       '</button>';
     }).join('');
-    el.innerHTML = chips + '<button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ 企業・テーマを追加</button>';
+    el.innerHTML = chips + '<button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">+ 企業を追加</button>';
   }
 
   function ipSelectCompany(id) {
@@ -1338,7 +1391,7 @@
 
   // ── 企業 CRUD ──
   function ipOpenAddCompany() {
-    document.getElementById('ip-cm-title').textContent = '企業・テーマを追加する';
+    document.getElementById('ip-cm-title').textContent = '企業を追加する';
     ['ip-cm-id','ip-cm-name','ip-cm-industry','ip-cm-position'].forEach(function(id) { document.getElementById(id).value = ''; });
     document.getElementById('ip-cm-status').value = '';
     document.getElementById('ip-cm-error').textContent = '';
@@ -1348,7 +1401,7 @@
   function ipOpenEditCompany(id) {
     var c = ipDb.companies.find(function(c) { return c.id === id; });
     if (!c) return;
-    document.getElementById('ip-cm-title').textContent = 'テーマを編集する';
+    document.getElementById('ip-cm-title').textContent = '企業を編集する';
     document.getElementById('ip-cm-id').value       = c.id;
     document.getElementById('ip-cm-name').value     = c.name     || '';
     document.getElementById('ip-cm-industry').value = c.industry || '';
@@ -1362,7 +1415,7 @@
 
   function ipSaveCompany() {
     var name = document.getElementById('ip-cm-name').value.trim();
-    if (!name) { document.getElementById('ip-cm-error').textContent = '企業名またはテーマを入力してください。'; return; }
+    if (!name) { document.getElementById('ip-cm-error').textContent = '企業名を入力してください。'; return; }
     var id = document.getElementById('ip-cm-id').value;
     if (id) {
       var c = ipDb.companies.find(function(c) { return c.id === id; });
@@ -1664,41 +1717,89 @@
 
   // ===== AI模擬面接 =====
   var miMessages = [];
-  var miChatHistory = [];
+  var miChatHistory = []; // Claude API用の会話履歴
   var miQuestionCount = 0;
   var miMaxQuestions = 7;
   var recognition = null;
-  var miType = '';
+  var miCompany = '', miCourse = '', miRound = '', miType = '';
   var miSpeakEnabled = true;
 
   function buildMiSystemPrompt() {
+    var companyStr = miCompany || '日本の大手企業';
+    var roundStr = miRound || '';
+    var courseStr = miCourse ? '（' + miCourse + '）' : '';
+
+    // 面接段階ごとのペルソナと評価軸
+    var roundConfig = {
+      '1次面接': {
+        persona: '30代前半の人事担当者。明るく丁寧だが、基本的な質問で論理性とコミュニケーション力を正確に見抜く。',
+        focus: '第一印象、基本的なコミュニケーション力、論理的思考力、ビジネスマナー（話し方、結論ファースト）',
+        style: '基本的な質問を中心に、回答の論理性と一貫性をチェックする。深掘りは1〜2回程度。',
+        opener: '自己紹介を1分程度でお願いします。'
+      },
+      '2次面接': {
+        persona: '30代後半〜40代の現場マネージャー。実務経験が豊富で、学生の回答の「薄さ」をすぐ見抜く。やや厳しめ。',
+        focus: '深掘りによる価値観の確認、自社との適合性、経験の具体性と再現性、困難への対処力',
+        style: '1つのテーマを2〜3回深掘りする。「なぜ？」「具体的には？」「他の選択肢はなかった？」「それで何を学んだ？」を徹底的に聞く。回答が抽象的なら容赦なく突く。',
+        opener: '改めて、学生時代に最も力を入れたことを教えてください。'
+      },
+      '最終面接': {
+        persona: '50代の役員・事業部長。経営者の視座で、この学生が10年後に会社を支える人材になれるかを見極める。穏やかだが核心を突く。',
+        focus: '入社への覚悟と本気度、長期的なキャリアビジョン、会社の将来への貢献イメージ、人間としての器・価値観',
+        style: '大きなテーマで人生観・仕事観を問う。「なぜこの業界なのか」「10年後どうなっていたいか」「入社したら何を成し遂げたいか」「あなたにとって仕事とは」。回答の覚悟と熱量を見る。',
+        opener: '本日はお越しいただきありがとうございます。まず、改めて志望動機をお聞かせください。'
+      },
+      'リクルーター面談': {
+        persona: '20代後半〜30代前半の若手社員。カジュアルだが実は選考に影響する。フランクな口調で本音を引き出す。',
+        focus: '就活の軸、業界への理解度、社風との相性、コミュニケーションの自然さ',
+        style: 'カジュアルな雑談風。「ぶっちゃけ他にどこ受けてる？」「うちのどこに興味ある？」「就活で大変だったこと何？」等。ただし回答からしっかり評価している。',
+        opener: '今日はカジュアルにお話ししましょう。まず、就活どんな感じで進めてますか？'
+      },
+      'インターン選考': {
+        persona: '30代の人事担当。インターンへの参加意欲と基礎力を見る。',
+        focus: 'インターンで何を学びたいか、業界への興味の深さ、チームワーク力',
+        style: '基本的な質問中心だが、「なぜこのインターンに参加したいのか」を重点的に聞く。',
+        opener: 'このインターンに応募した理由を教えてください。'
+      }
+    };
+
+    var config = roundConfig[roundStr] || roundConfig['2次面接'];
+
+    // 面接タイプごとの追加指示
     var typeInstructions = {
       general: '自己PR・ガクチカ・強み弱みなど幅広いテーマで質問する。',
-      motivation: '志望動機を軸に質問する。「なぜこの業界か」「なぜこの会社か」を深掘りする。',
-      behavioral: '行動面接形式。過去の具体的な経験をSTAR法で深掘りする。',
-      final: '入社後のビジョン・キャリアプラン・人生の価値観を中心に問う。'
+      motivation: '志望動機を軸に質問する。「なぜこの業界か」「なぜこの会社か」「競合ではダメな理由は」を深掘りする。',
+      behavioral: '行動面接（コンピテンシー面接）形式。過去の具体的な経験を深掘りする。STAR法（状況→課題→行動→結果）に沿って回答しているか確認し、不足があれば「その時の状況をもう少し詳しく」「なぜその行動を選んだのか」と掘る。',
+      final: '入社後のビジョン・キャリアプラン・会社への貢献・人生の価値観を中心に問う。'
     };
-    return 'あなたは日本企業の採用面接官です。\n\n'
-      + '【あなたの人物像】\n40代の人事部マネージャー。穏やかだが鋭い。学生の回答の「薄さ」をすぐ見抜く。\n\n'
+
+    return 'あなたは' + companyStr + 'の' + roundStr + '採用面接官です。' + courseStr + '\n\n'
+      + '【あなたの人物像】\n' + config.persona + '\n\n'
+      + '【この面接段階での評価ポイント】\n' + config.focus + '\n\n'
+      + '【面接スタイル】\n' + config.style + '\n\n'
       + '【面接タイプ】\n' + (typeInstructions[miType] || typeInstructions.general) + '\n\n'
-      + '【深掘りの5パターン】\n'
+      + '【深掘りの5パターン（状況に応じて使い分ける）】\n'
       + '1. 「なぜ？」— 価値観・動機を探る\n'
-      + '2. 「具体的には？」— 事実確認\n'
-      + '3. 「他の選択肢はなかった？」— 思考の幅を確認\n'
-      + '4. 「困難はなかった？」— ストレス耐性を確認\n'
-      + '5. 「それをどう活かす？」— 貢献イメージを確認\n\n'
+      + '2. 「具体的には？」— 事実確認、抽象的な回答を許さない\n'
+      + '3. 「他の選択肢はなかった？」— 思考の幅・意思決定プロセスを確認\n'
+      + '4. 「困難や失敗はなかった？」— ストレス耐性・誠実さを確認\n'
+      + '5. 「それをどう活かす？」— 入社後の貢献イメージを確認\n\n'
       + '【絶対ルール】\n'
       + '- 1回の発言で質問は必ず1つだけ。短く鋭く。\n'
-      + '- 質問文のみを返す。前置き・解説は不要。\n'
-      + '- 回答が曖昧なら深掘り。具体的なら次のテーマへ。\n'
-      + '- 矛盾があればやんわり突く。\n'
-      + '- オープンクエスチョンのみ。\n';
+      + '- 質問文のみを返す。前置き・解説・評価コメントは一切入れない。\n'
+      + '- 学生の回答が曖昧・抽象的・表面的なら、同じテーマで深掘りする。「もう少し具体的に教えてください」等。\n'
+      + '- 学生の回答に矛盾や論理の飛躍があれば、やんわりだが的確に突く。\n'
+      + '- 学生の回答が十分に具体的で納得できるレベルなら、次のテーマに移る。\n'
+      + '- 「はい」「いいえ」で終わる質問はしない。必ずオープンクエスチョン。\n'
+      + '- 面接官らしい自然な日本語で話す。敬語を使う。\n';
   }
 
   function startMockInterview() {
     if (!checkAiConsent()) return;
-    if (typeof gtag === 'function') { gtag('event', 'mock_interview_start'); }
     miType = document.getElementById('mi-type').value;
+    miCompany = (document.getElementById('mi-company') || {}).value || '';
+    miCourse = (document.getElementById('mi-course') || {}).value || '';
+    miRound = (document.getElementById('mi-round') || {}).value || '';
     miMessages = [];
     miChatHistory = [];
     miQuestionCount = 0;
@@ -1706,28 +1807,51 @@
     document.getElementById('mi-session').style.display = 'block';
     document.getElementById('mi-result').style.display = 'none';
     document.getElementById('mi-chat').innerHTML = '';
-    appendBubble('system', '模擬面接を開始します。面接官がまもなく質問します...');
+
+    var intro = miCompany ? miCompany : '模擬面接';
+    intro += miCourse ? '（' + miCourse + '）' : '';
+    intro += miRound ? ' ' + miRound : '';
+    appendBubble('system', intro + ' を開始します。面接官がまもなく質問します...');
+
     askNextQuestion();
   }
 
   async function askNextQuestion() {
     appendBubble('interviewer', '...');
+    var sendBtn = document.querySelector('[onclick="sendMiAnswer()"]');
+    if (sendBtn) sendBtn.disabled = true;
+
     var systemPrompt = buildMiSystemPrompt();
+
+    // 初回は面接段階とタイプに応じた詳細指示
     if (miChatHistory.length === 0) {
-      var firstInstruction = {
-        general: '面接を始めてください。自己紹介を1分程度でお願いしてください。',
-        motivation: '面接を始めてください。志望動機を聞いてください。',
-        behavioral: '面接を始めてください。学生時代に最も力を入れたことを聞いてください。',
-        final: '最終面接を始めてください。志望動機を改めて聞いてください。'
+      var roundOpeners = {
+        '1次面接': '1次面接を始めてください。まず自己紹介を1分程度でお願いしてください。',
+        '2次面接': '2次面接を始めてください。前回の面接は通過しています。改めてガクチカまたは自己PRを聞いてください。今回は深掘りがメインです。',
+        '最終面接': '最終面接を始めてください。役員として、まず志望動機を改めて聞いてください。覚悟と本気度を見極めます。',
+        'リクルーター面談': 'カジュアル面談を始めてください。フランクに「就活どんな感じですか？」から入ってください。',
+        'インターン選考': 'インターン選考面接を始めてください。「このインターンに応募した理由を教えてください」から入ってください。'
       };
-      miChatHistory.push({ role: 'user', content: (firstInstruction[miType] || firstInstruction.general) + '\n\n最初の質問を1つだけしてください。質問文のみで。' });
+      var typeOpeners = {
+        general: '自己PRまたは自己紹介から始めてください。',
+        motivation: '志望動機を聞くところから始めてください。',
+        behavioral: '学生時代に最も力を入れたことから聞いてください。行動面接形式で深掘りします。',
+        final: '志望動機を改めて聞くところから始めてください。'
+      };
+      var opener = roundOpeners[miRound] || typeOpeners[miType] || typeOpeners.general;
+      miChatHistory.push({ role: 'user', content: opener + '\n\n最初の質問を1つだけしてください。質問文のみで。' });
     }
+
     try {
       var data = await callAuthApi('callClaude', {
         toolType: 'esChatMessage',
-        input: { systemPrompt: systemPrompt, messages: miChatHistory }
+        input: {
+          systemPrompt: systemPrompt,
+          messages: miChatHistory
+        }
       });
       var question = (data.result || '自己PRを1分程度でお願いします。').trim();
+      // Claude応答を履歴に追加
       miChatHistory.push({ role: 'assistant', content: question });
       replaceLast('interviewer', question);
       miMessages.push({ role: '面接官', text: question });
@@ -1739,6 +1863,8 @@
       miMessages.push({ role: '面接官', text: fallback });
       miQuestionCount++;
     }
+
+    if (sendBtn) sendBtn.disabled = false;
   }
 
   function escHtml(value) {
@@ -1766,11 +1892,13 @@
 
   function appendBubble(type, text) {
     var chat = document.getElementById('mi-chat');
+    var roleMap = { interviewer: '面接官', user: 'あなた', system: '' };
+    var role = roleMap[type] || '';
+    var cls = type === 'system' ? 'mi-bubble system' : 'mi-bubble ' + type;
     if (type === 'system') {
       chat.innerHTML += '<div style="text-align:center;padding:0.6rem;font-size:0.72rem;color:var(--text-muted);">' + renderMultilineHtml(text) + '</div>';
     } else {
-      var role = type === 'interviewer' ? '面接官' : 'あなた';
-      chat.innerHTML += '<div class="mi-bubble ' + type + '"><div class="mi-role">' + escHtml(role) + '</div>' + renderMultilineHtml(text) + '</div>';
+      chat.innerHTML += '<div class="' + cls + '"><div class="mi-role">' + escHtml(role) + '</div>' + renderMultilineHtml(text) + '</div>';
     }
     chat.scrollTop = chat.scrollHeight;
   }
@@ -1795,7 +1923,10 @@
     utter.rate = 0.9;
     utter.pitch = 0.85;
     var voices = window.speechSynthesis.getVoices();
-    var jaVoice = voices.find(function(v) { return v.lang.startsWith('ja'); });
+    // 男性っぽい低めの声を優先
+    var jaVoice = voices.find(function(v) { return v.lang.startsWith('ja') && v.name.toLowerCase().indexOf('male') >= 0; })
+      || voices.find(function(v) { return v.lang.startsWith('ja') && v.name.indexOf('Otoya') >= 0; })
+      || voices.find(function(v) { return v.lang.startsWith('ja'); });
     if (jaVoice) utter.voice = jaVoice;
     window.speechSynthesis.speak(utter);
   }
@@ -1808,19 +1939,32 @@
     var input = document.getElementById('mi-input');
     var answer = input.value.trim();
     if (!answer) return;
+
+    // 音声合成を止める（回答中にまだ喋ってたら）
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
     appendBubble('user', answer);
     miMessages.push({ role: 'あなた', text: answer });
+
+    // Claude API用の会話履歴に追加（面接官への指示付き）
     var answerPrompt = '学生の回答: ' + answer + '\n\n';
-    if (answer.length < 50) answerPrompt += '（回答が短すぎます。深掘りしてください）';
+    if (answer.length < 50) {
+      answerPrompt += '（回答が短すぎます。「もう少し詳しく教えていただけますか？」等で深掘りしてください）';
+    } else if (answer.length < 100) {
+      answerPrompt += '（回答がやや短い。具体性が足りなければ深掘りしてください）';
+    }
     answerPrompt += '\n次の質問を1つだけしてください。質問文のみで。';
     miChatHistory.push({ role: 'user', content: answerPrompt });
+
     input.value = '';
+
+    // 7問以上 or 20分経過で自動終了提案
     if (miQuestionCount >= miMaxQuestions) {
       appendBubble('system', '面接が終了に近づいています。');
       endMockInterview();
       return;
     }
+
     askNextQuestion();
   }
 
@@ -1829,14 +1973,27 @@
     document.getElementById('mi-result').style.display = 'block';
     document.getElementById('mi-start-btn').style.display = 'block';
     document.getElementById('mi-feedback').textContent = '総合フィードバックを生成中...（30秒ほどかかります）';
+
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    var transcript = miMessages.map(function(m){ return m.role + ': ' + m.text; }).join('\n\n');
+
+    var transcript = miMessages.map(function(m) { return m.role + ': ' + m.text; }).join('\n\n');
+    var companyNote = miCompany ? '【企業】' + miCompany + (miCourse ? '（' + miCourse + '）' : '') + (miRound ? ' ' + miRound : '') + '\n\n' : '';
+
     try {
       var data = await callAuthApi('callClaude', {
         toolType: 'esChatMessage',
         input: {
-          systemPrompt: 'あなたは新卒採用の面接評価のプロフェッショナルです。模擬面接のやり取り全体を詳細に分析し、具体的なフィードバックを提供してください。「この回答のこの部分をこう変えるべき」レベルの具体性で書いてください。',
-          messages: [{role:'user', content: '以下の模擬面接を評価してください。\n\n' + transcript + '\n\n以下の形式で詳細にフィードバックしてください：\n\n## 総合評価\n評価: S/A/B/C/D\n一言コメント\n\n## 各質問の個別評価\n質問ごとに：\n- その質問の意図\n- 回答の良かった点\n- 回答の問題点（具体的に）\n- 改善版の回答例\n\n## 全体を通した課題\n- 論理性・構成力\n- 具体性・エピソードの質\n- 熱意の伝わり方\n- 話し方（結論ファーストか、冗長でないか等）\n\n## 次の面接までにやるべきこと\n優先順位をつけて3つ'}]
+          systemPrompt: 'あなたは新卒採用の面接評価のプロフェッショナルです。以下の模擬面接のやり取り全体を詳細に分析し、就活生にとって本当に役立つ具体的なフィードバックを提供してください。抽象的な褒め言葉ではなく、「この回答のこの部分をこう変えるべき」レベルの具体性で書いてください。',
+          messages: [{
+            role: 'user',
+            content: companyNote + '以下の模擬面接を評価してください。\n\n' + transcript + '\n\n'
+              + '以下の形式で詳細にフィードバックしてください：\n\n'
+              + '## 総合評価\n評価: S/A/B/C/D（Sが最高）\n一言コメント\n\n'
+              + '## 各質問の個別評価\n質問ごとに：\n- その質問の意図（面接官が何を見ていたか）\n- 回答の良かった点\n- 回答の問題点（具体的に「〇〇という表現を△△に変えるべき」レベルで）\n- 改善版の回答例（そのまま使えるレベル）\n\n'
+              + '## 全体を通した課題\n- 論理性・構成力\n- 具体性・エピソードの質\n- 熱意・志望度の伝わり方\n- 話し方・表現力（回答の長さ、冗長さ、結論ファーストか等）\n\n'
+              + '## 次の面接までにやるべきこと\n優先順位をつけて3つ\n\n'
+              + (miCompany ? '## ' + miCompany + '固有のアドバイス\nこの企業の面接で特に意識すべきポイント\n' : '')
+          }]
         }
       });
       document.getElementById('mi-feedback').textContent = data.result || '評価の生成に失敗しました。';
@@ -1898,7 +2055,7 @@
 </style>
 
 <!-- 振り返りフォームモーダル -->
-<div id="review-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;justify-content:center;align-items:center;padding:1rem;">
+<div class="ip-modal-overlay" id="review-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;justify-content:center;align-items:center;padding:1rem;">
   <div style="background:white;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;">
     <div style="background:var(--navy);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;">
       <span style="color:white;font-family:'Noto Serif JP',serif;font-size:0.95rem;font-weight:700;">面接振り返りを記録</span>
@@ -2052,8 +2209,6 @@ document.getElementById('review-modal').addEventListener('click', function(e) {
 if (typeof currentMember !== 'undefined' && currentMember) { loadReviews(); }
 </script>
 
-<div style="padding:1rem 5vw 0.5rem;text-align:center;font-size:0.7rem;color:var(--text-muted);line-height:1.7;">AI回答は参考情報です。最終判断は必ずご自身で行ってください。</div>
-
 <!-- ===== OB訪問対策 ===== -->
 <style>
 .ob-card{border:1px solid rgba(10,26,62,0.1);padding:1rem;margin-bottom:0.8rem;background:white;}
@@ -2104,8 +2259,8 @@ if (typeof currentMember !== 'undefined' && currentMember) { loadReviews(); }
     <button class="ob-modal-close" onclick="closeOBVisitForm()">&times;</button>
     <h3 id="ob-modal-title">OB訪問を追加</h3>
     <input type="hidden" id="ob-edit-id">
-    <label>テーマ</label>
-    <input type="text" id="ob-company" placeholder="例: IT業界の働き方">
+    <label>企業名</label>
+    <input type="text" id="ob-company" placeholder="例: 三菱商事">
     <label>OB/OGの名前</label>
     <input type="text" id="ob-name" placeholder="例: 田中太郎">
     <label>部署・役職</label>
@@ -2362,17 +2517,17 @@ document.getElementById('ob-visit-modal').addEventListener('click', function(e) 
 
 // ===== OB訪問依頼メール自動生成 =====
 async function generateOBRequestEmail() {
-  var theme = document.getElementById('ob-company').value.trim();
+  var company = document.getElementById('ob-company').value.trim();
   var obName = document.getElementById('ob-name').value.trim();
   var dept = document.getElementById('ob-department').value.trim();
-  if (!theme && !obName) { alert('テーマまたはOB名を入力してください。'); return; }
+  if (!company && !obName) { alert('企業名またはOB名を入力してください。'); return; }
   var resultEl = document.getElementById('ob-email-result');
   var textEl = document.getElementById('ob-email-text');
   resultEl.style.display = 'none';
   textEl.textContent = '生成中...';
   resultEl.style.display = 'block';
   try {
-    var userMsg = 'OB訪問の依頼メールを作成してください。\nテーマ: ' + (theme || '未入力') + '\nOB/OGの名前: ' + (obName || '未入力') + '\n部署・役職: ' + (dept || '未入力');
+    var userMsg = 'OB訪問の依頼メールを作成してください。\n企業名: ' + (company || '未入力') + '\nOB/OGの名前: ' + (obName || '未入力') + '\n部署・役職: ' + (dept || '未入力');
     var data = await callAuthApi('callClaude', {
       toolType: 'esChatMessage',
       input: {
@@ -2394,7 +2549,7 @@ async function generateMotivationFromOB(visitId) {
   resultEl.style.display = 'block';
   resultEl.innerHTML = '\x3cdiv style="color:var(--text-muted);">生成中...\x3c/div>';
   try {
-    var userMsg = '以下のOB訪問の振り返り情報を元に、志望動機のドラフトを作成してください。\n\nテーマ: ' + (r.company || '') + '\n振り返りメモ: ' + (r.reviewNotes || '') + '\n印象・学び: ' + (r.impressions || '') + '\n次のアクション: ' + (r.nextActions || '');
+    var userMsg = '以下のOB訪問の振り返り情報を元に、志望動機のドラフトを作成してください。\n\n企業名: ' + (r.company || '') + '\n振り返りメモ: ' + (r.reviewNotes || '') + '\n印象・学び: ' + (r.impressions || '') + '\n次のアクション: ' + (r.nextActions || '');
     var data = await callAuthApi('callClaude', {
       toolType: 'esChatMessage',
       input: {
@@ -2443,11 +2598,11 @@ var sharedOBCache = [];
 async function shareOBAnonymously(visitId) {
   var r = obVisitsCache.find(function(x) { return x.id === visitId; });
   if (!r) { alert('訪問記録が見つかりません。'); return; }
-  if (!confirm('この訪問の学びを匿名で共有しますか？\n（テーマ・OB名は共有されません）')) return;
+  if (!confirm('この訪問の学びを匿名で共有しますか？\n（企業名・OB名は共有されません）')) return;
   try {
     await callAuthApi('shareOBInfo', {
       info: {
-        industry: r.company ? r.company.substring(0, 2) + '関連' : '',
+        industry: r.company ? r.company.substring(0, 2) + '業界' : '',
         department: r.obDepartment || '',
         yearsOfExp: '',
         keyInsights: r.impressions || r.reviewNotes || '',
@@ -2616,7 +2771,7 @@ async function generateThankYouEmail(visitId) {
       var rv = JSON.parse(reviewSummary);
       if (rv && rv._structured) { reviewSummary = '事実: ' + (rv.facts || '') + '\n解釈: ' + (rv.interpretation || '') + '\nアクション: ' + (rv.actions || ''); }
     } catch(e) {}
-    var userMsg = 'OB訪問のお礼メールを作成してください。\n\nテーマ: ' + (r.company || '') + '\nOB/OGの名前: ' + (r.obName || '') + '\n部署・役職: ' + (r.obDepartment || '') + '\n振り返り: ' + reviewSummary + '\n印象・学び: ' + (r.impressions || '');
+    var userMsg = 'OB訪問のお礼メールを作成してください。\n\n企業名: ' + (r.company || '') + '\nOB/OGの名前: ' + (r.obName || '') + '\n部署・役職: ' + (r.obDepartment || '') + '\n振り返り: ' + reviewSummary + '\n印象・学び: ' + (r.impressions || '');
     var data = await callAuthApi('callClaude', {
       toolType: 'esChatMessage',
       input: {
@@ -2692,6 +2847,7 @@ function replaceLastOB(role, text) {
 }
 
 async function startOBRoleplay() {
+  var company = document.getElementById('ob-rp-company').value.trim();
   var industry = document.getElementById('ob-rp-industry').value.trim();
   obRpSpeakEnabled = document.getElementById('ob-rp-speak-toggle').checked;
   obRpChatHistory = [];
@@ -2702,13 +2858,14 @@ async function startOBRoleplay() {
   document.getElementById('ob-rp-result').style.display = 'none';
   document.getElementById('ob-rp-chat').innerHTML = '';
 
+  var companyNote = company ? '（企業: ' + company + '）' : '';
   var industryNote = industry ? '（業界・職種: ' + industry + '）' : '';
 
-  var systemPrompt = 'あなたはある企業に入社3年目の社員です。' + industryNote + ' 就活生からのOB訪問を受けています。カジュアルで親しみやすい口調で、リアルな社員として回答してください。自分の経験や感じていることを具体的に話してください。面接のような堅い雰囲気ではなく、カフェで先輩と話すような雰囲気でお願いします。回答は簡潔に2〜4文程度で。';
+  var systemPrompt = 'あなたは' + (company || 'ある企業') + 'に入社3年目の社員です。' + industryNote + ' 就活生からのOB訪問を受けています。カジュアルで親しみやすい口調で、リアルな社員として回答してください。自分の経験や感じていることを具体的に話してください。面接のような堅い雰囲気ではなく、カフェで先輩と話すような雰囲気でお願いします。回答は簡潔に2〜4文程度で。';
 
   obRpChatHistory.push({ role: 'user', content: '初めまして、本日はお時間いただきありがとうございます。' });
 
-  appendOBBubble('system', '模擬OB訪問を開始します。入社3年目の社員が応対します。');
+  appendOBBubble('system', '模擬OB訪問を開始します。' + companyNote + ' 入社3年目の社員が応対します。');
   appendOBBubble('ob', '考え中...');
 
   try {
@@ -2728,6 +2885,7 @@ async function startOBRoleplay() {
     obRpMessages.push({ role: 'OB', text: fallback });
   }
 
+  // Store systemPrompt for subsequent calls
   window._obRpSystemPrompt = systemPrompt;
 }
 
@@ -2827,17 +2985,99 @@ if (typeof currentMember !== 'undefined' && currentMember) { loadOBVisits(); loa
 
 // ===== GD FEEDBACK =====
 var _gdFbRating = 0;
-function readGdFeedback() { try { var d = localStorage.getItem('keio_navi_gd_feedback_v1'); return d ? JSON.parse(d) : []; } catch(e) { return []; } }
+
+function readGdFeedback() {
+  try { var d = localStorage.getItem('keio_navi_gd_feedback_v1'); return d ? JSON.parse(d) : []; } catch(e) { return []; }
+}
 function writeGdFeedback(list) { localStorage.setItem('keio_navi_gd_feedback_v1', JSON.stringify(list)); }
-function calcGdStats(list) { var count = list.length; var avg = 0; var roleCount = {}; if (count > 0) { var sum = 0; var rated = 0; list.forEach(function(e) { if (e.rating > 0) { sum += e.rating; rated++; } roleCount[e.role] = (roleCount[e.role] || 0) + 1; }); avg = rated > 0 ? (sum / rated) : 0; } var topRole = '-'; var topCount = 0; Object.keys(roleCount).forEach(function(r) { if (roleCount[r] > topCount) { topCount = roleCount[r]; topRole = r; } }); return { count: count, avg: avg, topRole: topRole }; }
+
+function calcGdStats(list) {
+  var count = list.length; var avg = 0; var roleCount = {};
+  if (count > 0) { var sum = 0; var rated = 0; list.forEach(function(e) { if (e.rating > 0) { sum += e.rating; rated++; } roleCount[e.role] = (roleCount[e.role] || 0) + 1; }); avg = rated > 0 ? (sum / rated) : 0; }
+  var topRole = '-'; var topCount = 0;
+  Object.keys(roleCount).forEach(function(r) { if (roleCount[r] > topCount) { topCount = roleCount[r]; topRole = r; } });
+  return { count: count, avg: avg, topRole: topRole };
+}
+
 function renderGdStars(n) { var s = ''; for (var i = 1; i <= 5; i++) s += (i <= n ? '\u2605' : '\u2606'); return s; }
-function renderGdFeedback() { var list = readGdFeedback(); var stats = calcGdStats(list); var statsEl = document.getElementById('gd-fb-stats'); var listEl = document.getElementById('gd-fb-list'); if (!statsEl || !listEl) return; statsEl.innerHTML = '<div class="gd-fb-stat"><div class="gd-fb-stat-num">' + stats.count + '</div><div class="gd-fb-stat-label">参加回数</div></div><div class="gd-fb-stat"><div class="gd-fb-stat-num">' + (stats.avg > 0 ? stats.avg.toFixed(1) : '-') + '</div><div class="gd-fb-stat-label">平均評価</div></div><div class="gd-fb-stat"><div class="gd-fb-stat-num" style="font-size:1rem;">' + stats.topRole + '</div><div class="gd-fb-stat-label">よく担った役割</div></div>'; if (list.length === 0) { listEl.innerHTML = '<div class="gd-fb-empty">まだ記録がありません。<br>GD練習会に参加したら「+ FBを記録」から振り返りを残しましょう。</div>'; return; } list.sort(function(a, b) { return b.date.localeCompare(a.date); }); var html = ''; list.forEach(function(e) { var d = e.date.replace(/-/g, '/'); html += '<div class="gd-fb-card"><div class="gd-fb-card-header"><span class="gd-fb-date">' + d + '</span><span class="gd-fb-role-badge gd-fb-role-' + e.role + '">' + e.role + '</span></div><div class="gd-fb-theme">' + (e.theme || '').replace(/</g, '&lt;') + '</div>'; if (e.otherFeedback || e.others) { html += '<div class="gd-fb-content-label">他者からのFB</div><div class="gd-fb-content">' + (e.otherFeedback || e.others || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</div>'; } if (e.selfReflection || e.self) { html += '<div class="gd-fb-content-label">自分の振り返り</div><div class="gd-fb-content">' + (e.selfReflection || e.self || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</div>'; } if (e.rating > 0) { html += '<div class="gd-fb-rating">' + renderGdStars(e.rating) + '</div>'; } html += '<div class="gd-fb-card-actions"><button onclick="openGdFbModal(\'' + e.id + '\')">編集</button><button class="gd-fb-del" onclick="deleteGdFbEntry(\'' + e.id + '\')">削除</button></div></div>'; }); listEl.innerHTML = html; }
-function openGdFbModal(id) { var modal = document.getElementById('gd-fb-modal'); var titleEl = document.getElementById('gd-fb-modal-title'); document.getElementById('gd-fb-error').textContent = ''; if (id) { var list = readGdFeedback(); var entry = list.find(function(e) { return e.id === id; }); if (!entry) return; titleEl.textContent = 'フィードバックを編集'; document.getElementById('gd-fb-edit-id').value = id; document.getElementById('gd-fb-date').value = entry.date || ''; document.getElementById('gd-fb-theme-input').value = entry.theme || ''; document.getElementById('gd-fb-role-input').value = entry.role || 'メンバー'; document.getElementById('gd-fb-others').value = entry.otherFeedback || entry.others || ''; document.getElementById('gd-fb-self').value = entry.selfReflection || entry.self || ''; setGdFbRating(entry.rating || 0); } else { titleEl.textContent = 'GDフィードバックを記録'; document.getElementById('gd-fb-edit-id').value = ''; var today = new Date(); document.getElementById('gd-fb-date').value = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0'); document.getElementById('gd-fb-theme-input').value = ''; document.getElementById('gd-fb-role-input').value = 'メンバー'; document.getElementById('gd-fb-others').value = ''; document.getElementById('gd-fb-self').value = ''; setGdFbRating(0); } modal.classList.add('open'); }
+
+function renderGdFeedback() {
+  var list = readGdFeedback(); var stats = calcGdStats(list);
+  var statsEl = document.getElementById('gd-fb-stats'); var listEl = document.getElementById('gd-fb-list');
+  if (!statsEl || !listEl) return;
+  statsEl.innerHTML = '<div class="gd-fb-stat"><div class="gd-fb-stat-num">' + stats.count + '</div><div class="gd-fb-stat-label">参加回数</div></div><div class="gd-fb-stat"><div class="gd-fb-stat-num">' + (stats.avg > 0 ? stats.avg.toFixed(1) : '-') + '</div><div class="gd-fb-stat-label">平均評価</div></div><div class="gd-fb-stat"><div class="gd-fb-stat-num" style="font-size:1rem;">' + stats.topRole + '</div><div class="gd-fb-stat-label">よく担った役割</div></div>';
+  if (list.length === 0) { listEl.innerHTML = '<div class="gd-fb-empty">まだ記録がありません。<br>GD練習会に参加したら「+ FBを記録」から振り返りを残しましょう。</div>'; return; }
+  list.sort(function(a, b) { return b.date.localeCompare(a.date); });
+  var html = '';
+  list.forEach(function(e) {
+    var d = e.date.replace(/-/g, '/');
+    html += '<div class="gd-fb-card"><div class="gd-fb-card-header"><span class="gd-fb-date">' + d + '</span><span class="gd-fb-role-badge gd-fb-role-' + e.role + '">' + e.role + '</span></div>';
+    html += '<div class="gd-fb-theme">' + (e.theme || '').replace(/</g, '&lt;') + '</div>';
+    if (e.otherFeedback || e.others) { html += '<div class="gd-fb-content-label">他者からのFB</div><div class="gd-fb-content">' + (e.otherFeedback || e.others || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</div>'; }
+    if (e.selfReflection || e.self) { html += '<div class="gd-fb-content-label">自分の振り返り</div><div class="gd-fb-content">' + (e.selfReflection || e.self || '').replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</div>'; }
+    if (e.rating > 0) { html += '<div class="gd-fb-rating">' + renderGdStars(e.rating) + '</div>'; }
+    html += '<div class="gd-fb-card-actions"><button onclick="openGdFbModal(\'' + e.id + '\')">編集</button><button class="gd-fb-del" onclick="deleteGdFbEntry(\'' + e.id + '\')">削除</button></div></div>';
+  });
+  listEl.innerHTML = html;
+}
+
+function openGdFbModal(id) {
+  var modal = document.getElementById('gd-fb-modal'); var titleEl = document.getElementById('gd-fb-modal-title');
+  document.getElementById('gd-fb-error').textContent = '';
+  if (id) {
+    var list = readGdFeedback(); var entry = list.find(function(e) { return e.id === id; }); if (!entry) return;
+    titleEl.textContent = 'フィードバックを編集';
+    document.getElementById('gd-fb-edit-id').value = id;
+    document.getElementById('gd-fb-date').value = entry.date || '';
+    document.getElementById('gd-fb-theme-input').value = entry.theme || '';
+    document.getElementById('gd-fb-role-input').value = entry.role || 'メンバー';
+    document.getElementById('gd-fb-others').value = entry.otherFeedback || entry.others || '';
+    document.getElementById('gd-fb-self').value = entry.selfReflection || entry.self || '';
+    setGdFbRating(entry.rating || 0);
+  } else {
+    titleEl.textContent = 'GDフィードバックを記録';
+    document.getElementById('gd-fb-edit-id').value = '';
+    var today = new Date();
+    document.getElementById('gd-fb-date').value = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+    document.getElementById('gd-fb-theme-input').value = '';
+    document.getElementById('gd-fb-role-input').value = 'メンバー';
+    document.getElementById('gd-fb-others').value = '';
+    document.getElementById('gd-fb-self').value = '';
+    setGdFbRating(0);
+  }
+  modal.classList.add('open');
+}
 function closeGdFbModal() { document.getElementById('gd-fb-modal').classList.remove('open'); }
-function setGdFbRating(n) { _gdFbRating = n; var stars = document.getElementById('gd-fb-stars'); if (!stars) return; stars.querySelectorAll('span').forEach(function(s, i) { if (i < n) { s.innerHTML = '\u2605'; s.classList.add('filled'); } else { s.innerHTML = '\u2606'; s.classList.remove('filled'); } }); }
-async function saveGdFbEntry() { var theme = document.getElementById('gd-fb-theme-input').value.trim(); if (!theme) { document.getElementById('gd-fb-error').textContent = 'テーマ（お題）を入力してください。'; return; } var editId = document.getElementById('gd-fb-edit-id').value; var entry = { id: editId || '', date: document.getElementById('gd-fb-date').value, theme: theme, role: document.getElementById('gd-fb-role-input').value, otherFeedback: document.getElementById('gd-fb-others').value.trim(), selfReflection: document.getElementById('gd-fb-self').value.trim(), rating: _gdFbRating }; closeGdFbModal(); try { var result = await callAuthApi('writeGdFeedback', { entry: entry }); if (result.id) entry.id = result.id; } catch(e) { console.warn('GD FB server save failed', e); } var list = readGdFeedback(); if (editId) { list = list.map(function(e) { return e.id === editId ? entry : e; }); } else { list.push(entry); } writeGdFeedback(list); renderGdFeedback(); }
-async function deleteGdFbEntry(id) { if (!confirm('このフィードバック記録を削除しますか？')) return; try { await callAuthApi('deleteGdFeedback', { id: id }); } catch(e) { console.warn('GD FB server delete failed', e); } writeGdFeedback(readGdFeedback().filter(function(e) { return e.id !== id; })); renderGdFeedback(); }
-async function initGdFeedback() { renderGdFeedback(); try { var data = await callAuthApi('readGdFeedback'); if (data.entries && data.entries.length) { writeGdFeedback(data.entries); renderGdFeedback(); } } catch(e) { console.warn('GD FB server load failed, using local', e); } var modal = document.getElementById('gd-fb-modal'); if (modal) { modal.addEventListener('click', function(e) { if (e.target === modal) closeGdFbModal(); }); } }
+
+function setGdFbRating(n) {
+  _gdFbRating = n; var stars = document.getElementById('gd-fb-stars'); if (!stars) return;
+  stars.querySelectorAll('span').forEach(function(s, i) { if (i < n) { s.innerHTML = '\u2605'; s.classList.add('filled'); } else { s.innerHTML = '\u2606'; s.classList.remove('filled'); } });
+}
+
+async function saveGdFbEntry() {
+  var theme = document.getElementById('gd-fb-theme-input').value.trim();
+  if (!theme) { document.getElementById('gd-fb-error').textContent = 'テーマ（お題）を入力してください。'; return; }
+  var editId = document.getElementById('gd-fb-edit-id').value;
+  var entry = { id: editId || '', date: document.getElementById('gd-fb-date').value, theme: theme, role: document.getElementById('gd-fb-role-input').value, otherFeedback: document.getElementById('gd-fb-others').value.trim(), selfReflection: document.getElementById('gd-fb-self').value.trim(), rating: _gdFbRating };
+  closeGdFbModal();
+  try { var result = await callAuthApi('writeGdFeedback', { entry: entry }); if (result.id) entry.id = result.id; } catch(e) { console.warn('GD FB server save failed', e); }
+  var list = readGdFeedback();
+  if (editId) { list = list.map(function(e) { return e.id === editId ? entry : e; }); } else { list.push(entry); }
+  writeGdFeedback(list); renderGdFeedback();
+}
+
+async function deleteGdFbEntry(id) {
+  if (!confirm('このフィードバック記録を削除しますか？')) return;
+  try { await callAuthApi('deleteGdFeedback', { id: id }); } catch(e) { console.warn('GD FB server delete failed', e); }
+  writeGdFeedback(readGdFeedback().filter(function(e) { return e.id !== id; })); renderGdFeedback();
+}
+
+async function initGdFeedback() {
+  renderGdFeedback();
+  try { var data = await callAuthApi('readGdFeedback'); if (data.entries && data.entries.length) { writeGdFeedback(data.entries); renderGdFeedback(); } } catch(e) { console.warn('GD FB server load failed, using local', e); }
+  var modal = document.getElementById('gd-fb-modal');
+  if (modal) { modal.addEventListener('click', function(e) { if (e.target === modal) closeGdFbModal(); }); }
+}
 </script>
 
 <style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>

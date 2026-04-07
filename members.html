@@ -548,13 +548,6 @@
   .roadmap-phase.current .roadmap-task-chip:hover {
     background: var(--crimson); color: white; border-color: var(--crimson);
   }
-  .roadmap-toggle {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    font-size: 0.75rem; color: var(--text-muted); background: none;
-    border: none; cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
-    padding: 0.3rem 0; margin-top: 0.5rem; transition: color 0.2s;
-  }
-  .roadmap-toggle:hover { color: var(--navy); }
 
   /* ===== EVENTS PRIORITY ===== */
   .priority-list { display: flex; flex-direction: column; gap: 1px; background: rgba(10,26,62,0.08); }
@@ -1910,12 +1903,13 @@
 </nav>
 
 <div class="mobile-menu-m" id="mobile-menu-m">
+  <a href="research.html">企業を知る</a>
   <a href="writing.html">ES・ガクチカ</a>
   <a href="interview-page.html">面接対策</a>
   <a href="resources.html">リソース</a>
   <a href="account.html">マイページ</a>
+  <a href="match.html">企業マッチング</a>
   <a href="community.html">コミュニティ</a>
-  <a href="glossary.html">用語集</a>
   <a href="index.html">トップに戻る</a>
   <button id="mobile-logout-btn" style="display:none;" onclick="logout()">ログアウト</button>
 </div>
@@ -1938,7 +1932,7 @@
 <div id="password-screen">
   <div class="pw-box">
     <div class="pw-icon">👤</div>
-    <h2 class="pw-title">会員専用ページ</h2>
+    <h2 class="pw-title">マイページ</h2>
     <p class="pw-sub" id="auth-gate-copy">このページは慶應就活ナビのメンバー限定です。<br>個人アカウントでログインすると閲覧できます。</p>
     <div class="gate-actions">
       <a class="pw-btn" id="gate-login-btn" href="account.html?mode=login&amp;returnTo=members.html">ログインして入る →</a>
@@ -1953,7 +1947,7 @@
   <div class="members-hero" style="padding:30px 5vw 20px;">
     <div class="members-hero-inner">
       <h1 style="font-size:1.4rem; margin-bottom:0.2rem;" id="members-hero-greeting">おかえりなさい</h1>
-      <p id="members-hero-copy" style="font-size:0.8rem;">今日も就活を進めましょう。</p>
+      <p id="members-hero-copy" style="font-size:0.8rem;">選考情報・限定イベント・資料・輪読会をまとめています。</p>
     </div>
   </div>
 
@@ -1979,7 +1973,7 @@
         <div id="wiz-panel-0">
           <div style="font-size:0.72rem; color:var(--gold); font-weight:700; letter-spacing:0.1em;">STEP 1 / 3</div>
           <div style="font-family:'Noto Serif JP',serif; font-size:1.1rem; font-weight:700; color:var(--navy); margin:0.5rem 0;">今の就活フェーズは？</div>
-          <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.8; margin-bottom:1rem;">選択したフェーズに合わせて、ページの表示順やおすすめアクションが変わります。</p>
+          <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.8; margin-bottom:1rem;">選択したフェーズに合わせ���、ページの表示順やおすすめアクションが変わります。</p>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;" id="wiz-stage-btns">
             <button onclick="wizSelectStage(this,'自己分析中')" class="wiz-stage-btn" style="padding:0.8rem; background:white; border:2px solid rgba(10,26,62,0.15); font-family:'Noto Sans JP',sans-serif; font-size:0.82rem; font-weight:600; color:var(--navy); cursor:pointer; transition:all 0.2s; text-align:left;">
               <div style="font-size:1.1rem; margin-bottom:0.3rem;">🔍</div>自己分析中
@@ -2017,8 +2011,48 @@
           <div style="font-family:'Noto Serif JP',serif; font-size:1.1rem; font-weight:700; color:var(--navy); margin:0.5rem 0;">準備完了！最初の一歩を踏み出そう</div>
           <p style="font-size:0.82rem; color:var(--text-muted); line-height:1.8; margin-bottom:1rem;" id="wiz-cta-desc">ページがあなたのフェーズに合わせてカスタマイズされました。さっそく始めましょう。</p>
           <div style="display:flex; gap:0.5rem;">
-            <a id="wiz-cta-link" href="writing.html" style="padding:0.6rem 1.2rem; background:var(--crimson); color:white; text-decoration:none; font-size:0.82rem; font-weight:700;" id="wiz-cta-btn">ガクチカを書く →</a>
+            <a id="wiz-cta-link" href="writing.html" style="padding:0.6rem 1.2rem; background:var(--crimson); color:white; text-decoration:none; font-size:0.82rem; font-weight:700;">ガクチカを書く →</a>
             <button onclick="completeWizard()" style="padding:0.6rem 1.2rem; background:var(--navy); color:white; border:none; font-size:0.82rem; font-weight:700; cursor:pointer; font-family:'Noto Sans JP',sans-serif;">ダッシュボードへ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- オンボーディング -->
+    <div class="onboarding-section" id="onboarding-section">
+      <div class="onboarding-label">FIRST STEPS</div>
+      <div class="onboarding-title">入会したらまずやること</div>
+      <div class="onboarding-steps">
+        <div class="onboarding-step">
+          <div class="onboarding-step-num">01</div>
+          <div>
+            <div class="onboarding-step-title">LINEコミュニティに参加する</div>
+            <div class="onboarding-step-desc">選考情報・仲間との交流はLINEが中心です。まだの人は申請フォームから参加してください。</div>
+            <a class="onboarding-step-link" href="https://docs.google.com/forms/d/e/1FAIpQLScL31q5XlLB7dtv1_37s-Ssm9DUQcJUDSCqYetDe3an48p8Hw/viewform?usp=publish-editor" target="_blank" rel="noopener">LINE参加申請 →</a>
+          </div>
+        </div>
+        <div class="onboarding-step">
+          <div class="onboarding-step-num">02</div>
+          <div>
+            <div class="onboarding-step-title">企業分析ノートを読む</div>
+            <div class="onboarding-step-desc">主要企業の事業内容・選考フローをまとめたノートが使えます。業界研究の起点として活用してください。</div>
+            <a class="onboarding-step-link" href="#company-notes">企業ノートを見る →</a>
+          </div>
+        </div>
+        <div class="onboarding-step">
+          <div class="onboarding-step-num">03</div>
+          <div>
+            <div class="onboarding-step-title">選考情報を投稿する</div>
+            <div class="onboarding-step-desc">受けた企業の選考情報を共有してください。みんなの情報がコミュニティの力になります。</div>
+            <a class="onboarding-step-link" id="onboarding-form-link" href="#" target="_blank" rel="noopener">投稿フォームへ →</a>
+          </div>
+        </div>
+        <div class="onboarding-step">
+          <div class="onboarding-step-num">04</div>
+          <div>
+            <div class="onboarding-step-title">過去問を共有する</div>
+            <div class="onboarding-step-desc">持っている講義の過去問を登録してください。学部・科目別に検索できます。</div>
+            <a class="onboarding-step-link" href="writing.html">ES保管庫へ →</a>
           </div>
         </div>
       </div>
@@ -2079,10 +2113,14 @@
     <div id="monthly-advice-card" style="margin-bottom:1.5rem;background:linear-gradient(135deg,#0a1a3e 0%,#142254 100%);border-radius:14px;padding:1.2rem 1.4rem;box-shadow:0 4px 16px rgba(10,26,62,0.25);"></div>
 
     <!-- 選考管理・内定サポートへのリンク（pipeline.html / offer-tools.html に移動済み） -->
+    <!-- removed: progress-section, calendar-section, offer-tools-section -->
+    <!-- placeholder to avoid breaking references -->
     <div style="display:none" id="progress-section"></div>
     <div style="display:none" id="calendar-section"></div>
     <div style="display:none" id="offer-tools-section"></div>
-    <!-- REMOVED progress/calendar/offer section HTML -->
+
+    <!-- REMOVED BELOW (progress tracker dashboard, toolbar, list, kanban, calendar, offer tools) -->
+    <!--
     <!-- ダッシュボードウィジェット -->
     <div class="m-section" id="stats-section">
       <div class="m-section-header">
@@ -2118,13 +2156,19 @@
     </div>
 
     <!-- GD練習会フィードバック（interview-page.html に移動済み） -->
-
+        </div>
+      </div>
     <div style="margin:2.5rem 0 1.5rem; padding:0 0.5rem;">
       <div style="font-size:0.65rem; letter-spacing:0.18em; color:var(--gold); font-weight:700; text-transform:uppercase;">QUICK ACCESS</div>
       <div style="font-family:'Noto Serif JP',serif; font-size:1.2rem; font-weight:700; color:var(--navy); margin-top:0.2rem;">機能メニュー</div>
       <div style="width:40px; height:2px; background:var(--gold); margin-top:0.5rem;"></div>
     </div>
     <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:1rem; margin-bottom:2rem;">
+      <a href="research.html" style="text-decoration:none; background:white; border:1px solid rgba(10,26,62,0.08); padding:1.5rem; transition:border-color 0.2s;">
+        <div style="font-size:0.65rem; letter-spacing:0.12em; color:var(--crimson); font-weight:700;">RESEARCH</div>
+        <div style="font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-top:0.3rem;">企業を知る</div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.4rem; line-height:1.6;">企業ノート・選考情報・クイズ・イベント</div>
+      </a>
       <a href="writing.html" style="text-decoration:none; background:white; border:1px solid rgba(10,26,62,0.08); padding:1.5rem; transition:border-color 0.2s;">
         <div style="font-size:0.65rem; letter-spacing:0.12em; color:var(--crimson); font-weight:700;">WRITE</div>
         <div style="font-family:'Noto Serif JP',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-top:0.3rem;">ES・ガクチカを書く</div>
@@ -2176,7 +2220,8 @@
 </div>
 
 
-<!-- モーダルは各専用ページに移動済み -->
+<!-- 以下のモーダルは各専用ページに移動済み -->
+<!-- GD: interview-page.html, 進捗: pipeline.html, 研究ノート: pipeline.html -->
 <!--
 <div class="gd-fb-modal-overlay-REMOVED" id="gd-fb-modal-REMOVED">
   <div class="gd-fb-modal-box">
@@ -2235,13 +2280,13 @@
 <div class="progress-modal-overlay" id="progress-modal">
   <div class="progress-modal-box">
     <div class="progress-modal-header">
-      <span class="progress-modal-title">選考を追加</span>
+      <span class="progress-modal-title">企業を追加</span>
       <button id="progress-modal-close" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">✕</button>
     </div>
     <div class="progress-modal-body">
       <div>
-        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">選考名 <span style="color:var(--crimson);">*</span></label>
-        <input type="text" id="pm-company" style="width:100%;padding:0.7rem;border:1px solid rgba(10,26,62,0.2);font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;outline:none;" placeholder="例：総合商社A">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">企業名 <span style="color:var(--crimson);">*</span></label>
+        <input type="text" id="pm-company" style="width:100%;padding:0.7rem;border:1px solid rgba(10,26,62,0.2);font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;outline:none;" placeholder="例：三菱商事">
       </div>
       <div>
         <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">業界</label>
@@ -2292,12 +2337,56 @@
 </div>
 -->
 
-<!-- recruit-fetch-modal removed for public version -->
+<!-- 選考情報AI収集モーダル -->
+<div class="progress-modal-overlay" id="recruit-fetch-modal">
+  <div class="progress-modal-box" style="max-width:520px;">
+    <div class="progress-modal-header">
+      <span class="progress-modal-title">AIで選考情報を収集</span>
+      <button onclick="document.getElementById('recruit-fetch-modal').classList.remove('open')" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.1rem;cursor:pointer;padding:0;">✕</button>
+    </div>
+    <div class="progress-modal-body">
+      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.7;">企業名を入力すると、AIが公式採用ページを探して選考情報を自動抽出します。</p>
+      <div>
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">企業名 <span style="color:var(--crimson);">*</span></label>
+        <input id="rf-company" type="text" style="width:100%;padding:0.6rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.88rem;font-family:'Noto Sans JP',sans-serif;" placeholder="例: トヨタ自動車">
+      </div>
+      <div style="margin-top:0.8rem;">
+        <label style="font-size:0.78rem;color:var(--text-muted);display:block;margin-bottom:0.3rem;">採用ページURL（任意 — 空欄ならAIが探します）</label>
+        <input id="rf-url" type="url" style="width:100%;padding:0.6rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.88rem;font-family:'Noto Sans JP',sans-serif;" placeholder="https://...">
+      </div>
+      <div style="font-size:0.78rem;color:var(--crimson);min-height:1.2em;margin-top:0.5rem;" id="rf-error"></div>
+      <button id="rf-fetch-btn" onclick="fetchRecruitInfo()" style="width:100%;padding:0.85rem;background:var(--navy);color:white;border:none;font-family:'Noto Sans JP',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;letter-spacing:0.06em;margin-top:0.5rem;">AIで取得する</button>
+
+      <!-- 結果プレビュー -->
+      <div id="rf-result" style="display:none;margin-top:1.2rem;border-top:1px solid rgba(10,26,62,0.1);padding-top:1rem;">
+        <div style="font-size:0.78rem;color:var(--gold);font-weight:700;letter-spacing:0.1em;margin-bottom:0.8rem;">取得結果</div>
+        <div id="rf-preview" style="font-size:0.82rem;line-height:1.8;"></div>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.5rem;" id="rf-source"></div>
+        <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+          <button id="rf-save-btn" onclick="saveRecruitInfo()" style="flex:1;padding:0.7rem;background:var(--crimson);color:white;border:none;font-family:'Noto Sans JP',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">選考情報スプシに保存</button>
+          <button onclick="document.getElementById('rf-result').style.display='none'" style="padding:0.7rem 1rem;background:none;border:1px solid rgba(10,26,62,0.2);color:var(--text-muted);font-family:'Noto Sans JP',sans-serif;font-size:0.82rem;cursor:pointer;">やり直す</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- スクロールトップボタン -->
 <button class="scroll-top-btn" id="scroll-top-btn" aria-label="ページトップへ戻る" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<!-- company-modal removed for public version -->
+<!-- COMPANY NOTE MODAL -->
+<div class="modal-overlay" id="company-modal" onclick="closeModal(event)">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-company-name" id="modal-company-name">–</div>
+        <div class="modal-industry" id="modal-industry"></div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
 
 <script src="auth.js"></script>
 <script>
@@ -2318,7 +2407,7 @@
   };
   const NOTICE_CSV     = ''; // ← お知らせスプシのCSV URLを貼る（列: 日付・タイトル・内容・タグ）
   const SELECTION_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSeg0-r0YzP_1sdSjvI98lNWrlwYfCsChk67fGlq3uwrQvuuFA/viewform?usp=publish-editor';
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
   const LENDING_FORM  = 'https://docs.google.com/forms/d/e/1FAIpQLScmV_ubANH5RNIHD_wEH3yakHbs5YqdegrPysSfpFo4veAg4Q/viewform'; // 列: タイトル, 著者, 状態(貸出可/貸出中), 現在の保有者
   let hasLoadedMembersContent = false;
 
@@ -2421,35 +2510,35 @@
   var WIZ_STAGE_DATA = {
     '自己分析中': {
       recs: [
-        { icon: '✍', title: 'ガクチカを書く', desc: 'STAR法でエピソードを整理。ES・面接の土台になります', link: 'writing.html' },
-        { icon: '📖', title: '就活用語を学ぶ', desc: '知らない用語があると損をします��まず基本を押さえよう', link: 'glossary.html' },
-        { icon: '👥', title: '仲間とつながる', desc: '同じ志望の仲間を見��けてモチベーションを維持', link: 'community.html' }
+        { icon: '\u270D', title: 'ガクチカを書く', desc: 'STAR法でエピソードを整理。ES・面接の土台になります', link: 'writing.html' },
+        { icon: '\uD83D\uDCD6', title: '企業分析ノートを読む', desc: '主要企業の事業・選考フローをチェック', link: '#company-notes' },
+        { icon: '\uD83D\uDC65', title: '仲間とつながる', desc: '同じ志望の仲間を見つけてモチベーションを維持', link: 'community.html' }
       ],
-      cta: { text: 'ガクチカを書く →', link: 'writing.html', desc: 'まずはガクチカを1つ書いてみましょう。AIが構成をチ��ックしてくれます。' }
+      cta: { text: 'ガクチカを書く \u2192', link: 'writing.html', desc: 'まずはガクチカを1つ書いてみましょう。AIが構成をチェックしてくれます。' }
     },
     'ES準備中': {
       recs: [
-        { icon: '📝', title: 'ESを書いてAI添削', desc: 'ESを書いてAIに添削してもらおう。何度でも無料です', link: 'writing.html' },
-        { icon: '✍', title: 'ガクチカバンクを整理', desc: 'エピソードをストックしておくと使い回し��楽に', link: 'writing.html' },
-        { icon: '📋', title: '選考を管理する', desc: '締切を登録して見逃しを防止', link: '#progress-section' }
+        { icon: '\uD83D\uDCDD', title: 'ESを書いてAI添削', desc: 'ESを書いてAIに添削してもらおう。何度でも無料です', link: 'writing.html' },
+        { icon: '\u270D', title: 'ガクチカバンクを整理', desc: 'エピソードをストックしておくと使い回しが楽に', link: 'writing.html' },
+        { icon: '\uD83D\uDCCB', title: '選考を管理する', desc: '締切を登録して見逃しを防止', link: '#progress-section' }
       ],
-      cta: { text: 'ES添削ツールへ →', link: 'writing.html', desc: 'ESを書いてAIに添削してもらいましょう。構成・具体性・表現力の観点でフィードバックがもらえます。' }
+      cta: { text: 'ES添削ツールへ \u2192', link: 'writing.html', desc: 'ESを書いてAIに添削してもらいましょう。構成・具体性・表現力の観点でフィードバックがもらえます。' }
     },
     '面接対策中': {
       recs: [
-        { icon: '🎤', title: '面接対策ノート', desc: '質問ごとに回答を準備。AIが深掘り��問を生成', link: 'interview-page.html' },
-        { icon: '🤖', title: 'AI模擬面接', desc: '音声認識でリアルな面接練習。即座にフィードバック', link: 'interview-page.html' },
-        { icon: '📋', title: '面接チェックリスト', desc: '当日の準備漏れを防ぐ14項目のチェックリスト', link: '#interview-checklist-section' }
+        { icon: '\uD83C\uDFA4', title: '面接対策ノート', desc: '質問ごとに回答を準備。AIが深掘り質問を生成', link: 'interview-page.html' },
+        { icon: '\uD83E\uDD16', title: 'AI模擬面接', desc: '音声認識でリアルな面接練習。即座にフィードバック', link: 'interview-page.html' },
+        { icon: '\uD83D\uDCCB', title: '面接チェックリスト', desc: '当日の準備漏れを防ぐ14項目のチェックリスト', link: '#interview-checklist-section' }
       ],
-      cta: { text: '面接対策を始める →', link: 'interview-page.html', desc: '面接でよく聞かれる質問への回答を準備しましょう。AIがあなたの回答を添削してくれます。' }
+      cta: { text: '面接対策を始める \u2192', link: 'interview-page.html', desc: '面接でよく聞かれる質問への回答を準備しましょう。AIがあなたの回答を添削してくれます。' }
     },
     '内定待ち': {
       recs: [
-        { icon: '📊', title: '選考状況を管理', desc: '企業ごとの進捗をまとめて管理', link: '#progress-section' },
-        { icon: '📅', title: '締切カレンダー', desc: 'スケジュールを可���化して漏れをなくす', link: '#calendar-section' },
-        { icon: '👥', title: '体験を共有する', desc: '後輩のためにES掲示板に投稿しよう', link: 'writing.html' }
+        { icon: '\uD83D\uDCCA', title: '選考状況を管理', desc: '企業ごとの進捗をまとめて管理', link: '#progress-section' },
+        { icon: '\uD83D\uDCC5', title: '締切カレンダー', desc: 'スケジュールを可視化して漏れをなくす', link: '#calendar-section' },
+        { icon: '\uD83D\uDC65', title: '体験を共有する', desc: '後輩のためにES掲示板に投稿しよう', link: 'writing.html' }
       ],
-      cta: { text: '選考管理へ →', link: '#progress-section', desc: '選考状況を登録して、すべてを一元管理しましょう。' }
+      cta: { text: '選考管理へ \u2192', link: '#progress-section', desc: '選考状況を登録して、すべてを一元管理しましょう。' }
     }
   };
 
@@ -2470,7 +2559,6 @@
 
   function wizSelectStage(btn, stage) {
     _wizSelectedStage = stage;
-    // ボタンのハイライト
     document.querySelectorAll('.wiz-stage-btn').forEach(function(b) {
       b.style.borderColor = 'rgba(10,26,62,0.15)';
       b.style.background = 'white';
@@ -2478,14 +2566,12 @@
     btn.style.borderColor = 'var(--navy)';
     btn.style.background = 'rgba(10,26,62,0.04)';
 
-    // ステージを保存してページを再構成
     localStorage.setItem(STAGE_KEY, stage);
     if (typeof setStage === 'function') setStage(stage);
 
-    // Step 2 のおすすめ��生成
     var data = WIZ_STAGE_DATA[stage];
     if (data) {
-      document.getElementById('wiz-rec-title').textContent = '「' + stage + '」のあなたへ';
+      document.getElementById('wiz-rec-title').textContent = '\u300C' + stage + '\u300D\u306E\u3042\u306A\u305F\u3078';
       document.getElementById('wiz-rec-list').innerHTML = data.recs.map(function(r) {
         return '<div style="display:flex;align-items:flex-start;gap:0.8rem;padding:0.7rem 0;border-bottom:1px solid rgba(10,26,62,0.06);">'
           + '<div style="font-size:1.1rem;flex-shrink:0;margin-top:0.1rem;">' + r.icon + '</div>'
@@ -2493,7 +2579,6 @@
           + '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.1rem;">' + r.desc + '</div></div></div>';
       }).join('');
 
-      // Step 3 のCTAをセット
       document.getElementById('wiz-cta-desc').textContent = data.cta.desc;
       var ctaLink = document.getElementById('wiz-cta-link');
       ctaLink.textContent = data.cta.text;
@@ -2505,14 +2590,12 @@
       }
     }
 
-    // 自動で次のステップへ
     setTimeout(function() { nextWizStep(1); }, 300);
   }
 
   function completeWizard() {
     localStorage.setItem(WIZARD_KEY, '1');
     document.getElementById('onboarding-wizard').style.display = 'none';
-    // ダッシュボードを再描画（フェーズ選択の反映）
     renderHomeDashboard(_dashStats);
   }
 
@@ -2671,7 +2754,7 @@
   function checkDeadlineAlert() {
     if (!selectionRows.length) return;
 
-    // アカウントごとの気になりリストを読む
+    // アカウントごとの気になりリストを読む（match.htmlと共有）
     const liked = KeioNaviAuth.getLikedCompanies();
     const today = new Date();
 
@@ -2821,7 +2904,7 @@
 
     el.innerHTML = `
       <div class="selection-row header">
-        <span>選考名</span><span>締切</span><span>タグ</span><span>資料</span>
+        <span>企業名</span><span>締切</span><span>タグ</span><span>資料</span>
       </div>` +
       pageRows.map(r => {
         const companyLabel = escHtml(r[0] || '–');
@@ -2989,6 +3072,7 @@
             </div>
           </div>
           <div class="event-actions">
+            ${noteExists ? '<span class="note-badge">📋 企業ノートあり</span>' : ''}
             ${hasBenefit ? `<span class="event-benefit">🎁 ${escHtml(r[6].trim())}さん紹介特典あり</span>` : ''}
             ${linkUrl
               ? `<a href="${escAttr(linkUrl)}" target="_blank" rel="noopener noreferrer" class="event-apply-btn">申し込む →</a>`
@@ -3110,17 +3194,49 @@
   }
 
 
-  // ===== 企業分析ノート（無効化） =====
+  // ===== 企業分析ノート =====
   let companyNotes = [];
 
   async function loadCompanyNotes() {
-    // 企業ノート機能は無効化されています
-    return;
+    if (!GAS_PROXY_URL) return;
+    try {
+      companyNotes = await fetchViaGAS(COMPANY_KEY);
+      renderRandomNotes();
+    } catch(e) { console.warn('企業分析ノート読み込み失敗', e); }
   }
 
   function renderRandomNotes() {
-    // 企業ノート機能は無効化されています
-    return;
+    const valid = companyNotes.filter(r => r[0] && r[0].trim());
+    if (!valid.length) return;
+    const liked = KeioNaviAuth.getLikedCompanies();
+    const title = document.getElementById('random-notes-title');
+    const preferred = liked
+      .map(company => findNote(company.name))
+      .filter(Boolean)
+      .filter((note, index, list) => list.findIndex(item => item[0] === note[0]) === index);
+    const fallback = valid
+      .filter(note => !preferred.some(item => item[0] === note[0]))
+      .sort(() => Math.random() - 0.5);
+    const picks = [...preferred, ...fallback].slice(0, Math.min(3, valid.length));
+    const section = document.getElementById('random-notes-section');
+    const grid = document.getElementById('random-notes-grid');
+    section.style.display = 'block';
+    if (title) {
+      title.textContent = preferred.length ? '気になる企業のノート' : '今日のおすすめ企業ノート';
+    }
+    grid.innerHTML = picks.map(r => {
+      const preview = escHtml([r[2], r[3], r[4]].filter(Boolean).join(' ／ '));
+      const escapedName = escAttr(r[0] || '');
+      return `<div class="company-note-card" data-open-modal="${escapedName}">
+        <div class="company-note-card-name">${escHtml(r[0] || '–')}</div>
+        ${r[1] ? `<div class="company-note-card-industry">${escHtml(r[1])}</div>` : ''}
+        ${preview ? `<div class="company-note-card-preview">${preview}</div>` : ''}
+        <div class="company-note-card-arrow">ノートを見る →</div>
+      </div>`;
+    }).join('');
+    grid.querySelectorAll('[data-open-modal]').forEach(card => {
+      card.addEventListener('click', () => openModal(card.dataset.openModal));
+    });
   }
 
 
@@ -3181,10 +3297,18 @@
           ? `<button id="search-generate-btn"
               style="padding:0.7rem 1.8rem; background:var(--navy); color:white; border:none;
               font-family:'Noto Sans JP',sans-serif; font-size:0.85rem; font-weight:600;
-              cursor:pointer; letter-spacing:0.06em; transition:background 0.2s;"
+              cursor:pointer; letter-spacing:0.06em; transition:background 0.2s; margin-bottom:1rem;"
               onmouseover="this.style.background='var(--crimson)'" onmouseout="this.style.background='var(--navy)'">
               公式HPからAI分析ノートを生成
-            </button>`
+            </button>
+            <details style="text-align:left; max-width:400px; margin:0 auto;">
+              <summary style="font-size:0.72rem; color:var(--text-muted); cursor:pointer; margin-bottom:0.5rem;">公式URLを手動で指定する（任意）</summary>
+              <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.4rem;">
+                <input type="url" id="manual-corp-url" placeholder="コーポレートサイトURL" style="padding:0.45rem 0.7rem; border:1px solid rgba(10,26,62,0.15); font-size:0.75rem; font-family:'Noto Sans JP',sans-serif; outline:none;">
+                <input type="url" id="manual-recruit-url" placeholder="採用ページURL" style="padding:0.45rem 0.7rem; border:1px solid rgba(10,26,62,0.15); font-size:0.75rem; font-family:'Noto Sans JP',sans-serif; outline:none;">
+                <div style="font-size:0.65rem; color:var(--text-muted); line-height:1.5;">※ 企業の公式サイトのみ入力可能です。就活サイト・口コミサイトのURLはブロックされます。</div>
+              </div>
+            </details>`
           : ''
         }
       </div>`;
@@ -3283,10 +3407,12 @@
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 90000);
       const sessionToken = KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
+      var manualCorpUrl = (document.getElementById('manual-corp-url') || {}).value || '';
+      var manualRecruitUrl = (document.getElementById('manual-recruit-url') || {}).value || '';
       const res = await fetch(GAS_PROXY_URL, {
         method: 'POST',
         redirect: 'follow',
-        body: JSON.stringify({ action: 'generate', companyName: searchWord, sessionToken }),
+        body: JSON.stringify({ action: 'generate', companyName: searchWord, sessionToken: sessionToken, manualCorpUrl: manualCorpUrl.trim(), manualRecruitUrl: manualRecruitUrl.trim() }),
         signal: controller.signal,
       });
       clearTimeout(timeout);
@@ -3330,13 +3456,30 @@
       // 生成結果を一時保存（正式名称・検索ワード両方）
       window._lastGeneratedNote = { searchWord, officialName, note };
 
+      // 出典URL表示
+      var sourceHtml = '';
+      if (note.sourceUrls && note.sourceUrls.length) {
+        var sourceUrls = note.sourceUrls.map(function(u) { return safeHttpUrl(u); }).filter(Boolean);
+        if (sourceUrls.length) {
+          sourceHtml = '<div style="margin-top:1rem;padding:0.6rem 0.8rem;background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);">'
+            + '<div style="font-size:0.65rem;color:var(--gold);font-weight:700;letter-spacing:0.1em;margin-bottom:0.3rem;">出典（公式サイト）</div>'
+            + sourceUrls.map(function(u) { return '<div style="font-size:0.72rem;"><a href="' + escAttr(u) + '" target="_blank" rel="noopener noreferrer" style="color:var(--navy);word-break:break-all;">' + escHtml(u) + '</a></div>'; }).join('')
+            + '</div>';
+        }
+      }
+
+      // 注記
+      var disclaimerHtml = '<div style="margin-top:0.8rem;font-size:0.68rem;color:var(--text-muted);line-height:1.6;padding:0.5rem 0.8rem;background:rgba(10,26,62,0.02);border:1px solid rgba(10,26,62,0.06);">'
+        + (note.disclaimer || '※この分析は企業公式HPの情報に基づくAIの独自分析です。正確性は保証されません。必ず公式情報をご確認ください。')
+        + '</div>';
+
       body.innerHTML = fields.map(f => {
         if (!f.value) return '';
         const val = f.isUrl
           ? renderUrlList(f.value)
           : `<div class="modal-field-content">${escHtml(f.value)}</div>`;
         return `<div class="modal-field"><div class="modal-field-label">${escHtml(f.label)}</div>${val}</div>`;
-      }).filter(Boolean).join('') +
+      }).filter(Boolean).join('') + sourceHtml + disclaimerHtml +
       `<div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid rgba(10,26,62,0.1); text-align:center;">
         <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:0.8rem;">※ このノートはまだスプシに保存されていません</div>
         <button onclick="saveLastNote(this)"
@@ -3868,7 +4011,7 @@
       if (days >= 0 && days <= 7) {
         var label = days === 0 ? '今日' : 'あと' + days + '日';
         actions.push({
-          icon: '⏰', title: p.company + ' の締切が' + label,
+          icon: '\u23F0', title: p.company + ' の締切が' + label,
           desc: dl.toLocaleDateString('ja-JP') + ' まで',
           link: '#progress-section', priority: days <= 3 ? 'urgent' : 'high', sort: days
         });
@@ -3878,28 +4021,28 @@
 
     // ステップバイステップ推奨
     if (gkCount === 0) {
-      actions.push({ icon: '✍', title: 'ガクチカを書こう', desc: 'STAR法でエピソードを整理。ESや面接の土台になります', link: 'writing.html', priority: 'high' });
+      actions.push({ icon: '\u270D', title: 'ガクチカを書こう', desc: 'STAR法でエピソードを整理。ESや面接の土台になります', link: 'writing.html', priority: 'high' });
     } else if (esCount === 0) {
-      actions.push({ icon: '📝', title: 'ESを作成しよう', desc: 'ガクチカをもとにESを書いてAIに添削してもらおう', link: 'writing.html', priority: 'high' });
+      actions.push({ icon: '\uD83D\uDCDD', title: 'ESを作成しよう', desc: 'ガクチカをもとにESを書いてAIに添削してもらおう', link: 'writing.html', priority: 'high' });
     } else if (ipCount === 0 && (ipDb.companies || []).length === 0) {
-      actions.push({ icon: '🎤', title: '面接対策を始めよう', desc: 'よく聞かれる質問への回答を準備しましょう', link: 'interview-page.html', priority: 'medium' });
+      actions.push({ icon: '\uD83C\uDFA4', title: '面接対策を始めよう', desc: 'よく聞かれる質問への回答を準備しましょう', link: 'interview-page.html', priority: 'medium' });
     } else if (progress.length === 0) {
-      actions.push({ icon: '📋', title: '選考を追加しよう', desc: '選考状況を管理して締切を見逃さない', link: '#progress-section', priority: 'medium' });
+      actions.push({ icon: '\uD83D\uDCCB', title: '選考を追加しよう', desc: '選考状況を管理して締切を見逃さない', link: '#progress-section', priority: 'medium' });
     }
 
     // チェックリスト未完了
     if (checklist.length > 0 && checklist.length < 14) {
-      actions.push({ icon: '✅', title: '面接チェックリスト 未完了あり', desc: checklist.length + '/14 完了', link: '#interview-checklist-section', priority: 'low' });
+      actions.push({ icon: '\u2705', title: '面接チェックリスト 未完了あり', desc: checklist.length + '/14 完了', link: '#interview-checklist-section', priority: 'low' });
     }
 
     // データ未取得時
     if (!_dashStats && actions.length === 0) {
-      actions.push({ icon: '📊', title: 'データを読み込み中...', desc: 'しばらくお待ちください', link: '#', priority: 'low' });
+      actions.push({ icon: '\uD83D\uDCCA', title: 'データを読み込み中...', desc: 'しばらくお待ちください', link: '#', priority: 'low' });
     }
 
     // 全部できてる場合
     if (_dashStats && actions.length === 0) {
-      actions.push({ icon: '🎯', title: 'いい調子です！', desc: '新しい選考を追加するか、面接練習を続けよう', link: 'interview-page.html', priority: 'low' });
+      actions.push({ icon: '\uD83C\uDFAF', title: 'いい調子です！', desc: '新しい選考を追加するか、面接練習を続けよう', link: 'interview-page.html', priority: 'low' });
     }
 
     var el = document.getElementById('action-cards');
@@ -4090,7 +4233,7 @@
       tasks: [
         { label: 'ガクチカ整理', link: 'writing.html' },
         { label: '強み・弱み分析', link: 'writing.html' },
-        { label: '用語を学ぶ', link: 'glossary.html' }
+        { label: '企業ノートを読む', link: '#company-notes' }
       ]
     },
     {
@@ -4099,7 +4242,7 @@
       tasks: [
         { label: 'ES作成・添削', link: 'writing.html' },
         { label: 'ガクチカ深掘り', link: 'writing.html' },
-        { label: '業界研究', link: 'glossary.html' }
+        { label: '企業研究', link: 'research.html' }
       ]
     },
     {
@@ -4117,7 +4260,7 @@
       tasks: [
         { label: 'OB訪問', link: 'interview-page.html' },
         { label: 'ES改善', link: 'writing.html' },
-        { label: '選考管理', link: '#progress-section' }
+        { label: '企業マッチング', link: 'match.html' }
       ]
     },
     {
@@ -4156,7 +4299,6 @@
     var currentMonth = now.getMonth();
     var userStage = localStorage.getItem(STAGE_KEY) || '';
 
-    // 現在フェーズを判定（ユーザー設定 or 月ベース）
     var currentIdx = -1;
     if (userStage) {
       for (var i = ROADMAP_PHASES.length - 1; i >= 0; i--) {
@@ -4225,7 +4367,6 @@
     if (!text) return;
     try {
       await callAuthApi('writeTimeline', { text: text });
-      if (typeof gtag === 'function') { gtag('event', 'timeline_post'); }
       input.value = '';
       loadTimeline();
     } catch(e) { alert(e.message); }
@@ -4330,7 +4471,7 @@
   const CL_KEY = 'keio_navi_checklist_v1';
   const CL_GROUPS = [
     { title: '面接前の準備', items: [
-      { id:'cl1', text:'業界研究は完了しているか' },
+      { id:'cl1', text:'企業研究は完了しているか' },
       { id:'cl2', text:'自分の強み・弱みを整理したか' },
       { id:'cl3', text:'逆質問を3つ以上準備したか' },
       { id:'cl4', text:'志望動機を1分で話せるか' },
@@ -4630,7 +4771,7 @@
     else if (list.some(e => e.status === 'active' && PROGRESS_STAGES.indexOf(e.stage) >= 2)) badges.push('面接突破');
     badgesEl.innerHTML = badges.length
       ? badges.map(b => `<span class="dash-badge">${b}</span>`).join('')
-      : '<span class="dash-badge-empty">選考を追加するとバッジが表示されます</span>';
+      : '<span class="dash-badge-empty">企業を追加するとバッジが表示されます</span>';
   }
 
   function renderProgressList() {
@@ -4639,7 +4780,7 @@
     renderProgressDashboard(list);
     renderProgressAnalytics();
     if (!list.length) {
-      el.innerHTML = '<div class="m-empty">まだ登録されていません。「＋ 選考を追加」から登録してください。</div>';
+      el.innerHTML = '<div class="m-empty">まだ登録されていません。「＋ 企業を追加」から登録してください。</div>';
       return;
     }
     const sorted = [...list].sort((a, b) => {
@@ -4888,7 +5029,7 @@
     });
     document.getElementById('pm-submit').addEventListener('click', async () => {
       const company = document.getElementById('pm-company').value.trim();
-      if (!company) { document.getElementById('pm-error').textContent = '選考名を入力してください。'; return; }
+      if (!company) { document.getElementById('pm-error').textContent = '企業名を入力してください。'; return; }
       const newEntry = {
         id: Date.now().toString(),
         company,
@@ -4933,7 +5074,6 @@
     var list = readProgress();
     var el = document.getElementById('kanban-board');
 
-    // カラム定義：通常ステージ＋結果
     var columns = PROGRESS_STAGES.map(function(s) { return { label: s, entries: [] }; });
     columns.push({ label: '結果', entries: [], isResult: true });
 
@@ -4962,7 +5102,6 @@
           if (entry.status === 'offer') cardCls += ' offer';
           if (entry.status === 'rejected') cardCls += ' rejected';
 
-          // 締切表示
           var deadlineMeta = '';
           if (entry.deadline) {
             var dl = new Date(entry.deadline);
@@ -4987,7 +5126,6 @@
             html += '<div style="font-size:0.62rem;color:var(--text-muted);margin-bottom:0.3rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + entry.memo + '</div>';
           }
 
-          // ステージ移動ボタン + メモ
           html += '<div class="kanban-card-actions">';
           html += '<button class="kanban-memo-btn" onclick="openResearchNote(\'' + entry.id + '\')">メモ</button>';
           if (col.isResult) {
@@ -5016,7 +5154,6 @@
     setProgressStage(id, stageIdx);
   }
 
-  // リスト系操作のあとにカンバン再描画をフック
   (function() {
     var origRenderList = renderProgressList;
     renderProgressList = function() {
@@ -5042,7 +5179,7 @@
     { bg: 'rgba(0,112,60,0.18)',  border: '#00703c', label: '#00703c' },
     { bg: 'rgba(123,47,190,0.18)',border: '#7b2fbe', label: '#7b2fbe' }
   ];
-  const SITE_BRAND = '就活ナビ';
+  const SITE_BRAND = '慶應就活ナビ';
 
   function readOfferScores() {
     try { return JSON.parse(localStorage.getItem(OFFER_COMPARE_KEY) || '{}'); } catch { return {}; }
@@ -5816,7 +5953,7 @@
   }
 
   // ===== AI就活サポートツール =====
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
 
   // ── GAS認証API 共通呼び出し ──────────────────────────────────────────────
   async function callAuthApi(action, extraPayload) {
@@ -6245,7 +6382,7 @@
         ${escHtml(c.name || '')}<span class="ip-company-chip-badge">${ready}/${qs.length}</span>
       </button>`;
     }).join('');
-    el.innerHTML = chips + `<button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">＋ テーマを追加</button>`;
+    el.innerHTML = chips + `<button class="ip-add-chip-btn" onclick="ipOpenAddCompany()">＋ 企業を追加</button>`;
   }
 
   function ipSelectCompany(id) {
@@ -6416,7 +6553,7 @@
 
   // ── 企業 CRUD ──────────────────────────────────────────────────────────────
   function ipOpenAddCompany() {
-    document.getElementById('ip-cm-title').textContent = 'テーマを追加する';
+    document.getElementById('ip-cm-title').textContent = '企業を追加する';
     ['ip-cm-id','ip-cm-name','ip-cm-industry','ip-cm-position'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('ip-cm-status').value = '';
     document.getElementById('ip-cm-error').textContent = '';
@@ -6426,7 +6563,7 @@
   function ipOpenEditCompany(id) {
     const c = ipDb.companies.find(c => c.id === id);
     if (!c) return;
-    document.getElementById('ip-cm-title').textContent = 'テーマを編集する';
+    document.getElementById('ip-cm-title').textContent = '企業を編集する';
     document.getElementById('ip-cm-id').value       = c.id;
     document.getElementById('ip-cm-name').value     = c.name     || '';
     document.getElementById('ip-cm-industry').value = c.industry || '';
@@ -6440,7 +6577,7 @@
 
   function ipSaveCompany() {
     const name = document.getElementById('ip-cm-name').value.trim();
-    if (!name) { document.getElementById('ip-cm-error').textContent = 'テーマ名を入力してください。'; return; }
+    if (!name) { document.getElementById('ip-cm-error').textContent = '企業名を入力してください。'; return; }
     const id = document.getElementById('ip-cm-id').value;
     if (id) {
       const c = ipDb.companies.find(c => c.id === id);
@@ -7064,7 +7201,7 @@
     const originalEs = document.getElementById('rw-original').value.trim();
     const targetCompany = document.getElementById('rw-company').value.trim();
     if (!originalEs) { document.getElementById('rw-error').textContent = '元のES内容を入力してください。'; return; }
-    if (!targetCompany) { /* skip company validation for public version */ }
+    if (!targetCompany) { document.getElementById('rw-error').textContent = '志望企業名を入力してください。'; return; }
     document.getElementById('rw-error').textContent = '';
     setAiLoading('rw-submit-btn', 'rw-result', 'rw-error', true);
     try {
@@ -7322,7 +7459,6 @@
 
     closeGdFbModal();
 
-    // サーバーに保存
     try {
       var result = await callAuthApi('writeGdFeedback', { entry: entry });
       if (result.id) entry.id = result.id;
@@ -7330,7 +7466,6 @@
       console.warn('GD FB server save failed', e);
     }
 
-    // ローカルにも反映
     var list = readGdFeedback();
     if (editId) {
       list = list.map(function(e) { return e.id === editId ? entry : e; });
@@ -7343,7 +7478,6 @@
 
   async function deleteGdFbEntry(id) {
     if (!confirm('このフィードバック記録を削除しますか？')) return;
-    // サーバーから削除
     try {
       await callAuthApi('deleteGdFeedback', { id: id });
     } catch(e) {
@@ -7356,7 +7490,6 @@
 
   async function initGdFeedback() {
     renderGdFeedback();
-    // サーバーからロード
     try {
       var data = await callAuthApi('readGdFeedback');
       if (data.entries && data.entries.length) {
@@ -7386,7 +7519,7 @@
   else updateAuthGate();
 </script>
 
-<div style="padding:1rem 5vw 0.5rem;text-align:center;font-size:0.7rem;color:var(--text-muted);line-height:1.7;">AI回答は参考情報です。最終判断は必ずご自身で行ってください。</div>
+<div style="text-align:center;padding:1.5rem 1rem 0.5rem;font-size:0.6rem;color:rgba(10,26,62,0.25);line-height:1.7;max-width:500px;margin:2rem auto 0;">本サイトに掲載されている企業情報はAIによる独自分析または公開情報に基づくものであり、各企業の公式見解ではありません。正確な情報は各企業の公式サイトをご確認ください。</div>
 
 <!-- 固定下部タブバー -->
 <style>

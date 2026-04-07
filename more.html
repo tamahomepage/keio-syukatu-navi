@@ -104,6 +104,12 @@
 
   /* ===== MENU GRID ===== */
   .more-main { max-width: 900px; margin: 0 auto; padding: 2rem 5vw 4rem; }
+  .more-section-label {
+    font-family: 'Noto Serif JP', serif; font-size: 0.82rem; color: var(--navy);
+    font-weight: 700; letter-spacing: 0.08em; margin-bottom: 0.8rem; margin-top: 2rem;
+    padding-bottom: 0.5rem; border-bottom: 1px solid rgba(10,26,62,0.1);
+  }
+  .more-section-label:first-child { margin-top: 0; }
   .more-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
   }
@@ -233,6 +239,7 @@
   </section>
 
   <main class="more-main">
+    <div class="more-section-label">ツール・管理</div>
     <div class="more-grid">
       <a href="pipeline.html" class="more-card">
         <span class="more-card-icon">📋</span>
@@ -256,6 +263,24 @@
         </div>
       </a>
       </a>
+      <a href="research.html" class="more-card">
+        <span class="more-card-icon">🔍</span>
+        <div class="more-card-text">
+          <div class="more-card-title">企業研究</div>
+          <div class="more-card-desc">企業情報を調べて選考対策に活用</div>
+        </div>
+      </a>
+      <a href="match.html" class="more-card">
+        <span class="more-card-icon">💘</span>
+        <div class="more-card-text">
+          <div class="more-card-title">企業マッチング</div>
+          <div class="more-card-desc">あなたに合った企業を診断・提案</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="more-section-label">学ぶ・調べる</div>
+    <div class="more-grid">
       <a href="glossary.html" class="more-card">
         <span class="more-card-icon">📖</span>
         <div class="more-card-text">
@@ -305,6 +330,10 @@
           <div class="more-card-desc">仲間からのフィードバックで自分の強みを発見</div>
         </div>
       </a>
+    </div>
+
+    <div class="more-section-label">設定・その他</div>
+    <div class="more-grid">
       <a href="javascript:void(0)" class="more-card" onclick="openExportModal()">
         <span class="more-card-icon">📥</span>
         <div class="more-card-text">
@@ -332,6 +361,13 @@
         <div class="more-card-text">
           <div class="more-card-title">プライバシーポリシー</div>
           <div class="more-card-desc">個人情報の取り扱いについて</div>
+        </div>
+      </a>
+      <a href="admin.html" class="more-card">
+        <span class="more-card-icon">🔧</span>
+        <div class="more-card-text">
+          <div class="more-card-title">管理画面</div>
+          <div class="more-card-desc">サイト管理・データ分析ダッシュボード</div>
         </div>
       </a>
     </div>

@@ -5,7 +5,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0a1a3e">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>他己分析 ｜ 就活ナビ</title>
+<title>他己分析 ｜ 慶應就活ナビ</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,20 +50,22 @@
   }
   .nav-logo {
     font-family: 'Playfair Display', serif;
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: var(--gold-light);
-    letter-spacing: 0.04em;
     text-decoration: none;
   }
   .nav-back {
-    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
     text-decoration: none;
-    font-size: 0.82rem;
-    letter-spacing: 0.08em;
-    font-weight: 500;
+    letter-spacing: 0.06em;
     transition: color 0.2s;
   }
   .nav-back:hover { color: var(--gold-light); }
+  .nav-member-badge {
+    font-size: 0.68rem; background: rgba(201,168,76,0.15); color: var(--gold);
+    padding: 0.2rem 0.7rem; border: 1px solid rgba(201,168,76,0.3); letter-spacing: 0.1em;
+  }
 
   /* ===== MAIN CONTAINER ===== */
   .pf-container {
@@ -177,7 +179,7 @@
     border-color: var(--navy);
   }
 
-  /* ===== RESULTS LIST ===== */
+  /* ===== RESULTS ===== */
   .pf-results-header {
     display: flex;
     align-items: center;
@@ -286,7 +288,6 @@
     line-height: 1.7;
   }
 
-  /* ===== LOADING ===== */
   .pf-loading {
     text-align: center;
     padding: 2rem;
@@ -294,7 +295,6 @@
     font-size: 0.85rem;
   }
 
-  /* ===== LOGIN PROMPT ===== */
   .pf-login-prompt {
     text-align: center;
     padding: 2rem;
@@ -304,7 +304,6 @@
     font-weight: 600;
   }
 
-  /* ===== NOT FOUND ===== */
   .pf-not-found {
     text-align: center;
     padding: 3rem 2rem;
@@ -326,17 +325,17 @@
 
 <!-- NAV -->
 <nav>
-  <a href="index.html" class="nav-logo">就活ナビ</a>
-  <a href="index.html" class="nav-back">トップへ戻る</a>
+  <a href="members.html" class="nav-logo">慶應就活ナビ</a>
+  <a href="members.html" class="nav-back">会員ページへ戻る</a>
+  <span class="nav-member-badge">MEMBER</span>
 </nav>
 
 <!-- MAIN -->
 <div class="pf-container">
 
-  <!-- Loading state -->
   <div id="pf-loading" class="pf-loading">読み込み中...</div>
 
-  <!-- ===== SEND MODE (logged-in user) ===== -->
+  <!-- ===== SEND MODE ===== -->
   <div id="pf-send-mode" style="display:none;">
     <div class="pf-hero">
       <h1>他己分析</h1>
@@ -369,7 +368,7 @@
     </div>
   </div>
 
-  <!-- ===== RESPONSE MODE (friend answering) ===== -->
+  <!-- ===== RESPONSE MODE ===== -->
   <div id="pf-response-mode" style="display:none;">
     <div class="pf-hero">
       <h1 id="pf-response-title">他己分析に協力する</h1>
@@ -412,7 +411,6 @@
       </div>
     </div>
 
-    <!-- Thank you after submission -->
     <div class="pf-thankyou" id="pf-thankyou">
       <div class="pf-thankyou-icon">&#10003;</div>
       <h2>回答ありがとうございました！</h2>
@@ -443,23 +441,20 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
 
   let currentToken = null;
   let generatedLink = '';
 
-  // ===== INITIALIZATION =====
   (async function init() {
     var params = new URLSearchParams(window.location.search);
     var token = params.get('token');
 
     if (token) {
-      // RESPONSE MODE - friend answering
       document.getElementById('pf-loading').style.display = 'none';
       currentToken = token;
       await loadResponseMode(token);
     } else {
-      // SEND MODE - check if logged in
       var session = getSession();
       if (session && session.sessionToken) {
         document.getElementById('pf-loading').style.display = 'none';
@@ -479,11 +474,8 @@
     } catch(e) { return null; }
   }
 
-  // ===== RESPONSE MODE =====
   async function loadResponseMode(token) {
     document.getElementById('pf-response-mode').style.display = '';
-    // We set a generic title; the GAS will validate the token on submit
-    // For privacy, we don't expose displayName until they submit
     try {
       var res = await fetch(GAS_PROXY_URL, {
         method: 'POST',
@@ -497,9 +489,7 @@
         document.getElementById('pf-response-mode').style.display = 'none';
         document.getElementById('pf-not-found').style.display = '';
       }
-    } catch(e) {
-      // Keep showing the form even if info fetch fails
-    }
+    } catch(e) {}
   }
 
   async function submitFeedback() {
@@ -554,7 +544,6 @@
     }
   }
 
-  // ===== SEND MODE =====
   async function createFeedbackRequest() {
     var session = getSession();
     if (!session) { alert('ログインが必要です。'); return; }
@@ -614,7 +603,6 @@
     window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(generatedLink), '_blank', 'noopener,noreferrer');
   }
 
-  // ===== LOAD RESULTS =====
   async function loadResults(sessionToken) {
     try {
       var res = await fetch(GAS_PROXY_URL, {
@@ -629,9 +617,7 @@
       if (data.status === 'ok' && data.feedbacks && data.feedbacks.length > 0) {
         renderResults(data.feedbacks);
       }
-    } catch(e) {
-      // Silently fail, show default empty state
-    }
+    } catch(e) {}
   }
 
   function renderResults(feedbacks) {

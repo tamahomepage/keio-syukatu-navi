@@ -2,8 +2,25 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>企業マッチング | 慶應就活ナビ</title>
+<meta name="description" content="慶應就活ナビの企業マッチング機能。気になる企業をスワイプして、自分に合った就職先を見つけよう。">
+<meta name="robots" content="noindex, nofollow">
+
+<!-- OGP -->
+<meta property="og:title" content="企業マッチング | 慶應就活ナビ">
+<meta property="og:description" content="スワイプで気になる企業を探そう。慶應生のための就活支援コミュニティ。">
+<meta property="og:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+<meta property="og:url" content="https://naotama1123.github.io/keio-syukatu-navi/match.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="慶應就活ナビ">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="企業マッチング | 慶應就活ナビ">
+<meta name="twitter:description" content="スワイプで気になる企業を探そう。慶應生のための就活支援コミュニティ。">
+<meta name="twitter:image" content="https://naotama1123.github.io/keio-syukatu-navi/ogp.jpg">
+
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -86,15 +103,28 @@
   .card-fl-label { font-size: 0.57rem; color: var(--crimson); font-weight: 700; letter-spacing: 0.18em; margin-bottom: 0.3rem; }
   .card-fl-text { font-size: 0.79rem; color: var(--text); line-height: 1.75; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-  .card-footer { padding: 0.7rem 1.5rem 1rem; display: flex; gap: 0.4rem; flex-wrap: wrap; flex-shrink: 0; border-top: 1px solid rgba(10,26,62,0.06); }
+  .card-footer { padding: 0.7rem 1.5rem 1rem; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; flex-shrink: 0; border-top: 1px solid rgba(10,26,62,0.06); }
   .chip { font-size: 0.6rem; padding: 0.18rem 0.6rem; background: rgba(10,26,62,0.06); color: var(--navy); border-radius: 20px; font-weight: 600; }
   .chip-link { font-size: 0.6rem; padding: 0.18rem 0.6rem; background: rgba(192,0,26,0.06); color: var(--crimson); border-radius: 20px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
   .chip-link:hover { background: rgba(192,0,26,0.12); }
+  .card-note-btn { margin-left: auto; font-size: 0.6rem; padding: 0.22rem 0.7rem; background: rgba(10,26,62,0.07); color: var(--navy); border: 1px solid rgba(10,26,62,0.12); border-radius: 20px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.2s; flex-shrink: 0; }
+  .card-note-btn:hover { background: var(--navy); color: white; }
 
   /* Stamps */
   .stamp { position: absolute; z-index: 10; pointer-events: none; font-size: 1rem; font-weight: 900; letter-spacing: 0.12em; padding: 0.35rem 0.9rem; border: 3px solid; border-radius: 4px; opacity: 0; transition: opacity 0.05s; }
   .stamp-like { top: 1.2rem; left: 1.2rem; color: var(--green); border-color: var(--green); transform: rotate(-12deg); }
   .stamp-skip { top: 1.2rem; right: 1.2rem; color: var(--crimson); border-color: var(--crimson); transform: rotate(12deg); }
+
+  /* Industry filter */
+  .ind-filter { display:flex; flex-wrap:wrap; gap:0.4rem; width:100%; max-width:380px; margin-bottom:0.7rem; justify-content:center; }
+  .ind-chip {
+    font-size:0.58rem; padding:0.22rem 0.7rem; border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.55);
+    border-radius:20px; cursor:pointer; font-family:'Noto Sans JP',sans-serif;
+    font-weight:600; letter-spacing:0.06em; transition:all 0.18s; white-space:nowrap;
+  }
+  .ind-chip:hover { border-color:rgba(201,168,76,0.4); color:rgba(255,255,255,0.85); }
+  .ind-chip.active { background:rgba(201,168,76,0.18); border-color:var(--gold); color:var(--gold-light); }
 
   /* Actions */
   .actions { width: 100%; max-width: 380px; display: flex; align-items: center; justify-content: center; gap: 1.5rem; padding: 1.1rem 0 0.6rem; }
@@ -180,6 +210,14 @@
   .liked-row { cursor:pointer; transition:background 0.15s; }
   .liked-row:hover { background:rgba(10,26,62,0.04); }
   .liked-row-arrow { font-size:0.72rem; color:var(--text-muted); flex-shrink:0; }
+  /* マイメモ */
+  .my-memo-wrap { display:flex; flex-direction:column; gap:0.4rem; }
+  .my-memo-ta { width:100%; min-height:80px; border:1px solid rgba(10,26,62,0.14); border-radius:6px; padding:0.6rem 0.75rem; font-family:'Noto Sans JP',sans-serif; font-size:0.79rem; line-height:1.7; color:var(--text); resize:vertical; background:white; }
+  .my-memo-ta:focus { outline:none; border-color:var(--gold); }
+  .my-memo-save { align-self:flex-end; padding:0.3rem 1rem; background:var(--navy); color:white; border:none; border-radius:4px; font-family:'Noto Sans JP',sans-serif; font-size:0.72rem; font-weight:700; cursor:pointer; transition:background 0.2s; }
+  .my-memo-save:hover { background:var(--crimson); }
+  .my-memo-saved { font-size:0.65rem; color:var(--green); align-self:flex-end; opacity:0; transition:opacity 0.3s; }
+  .my-memo-saved.show { opacity:1; }
 
   @media (max-width:400px) {
     .card-stack { height:420px; }
@@ -249,15 +287,11 @@
   </div>
 </div>
 
-<nav>
-  <div style="display:flex; align-items:center; gap:0.55rem;">
-    <a href="members.html" class="nav-back">← 会員ページ</a>
-    <a href="account.html" class="nav-back" id="match-account-link">マイページ</a>
-  </div>
-  <div class="nav-title">企業マッチング</div>
-  <div style="display:flex; align-items:center; gap:0.55rem;">
-    <button class="nav-utility" id="match-logout-btn" onclick="logoutMatch()" style="display:none;">ログアウト</button>
+<nav style="justify-content:space-between;">
+  <a href="index.html" style="font-family:'Playfair Display',serif;font-size:1rem;color:#e8c96c;text-decoration:none;">慶應就活ナビ</a>
+  <div style="display:flex;align-items:center;gap:0.55rem;">
     <div class="like-pill" onclick="openModal()">♥ <span id="like-count">0</span></div>
+    <button class="nav-utility" id="match-logout-btn" onclick="logoutMatch()" style="display:none;font-size:0.7rem;">ログアウト</button>
   </div>
 </nav>
 
@@ -284,6 +318,15 @@
   </div>
 
   <div id="card-ui" style="display:none;flex-direction:column;align-items:center;width:100%;">
+    <div class="ind-filter" id="ind-filter">
+      <button class="ind-chip active" data-ind="all">すべて</button>
+      <button class="ind-chip" data-ind="商社">商社</button>
+      <button class="ind-chip" data-ind="コンサル">コンサル</button>
+      <button class="ind-chip" data-ind="金融">金融</button>
+      <button class="ind-chip" data-ind="メーカー">メーカー</button>
+      <button class="ind-chip" data-ind="広告">広告</button>
+      <button class="ind-chip" data-ind="IT">IT</button>
+    </div>
     <div class="progress-wrap">
       <div class="progress-bg"><div class="progress-fill" id="pfill" style="width:0%"></div></div>
       <div class="progress-label" id="plabel"></div>
@@ -302,7 +345,10 @@
     <div class="empty-icon">✓</div>
     <div class="empty-title">全部チェックしました！</div>
     <div class="empty-desc">気になる企業は♥ から確認できます。<br>企業ノートが増えるとまた楽しめます。</div>
-    <button class="empty-btn" onclick="restart()">もう一度スワイプする</button>
+    <div style="display:flex; gap:0.8rem; flex-wrap:wrap; justify-content:center; margin-bottom:1rem;">
+      <button class="empty-btn" onclick="restart()">もう一度スワイプする</button>
+      <a href="members.html" style="padding:0.75rem 2rem; background:rgba(255,255,255,0.12); color:white; font-family:'Noto Sans JP',sans-serif; font-size:0.82rem; font-weight:700; border-radius:4px; text-decoration:none; border:1px solid rgba(255,255,255,0.2); transition:background 0.2s;">会員ページへ →</a>
+    </div>
   </div>
 </div>
 
@@ -319,13 +365,14 @@
 
 <script src="auth.js"></script>
 <script>
-const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbzyBJqVPgGXxHX7_RFuN4MyyOen-viaxX5hE36WLibZ0hVL6-H9hlJXQSAdi-XsRf1k6A/exec';
+const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
 
 let companies = [], selectionRows = [], idx = 0, sessionSeen = new Set();
 let liked = [];
 let dragging = false, sx = 0, sy = 0, cx = 0;
 let topCard = null;
 let hasInitialized = false;
+let industryFilter = 'all';
 
 const IND_COLORS = {
   '総合商社':'#112b5c','商社':'#112b5c','コンサル':'#221048','コンサルティング':'#221048',
@@ -337,11 +384,31 @@ function hdrColor(ind) {
   for (const [k,v] of Object.entries(IND_COLORS)) { if (ind && ind.includes(k)) return v; }
   return '#122050';
 }
+function escHtml(value) {
+  const div = document.createElement('div');
+  div.textContent = value == null ? '' : String(value);
+  return div.innerHTML;
+}
+function escAttr(value) {
+  return escHtml(value).replace(/'/g, '&#39;');
+}
+function safeHttpUrl(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  try {
+    const url = new URL(raw, window.location.href);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return '';
+    return url.href;
+  } catch (error) {
+    return '';
+  }
+}
 
 async function fetchViaGAS(sheetKey) {
+  const sessionToken = typeof KeioNaviAuth !== 'undefined' && KeioNaviAuth.getSessionToken ? KeioNaviAuth.getSessionToken() : '';
   const res = await fetch(GAS_PROXY_URL, {
     method: 'POST',
-    body: JSON.stringify({ action: 'read', sheetKey }),
+    body: JSON.stringify(sessionToken ? { action: 'read', sheetKey, sessionToken } : { action: 'read', sheetKey }),
     redirect: 'follow',
   });
   const data = await res.json();
@@ -356,25 +423,32 @@ async function init() {
     companies = rows.filter(r=>r[0]&&r[0].trim()).map(r=>({
       name:r[0]||'',industry:r[1]||'',business:r[2]||'',
       strength:r[3]||'',motive:r[4]||'',process:r[5]||'',url:r[6]||'',
-      alias:r[7]||'', // H列: 一般呼称
-      strength:r[3]||'',motive:r[4]||'',process:r[5]||'',url:r[6]||'',
+      alias:r[7]||'',
     }));
     companies.sort(()=>Math.random()-0.5);
   } catch(e) { companies = sample(); }
   document.getElementById('loading').style.display='none';
   const ui=document.getElementById('card-ui'); ui.style.display='flex';
+  initIndFilter();
   updateCount(); render(); checkDeadlines();
 }
 
+function filteredCompanies() {
+  if (industryFilter === 'all') return companies;
+  return companies.filter(c => c.industry && c.industry.includes(industryFilter));
+}
+
 function getNext() {
+  const pool0 = filteredCompanies();
+  if (!pool0.length) return companies[Math.floor(Math.random() * companies.length)];
   // 未表示の企業をフィルタ
-  let pool = companies.filter(c => !sessionSeen.has(c.name));
+  let pool = pool0.filter(c => !sessionSeen.has(c.name));
   // 全部見たらセッションリセット（ただし直前の企業は除外）
   if (!pool.length) {
     const last = [...sessionSeen].slice(-1)[0];
     sessionSeen.clear();
     if (last) sessionSeen.add(last);
-    pool = companies.filter(c => !sessionSeen.has(c.name));
+    pool = pool0.filter(c => !sessionSeen.has(c.name));
   }
   // ランダムに1社選ぶ
   const pick = pool[Math.floor(Math.random() * pool.length)];
@@ -382,10 +456,22 @@ function getNext() {
   return pick;
 }
 
+function initIndFilter() {
+  document.querySelectorAll('.ind-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      industryFilter = chip.dataset.ind;
+      document.querySelectorAll('.ind-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      sessionSeen.clear();
+      render();
+    });
+  });
+}
+
 function render() {
   const stack = document.getElementById('stack');
   stack.innerHTML = '';
-  if (!companies.length) { showEmpty(); return; }
+  if (!companies.length || !filteredCompanies().length) { showEmpty(); return; }
   updateProg();
   // 上から3枚分のカードをプレビュー生成
   const preview = [];
@@ -410,8 +496,11 @@ function makeCard(c, layer) {
   const bg=hdrColor(c.industry);
   const urls=(c.url||'').split(/[|;]/).map(u=>u.trim()).filter(u=>u.startsWith('http'));
   const firstUrl=urls[0]||'';
-  const shortBiz = c.business ? (c.business.split(/[。\n]/)[0].slice(0,60) + (c.business.length>60?'…':'')) : '';
-  const shortStr = c.strength ? (c.strength.split(/\n/)[0].replace(/【強み】/,'').slice(0,50) + '…') : '';
+  const biz0 = c.business ? c.business.split(/[。\n]/)[0] : '';
+  const shortBiz = biz0 ? (biz0.slice(0,60) + (biz0.length>60?'…':'')) : '';
+  const str0 = c.strength ? c.strength.split(/\n/)[0].replace(/【強み】/,'') : '';
+  const shortStr = str0 ? (str0.slice(0,50) + (str0.length>50?'…':'')) : '';
+  const escapedName = c.name.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
   card.innerHTML=`
     <div class="stamp stamp-like">LIKE</div>
     <div class="stamp stamp-skip">SKIP</div>
@@ -423,12 +512,21 @@ function makeCard(c, layer) {
       <div class="card-name">${c.name}</div>
     </div>
     <div class="card-body">
-      ${c.business?`<div class="card-fl"><div class="card-fl-label">事業内容</div><div class="card-fl-text">${shortBiz}</div></div>`:''}
-      ${c.strength?`<div class="card-fl"><div class="card-fl-label">強み</div><div class="card-fl-text">${shortStr}</div></div>`:''}
+      ${shortBiz?`<div class="card-fl"><div class="card-fl-label">事業内容</div><div class="card-fl-text">${shortBiz}</div></div>`:''}
+      ${shortStr?`<div class="card-fl"><div class="card-fl-label">強み</div><div class="card-fl-text">${shortStr}</div></div>`:''}
     </div>
     <div class="card-footer">
       ${c.industry?`<span class="chip">${c.industry}</span>`:''}
+      <button class="card-note-btn" data-name="${escapedName}">詳細 →</button>
     </div>`;
+  // 詳細ボタン: ドラッグを起こさずノートモーダルを開く
+  card.querySelector('.card-note-btn').addEventListener('pointerdown', e => e.stopPropagation());
+  card.querySelector('.card-note-btn').addEventListener('mousedown', e => e.stopPropagation());
+  card.querySelector('.card-note-btn').addEventListener('touchstart', e => e.stopPropagation(), {passive:true});
+  card.querySelector('.card-note-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    openNoteModal(c.name);
+  });
   return card;
 }
 
@@ -516,11 +614,13 @@ function pop(emoji) {
 }
 
 function updateProg() {
-  const seen = sessionSeen.size;
-  const total = companies.length;
-  const pct = Math.min((seen / total) * 100, 100);
+  const pool = filteredCompanies();
+  const seen = pool.filter(c => sessionSeen.has(c.name)).length;
+  const total = pool.length;
+  const pct = total ? Math.min((seen / total) * 100, 100) : 0;
   document.getElementById('pfill').style.width = pct + '%';
-  document.getElementById('plabel').textContent = `今回 ${seen} / ${total} 社チェック済み`;
+  const label = industryFilter === 'all' ? `今回 ${seen} / ${total} 社チェック済み` : `[${industryFilter}] ${seen} / ${total} 社`;
+  document.getElementById('plabel').textContent = label;
 }
 function updateCount() { document.getElementById('like-count').textContent=liked.length; }
 
@@ -537,8 +637,8 @@ function restart() {
 }
 function openNote() {
   const c=companies[idx]; if(!c) return;
-  const urls=(c.url||'').split(/[|;]/).map(u=>u.trim()).filter(u=>u.startsWith('http'));
-  window.open(urls[0]||'members.html','_blank');
+  const urls=(c.url||'').split(/[|;]/).map(u=>safeHttpUrl(u)).filter(Boolean);
+  window.open(urls[0]||'members.html','_blank','noopener,noreferrer');
 }
 
 
@@ -570,6 +670,18 @@ function openNote() {
     if (alias && companyMatch(alias, targetName)) return true;
     return false;
   }
+const MATCH_MEMO_KEY = 'keio_navi_match_memo_v1';
+function getMatchMemo(name) {
+  try { return JSON.parse(localStorage.getItem(MATCH_MEMO_KEY)||'{}')[name] || ''; } catch(e) { return ''; }
+}
+function saveMatchMemo(name, val) {
+  try {
+    const all = JSON.parse(localStorage.getItem(MATCH_MEMO_KEY)||'{}');
+    if (val) all[name] = val; else delete all[name];
+    localStorage.setItem(MATCH_MEMO_KEY, JSON.stringify(all));
+  } catch(e) {}
+}
+
 function openNoteModal(name) {
   const c = [...companies, ...liked].find(x =>
     companyMatch(x.name, name) || (x.alias && companyMatch(x.alias, name))
@@ -590,10 +702,10 @@ function openNoteModal(name) {
   let html = fields.map(f => {
     if (!f.value) return '';
     const val = f.isUrl
-      ? f.value.split(/[|;]/).map(u => u.trim()).filter(Boolean)
-          .map(u => `<a href="${u}" target="_blank" class="note-url">${u}</a>`).join('')
-      : `<div class="note-field-content">${f.value}</div>`;
-    return `<div><div class="note-field-label">${f.label}</div>${val}</div>`;
+      ? f.value.split(/[|;]/).map(u => safeHttpUrl(u)).filter(Boolean)
+          .map(u => `<a href="${escAttr(u)}" target="_blank" rel="noopener noreferrer" class="note-url">${escHtml(u)}</a>`).join('')
+      : `<div class="note-field-content">${escHtml(f.value)}</div>`;
+    return `<div><div class="note-field-label">${escHtml(f.label)}</div>${val}</div>`;
   }).filter(Boolean).join('');
 
   // 選考情報スプシから企業名でマッチング
@@ -609,23 +721,45 @@ function openNoteModal(name) {
       const d = r[1] ? new Date(r[1].replace(/\//g,'-')) : null;
       const diff = d ? Math.ceil((d - today) / (1000*60*60*24)) : null;
       const urgent = diff !== null && diff >= 0 && diff <= 7;
+      const deadlineText = escHtml(r[1] || '');
       const deadlineStr = r[1]
-        ? (urgent ? `<span style="color:var(--crimson);font-weight:700;">⚠ ${r[1]}（残${diff}日）</span>` : r[1])
+        ? (urgent ? `<span style="color:var(--crimson);font-weight:700;">⚠ ${deadlineText}（残${diff}日）</span>` : deadlineText)
         : '未定';
-      const tag = r[2] || '';
-      const link = r[3]?.startsWith('http') ? r[3] : '';
+      const tag = escHtml(r[2] || '');
+      const link = safeHttpUrl(r[3]);
+      const companyName = escHtml(r[0] || '');
       return `<div style="display:flex;align-items:center;justify-content:space-between;gap:0.8rem;padding:0.6rem 0;border-bottom:1px solid rgba(10,26,62,0.06);">
         <div>
-          <div style="font-size:0.82rem;font-weight:700;color:var(--navy);">${r[0]}</div>
+          <div style="font-size:0.82rem;font-weight:700;color:var(--navy);">${companyName}</div>
           <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.15rem;">${tag} ／ 締切: ${deadlineStr}</div>
         </div>
-        ${link ? `<a href="${link}" target="_blank" style="font-size:0.68rem;color:white;background:var(--navy);padding:0.3rem 0.7rem;text-decoration:none;border-radius:3px;white-space:nowrap;flex-shrink:0;">ES →</a>` : ''}
+        ${link ? `<a href="${escAttr(link)}" target="_blank" rel="noopener noreferrer" style="font-size:0.68rem;color:white;background:var(--navy);padding:0.3rem 0.7rem;text-decoration:none;border-radius:3px;white-space:nowrap;flex-shrink:0;">ES →</a>` : ''}
       </div>`;
     }).join('');
     html += `<div><div class="note-field-label">選考情報</div><div style="background:white;padding:0.6rem 1rem;border-left:2px solid rgba(201,168,76,0.3);">${selHtml}</div></div>`;
   }
 
+  // マイメモ
+  const memoVal = getMatchMemo(name);
+  html += `<div>
+    <div class="note-field-label">マイメモ</div>
+    <div class="my-memo-wrap">
+      <textarea class="my-memo-ta" id="match-memo-ta" placeholder="この企業についてのメモ（自分だけに見えます）">${escHtml(memoVal)}</textarea>
+      <span class="my-memo-saved" id="match-memo-saved">保存しました ✓</span>
+      <button class="my-memo-save" id="match-memo-save-btn">保存</button>
+    </div>
+  </div>`;
+
   body.innerHTML = html || '<div style="text-align:center;padding:2rem;color:var(--text-muted);">ノートの内容がまだありません。</div>';
+
+  document.getElementById('match-memo-save-btn').addEventListener('click', () => {
+    const val = document.getElementById('match-memo-ta').value.trim();
+    saveMatchMemo(name, val);
+    const saved = document.getElementById('match-memo-saved');
+    saved.classList.add('show');
+    setTimeout(() => saved.classList.remove('show'), 2000);
+  });
+
   document.getElementById('note-overlay').classList.add('open');
 }
 function closeNoteModal() { document.getElementById('note-overlay').classList.remove('open'); }
@@ -686,14 +820,18 @@ function openModal() {
   document.getElementById('modal-cnt').textContent=liked.length+'社';
   const body=document.getElementById('modal-body');
   if(!liked.length){body.innerHTML='<div class="liked-empty-msg">まだ気になる企業がありません。<br>右にスワイプして選んでみましょう。</div>';}
-  else{body.innerHTML=liked.map(c=>{
-    const urls=(c.url||'').split(/[|;]/).map(u=>u.trim()).filter(u=>u.startsWith('http'));
-    const u=urls[0]||'';
-    return `<div class="liked-row" onclick="openNoteModal('${c.name.replace(/'/g,"\'")}')">
-      <div><div class="liked-row-name">${c.name}</div><div class="liked-row-ind">${c.industry||''}</div></div>
-      <span class="liked-row-arrow">ノートを見る →</span>
-    </div>`;
-  }).join('')+`<button class="modal-clear-btn" onclick="clearLiked()">リストをリセット</button>`;}
+  else{
+    body.innerHTML=liked.map(c=>{
+      const escapedName = c.name.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+      return `<div class="liked-row" data-company="${escapedName}">
+        <div><div class="liked-row-name">${c.name}</div><div class="liked-row-ind">${c.industry||''}</div></div>
+        <span class="liked-row-arrow">ノートを見る →</span>
+      </div>`;
+    }).join('')+`<button class="modal-clear-btn" onclick="clearLiked()">リストをリセット</button>`;
+    body.querySelectorAll('.liked-row[data-company]').forEach(row => {
+      row.addEventListener('click', () => openNoteModal(row.dataset.company));
+    });
+  }
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -775,5 +913,13 @@ bootMatchPage();
   </div>
 </div>
 
-</body>
+<style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
+<nav class="bottom-tab-bar">
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>マイページ</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="community.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
+</nav>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
 </html>

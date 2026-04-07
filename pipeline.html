@@ -463,7 +463,7 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
   const GAS_URL = GAS_PROXY_URL;
 
   async function callAuthApi(action, extraPayload) {
@@ -500,7 +500,13 @@
       if (statusEl) statusEl.textContent = 'サーバーと同期中...';
       const result = await KeioNaviAuth.readMyProgress();
       if (result.ok && result.entries) {
-        writeProgressLocal(result.entries);
+        var seen = {};
+        var deduped = [];
+        result.entries.forEach(function(e) {
+          var key = (e.company || '').trim() + '_' + (e.stage || '') + '_' + (e.status || '');
+          if (!seen[key]) { seen[key] = true; deduped.push(e); }
+        });
+        writeProgressLocal(deduped);
         progressSyncLoaded = true;
         if (statusEl) statusEl.textContent = 'サーバーに同期済み';
         renderProgressList();
@@ -752,13 +758,17 @@
     document.getElementById('pm-submit').addEventListener('click', async () => {
       const company = document.getElementById('pm-company').value.trim();
       if (!company) { document.getElementById('pm-error').textContent = '企業名を入力してください。'; return; }
+      const list = readProgress();
+      const duplicate = list.find(e => e.company.trim() === company && e.status === 'active');
+      if (duplicate) {
+        if (!confirm('「' + company + '」は既に登録されています。それでも追加しますか？')) return;
+      }
       const newEntry = {
         id: Date.now().toString(), company,
         industry: document.getElementById('pm-industry').value,
         deadline: document.getElementById('pm-deadline').value,
         stage: PROGRESS_STAGES[0], status: 'active', memo: '',
       };
-      const list = readProgress();
       list.unshift(newEntry);
       writeProgressLocal(list);
       document.getElementById('progress-modal').classList.remove('open');

@@ -144,29 +144,41 @@ function handleGenerate_(payload) {
     }
   }
 
-  // Step 2: 公式HPからテキストを取得
+  // Step 1.5: ユーザーが手動URLを指定した場合はそちらを優先
+  var manualCorpUrl = trimText_(payload.manualCorpUrl || '');
+  var manualRecruitUrl = trimText_(payload.manualRecruitUrl || '');
+  if (manualCorpUrl) corpUrl = manualCorpUrl;
+  if (manualRecruitUrl) recruitUrl = manualRecruitUrl;
+
+  // Step 2: ドメインチェック＋公式HPからテキストを取得
   corpUrl = normalizeSafeFetchUrl_(corpUrl);
   recruitUrl = normalizeSafeFetchUrl_(recruitUrl);
   var corpText = '', recruitText = '';
   if (corpUrl) {
-    try {
-      var cResp = UrlFetchApp.fetch(corpUrl, { muteHttpExceptions: true, followRedirects: true });
-      if (cResp.getResponseCode() === 200) {
-        corpText = cResp.getContentText().replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<style[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-        if (corpText.length > 8000) corpText = corpText.substring(0, 8000);
-        sourceUrls.push(corpUrl);
-      }
-    } catch(e) {}
+    if (isDomainBlocked_(corpUrl)) { corpUrl = ''; }
+    else {
+      try {
+        var cResp = UrlFetchApp.fetch(corpUrl, { muteHttpExceptions: true, followRedirects: true });
+        if (cResp.getResponseCode() === 200) {
+          corpText = cResp.getContentText().replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<style[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+          if (corpText.length > 8000) corpText = corpText.substring(0, 8000);
+          sourceUrls.push(corpUrl);
+        }
+      } catch(e) {}
+    }
   }
   if (recruitUrl && recruitUrl !== corpUrl) {
-    try {
-      var rResp = UrlFetchApp.fetch(recruitUrl, { muteHttpExceptions: true, followRedirects: true });
-      if (rResp.getResponseCode() === 200) {
-        recruitText = rResp.getContentText().replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<style[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-        if (recruitText.length > 8000) recruitText = recruitText.substring(0, 8000);
-        sourceUrls.push(recruitUrl);
-      }
-    } catch(e) {}
+    if (isDomainBlocked_(recruitUrl)) { recruitUrl = ''; }
+    else {
+      try {
+        var rResp = UrlFetchApp.fetch(recruitUrl, { muteHttpExceptions: true, followRedirects: true });
+        if (rResp.getResponseCode() === 200) {
+          recruitText = rResp.getContentText().replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<style[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+          if (recruitText.length > 8000) recruitText = recruitText.substring(0, 8000);
+          sourceUrls.push(recruitUrl);
+        }
+      } catch(e) {}
+    }
   }
 
   // Step 3: 取得したテキストを元にAIが独自分析
@@ -217,10 +229,12 @@ function handleGenerate_(payload) {
   var note = JSON.parse(match[0]);
   if (note.status === 'NOT_FOUND') return { status: 'error', message: 'NOT_FOUND' };
 
-  // 出典情報を追加
+  // 出典情報＋ウォーターマークを追加
+  note.sourceUrls = sourceUrls;
   note.source = sourceUrls.length > 0
     ? 'AI独自分析（出典: ' + sourceUrls.join(', ') + '）'
     : 'AI独自分析（公式HP取得失敗のため一般情報に基づく）';
+  note.disclaimer = '※この分析は企業公式HPの情報に基づくAIの独自分析です。正確性は保証されません。必ず公式情報をご確認ください。';
 
   return { status: 'ok', note: note };
 }
@@ -953,10 +967,19 @@ function maybeUpgradePasswordHash_(usersSheet, rowIndex, user, password) {
 // ─────────────────────────────────────────────
 
 var BLOCKED_DOMAINS_ = [
+  // 就活情報サイト
   'onecareer.jp', 'unistyleinc.com', 'mynavi.jp', 'rikunabi.com',
   'shukatsu-kaigi.jp', 'goodfind.jp', 'gaishishukatsu.com',
-  'career-tasu.jp', 'openwork.jp', 'vorkers.com', 'en-courage.com',
-  'offerbox.jp', 'dodacampus.jp', 'type.jp'
+  'career-tasu.jp', 'en-courage.com', 'offerbox.jp', 'dodacampus.jp',
+  'type.jp', 'doda.jp', 'jobway.jp', 'careerpark.jp',
+  // 口コミ・評判サイト
+  'openwork.jp', 'vorkers.com', 'en-hyouban.com', 'jobtalk.jp',
+  'glassdoor.com', 'tenshoku-kaigi.jp', 'kaisha-hyouban.com',
+  // まとめ・ニュースサイト
+  'wikipedia.org', 'nikkei.com', 'toyokeizai.net', 'diamond.jp',
+  'president.jp', 'newspicks.com',
+  // SNS・掲示板
+  'twitter.com', 'x.com', '5ch.net', '2ch.sc', 'note.com', 'qiita.com'
 ];
 
 function extractUrlHostname_(url) {
@@ -1285,9 +1308,9 @@ function handleGetActivitySummary_(payload) {
   };
 }
 
-// ═══════���══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════
 //  他己分析（ピアフィードバック）
-// ���══════════════════════════════════���══════════════════════════════════
+// ══════════════════════════════════════════════════════════════════════
 
 var PEER_FEEDBACK_SHEET_NAME_ = 'peer_feedback';
 

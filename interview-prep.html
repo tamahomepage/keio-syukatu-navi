@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0a1a3e"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>面接対策ノート ｜ 慶應就活ナビ</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1a3e;
+    --crimson: #c0001a;
+    --gold: #c9a84c;
+    --gold-light: #e8c96c;
+    --cream: #faf7f2;
+    --gray: #f4f1ec;
+    --text: #1a1a2e;
+    --text-muted: #6b6b7e;
+    --white: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--text); }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 60px;
+    background: rgba(10,26,62,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--gold-light); text-decoration: none; }
+  .nav-back { font-size: 0.78rem; color: rgba(255,255,255,0.6); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold-light); }
+  .nav-title { font-size: 0.78rem; color: rgba(255,255,255,0.75); letter-spacing: 0.08em; }
+
+  /* ===== LAYOUT ===== */
+  .ip-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+    padding-top: 60px;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .ip-sidebar {
+    background: white;
+    border-right: 1px solid rgba(10,26,62,0.1);
+    display: flex; flex-direction: column;
+    position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto;
+  }
+  .ip-sidebar-header {
+    padding: 1.2rem 1.1rem 0.9rem;
+    border-bottom: 1px solid rgba(10,26,62,0.08);
+    background: rgba(10,26,62,0.02);
+  }
+  .ip-sidebar-title { font-family: 'Noto Serif JP', serif; font-size: 0.82rem; font-weight: 700; color: var(--navy); letter-spacing: 0.1em; }
+  .ip-sidebar-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .ip-company-list { flex: 1; padding: 0.6rem 0; }
+  .ip-company-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 1.1rem; cursor: pointer;
+    transition: background 0.15s; border-left: 3px solid transparent;
+  }
+  .ip-company-item:hover { background: rgba(10,26,62,0.04); }
+  .ip-company-item.active { background: rgba(10,26,62,0.06); border-left-color: var(--navy); }
+  .ip-company-icon {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--navy); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+  .ip-company-info { flex: 1; min-width: 0; }
+  .ip-company-name { font-size: 0.85rem; font-weight: 700; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ip-company-meta { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.1rem; }
+  .ip-company-badge { font-size: 0.65rem; background: rgba(10,26,62,0.07); color: var(--text-muted); padding: 0.1rem 0.45rem; border-radius: 8px; flex-shrink: 0; }
+  .ip-add-company-btn {
+    margin: 0.6rem 1rem 1rem;
+    padding: 0.6rem; width: calc(100% - 2rem);
+    border: 1.5px dashed rgba(10,26,62,0.2); background: none;
+    color: var(--text-muted); font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+  }
+  .ip-add-company-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+  /* ===== MAIN ===== */
+  .ip-main { padding: 2rem; max-width: 900px; }
+
+  /* Empty state */
+  .ip-empty {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 60vh; color: var(--text-muted); text-align: center;
+  }
+  .ip-empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+  .ip-empty-title { font-family: 'Noto Serif JP', serif; font-size: 1rem; color: var(--navy); margin-bottom: 0.5rem; }
+  .ip-empty-sub { font-size: 0.82rem; line-height: 1.7; }
+
+  /* Company header */
+  .ip-company-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 1.8rem; padding-bottom: 1.2rem;
+    border-bottom: 2px solid rgba(10,26,62,0.1);
+    gap: 1rem;
+  }
+  .ip-company-header-title { font-family: 'Noto Serif JP', serif; font-size: 1.5rem; font-weight: 700; color: var(--navy); }
+  .ip-company-header-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+  .ip-company-header-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+  .ip-btn-sm { font-size: 0.72rem; padding: 0.3rem 0.75rem; border: 1px solid rgba(10,26,62,0.2); background: none; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; color: var(--text-muted); transition: all 0.15s; }
+  .ip-btn-sm:hover { border-color: var(--navy); color: var(--navy); }
+  .ip-btn-sm.danger:hover { border-color: var(--crimson); color: var(--crimson); }
+
+  /* Tabs */
+  .ip-tabs { display: flex; border-bottom: 2px solid rgba(10,26,62,0.08); margin-bottom: 1.5rem; gap: 0; }
+  .ip-tab-btn {
+    padding: 0.7rem 1.2rem; background: none; border: none;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem;
+    color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+    border-bottom: 2px solid transparent; margin-bottom: -2px;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .ip-tab-btn:hover { color: var(--navy); }
+  .ip-tab-btn.active { color: var(--navy); font-weight: 700; border-bottom-color: var(--navy); }
+  .ip-tab-count { font-size: 0.65rem; background: rgba(10,26,62,0.08); padding: 0.1rem 0.4rem; border-radius: 8px; }
+  .ip-tab-btn.active .ip-tab-count { background: var(--navy); color: white; }
+  .ip-tab-panel { display: none; }
+  .ip-tab-panel.active { display: block; }
+
+  /* ガクチカ入力エリア */
+  .ip-gk-section {
+    background: white; border: 1px solid rgba(10,26,62,0.12);
+    padding: 1.2rem; margin-bottom: 1.2rem;
+  }
+  .ip-gk-section-title { font-size: 0.8rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem; }
+  .ip-gk-hint { font-size: 0.73rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.75rem; }
+  .ip-textarea { width: 100%; padding: 0.75rem; border: 1px solid rgba(10,26,62,0.15); background: rgba(10,26,62,0.01); font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; resize: vertical; outline: none; line-height: 1.7; }
+  .ip-textarea:focus { border-color: var(--navy); }
+  .ip-gen-btn {
+    margin-top: 0.75rem; width: 100%; padding: 0.75rem;
+    background: var(--navy); color: white; border: none;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .ip-gen-btn:hover { background: #152a5e; }
+  .ip-gen-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* Q&A カード */
+  .ip-qa-list { display: flex; flex-direction: column; gap: 0.85rem; }
+  .ip-qa-card {
+    background: white; border: 1px solid rgba(10,26,62,0.1);
+    transition: border-color 0.15s;
+  }
+  .ip-qa-card.ready { border-left: 3px solid #2d7a3a; }
+  .ip-qa-card-header {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    padding: 0.9rem 1rem 0.7rem; cursor: pointer;
+  }
+  .ip-qa-cat {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+    padding: 0.15rem 0.55rem; border-radius: 2px; flex-shrink: 0; margin-top: 0.1rem;
+    background: rgba(10,26,62,0.08); color: var(--navy);
+  }
+  .ip-qa-cat.動機・背景    { background: #e8f0fe; color: #1a56c4; }
+  .ip-qa-cat.具体的行動    { background: #e6f4ea; color: #2d7a3a; }
+  .ip-qa-cat.困難・課題    { background: #fdecea; color: #c62828; }
+  .ip-qa-cat.思考プロセス  { background: #f3e8fd; color: #7b1fa2; }
+  .ip-qa-cat.結果・成果    { background: #e0f7fa; color: #006064; }
+  .ip-qa-cat.自己成長      { background: #fff8e1; color: #b8860b; }
+  .ip-qa-cat.企業接続      { background: rgba(192,0,26,0.08); color: var(--crimson); }
+  .ip-qa-cat.定番          { background: rgba(10,26,62,0.08); color: var(--navy); }
+  .ip-qa-question { font-size: 0.88rem; font-weight: 700; color: var(--navy); line-height: 1.55; flex: 1; }
+  .ip-qa-ready-badge { font-size: 0.68rem; color: #2d7a3a; flex-shrink: 0; margin-top: 0.15rem; }
+  .ip-qa-body { padding: 0 1rem 1rem; display: none; }
+  .ip-qa-body.open { display: block; }
+  .ip-qa-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 0.3rem; margin-top: 0.75rem; }
+  .ip-qa-answer-wrap { position: relative; }
+  .ip-qa-answer {
+    width: 100%; padding: 0.75rem; padding-bottom: 1.6rem;
+    border: 1px solid rgba(10,26,62,0.15); background: rgba(10,26,62,0.01);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.85rem; resize: vertical; outline: none;
+    line-height: 1.7; min-height: 100px;
+  }
+  .ip-qa-answer:focus { border-color: var(--navy); }
+  .ip-qa-charcount { position: absolute; bottom: 0.4rem; right: 0.6rem; font-size: 0.68rem; color: var(--text-muted); }
+  .ip-qa-actions { display: flex; gap: 0.5rem; margin-top: 0.6rem; flex-wrap: wrap; align-items: center; }
+  .ip-qa-save-btn { font-size: 0.75rem; padding: 0.35rem 0.9rem; background: var(--navy); color: white; border: none; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: background 0.15s; }
+  .ip-qa-save-btn:hover { background: var(--crimson); }
+  .ip-qa-ai-btn { font-size: 0.75rem; padding: 0.35rem 0.9rem; border: 1px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-family: 'Noto Sans JP', sans-serif; transition: all 0.15s; }
+  .ip-qa-ai-btn:hover { background: var(--gold); color: white; }
+  .ip-qa-ai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .ip-qa-ready-btn { font-size: 0.75rem; padding: 0.35rem 0.75rem; border: 1px solid rgba(10,26,62,0.2); background: none; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; color: var(--text-muted); transition: all 0.15s; margin-left: auto; }
+  .ip-qa-ready-btn.on { border-color: #2d7a3a; color: #2d7a3a; background: #f0f9f1; }
+  .ip-qa-feedback {
+    margin-top: 0.75rem; padding: 1rem; background: rgba(201,168,76,0.07);
+    border-left: 3px solid var(--gold); font-size: 0.83rem; line-height: 1.8;
+    white-space: pre-wrap; color: var(--text); display: none;
+  }
+  .ip-qa-feedback.show { display: block; }
+  .ip-qa-delete-btn { font-size: 0.68rem; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0.2rem; margin-left: 0.3rem; }
+  .ip-qa-delete-btn:hover { color: var(--crimson); }
+
+  /* Add question button */
+  .ip-add-q-btn {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.6rem 1rem; background: none; border: 1.5px dashed rgba(10,26,62,0.18);
+    color: var(--text-muted); font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.78rem; cursor: pointer; width: 100%; justify-content: center;
+    transition: all 0.2s; margin-top: 0.75rem;
+  }
+  .ip-add-q-btn:hover { border-color: var(--navy); color: var(--navy); }
+
+  /* Section header */
+  .ip-section-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 0.85rem; }
+
+  /* Progress bar */
+  .ip-progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.2rem; font-size: 0.78rem; color: var(--text-muted); }
+  .ip-progress-track { flex: 1; height: 4px; background: rgba(10,26,62,0.08); border-radius: 2px; overflow: hidden; }
+  .ip-progress-fill { height: 100%; background: #2d7a3a; border-radius: 2px; transition: width 0.4s; }
+
+  /* ===== MODALS ===== */
+  .ip-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .ip-modal-overlay.open { display: flex; }
+  .ip-modal { background: white; width: 100%; max-width: 520px; padding: 2rem; max-height: 90vh; overflow-y: auto; }
+  .ip-modal-title { font-family: 'Noto Serif JP', serif; font-size: 1.05rem; color: var(--navy); font-weight: 700; margin-bottom: 1.3rem; }
+  .ip-modal-actions { display: flex; gap: 0.75rem; margin-top: 1.4rem; }
+  .ip-modal-save { flex: 1; padding: 0.75rem; background: var(--navy); color: white; border: none; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+  .ip-modal-save:hover { background: var(--crimson); }
+  .ip-modal-cancel { padding: 0.75rem 1.2rem; background: none; border: 1px solid rgba(10,26,62,0.2); color: var(--text-muted); font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; cursor: pointer; }
+  .ip-form-group { margin-bottom: 1rem; }
+  .ip-label { font-size: 0.75rem; font-weight: 700; color: var(--navy); letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem; }
+  .ip-input { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid rgba(10,26,62,0.18); background: white; font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; outline: none; }
+  .ip-input:focus { border-color: var(--navy); }
+  .ip-error { font-size: 0.78rem; color: var(--crimson); margin-top: 0.5rem; min-height: 1em; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .ip-layout { grid-template-columns: 1fr; }
+    .ip-sidebar { position: relative; height: auto; top: 0; border-right: none; border-bottom: 1px solid rgba(10,26,62,0.1); }
+    .ip-main { padding: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav style="justify-content:center;">
+  <a href="index.html" style="font-family:'Playfair Display',serif;font-size:1rem;color:#e8c96c;text-decoration:none;">慶應就活ナビ</a>
+</nav>
+
+<div class="ip-layout">
+  <!-- ===== SIDEBAR ===== -->
+  <div class="ip-sidebar">
+    <div class="ip-sidebar-header">
+      <div class="ip-sidebar-title">COMPANY LIST</div>
+      <div class="ip-sidebar-sub">企業ごとに対策を管理</div>
+    </div>
+    <div class="ip-company-list" id="company-list"></div>
+    <button class="ip-add-company-btn" onclick="openAddCompanyModal()">＋ 企業を追加する</button>
+  </div>
+
+  <!-- ===== MAIN ===== -->
+  <div class="ip-main">
+    <!-- Empty state -->
+    <div class="ip-empty" id="ip-empty-state">
+      <div class="ip-empty-icon">📋</div>
+      <div class="ip-empty-title">企業を選択してください</div>
+      <div class="ip-empty-sub">左のリストから企業を選ぶか、<br>「＋ 企業を追加する」で新しい企業の対策を始めましょう。</div>
+    </div>
+
+    <!-- Company detail -->
+    <div id="ip-company-detail" style="display:none;">
+      <!-- Header -->
+      <div class="ip-company-header">
+        <div>
+          <div class="ip-company-header-title" id="det-name"></div>
+          <div class="ip-company-header-meta">
+            <span id="det-industry"></span>
+            <span id="det-position"></span>
+          </div>
+        </div>
+        <div class="ip-company-header-actions">
+          <button class="ip-btn-sm" onclick="openEditCompanyModal()">編集</button>
+          <button class="ip-btn-sm danger" onclick="deleteCurrentCompany()">削除</button>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="ip-progress-row">
+        <span id="det-progress-label">準備完了 0 / 0 問</span>
+        <div class="ip-progress-track"><div class="ip-progress-fill" id="det-progress-fill" style="width:0%"></div></div>
+        <span id="det-progress-pct">0%</span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="ip-tabs">
+        <button class="ip-tab-btn active" data-tab="tab-gakuchika" onclick="switchTab(this)">
+          ガクチカ深掘り <span class="ip-tab-count" id="tc-gakuchika">0</span>
+        </button>
+        <button class="ip-tab-btn" data-tab="tab-standard" onclick="switchTab(this)">
+          定番質問 <span class="ip-tab-count" id="tc-standard">0</span>
+        </button>
+        <button class="ip-tab-btn" data-tab="tab-custom" onclick="switchTab(this)">
+          カスタム <span class="ip-tab-count" id="tc-custom">0</span>
+        </button>
+      </div>
+
+      <!-- ガクチカ深掘りタブ -->
+      <div class="ip-tab-panel active" id="tab-gakuchika">
+        <div class="ip-gk-section">
+          <div class="ip-gk-section-title">ガクチカを入力 → 深掘り質問を自動生成</div>
+          <div class="ip-gk-hint">面接官が聞いてきやすい「なぜ」「具体的に」「困難は」などの深掘り質問を10〜12問生成します。</div>
+          <textarea class="ip-textarea" id="gk-input" placeholder="ガクチカを貼り付けてください。&#10;&#10;例）テニスサークルで主将として、部員50名のモチベーション向上に取り組みました。練習参加率が低下していた問題に対し、個別面談を実施し..." rows="6"></textarea>
+          <div style="display:flex;gap:0.6rem;margin-top:0.6rem;flex-wrap:wrap;align-items:center;">
+            <button class="ip-gen-btn" id="gen-btn" onclick="generateQuestions()" style="flex:1;margin-top:0;">
+              <span>✦ 深掘り質問を生成する</span>
+            </button>
+          </div>
+          <div id="gen-error" style="font-size:0.78rem;color:var(--crimson);margin-top:0.5rem;"></div>
+        </div>
+        <div class="ip-section-label" id="gk-q-label" style="display:none;">生成された質問</div>
+        <div class="ip-qa-list" id="gk-qa-list"></div>
+      </div>
+
+      <!-- 定番質問タブ -->
+      <div class="ip-tab-panel" id="tab-standard">
+        <div class="ip-qa-list" id="std-qa-list"></div>
+      </div>
+
+      <!-- カスタム質問タブ -->
+      <div class="ip-tab-panel" id="tab-custom">
+        <div class="ip-qa-list" id="custom-qa-list"></div>
+        <button class="ip-add-q-btn" onclick="addCustomQuestion()">＋ 質問を追加する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 企業追加・編集モーダル ===== -->
+<div class="ip-modal-overlay" id="company-modal">
+  <div class="ip-modal">
+    <div class="ip-modal-title" id="company-modal-title">企業を追加する</div>
+    <input type="hidden" id="cm-id">
+    <div class="ip-form-group">
+      <label class="ip-label">企業名 <span style="color:var(--crimson)">*</span></label>
+      <input type="text" class="ip-input" id="cm-name" placeholder="例：三井物産">
+    </div>
+    <div class="ip-form-group">
+      <label class="ip-label">業界</label>
+      <input type="text" class="ip-input" id="cm-industry" placeholder="例：総合商社">
+    </div>
+    <div class="ip-form-group">
+      <label class="ip-label">職種・コース</label>
+      <input type="text" class="ip-input" id="cm-position" placeholder="例：総合職、デジタル職">
+    </div>
+    <div class="ip-form-group">
+      <label class="ip-label">選考状況</label>
+      <select class="ip-input" id="cm-status">
+        <option value="">未設定</option>
+        <option value="ES提出前">ES提出前</option>
+        <option value="ES提出済">ES提出済</option>
+        <option value="一次面接">一次面接</option>
+        <option value="二次面接">二次面接</option>
+        <option value="最終面接">最終面接</option>
+        <option value="内定">内定</option>
+      </select>
+    </div>
+    <div class="ip-form-group">
+      <label class="ip-label">メモ</label>
+      <textarea class="ip-input" id="cm-notes" placeholder="面接形式・雰囲気・特記事項など" rows="3" style="resize:vertical;"></textarea>
+    </div>
+    <div class="ip-error" id="cm-error"></div>
+    <div class="ip-modal-actions">
+      <button class="ip-modal-cancel" onclick="closeCompanyModal()">キャンセル</button>
+      <button class="ip-modal-save" onclick="saveCompany()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== カスタム質問追加モーダル ===== -->
+<div class="ip-modal-overlay" id="custom-q-modal">
+  <div class="ip-modal">
+    <div class="ip-modal-title">質問を追加する</div>
+    <div class="ip-form-group">
+      <label class="ip-label">質問文 <span style="color:var(--crimson)">*</span></label>
+      <textarea class="ip-input" id="cq-question" placeholder="例：あなたが最も誇りに思う経験を教えてください。" rows="3" style="resize:vertical;"></textarea>
+    </div>
+    <div class="ip-error" id="cq-error"></div>
+    <div class="ip-modal-actions">
+      <button class="ip-modal-cancel" onclick="closeCustomQModal()">キャンセル</button>
+      <button class="ip-modal-save" onclick="saveCustomQuestion()">追加する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycbwbWJcmlWReEGxOVnIuSlGd43AnRqx4dInwttaids7Pzho-PjxVTTWemUWqI8wBnjsUyA/exec';
+  const STORAGE_KEY = 'keio_navi_interview_prep_v1';
+
+  // ── 定番質問リスト ─────────────────────────────────────────────────────────
+  const STANDARD_QUESTIONS = [
+    { category: '定番', question: '自己PRをしてください（1分程度）' },
+    { category: '定番', question: 'ガクチカを教えてください（1分程度）' },
+    { category: '定番', question: '志望動機を教えてください' },
+    { category: '定番', question: '当社でやりたいことは何ですか？' },
+    { category: '定番', question: '強みと弱みを教えてください' },
+    { category: '定番', question: '挫折経験・失敗経験を教えてください' },
+    { category: '定番', question: '10年後のキャリアはどのように考えていますか？' },
+    { category: '定番', question: '最近気になったニュースはありますか？' },
+    { category: '定番', question: '当社に関して気になる点・逆質問はありますか？（2〜3個）' },
+  ];
+
+  // ── データ管理 ─────────────────────────────────────────────────────────────
+  let db = { companies: [], questions: [] };
+  let currentCompanyId = null;
+
+  function loadDb() {
+    try { db = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"companies":[],"questions":[]}'); } catch(e) {}
+    if (!db.companies) db.companies = [];
+    if (!db.questions) db.questions = [];
+  }
+
+  function saveDb() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+  }
+
+  function genId(prefix) {
+    return prefix + '_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+  }
+
+  function getCompanyQuestions(companyId) {
+    return db.questions.filter(q => q.companyId === companyId);
+  }
+
+  function getQuestionsByType(companyId, type) {
+    return getCompanyQuestions(companyId).filter(q => q.type === type);
+  }
+
+  // ── レンダリング ───────────────────────────────────────────────────────────
+  function renderAll() {
+    renderCompanyList();
+    if (currentCompanyId) renderCompanyDetail(currentCompanyId);
+  }
+
+  function renderCompanyList() {
+    const el = document.getElementById('company-list');
+    if (!db.companies.length) {
+      el.innerHTML = '<div style="padding:1.2rem 1.1rem;font-size:0.78rem;color:var(--text-muted);">まだ企業が登録されていません</div>';
+      return;
+    }
+    el.innerHTML = db.companies.map(c => {
+      const qs = getCompanyQuestions(c.id);
+      const readyCount = qs.filter(q => q.ready).length;
+      const initial = (c.name || '?').charAt(0);
+      return `<div class="ip-company-item${c.id === currentCompanyId ? ' active' : ''}" onclick="selectCompany('${c.id}')">
+        <div class="ip-company-icon">${initial}</div>
+        <div class="ip-company-info">
+          <div class="ip-company-name">${c.name}</div>
+          <div class="ip-company-meta">${c.industry || '業界未設定'}${c.status ? ' · ' + c.status : ''}</div>
+        </div>
+        <div class="ip-company-badge">${readyCount}/${qs.length}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function selectCompany(id) {
+    currentCompanyId = id;
+    document.getElementById('ip-empty-state').style.display = 'none';
+    document.getElementById('ip-company-detail').style.display = 'block';
+    renderCompanyList();
+    renderCompanyDetail(id);
+    // Reset to first tab
+    document.querySelectorAll('.ip-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.ip-tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('[data-tab="tab-gakuchika"]').classList.add('active');
+    document.getElementById('tab-gakuchika').classList.add('active');
+  }
+
+  function renderCompanyDetail(id) {
+    const c = db.companies.find(c => c.id === id);
+    if (!c) return;
+    document.getElementById('det-name').textContent = c.name;
+    document.getElementById('det-industry').textContent = c.industry || '';
+    document.getElementById('det-position').textContent = c.position ? '| ' + c.position : '';
+
+    const allQs = getCompanyQuestions(id);
+    const readyCount = allQs.filter(q => q.ready).length;
+    const pct = allQs.length ? Math.round(readyCount / allQs.length * 100) : 0;
+    document.getElementById('det-progress-label').textContent = `準備完了 ${readyCount} / ${allQs.length} 問`;
+    document.getElementById('det-progress-fill').style.width = pct + '%';
+    document.getElementById('det-progress-pct').textContent = pct + '%';
+
+    const gkQs = getQuestionsByType(id, 'gakuchika');
+    const stdQs = getQuestionsByType(id, 'standard');
+    const cusQs = getQuestionsByType(id, 'custom');
+
+    document.getElementById('tc-gakuchika').textContent = gkQs.length;
+    document.getElementById('tc-standard').textContent  = stdQs.length;
+    document.getElementById('tc-custom').textContent    = cusQs.length;
+
+    // ガクチカQ&A
+    document.getElementById('gk-q-label').style.display = gkQs.length ? '' : 'none';
+    renderQaList('gk-qa-list', gkQs);
+
+    // 定番質問（初回は自動で挿入）
+    ensureStandardQuestions(id);
+    renderQaList('std-qa-list', getQuestionsByType(id, 'standard'));
+
+    // カスタム
+    renderQaList('custom-qa-list', cusQs);
+  }
+
+  function ensureStandardQuestions(companyId) {
+    const existing = getQuestionsByType(companyId, 'standard');
+    if (existing.length) return;
+    STANDARD_QUESTIONS.forEach((sq, i) => {
+      db.questions.push({
+        id: genId('q'),
+        companyId,
+        type: 'standard',
+        category: sq.category,
+        question: sq.question,
+        answer: '',
+        aiFeedback: '',
+        ready: false,
+        createdAt: new Date().toISOString(),
+      });
+    });
+    saveDb();
+  }
+
+  function renderQaList(containerId, questions) {
+    const el = document.getElementById(containerId);
+    if (!questions.length) {
+      el.innerHTML = '<div style="text-align:center;padding:1.5rem;font-size:0.82rem;color:var(--text-muted);">まだ質問がありません</div>';
+      return;
+    }
+    el.innerHTML = questions.map(q => renderQaCard(q)).join('');
+  }
+
+  function renderQaCard(q) {
+    const catClass = q.category ? q.category.replace(/[・・]/g, '') : '';
+    return `<div class="ip-qa-card${q.ready ? ' ready' : ''}" id="card-${q.id}">
+      <div class="ip-qa-card-header" onclick="toggleQaCard('${q.id}')">
+        <span class="ip-qa-cat ${catClass}">${q.category || '質問'}</span>
+        <span class="ip-qa-question">${q.question}</span>
+        ${q.ready ? '<span class="ip-qa-ready-badge">✓ 準備完了</span>' : ''}
+      </div>
+      <div class="ip-qa-body${q.answer ? ' open' : ''}" id="body-${q.id}">
+        <div class="ip-qa-label">あなたの回答（面接本番で話す内容をメモ）</div>
+        <div class="ip-qa-answer-wrap">
+          <textarea class="ip-qa-answer" id="ans-${q.id}" placeholder="ここに回答を書いてみましょう..." oninput="updateCharCount('${q.id}')">${q.answer || ''}</textarea>
+          <div class="ip-qa-charcount" id="cc-${q.id}">${(q.answer || '').length}字</div>
+        </div>
+        <div class="ip-qa-actions">
+          <button class="ip-qa-save-btn" onclick="saveAnswer('${q.id}')">保存</button>
+          <button class="ip-qa-ai-btn" id="ai-btn-${q.id}" onclick="evaluateAnswer('${q.id}')">✦ AI添削</button>
+          <button class="ip-qa-ready-btn${q.ready ? ' on' : ''}" onclick="toggleReady('${q.id}')">${q.ready ? '✓ 準備完了' : '準備完了にする'}</button>
+          <button class="ip-qa-delete-btn" onclick="deleteQuestion('${q.id}')">✕</button>
+        </div>
+        ${q.aiFeedback ? `<div class="ip-qa-feedback show">${q.aiFeedback}</div>` : `<div class="ip-qa-feedback" id="fb-${q.id}"></div>`}
+      </div>
+    </div>`;
+  }
+
+  function toggleQaCard(id) {
+    document.getElementById('body-' + id).classList.toggle('open');
+  }
+
+  function updateCharCount(id) {
+    const ta = document.getElementById('ans-' + id);
+    const cc = document.getElementById('cc-' + id);
+    if (ta && cc) cc.textContent = ta.value.length + '字';
+  }
+
+  function saveAnswer(id) {
+    const q = db.questions.find(q => q.id === id);
+    if (!q) return;
+    q.answer = document.getElementById('ans-' + id).value;
+    saveDb();
+    const btn = document.querySelector(`#card-${id} .ip-qa-save-btn`);
+    const orig = btn.textContent;
+    btn.textContent = '保存しました ✓';
+    setTimeout(() => { btn.textContent = orig; }, 1200);
+    updateProgress();
+  }
+
+  function toggleReady(id) {
+    const q = db.questions.find(q => q.id === id);
+    if (!q) return;
+    q.answer = document.getElementById('ans-' + id).value;
+    q.ready = !q.ready;
+    saveDb();
+    // re-render the card
+    const card = document.getElementById('card-' + id);
+    card.outerHTML = renderQaCard(q);
+    updateProgress();
+  }
+
+  function deleteQuestion(id) {
+    if (!confirm('この質問を削除しますか？')) return;
+    db.questions = db.questions.filter(q => q.id !== id);
+    saveDb();
+    renderCompanyDetail(currentCompanyId);
+  }
+
+  function updateProgress() {
+    if (!currentCompanyId) return;
+    const allQs = getCompanyQuestions(currentCompanyId);
+    const readyCount = allQs.filter(q => q.ready).length;
+    const pct = allQs.length ? Math.round(readyCount / allQs.length * 100) : 0;
+    document.getElementById('det-progress-label').textContent = `準備完了 ${readyCount} / ${allQs.length} 問`;
+    document.getElementById('det-progress-fill').style.width = pct + '%';
+    document.getElementById('det-progress-pct').textContent = pct + '%';
+    renderCompanyList();
+  }
+
+  // ── タブ切り替え ──────────────────────────────────────────────────────────
+  function switchTab(btn) {
+    document.querySelectorAll('.ip-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.ip-tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  }
+
+  // ── GAS API呼び出し ───────────────────────────────────────────────────────
+  async function callGas(payload) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 45000);
+    let res;
+    try {
+      res = await fetch(GAS_PROXY_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        redirect: 'follow',
+        signal: controller.signal,
+      });
+    } catch(e) {
+      clearTimeout(timer);
+      if (e.name === 'AbortError') throw new Error('タイムアウトしました。再試行してください。');
+      throw e;
+    }
+    clearTimeout(timer);
+    const data = await res.json().catch(() => null);
+    if (!data || data.status !== 'ok') throw new Error((data && data.message) || 'サーバーエラーが発生しました。');
+    return data;
+  }
+
+  // ── 深掘り質問生成 ────────────────────────────────────────────────────────
+  async function generateQuestions() {
+    const gkText = document.getElementById('gk-input').value.trim();
+    if (!gkText) { document.getElementById('gen-error').textContent = 'ガクチカを入力してください。'; return; }
+    document.getElementById('gen-error').textContent = '';
+    const c = db.companies.find(c => c.id === currentCompanyId);
+    const btn = document.getElementById('gen-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span>AIが質問を生成中...</span>';
+
+    try {
+      const data = await callGas({
+        action: 'callClaude',
+        toolType: 'generateInterviewQuestions',
+        input: {
+          gakuchikaText: gkText,
+          company:  c ? c.name     : '',
+          position: c ? c.position : '',
+        }
+      });
+
+      // JSONパース (AIがコードブロックで返す場合を考慮)
+      let rawText = data.result || '';
+      const jsonMatch = rawText.match(/```json\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) rawText = jsonMatch[1];
+      // ```のみの場合も
+      const plainMatch = rawText.match(/```\s*([\s\S]*?)\s*```/);
+      if (!jsonMatch && plainMatch) rawText = plainMatch[1];
+
+      let questions;
+      try { questions = JSON.parse(rawText.trim()); } catch(e) { throw new Error('AIの返答を解析できませんでした。再試行してください。'); }
+
+      // 既存のガクチカ質問をクリアして追加
+      db.questions = db.questions.filter(q => !(q.companyId === currentCompanyId && q.type === 'gakuchika'));
+      questions.forEach(item => {
+        db.questions.push({
+          id: genId('q'),
+          companyId: currentCompanyId,
+          type: 'gakuchika',
+          category: item.category || 'ガクチカ深掘り',
+          question: item.question || '',
+          answer: '',
+          aiFeedback: '',
+          ready: false,
+          createdAt: new Date().toISOString(),
+        });
+      });
+      saveDb();
+      renderCompanyDetail(currentCompanyId);
+    } catch(e) {
+      document.getElementById('gen-error').textContent = '生成に失敗しました: ' + e.message;
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span>✦ 深掘り質問を生成する</span>';
+    }
+  }
+
+  // ── 回答評価 ──────────────────────────────────────────────────────────────
+  async function evaluateAnswer(id) {
+    const q = db.questions.find(q => q.id === id);
+    if (!q) return;
+    const answer = document.getElementById('ans-' + id).value.trim();
+    if (!answer) { alert('回答を入力してください。'); return; }
+    const c = db.companies.find(c => c.id === currentCompanyId);
+
+    const btn = document.getElementById('ai-btn-' + id);
+    btn.disabled = true; btn.textContent = '評価中...';
+
+    try {
+      const data = await callGas({
+        action: 'callClaude',
+        toolType: 'evaluateInterviewAnswer',
+        input: {
+          question: q.question,
+          answer,
+          company:  c ? c.name     : '',
+          position: c ? c.position : '',
+        }
+      });
+
+      // 回答と feedback を保存
+      q.answer = answer;
+      q.aiFeedback = data.result || '';
+      saveDb();
+
+      // フィードバック表示
+      let fbEl = document.getElementById('fb-' + id);
+      if (!fbEl) {
+        // re-renderされたカードの場合 feedbackがshowで既に存在する場合も
+        const card = document.getElementById('card-' + id);
+        const existingFb = card.querySelector('.ip-qa-feedback');
+        if (existingFb) { existingFb.textContent = q.aiFeedback; existingFb.classList.add('show'); }
+      } else {
+        fbEl.textContent = q.aiFeedback;
+        fbEl.classList.add('show');
+      }
+    } catch(e) {
+      alert('AI評価に失敗しました: ' + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = '✦ AI添削';
+    }
+  }
+
+  // ── カスタム質問 ──────────────────────────────────────────────────────────
+  function addCustomQuestion() {
+    document.getElementById('cq-question').value = '';
+    document.getElementById('cq-error').textContent = '';
+    document.getElementById('custom-q-modal').classList.add('open');
+  }
+
+  function closeCustomQModal() {
+    document.getElementById('custom-q-modal').classList.remove('open');
+  }
+
+  function saveCustomQuestion() {
+    const question = document.getElementById('cq-question').value.trim();
+    if (!question) { document.getElementById('cq-error').textContent = '質問を入力してください。'; return; }
+    db.questions.push({
+      id: genId('q'),
+      companyId: currentCompanyId,
+      type: 'custom',
+      category: 'カスタム',
+      question,
+      answer: '',
+      aiFeedback: '',
+      ready: false,
+      createdAt: new Date().toISOString(),
+    });
+    saveDb();
+    closeCustomQModal();
+    renderCompanyDetail(currentCompanyId);
+  }
+
+  // ── 企業 CRUD ─────────────────────────────────────────────────────────────
+  function openAddCompanyModal() {
+    document.getElementById('company-modal-title').textContent = '企業を追加する';
+    document.getElementById('cm-id').value = '';
+    document.getElementById('cm-name').value = '';
+    document.getElementById('cm-industry').value = '';
+    document.getElementById('cm-position').value = '';
+    document.getElementById('cm-status').value = '';
+    document.getElementById('cm-notes').value = '';
+    document.getElementById('cm-error').textContent = '';
+    document.getElementById('company-modal').classList.add('open');
+  }
+
+  function openEditCompanyModal() {
+    const c = db.companies.find(c => c.id === currentCompanyId);
+    if (!c) return;
+    document.getElementById('company-modal-title').textContent = '企業を編集する';
+    document.getElementById('cm-id').value       = c.id;
+    document.getElementById('cm-name').value     = c.name     || '';
+    document.getElementById('cm-industry').value = c.industry || '';
+    document.getElementById('cm-position').value = c.position || '';
+    document.getElementById('cm-status').value   = c.status   || '';
+    document.getElementById('cm-notes').value    = c.notes    || '';
+    document.getElementById('cm-error').textContent = '';
+    document.getElementById('company-modal').classList.add('open');
+  }
+
+  function closeCompanyModal() {
+    document.getElementById('company-modal').classList.remove('open');
+  }
+
+  function saveCompany() {
+    const name = document.getElementById('cm-name').value.trim();
+    if (!name) { document.getElementById('cm-error').textContent = '企業名を入力してください。'; return; }
+    const id = document.getElementById('cm-id').value;
+    if (id) {
+      // 編集
+      const c = db.companies.find(c => c.id === id);
+      if (c) {
+        c.name     = name;
+        c.industry = document.getElementById('cm-industry').value.trim();
+        c.position = document.getElementById('cm-position').value.trim();
+        c.status   = document.getElementById('cm-status').value;
+        c.notes    = document.getElementById('cm-notes').value.trim();
+      }
+    } else {
+      // 新規
+      const newId = genId('c');
+      db.companies.push({
+        id: newId,
+        name,
+        industry: document.getElementById('cm-industry').value.trim(),
+        position: document.getElementById('cm-position').value.trim(),
+        status:   document.getElementById('cm-status').value,
+        notes:    document.getElementById('cm-notes').value.trim(),
+        createdAt: new Date().toISOString(),
+      });
+      saveDb();
+      closeCompanyModal();
+      selectCompany(newId);
+      return;
+    }
+    saveDb();
+    closeCompanyModal();
+    renderCompanyDetail(currentCompanyId);
+    renderCompanyList();
+  }
+
+  function deleteCurrentCompany() {
+    const c = db.companies.find(c => c.id === currentCompanyId);
+    if (!c || !confirm(`「${c.name}」の全データを削除しますか？この操作は取り消せません。`)) return;
+    db.companies = db.companies.filter(c => c.id !== currentCompanyId);
+    db.questions = db.questions.filter(q => q.companyId !== currentCompanyId);
+    saveDb();
+    currentCompanyId = null;
+    document.getElementById('ip-empty-state').style.display = 'flex';
+    document.getElementById('ip-company-detail').style.display = 'none';
+    renderCompanyList();
+  }
+
+  // ── モーダル外クリックで閉じる ────────────────────────────────────────────
+  document.querySelectorAll('.ip-modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+  });
+
+  // ── 初期化 ────────────────────────────────────────────────────────────────
+  loadDb();
+  renderCompanyList();
+  if (db.companies.length) {
+    selectCompany(db.companies[0].id);
+  }
+</script>
+<style>.bottom-tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;background:#0a1a3e;border-top:1px solid rgba(201,168,76,0.2);height:56px}.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.5);font-size:0.6rem;gap:2px;transition:color 0.2s}.bottom-tab svg{width:20px;height:20px}.bottom-tab:hover,.bottom-tab.active{color:#e8c96c}.bottom-tab.active{font-weight:700}body{padding-bottom:60px}</style>
+<nav class="bottom-tab-bar">
+  <a href="members.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>マイページ</span></a>
+  <a href="writing.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>書く</span></a>
+  <a href="interview-page.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>面接</span></a>
+  <a href="community.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>仲間</span></a>
+  <a href="more.html" class="bottom-tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
+</nav>
+<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}</script></body>
+</html>
