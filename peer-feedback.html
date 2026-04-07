@@ -443,7 +443,7 @@
 
 <script src="auth.js"></script>
 <script>
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
 
   let currentToken = null;
   let generatedLink = '';
@@ -605,13 +605,13 @@
   function shareToLine() {
     if (!generatedLink) return;
     var text = '他己分析に協力してほしいです！以下のリンクから回答してもらえると嬉しいです。';
-    window.open('https://line.me/R/share?text=' + encodeURIComponent(text + '\n' + generatedLink), '_blank');
+    window.open('https://line.me/R/share?text=' + encodeURIComponent(text + '\n' + generatedLink), '_blank', 'noopener,noreferrer');
   }
 
   function shareToX() {
     if (!generatedLink) return;
     var text = '友人の就活を応援！他己分析に回答してみてください。';
-    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(generatedLink), '_blank');
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(generatedLink), '_blank', 'noopener,noreferrer');
   }
 
   // ===== LOAD RESULTS =====

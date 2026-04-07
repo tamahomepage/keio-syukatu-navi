@@ -1,5 +1,5 @@
 (function () {
-  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby-oigHKj3K5DxgSYS40guqoR4kzPLuc1dkaeZhQ3je-246slz-xKfok4N0kq02OvbWjQ/exec';
+  const GAS_PROXY_URL = 'https://script.google.com/macros/s/AKfycby1YNoTw0enlPBI44yC0OqlmjprRu2ZZNaX2oRtwIAiQUlUIQmoiKBqduKQ7YK0-BMzZA/exec';
   const SESSION_TOKEN_KEY = 'keio_navi_session_token_v1';
   const USER_CACHE_KEY = 'keio_navi_current_user_cache_v1';
   const LIKED_CACHE_KEY = 'keio_navi_liked_cache_v1';
@@ -150,11 +150,53 @@
     localStorage.removeItem(SESSION_TOKEN_KEY);
   }
 
+  function clearClientSecurityArtifacts() {
+    try {
+      sessionStorage.removeItem(REDIRECT_KEY);
+    } catch (error) {
+      // noop
+    }
+
+    try {
+      if (typeof caches !== 'undefined' && caches && typeof caches.keys === 'function') {
+        caches.keys().then(keys =>
+          Promise.all(
+            keys
+              .filter(key => typeof key === 'string' && key.indexOf('keio-navi-') === 0)
+              .map(key => caches.delete(key))
+          )
+        ).catch(() => {});
+      }
+    } catch (error) {
+      // noop
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(registrations => {
+        registrations.forEach(registration => {
+          if (registration.active) {
+            try {
+              registration.active.postMessage({ type: 'CLEAR_RUNTIME_CACHE' });
+            } catch (postMessageError) {
+              // noop
+            }
+          }
+          if (typeof registration.getNotifications === 'function') {
+            registration.getNotifications().then(notifications => {
+              notifications.forEach(notification => notification.close());
+            }).catch(() => {});
+          }
+        });
+      }).catch(() => {});
+    }
+  }
+
   function clearSessionCache() {
     [SESSION_TOKEN_KEY, USER_CACHE_KEY, LIKED_CACHE_KEY].forEach(key => {
       sessionStorage.removeItem(key);
       localStorage.removeItem(key);
     });
+    clearClientSecurityArtifacts();
   }
 
   function normalizeUser(user) {

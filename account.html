@@ -776,7 +776,7 @@
 
         <label class="field-group" style="flex-direction:row; align-items:flex-start; gap:0.6rem; cursor:pointer;">
           <input type="checkbox" name="agreePrivacy" required style="margin-top:0.25rem; width:18px; height:18px; flex-shrink:0; cursor:pointer;">
-          <span class="field-help" style="font-size:0.78rem; line-height:1.7;"><a href="privacy.html" target="_blank" style="color:var(--crimson); text-decoration:underline;">プライバシーポリシー</a>および<a href="terms.html" target="_blank" style="color:var(--crimson); text-decoration:underline;">利用規約</a>を読み、同意します。AI生成コンテンツは参考情報であり、本サービスはその結果について責任を負いません。</span>
+          <span class="field-help" style="font-size:0.78rem; line-height:1.7;"><a href="privacy.html" target="_blank" rel="noopener noreferrer" style="color:var(--crimson); text-decoration:underline;">プライバシーポリシー</a>および<a href="terms.html" target="_blank" rel="noopener noreferrer" style="color:var(--crimson); text-decoration:underline;">利用規約</a>を読み、同意します。AI生成コンテンツは参考情報であり、本サービスはその結果について責任を負いません。</span>
         </label>
 
         <div class="form-actions">
@@ -986,29 +986,6 @@
           </div>
           <button class="subtle-btn" type="submit">パスワードを更新する</button>
         </form>
-      </div>
-
-      <div class="settings-block" id="weekly-report-block">
-        <h3 class="settings-title">週次レポート</h3>
-        <p class="settings-sub">毎週月曜日に、あなたの就活アクティビティをまとめたレポートをメールで受け取れます。</p>
-        <div style="display:flex; align-items:center; gap:0.8rem; margin-top:0.8rem;">
-          <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer;">
-            <input type="checkbox" id="weekly-report-toggle" style="width:18px; height:18px; accent-color:var(--gold);">
-            <span style="font-size:0.85rem; font-weight:500;">週次レポートを受け取る</span>
-          </label>
-        </div>
-        <div id="weekly-report-options" style="display:none; margin-top:1rem;">
-          <label class="field-group" style="margin-bottom:0.8rem;">
-            <span class="field-label">送信先メールアドレス</span>
-            <input class="field-input" type="email" id="weekly-report-email" placeholder="example@keio.jp">
-          </label>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button type="button" class="subtle-btn" id="weekly-report-save-btn" style="font-size:0.78rem; border-color:rgba(201,168,76,0.4); color:var(--navy);">設定を保存</button>
-            <button type="button" class="subtle-btn" id="weekly-report-preview-btn" style="font-size:0.78rem;">プレビュー</button>
-          </div>
-          <div id="weekly-report-status" style="font-size:0.72rem; color:var(--text-muted); margin-top:0.5rem;"></div>
-        </div>
-        <div id="weekly-report-preview-area" style="display:none; margin-top:1rem; background:var(--gray); padding:1rem; font-size:0.75rem; line-height:1.8; white-space:pre-wrap; font-family:'Noto Sans JP', monospace; color:var(--text); max-height:300px; overflow-y:auto; border-left:3px solid var(--gold);"></div>
       </div>
 
       <div class="settings-block" id="notification-settings-block">
@@ -2116,99 +2093,6 @@
 
   if (!KeioNaviAuth.getCurrentUser() && returnTo && !verificationToken) {
     showFlash('ログインまたは登録が完了すると、元のページへ戻ります。', 'info');
-  }
-
-  // ── 週次レポート設定 ──────────────────────────────
-  const weeklyToggle     = document.getElementById('weekly-report-toggle');
-  const weeklyOptions    = document.getElementById('weekly-report-options');
-  const weeklyEmailInput = document.getElementById('weekly-report-email');
-  const weeklySaveBtn    = document.getElementById('weekly-report-save-btn');
-  const weeklyPreviewBtn = document.getElementById('weekly-report-preview-btn');
-  const weeklyStatus     = document.getElementById('weekly-report-status');
-  const weeklyPreviewArea = document.getElementById('weekly-report-preview-area');
-
-  weeklyToggle.addEventListener('change', () => {
-    weeklyOptions.style.display = weeklyToggle.checked ? 'block' : 'none';
-    if (!weeklyToggle.checked) {
-      weeklyPreviewArea.style.display = 'none';
-    }
-  });
-
-  // 初期化時に設定を読み込む
-  async function loadWeeklyReportPref() {
-    const token = KeioNaviAuth.getSessionToken();
-    if (!token) return;
-    try {
-      const data = await KeioNaviAuth.postToGas({
-        action: 'authGetWeeklyReportPreview',
-        sessionToken: token
-      });
-      if (data.pref) {
-        weeklyToggle.checked = data.pref.enabled;
-        weeklyEmailInput.value = data.pref.email || '';
-        weeklyOptions.style.display = data.pref.enabled ? 'block' : 'none';
-      }
-    } catch (e) {
-      // サイレントに失敗
-    }
-  }
-
-  weeklySaveBtn.addEventListener('click', async () => {
-    const token = KeioNaviAuth.getSessionToken();
-    if (!token) { showFlash('ログインが必要です。', 'error'); return; }
-
-    const enabled = weeklyToggle.checked;
-    const email   = weeklyEmailInput.value.trim();
-
-    if (enabled && !email) {
-      weeklyStatus.textContent = 'メールアドレスを入力してください。';
-      weeklyStatus.style.color = 'var(--crimson)';
-      return;
-    }
-
-    weeklySaveBtn.disabled = true;
-    weeklySaveBtn.textContent = '保存中...';
-    try {
-      await KeioNaviAuth.postToGas({
-        action: 'authSetWeeklyReportPref',
-        sessionToken: token,
-        enabled: enabled,
-        email: email
-      });
-      weeklyStatus.textContent = enabled ? '週次レポートの配信を設定しました。' : '週次レポートの配信を停止しました。';
-      weeklyStatus.style.color = 'var(--success)';
-    } catch (e) {
-      weeklyStatus.textContent = e.message || '保存に失敗しました。';
-      weeklyStatus.style.color = 'var(--crimson)';
-    }
-    weeklySaveBtn.disabled = false;
-    weeklySaveBtn.textContent = '設定を保存';
-  });
-
-  weeklyPreviewBtn.addEventListener('click', async () => {
-    const token = KeioNaviAuth.getSessionToken();
-    if (!token) { showFlash('ログインが必要です。', 'error'); return; }
-
-    weeklyPreviewBtn.disabled = true;
-    weeklyPreviewBtn.textContent = '読込中...';
-    weeklyPreviewArea.style.display = 'none';
-    try {
-      const data = await KeioNaviAuth.postToGas({
-        action: 'authGetWeeklyReportPreview',
-        sessionToken: token
-      });
-      weeklyPreviewArea.textContent = data.preview || '(プレビューを取得できませんでした)';
-      weeklyPreviewArea.style.display = 'block';
-    } catch (e) {
-      weeklyPreviewArea.textContent = 'プレビューの取得に失敗しました: ' + (e.message || '');
-      weeklyPreviewArea.style.display = 'block';
-    }
-    weeklyPreviewBtn.disabled = false;
-    weeklyPreviewBtn.textContent = 'プレビュー';
-  });
-
-  if (KeioNaviAuth.getCurrentUser()) {
-    loadWeeklyReportPref();
   }
 
   // ── 通知設定 ──────────────────────────────────────
