@@ -74,15 +74,7 @@
   }
 
   function readSessionCacheRaw(key) {
-    const current = sessionStorage.getItem(key);
-    if (current !== null) return current;
-
-    const legacy = localStorage.getItem(key);
-    if (legacy === null) return null;
-
-    sessionStorage.setItem(key, legacy);
-    localStorage.removeItem(key);
-    return legacy;
+    return localStorage.getItem(key);
   }
 
   function readSessionCacheJSON(key, fallback) {
@@ -95,8 +87,7 @@
   }
 
   function writeSessionCacheJSON(key, value) {
-    sessionStorage.setItem(key, JSON.stringify(value));
-    localStorage.removeItem(key);
+    localStorage.setItem(key, JSON.stringify(value));
   }
 
   function sanitizeReturnTo(url) {
@@ -143,11 +134,10 @@
 
   function setSessionToken(token) {
     if (token) {
-      sessionStorage.setItem(SESSION_TOKEN_KEY, token);
+      localStorage.setItem(SESSION_TOKEN_KEY, token);
     } else {
-      sessionStorage.removeItem(SESSION_TOKEN_KEY);
+      localStorage.removeItem(SESSION_TOKEN_KEY);
     }
-    localStorage.removeItem(SESSION_TOKEN_KEY);
   }
 
   function clearClientSecurityArtifacts() {
@@ -228,8 +218,6 @@
       lineQrUrl,
       hasLineQr,
       referralCode: trimText(user.referralCode),
-      emailVerified: user.emailVerified === true || user.emailVerified === 'true' || user.emailVerified === '1',
-      emailVerifiedAt: trimText(user.emailVerifiedAt),
       createdAt: user.createdAt || '',
       updatedAt: user.updatedAt || '',
       sessionToken: trimText(user.sessionToken) || getSessionToken(),
@@ -578,44 +566,6 @@
     }
   }
 
-  async function resendVerificationEmail() {
-    const sessionToken = getSessionToken();
-    const currentUser = getCurrentUser();
-    if (!sessionToken || !currentUser) return { ok: false, error: 'ログインが必要です。' };
-
-    try {
-      const result = await postToGas({ action: 'authResendVerificationEmail', sessionToken });
-      const nextUser = normalizeUser(result.user);
-      if (nextUser && currentUser.id === nextUser.id) {
-        writeSessionCacheJSON(USER_CACHE_KEY, nextUser);
-      }
-      return { ok: true, message: result.message, user: getCurrentUser() || nextUser };
-    } catch (serverError) {
-      return { ok: false, error: serverError.message };
-    }
-  }
-
-  async function verifyEmail(verificationToken) {
-    const token = trimText(verificationToken);
-    if (!token) return { ok: false, error: '確認トークンが必要です。' };
-
-    try {
-      const result = await postToGas({
-        action: 'authVerifyEmail',
-        verificationToken: token,
-        sessionToken: getSessionToken(),
-      });
-      const currentUser = getCurrentUser();
-      const nextUser = normalizeUser(result.user);
-      if (nextUser && currentUser && currentUser.id === nextUser.id) {
-        writeSessionCacheJSON(USER_CACHE_KEY, nextUser);
-      }
-      return { ok: true, message: result.message, user: nextUser };
-    } catch (serverError) {
-      return { ok: false, error: serverError.message };
-    }
-  }
-
   async function listSessions() {
     const sessionToken = getSessionToken();
     if (!sessionToken) return { ok: false, error: 'ログインが必要です。' };
@@ -704,22 +654,6 @@
     }
 
     return null;
-  }
-
-  function ensureVerifiedUser(actionLabel) {
-    const user = getCurrentUser();
-    if (!user) {
-      return { ok: false, error: 'ログインが必要です。' };
-    }
-    if (user.emailVerified) {
-      return { ok: true, user };
-    }
-    const label = trimText(actionLabel);
-    return {
-      ok: false,
-      error: (label ? label + 'には' : 'この操作には') + 'メール認証が必要です。マイページで確認メールを再送できます。',
-      user,
-    };
   }
 
   function formatDate(dateString) {
@@ -1037,8 +971,6 @@
     updateCurrentUser,
     changePassword,
     deleteAccount,
-    resendVerificationEmail,
-    verifyEmail,
     requestPasswordReset,
     resetPassword,
     getReferralInfo,
@@ -1067,7 +999,6 @@
     saveNotificationPrefs,
     scheduleLocalNotification,
     checkDeadlineReminders,
-    ensureVerifiedUser,
     getLocalBackupSummary,
     createLocalBackupSnapshot,
     downloadLocalBackup,
