@@ -313,18 +313,3 @@ nav.top-nav {
   border: 1px solid rgba(192,0,26,0.2);
 }
 
-/* ===== VERIFICATION BANNER ===== */
-.verification-banner {
-  display: none;
-  padding: 0.9rem 1rem;
-  margin: 0 0 1.2rem;
-  background: rgba(201,168,76,0.12);
-  border-left: 4px solid var(--gold);
-  font-size: 0.78rem;
-  color: var(--text);
-  line-height: 1.8;
-}
-.verification-banner a {
-  color: var(--navy);
-  font-weight: 700;
-}

@@ -103,34 +103,6 @@
   .flash.show { display: block; }
   .flash.success { background: rgba(10,110,69,0.1); color: #0a6e45; border: 1px solid rgba(10,110,69,0.25); }
   .flash.error { background: rgba(192,0,26,0.08); color: var(--crimson); border: 1px solid rgba(192,0,26,0.2); }
-  .verification-banner {
-    display:none;
-    padding:0.9rem 1rem;
-    margin:0 0 1.2rem;
-    background:rgba(201,168,76,0.12);
-    border-left:4px solid var(--gold);
-    font-size:0.78rem;
-    color:var(--text);
-    line-height:1.8;
-  }
-  .verification-banner a {
-    color:var(--navy);
-    font-weight:700;
-  }
-  .section-lock-note {
-    display:none;
-    margin-top:0.7rem;
-    font-size:0.72rem;
-    color:var(--crimson);
-    line-height:1.7;
-  }
-  .locked-action {
-    opacity:0.58;
-    cursor:not-allowed !important;
-  }
-  .locked-action:hover {
-    opacity:0.58;
-  }
   .inline-action-menu {
     margin-top:0.6rem;
   }
@@ -241,7 +213,6 @@
   </div>
 
   <div class="flash" id="flash"></div>
-  <div class="verification-banner" id="verification-banner"></div>
 
   <!-- マッチング設定 -->
   <div class="section">
@@ -329,7 +300,6 @@
         <input type="text" id="new-group-desc" placeholder="説明（任意）" style="flex:1;min-width:150px;">
         <button class="filter-btn" id="group-create-btn" onclick="createNewGroup()">グループ作成</button>
       </div>
-      <div class="section-lock-note" id="group-lock-note">メール認証が完了すると、公開設定の変更やグループ作成・参加ができます。</div>
       <div id="group-list" class="group-list">
         <div class="empty-msg">読み込み中...</div>
       </div>
@@ -354,7 +324,6 @@
 <script>
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbxo0hLKrwdiI1kAyt--8QMC_2H9Y9jKEEwYLx28MbC4S6eRfW9RVMKciz1IuhTGsmFF/exec';
   const flash = document.getElementById('flash');
-  const verificationBanner = document.getElementById('verification-banner');
   let mutedUserIds = {};
   let flashTimer = null;
 
@@ -376,28 +345,6 @@
     const data = await res.json();
     if (!data || data.status !== 'ok') throw new Error((data && data.message) || 'エラーが発生しました。');
     return data;
-  }
-
-  function guardVerifiedAction(actionLabel) {
-    if (!KeioNaviAuth.ensureVerifiedUser) return true;
-    const result = KeioNaviAuth.ensureVerifiedUser(actionLabel);
-    if (result.ok) return true;
-    showFlash(result.error, 'error');
-    renderVerificationBanner(KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null);
-    return false;
-  }
-
-  function renderVerificationBanner(user) {
-    if (!verificationBanner) return;
-    if (!user || user.emailVerified) {
-      verificationBanner.style.display = 'none';
-      verificationBanner.innerHTML = '';
-      applyVerificationLocks();
-      return;
-    }
-    verificationBanner.style.display = 'block';
-    verificationBanner.innerHTML = 'メール認証がまだ完了していません。閲覧はできますが、投稿・返信・練習募集・GD参加などのコミュニティ機能は認証後に有効になります。<a href="account.html">マイページで確認メールを再送する</a>';
-    applyVerificationLocks();
   }
 
   async function loadMutedMembers() {
@@ -425,56 +372,7 @@
     return `<details class="inline-action-menu" onclick="event.stopPropagation()"><summary onclick="event.stopPropagation()">投稿オプション</summary><div class="inline-actions">${muteButton}${reportButton}</div></details>`;
   }
 
-  function applyVerificationLocks() {
-    const user = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
-    const locked = !!(user && !user.emailVerified);
-    [
-      { buttonId: 'group-create-btn', noteId: 'group-lock-note', lockedLabel: 'グループ作成', actionLabel: 'グループ作成' },
-      { buttonId: 'consul-submit-btn', noteId: 'consul-lock-note', lockedLabel: '相談投稿', actionLabel: '相談投稿' },
-      { buttonId: 'gd-create-btn', noteId: 'gd-lock-note', lockedLabel: 'GDセッション作成', actionLabel: 'GDセッション作成' },
-      { buttonId: 'pm-open-btn', noteId: 'pm-lock-note', lockedLabel: '練習募集投稿', actionLabel: '練習募集投稿' },
-      { buttonId: 'qa-open-btn', noteId: 'qa-lock-note', lockedLabel: '質問投稿', actionLabel: '質問投稿' },
-      { buttonId: 'board-post-btn', noteId: 'board-lock-note', lockedLabel: 'ES投稿', actionLabel: 'ES投稿' },
-      { buttonId: 'exp-open-btn', noteId: 'exp-lock-note', lockedLabel: '体験記投稿', actionLabel: '体験記投稿' }
-    ].forEach(function(config) {
-      const button = document.getElementById(config.buttonId);
-      const note = document.getElementById(config.noteId);
-      if (button) {
-        if (!button.dataset.baseLabel) button.dataset.baseLabel = button.textContent.trim();
-        button.dataset.actionLabel = config.actionLabel;
-        button.dataset.locked = locked ? '1' : '0';
-        button.textContent = locked ? button.dataset.baseLabel + '（認証後）' : button.dataset.baseLabel;
-        button.classList.toggle('locked-action', locked);
-        button.setAttribute('aria-disabled', locked ? 'true' : 'false');
-        button.title = locked ? 'メール認証後に利用できます' : '';
-      }
-      if (note) note.style.display = locked ? 'block' : 'none';
-    });
-
-    const optInToggle = document.getElementById('opt-in-toggle');
-    if (optInToggle) {
-      optInToggle.disabled = locked;
-      optInToggle.style.opacity = locked ? '0.6' : '';
-      optInToggle.title = locked ? 'メール認証後に変更できます' : '';
-    }
-  }
-
-  function bindVerificationLockedButtons() {
-    ['group-create-btn', 'consul-submit-btn', 'gd-create-btn', 'pm-open-btn', 'qa-open-btn', 'board-post-btn', 'exp-open-btn'].forEach(function(id) {
-      const button = document.getElementById(id);
-      if (!button || button.dataset.lockGuardBound) return;
-      button.dataset.lockGuardBound = '1';
-      button.addEventListener('click', function(event) {
-        if (button.dataset.locked !== '1') return;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        guardVerifiedAction(button.dataset.actionLabel || 'この操作');
-      }, true);
-    });
-  }
-
   async function toggleMuteMember(userId, displayName) {
-    if (!guardVerifiedAction('ミュート')) return;
     if (!userId) return;
     const muted = !!mutedUserIds[userId];
     if (!muted && !confirm((displayName || 'このユーザー') + ' をミュートしますか？このユーザーの投稿は今後表示されなくなります。')) return;
@@ -493,7 +391,6 @@
   }
 
   async function reportContentAction(contentType, contentId, targetUserId) {
-    if (!guardVerifiedAction('通報')) return;
     const reason = window.prompt('通報理由を入力してください。\n例: スパム / 個人情報 / 不適切表現 / 機密情報');
     if (!reason) return;
     const details = window.prompt('補足があれば入力してください。（任意）') || '';
@@ -584,8 +481,6 @@
 
   function renderGroups(groups) {
     const el = document.getElementById('group-list');
-    const currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
-    const canJoinGroup = !!(currentUser && currentUser.emailVerified);
     if (!groups.length) {
       el.innerHTML = '<div class="empty-msg">まだグループがありません。上のフォームから作成してみましょう。</div>';
       return;
@@ -597,9 +492,7 @@
       const actions = g.isMember
         ? `<button class="btn-view" onclick="viewGroupMembers(decodeURIComponent('${groupIdArg}'),decodeURIComponent('${groupNameArg}'))">メンバー</button>
            <button class="btn-leave" onclick="leaveGroupAction(decodeURIComponent('${groupIdArg}'))">退出</button>`
-        : canJoinGroup
-          ? `<button class="btn-join" onclick="joinGroupAction(decodeURIComponent('${groupIdArg}'))">参加する</button>`
-          : `<button class="btn-join locked-action" onclick="event.stopPropagation();guardVerifiedAction('グループ参加')">認証後に参加</button>`;
+        : `<button class="btn-join" onclick="joinGroupAction(decodeURIComponent('${groupIdArg}'))">参加する</button>`;
       return `<div class="group-card">
         <div class="group-info">
           <div class="group-name">${escHtml(g.name || '')}</div>
@@ -611,7 +504,6 @@
   }
 
   async function createNewGroup() {
-    if (!guardVerifiedAction('グループ作成')) return;
     const name = document.getElementById('new-group-name').value.trim();
     if (!name) { showFlash('グループ名を入力してください。', 'error'); return; }
     try {
@@ -630,7 +522,6 @@
   }
 
   async function joinGroupAction(groupId) {
-    if (!guardVerifiedAction('グループ参加')) return;
     try {
       await callApi('joinGroup', { groupId });
       showFlash('グループに参加しました。', 'success');
@@ -671,10 +562,6 @@
   // マッチング設定
   const optInToggle = document.getElementById('opt-in-toggle');
   optInToggle.addEventListener('change', async () => {
-    if (!guardVerifiedAction('公開設定の変更')) {
-      optInToggle.checked = !optInToggle.checked;
-      return;
-    }
     try {
       await callApi('updateMatchingPrefs', { optIn: optInToggle.checked });
       showFlash(optInToggle.checked ? '公開設定をオンにしました。' : '公開設定をオフにしました。', 'success');
@@ -684,8 +571,6 @@
   // 初期化
   const user = KeioNaviAuth.requireAuth({ returnTo: 'community.html' });
   if (user) {
-    bindVerificationLockedButtons();
-    renderVerificationBanner(user);
     // 自動検索: 自分の業界と志望企業で
     if (user.desiredIndustry) {
       document.getElementById('filter-industry').value = user.desiredIndustry;
@@ -754,7 +639,6 @@
       <textarea id="consul-body" placeholder="相談内容を書いてください..." style="width:100%;padding:0.5rem 0.8rem;border:1px solid rgba(10,26,62,0.15);font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;min-height:80px;resize:vertical;"></textarea>
       <button class="filter-btn" id="consul-submit-btn" onclick="postConsultation()" style="align-self:flex-end;">投稿する</button>
     </div>
-    <div class="section-lock-note" id="consul-lock-note">メール認証が完了すると、相談投稿とコメントができます。</div>
     <div id="consul-feed">
       <div class="empty-msg">読み込み中...</div>
     </div>
@@ -791,7 +675,6 @@
         <button class="filter-btn" id="gd-create-btn" onclick="createGDSessionAction()" style="flex:1;">セッション作成</button>
         <button class="filter-btn" onclick="generateGDThemeAction()" style="flex:1;background:var(--gold);color:var(--navy);">AIテーマ生成</button>
       </div>
-      <div class="section-lock-note" id="gd-lock-note">メール認証が完了すると、GDセッションの作成と参加ができます。</div>
       <div id="gd-theme-result" style="display:none;padding:0.6rem;background:white;border:1px solid rgba(201,168,76,0.3);font-size:0.8rem;line-height:1.6;color:var(--text);"></div>
     </div>
     <div id="gd-session-list">
@@ -839,7 +722,6 @@ function renderConsultations(posts) {
 }
 
 async function postConsultation() {
-  if (!guardVerifiedAction('相談投稿')) return;
   var title = document.getElementById('consul-title').value.trim();
   var body = document.getElementById('consul-body').value.trim();
   if (!title || !body) { showFlash('タイトルと内容を入力してください。', 'error'); return; }
@@ -857,7 +739,6 @@ async function postConsultation() {
 }
 
 async function addComment(postId) {
-  if (!guardVerifiedAction('相談へのコメント')) return;
   var input = document.getElementById('consul-cmt-' + postId);
   var text = input.value.trim();
   if (!text) return;
@@ -882,7 +763,6 @@ async function loadGDSessions() {
 function renderGDSessions(sessions) {
   var el = document.getElementById('gd-session-list');
   var currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
-  var canJoin = !!(currentUser && currentUser.emailVerified);
   if (!sessions.length) {
     el.innerHTML = '\x3cdiv class="empty-msg">まだセッションがありません。作成してみましょう。\x3c/div>';
     return;
@@ -892,9 +772,7 @@ function renderGDSessions(sessions) {
     var isParticipant = !!s.isParticipant || ((s.participants || []).some(function(p) { return currentUser && p.userId === currentUser.id; }));
     var actions = isParticipant
       ? '\x3cbutton class="btn-leave" onclick="leaveGDAction(decodeURIComponent(\'' + sessionIdArg + '\'))">退出\x3c/button>'
-      : (canJoin
-        ? '\x3cbutton class="btn-join" onclick="joinGDAction(decodeURIComponent(\'' + sessionIdArg + '\'))">参加する\x3c/button>'
-        : '\x3cbutton class="btn-join locked-action" onclick="event.stopPropagation();guardVerifiedAction(\'GDセッション参加\')">認証後に参加\x3c/button>');
+      : '\x3cbutton class="btn-join" onclick="joinGDAction(decodeURIComponent(\'' + sessionIdArg + '\'))">参加する\x3c/button>';
     return '\x3cdiv class="gd-session">'
       + '\x3cdiv class="gd-info">'
       + '\x3cdiv class="gd-title-text">' + escHtml(s.title || 'GDセッション') + '\x3c/div>'
@@ -906,7 +784,6 @@ function renderGDSessions(sessions) {
 }
 
 async function createGDSessionAction() {
-  if (!guardVerifiedAction('GDセッション作成')) return;
   var title = document.getElementById('gd-title').value.trim();
   var date = document.getElementById('gd-date').value;
   var time = document.getElementById('gd-time').value;
@@ -923,7 +800,6 @@ async function createGDSessionAction() {
 }
 
 async function joinGDAction(sessionId) {
-  if (!guardVerifiedAction('GDセッション参加')) return;
   try {
     await callApi('joinGDSession', { sessionId: sessionId });
     showFlash('セッションに参加しました。', 'success');
@@ -1024,7 +900,6 @@ async function generateGDThemeAction() {
   </div>
   <div class="section-body">
     <button class="pm-post-btn" id="pm-open-btn" onclick="document.getElementById('pm-post-modal').classList.add('open')">＋ 練習相手を募集</button>
-    <div class="section-lock-note" id="pm-lock-note">メール認証が完了すると、募集投稿と参加ができます。</div>
     <div class="pm-filter-tabs">
       <button class="pm-filter-tab active" data-filter="すべて" onclick="filterPM(this)">すべて</button>
       <button class="pm-filter-tab" data-filter="面接練習" onclick="filterPM(this)">面接練習</button>
@@ -1114,7 +989,6 @@ function pmInitial(name) {
 function renderPracticeRequests() {
   var el = document.getElementById('pm-feed');
   var currentUser = KeioNaviAuth.getCurrentUser ? KeioNaviAuth.getCurrentUser() : null;
-  var canJoin = !!(currentUser && currentUser.emailVerified);
   var filtered = pmAllRequests;
   if (pmCurrentFilter !== 'すべて') {
     filtered = filtered.filter(function(r) { return r.type === pmCurrentFilter; });
@@ -1147,9 +1021,7 @@ function renderPracticeRequests() {
       actionsHtml += '\x3cspan class="pm-joined-badge">参加中\x3c/span>';
       actionsHtml += '\x3cbutton class="pm-cancel-btn" onclick="leavePracticeReq(\'' + escAttr(r.id) + '\')">キャンセル\x3c/button>';
     } else if (!isClosed && slotsLeft > 0) {
-      actionsHtml += canJoin
-        ? '\x3cbutton class="pm-join-btn" onclick="joinPracticeReq(\'' + escAttr(r.id) + '\')">参加する\x3c/button>'
-        : '\x3cbutton class="pm-join-btn locked-action" onclick="event.stopPropagation();guardVerifiedAction(\'練習募集への参加\')">認証後に参加\x3c/button>';
+      actionsHtml += '\x3cbutton class="pm-join-btn" onclick="joinPracticeReq(\'' + escAttr(r.id) + '\')">参加する\x3c/button>';
     }
 
     // LINE info (shown when joined)
@@ -1187,7 +1059,6 @@ function renderPracticeRequests() {
 }
 
 async function submitPracticeRequest() {
-  if (!guardVerifiedAction('練習募集投稿')) return;
   var type     = document.getElementById('pm-new-type').value;
   var industry = document.getElementById('pm-new-industry').value.trim();
   var date     = document.getElementById('pm-new-date').value.trim();
@@ -1209,7 +1080,6 @@ async function submitPracticeRequest() {
 }
 
 async function joinPracticeReq(id) {
-  if (!guardVerifiedAction('練習募集への参加')) return;
   try {
     await callApi('joinPracticeRequest', { requestId: id });
     showFlash('参加しました！募集者のLINE情報を確認してください。', 'success');
@@ -1326,7 +1196,6 @@ document.getElementById('pm-post-modal').addEventListener('click', function(e) {
   </div>
   <div class="section-body">
     <button class="qa-post-btn" id="qa-open-btn" onclick="document.getElementById('qa-post-modal').classList.add('open')">＋ 質問を投稿</button>
-    <div class="section-lock-note" id="qa-lock-note">メール認証が完了すると、質問投稿・返信・ベストアンサー選択ができます。</div>
     <div class="qa-filter-tabs">
       <button class="qa-filter-tab active" data-filter="すべて" onclick="filterQA(this)">すべて</button>
       <button class="qa-filter-tab" data-filter="ES・ガクチカ" onclick="filterQA(this)">ES・ガクチカ</button>
@@ -1529,7 +1398,6 @@ function toggleQAExpand(card) {
 }
 
 async function submitQuestion() {
-  if (!guardVerifiedAction('質問投稿')) return;
   var title = document.getElementById('qa-new-title').value.trim();
   var body = document.getElementById('qa-new-body').value.trim();
   var category = document.getElementById('qa-new-category').value;
@@ -1547,7 +1415,6 @@ async function submitQuestion() {
 }
 
 async function submitReply(questionId) {
-  if (!guardVerifiedAction('返信投稿')) return;
   var input = document.getElementById('qa-reply-' + questionId);
   var body = input.value.trim();
   if (!body) return;
@@ -1569,7 +1436,6 @@ async function deleteQuestionAction(questionId) {
 }
 
 async function acceptReply(questionId, replyId) {
-  if (!guardVerifiedAction('ベストアンサー選択')) return;
   try {
     await callApi('acceptQuestionReply', { questionId: questionId, replyId: replyId });
     showFlash('ベストアンサーを更新しました。', 'success');
@@ -1645,7 +1511,6 @@ document.getElementById('qa-post-modal').addEventListener('click', function(e) {
       <span style="font-size:0.78rem;color:var(--text-muted);" id="board-count">読み込み中...</span>
       <button class="board-post-btn" id="board-post-btn">＋ ESを投稿する</button>
     </div>
-    <div class="section-lock-note" id="board-lock-note">メール認証が完了すると、ES投稿とコメントができます。</div>
     <div id="board-list"></div>
   </div>
 </div>
@@ -1749,7 +1614,6 @@ function renderBoardPosts(posts) {
 }
 
 async function submitBoardComment(postId) {
-  if (!guardVerifiedAction('ESへのコメント')) return;
   var input = document.getElementById('ci-' + postId);
   var text = input.value.trim();
   if (!text) return;
@@ -1786,7 +1650,6 @@ function initBoardModal() {
       document.getElementById('board-modal').classList.remove('open');
   });
   document.getElementById('bm-submit').addEventListener('click', async function() {
-    if (!guardVerifiedAction('ES投稿')) return;
     var company = document.getElementById('bm-company').value.trim();
     var question = document.getElementById('bm-question').value.trim();
     var esText = document.getElementById('bm-text').value.trim();
@@ -1895,7 +1758,6 @@ function initBoardModal() {
   </div>
   <div class="section-body">
     <button class="exp-post-btn" id="exp-open-btn" onclick="document.getElementById('exp-post-modal').classList.add('open')">＋ 体験記を投稿</button>
-    <div class="section-lock-note" id="exp-lock-note">メール認証が完了すると、体験記を投稿できます。</div>
     <div class="exp-filter-tabs">
       <button class="exp-filter-tab active" data-filter="すべて" onclick="filterExp(this)">すべて</button>
       <button class="exp-filter-tab" data-filter="メーカー" onclick="filterExp(this)">メーカー</button>
@@ -2068,7 +1930,6 @@ function toggleExpExpand(card) {
 }
 
 async function submitExperience() {
-  if (!guardVerifiedAction('体験記投稿')) return;
   var industry = document.getElementById('exp-new-industry').value;
   var companyCount = document.getElementById('exp-new-companycount').value;
   var startMonth = document.getElementById('exp-new-startmonth').value;
@@ -2143,8 +2004,6 @@ document.getElementById('exp-post-modal').addEventListener('click', function(e) 
   <a href="more.html" class="bottom-tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg><span>もっと</span></a>
 </nav>
 <script>
-if (typeof bindVerificationLockedButtons === 'function') bindVerificationLockedButtons();
-if (typeof applyVerificationLocks === 'function') applyVerificationLocks();
 if("serviceWorker"in navigator){navigator.serviceWorker.register("sw.js").catch(function(){});}
 </script></body>
 </html>
