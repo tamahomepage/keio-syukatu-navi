@@ -1422,7 +1422,7 @@
     try {
       var data = await callAuthApi('callClaude', {
         toolType: 'generateInterviewQuestions',
-        input: { gakuchikaText: gkText, company: c ? c.name : '', position: c ? c.position : '' }
+        input: { gakuchikaText: gkText, industry: c ? c.industry : '', position: c ? c.position : '' }
       });
       var raw = data.result || '';
       var m = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
@@ -1455,7 +1455,7 @@
     try {
       var data = await callAuthApi('callClaude', {
         toolType: 'evaluateInterviewAnswer',
-        input: { question: q.question, answer: answer, company: c ? c.name : '', position: c ? c.position : '' }
+        input: { question: q.question, answer: answer, industry: c ? c.industry : '', position: c ? c.position : '' }
       });
       q.answer = answer;
       q.aiFeedback = data.result || '';
