@@ -2700,6 +2700,8 @@
     return aiResponse.replace(/\[SCORES\][\s\S]*?\[\/SCORES\]\s*/, '').replace(/^\s*\n/, '');
   }
 
+  function scoreColor(v) { return v <= 2 ? '#c0001a' : v === 3 ? '#d4a017' : '#0a6e45'; }
+
   function renderRubric(scores) {
     var DIMS = [
       { key:'structure',   name:'\u69CB\u6210' },
