@@ -1058,9 +1058,5 @@
     }).catch(function() {});
   } catch (e) {}
 
-  // ── ページ読み込み時に page_view を自動記録 ─────────
-  try {
-    const pageName = (window.location.pathname.split('/').pop() || 'index.html').replace(/\.html$/, '');
-    logActivity('page_view', pageName, '');
-  } catch (e) {}
+  // page_view自動記録は廃止（GASへの毎回リクエスト+シート書き込みがログイン体感速度を悪化させるため）
 })();
